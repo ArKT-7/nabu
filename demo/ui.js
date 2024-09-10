@@ -1,7 +1,7 @@
 // @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&dn=expat.txt MIT
 
-import * as fastboot from "fastboot.mjs";
-import { BlobStore } from "download.js";
+import * as fastboot from "../dist/fastboot.mjs";
+import { BlobStore } from "./download.js";
 
 let device = new fastboot.FastbootDevice();
 window.device = device;
@@ -123,7 +123,7 @@ async function flashDownloadedFactoryZip() {
 
 fastboot.configureZip({
     workerScripts: {
-        inflate: ["vendor/z-worker-pako.js", "pako_inflate.min.js"],
+        inflate: ["../dist/vendor/z-worker-pako.js", "pako_inflate.min.js"],
     },
 });
 
