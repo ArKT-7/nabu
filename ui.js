@@ -123,7 +123,7 @@ async function flashDownloadedFactoryZip() {
 
 fastboot.configureZip({
     workerScripts: {
-        inflate: ["../dist/vendor/z-worker-pako.js", "pako_inflate.min.js"],
+        inflate: ["dist/vendor/z-worker-pako.js", "pako_inflate.min.js"],
     },
 });
 
