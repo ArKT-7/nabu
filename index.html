@@ -83,22 +83,34 @@
         fastboot.setDebugLevel(2);
 
         async function connectDevice() {
-            let statusField = document.querySelector(".status-field");
-            statusField.textContent = "Connecting...";
+    let statusField = document.querySelector(".status-field");
+    statusField.textContent = "Connecting...";
 
-            try {
-                await device.connect();
-            } catch (error) {
-                statusField.textContent = `Failed to connect to device: ${error.message}`;
-                return;
-            }
+    try {
+        await device.connect();
+    } catch (error) {
+        statusField.textContent = `Failed to connect to device: ${error.message}`;
+        return;
+    }
 
-            let product = await device.getVariable("product");
-            let slot = await device.getVariable("current-slot");
-            let serial = await device.getVariable("serialno");
-            let status = `Connected to - ${product} / Current slot - ${slot} / (serial: ${serial})`;
-            statusField.textContent = status;
-        }
+    let product = await device.getVariable("product");
+    let slot = await device.getVariable("current-slot");
+    let serial = await device.getVariable("serialno");
+    
+    // Prepare the status message
+    let deviceName = "";
+    if (product === "nabu") {
+        deviceName = "Device name - Xiaomi Pad 5";
+    } else if (product === "dm3q") {
+        deviceName = "Device name - Samsung S23 Ultra";
+    } else {
+        deviceName = ""; // Do not show anything for unknown devices
+    }
+
+    let status = `Connected to - ${product} / Current slot - ${slot} / (serial: ${serial})${deviceName ? '\n' + deviceName : ''}`;
+    statusField.textContent = status;
+}
+
 
         async function sendFormCommand(event) {
             event.preventDefault();
