@@ -32,6 +32,20 @@
     <hr />
 
     <div>
+    <form class="boot-form">
+        <label for="boot-file">Boot image:</label>
+        <input type="file" name="boot-file" class="boot-file" />
+        <select name="boot-type" class="boot-type">
+            <option value="">Select Boot Type</option>
+            <option value="hyperos">HyperOS Boot</option>
+            <option value="miui">MIUI OS Boot</option>
+        </select>
+        <input type="submit" value="Boot" />
+    </form>
+</div>
+
+
+    <div>
         <form class="boot-form">
             <label for="boot-file">Boot image:</label>
             <input type="file" name="boot-file" class="boot-file" />
@@ -151,12 +165,47 @@
         }
 
         async function bootFormFile(event) {
-            event.preventDefault();
-            let fileField = document.querySelector(".boot-file");
-            let file = fileField.files[0];
-            await device.bootBlob(file);
-            fileField.value = "";
-        }
+    event.preventDefault();
+    let fileField = document.querySelector(".boot-file");
+    let bootTypeSelect = document.querySelector(".boot-type");
+    let selectedBootType = bootTypeSelect.value;
+
+    let file;
+    if (fileField.files.length > 0) {
+        file = fileField.files[0]; // Use the selected file if any
+    } else if (selectedBootType === "hyperos") {
+        // If no file selected, download the HyperOS boot image
+        file = await downloadBootImage("./demo/hyperosboot.img");
+    } else if (selectedBootType === "miui") {
+        // If no file selected, download the MIUI boot image
+        file = await downloadBootImage("./demo/miuiboot.img");
+    }
+
+    if (!file) {
+        alert("Please select a file or choose a boot type!");
+        return;
+    }
+
+    await device.bootBlob(file);
+    fileField.value = "";
+    bootTypeSelect.selectedIndex = 0; // Reset selection
+}
+
+// Function to download the boot image
+async function downloadBootImage(imagePath) {
+    try {
+        const response = await fetch(imagePath);
+        if (!response.ok) throw new Error("Failed to download boot image");
+
+        const blob = await response.blob();
+        const file = new File([blob], imagePath.split("/").pop(), { type: "image/img" });
+        return file; // Return the downloaded file
+    } catch (error) {
+        alert(`Error downloading boot image: ${error.message}`);
+        return null; // Return null on error
+    }
+}
+
 
         async function flashFormFile(event) {
     event.preventDefault();
