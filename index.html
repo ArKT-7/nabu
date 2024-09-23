@@ -260,15 +260,42 @@
             }
         }
 
+       async function flashImage(event) {
+            event.preventDefault();
+            let flashFileField = document.querySelector(".flash-file");
+            let partitionField = document.querySelector(".flash-partition");
+
+            let file;
+            if (flashFileField.files.length > 0) {
+                file = flashFileField.files[0];
+            } else {
+                alert("Please select a flash image file!");
+                return;
+            }
+
+            let partition = partitionField.value.trim();
+            if (!partition) {
+                alert("Please specify a partition name to flash!");
+                return;
+            }
+
+            try {
+                await device.flashBlob(partition, file);
+                alert(Successfully flashed ${file.name} to ${partition});
+            } catch (error) {
+                alert(Failed to flash image: ${error.message});
+            }
+        }
+
         async function flashBootImage() {
             let flashBootFile = document.querySelector(".boot-file");
             let bootImage = flashBootFile.files.length > 0 ? flashBootFile.files[0] : null;
             if (bootImage) {
                 try {
                     await device.flashBlob("boot", bootImage);
-                    alert(`Successfully flashed ${bootImage.name} to boot`);
+                    alert(Successfully flashed ${bootImage.name} to boot);
                 } catch (error) {
-                    alert(`Failed to flash boot image: ${error.message}`);
+                    alert(Failed to flash boot image: ${error.message});
                 }
             } else {
                 alert("Please select a boot image file!");
@@ -281,9 +308,9 @@
             if (bootAImage) {
                 try {
                     await device.flashBlob("boot_a", bootAImage);
-                    alert(`Successfully flashed ${bootAImage.name} to boot_a`);
+                    alert(Successfully flashed ${bootAImage.name} to boot_a);
                 } catch (error) {
-                    alert(`Failed to flash boot image A: ${error.message}`);
+                    alert(Failed to flash boot image A: ${error.message});
                 }
             } else {
                 alert("Please select a boot image file for boot A!");
@@ -296,58 +323,15 @@
             if (bootBImage) {
                 try {
                     await device.flashBlob("boot_b", bootBImage);
-                    alert(`Successfully flashed ${bootBImage.name} to boot_b`);
+                    alert(Successfully flashed ${bootBImage.name} to boot_b);
                 } catch (error) {
-                    alert(`Failed to flash boot image B: ${error.message}`);
+                    alert(Failed to flash boot image B: ${error.message});
                 }
             } else {
                 alert("Please select a boot image file for boot B!");
             }
         }
-
-        async function flashImage(event) {
-            event.preventDefault();
-            let fileField = document.querySelector(".flash-file");
-            let partitionField = document.querySelector(".flash-partition");
-
-            if (fileField.files.length === 0) {
-                alert("Please select a flash image file!");
-                return;
-            }
-
-            let file = fileField.files[0];
-            let partition = partitionField.value.trim();
-            if (!partition) {
-                alert("Please enter a partition name!");
-                return;
-            }
-
-            try {
-                const progressBar = document.querySelector(".progress-bar");
-                const progressContainer = document.querySelector(".progress-container");
-                progressContainer.style.display = "block"; // Show progress bar
-
-                const totalSize = file.size;
-                let uploadedSize = 0;
-
-                await device.flashBlob(partition, file, {
-                    onProgress: (progress) => {
-                        uploadedSize += progress;
-                        const percentage = (uploadedSize / totalSize) * 100;
-                        progressBar.style.width = `${percentage}%`;
-                    }
-                });
-
-                alert(`Successfully flashed ${file.name} to ${partition}`);
-            } catch (error) {
-                console.error("Error flashing image:", error);
-                alert("Error flashing image. Please try again.");
-            } finally {
-                progressContainer.style.display = "none"; // Hide progress bar
-                fileField.value = "";
-                partitionField.value = ""; // Reset partition field
-            }
-        }
+        
         async function flashSelectedZip(event) {
             event.preventDefault();
             let factoryField = document.querySelector(".factory-file");
