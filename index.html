@@ -21,10 +21,10 @@
             <input type="text" name="command" class="command-input" />
             <input type="submit" value="Send" />
         </form>
-        <button class="reboot-button">Reboot Device</button> <!-- Reboot button -->
-        <button class="reboot-bootloader-button">Reboot to Bootloader</button> <!-- New reboot to bootloader button -->
-        <button class="reboot-recovery-button">Reboot to Recovery</button> <!-- New reboot to recovery button -->
-        <button class="reboot-fastbootd-button">Reboot to FastbootD</button> <!-- New reboot to FastbootD button -->
+        <button class="reboot-button">Reboot Device</button> 
+        <button class="reboot-bootloader-button">Reboot to Bootloader</button> 
+        <button class="reboot-recovery-button">Reboot to Recovery</button> 
+        <button class="reboot-fastbootd-button">Reboot to FastbootD</button> 
         <p>Result:</p>
         <pre class="result-field"></pre>
     </div>
@@ -53,7 +53,7 @@
         <button class="flash-boot-button" disabled>Flash Boot</button>
         <button class="flash-boot_a-button" disabled>Flash Boot_A</button>
         <button class="flash-boot_b-button" disabled>Flash Boot_B</button>
-        <p class="flash-status-field" aria-live="polite"></p> <!-- Status for flash operations -->
+        <p class="flash-status-field" aria-live="polite"></p> 
     </div>
 
     <hr />
@@ -74,15 +74,12 @@
     </div>
 
     <script type="module">
-        // Importing necessary modules
         import * as fastboot from "./dist/fastboot.mjs";
         import { BlobStore } from "./download.js";
 
         let device = new fastboot.FastbootDevice();
         window.device = device;
         let blobStore = new BlobStore();
-
-        // Enable verbose debug logging
         fastboot.setDebugLevel(2);
 
         async function connectDevice() {
@@ -91,20 +88,16 @@
 
             try {
                 await device.connect();
+                let product = await device.getVariable("product");
+                let serial = await device.getVariable("serialno");
+                statusField.textContent = `Connected to ${product} (serial: ${serial})`;
             } catch (error) {
                 statusField.textContent = `Failed to connect to device: ${error.message}`;
-                return;
             }
-
-            let product = await device.getVariable("product");
-            let serial = await device.getVariable("serialno");
-            let status = `Connected to ${product} (serial: ${serial})`;
-            statusField.textContent = status;
         }
 
         async function sendFormCommand(event) {
             event.preventDefault();
-
             let inputField = document.querySelector(".command-input");
             let command = inputField.value;
             let result = (await device.runCommand(command)).text;
@@ -113,32 +106,31 @@
         }
 
         async function rebootDevice() {
-            let command = "reboot"; // Command to send
+            let command = "reboot";
             let result = (await device.runCommand(command)).text;
-            document.querySelector(".result-field").textContent = result; // Display result
+            document.querySelector(".result-field").textContent = result;
         }
 
         async function rebootToBootloader() {
-            let command = "reboot-bootloader"; // Command to send
+            let command = "reboot-bootloader";
             let result = (await device.runCommand(command)).text;
-            document.querySelector(".result-field").textContent = result; // Display result
+            document.querySelector(".result-field").textContent = result;
         }
 
         async function rebootToRecovery() {
-            let command = "reboot-recovery"; // Command to send
+            let command = "reboot-recovery";
             let result = (await device.runCommand(command)).text;
-            document.querySelector(".result-field").textContent = result; // Display result
+            document.querySelector(".result-field").textContent = result;
         }
 
         async function rebootToFastbootD() {
-            let command = "reboot-fastboot"; // Command to send
+            let command = "reboot-fastboot";
             let result = (await device.runCommand(command)).text;
-            document.querySelector(".result-field").textContent = result; // Display result
+            document.querySelector(".result-field").textContent = result;
         }
 
         async function bootFormFile(event) {
             event.preventDefault();
-
             let fileField = document.querySelector(".boot-file");
             let file = fileField.files[0];
             await device.bootBlob(file);
@@ -147,15 +139,15 @@
 
         async function flashFormFile(event) {
             event.preventDefault();
-
             let fileField = document.querySelector(".flash-file");
             let partField = document.querySelector(".flash-partition");
             let file = fileField.files[0];
-            
+
             if (!file) {
                 alert("Please select a file to flash.");
                 return;
             }
+
             await device.flashBlob(partField.value, file);
             fileField.value = "";
             partField.value = "";
@@ -164,7 +156,6 @@
         async function flashFactoryZip(blob) {
             let statusField = document.querySelector(".factory-status-field");
             statusField.textContent = "Flashing...";
-
             let progressBar = document.querySelector(".factory-progress-bar");
 
             try {
@@ -172,44 +163,37 @@
                     blob,
                     false,
                     reconnectCallback,
-                    // Progress callback
                     (action, item, progress) => {
                         let userAction = fastboot.USER_ACTION_MAP[action];
                         statusField.textContent = `${userAction} ${item}`;
                         progressBar.value = progress;
                     }
                 );
+                statusField.textContent = "Successfully flashed factory images";
             } catch (error) {
                 statusField.textContent = `Failed to flash zip: ${error.message}`;
-                throw error;
             }
-
-            statusField.textContent = "Successfully flashed factory images";
         }
 
         async function flashSelectedFactoryZip(event) {
             event.preventDefault();
-
             let fileField = document.querySelector(".factory-file");
             await flashFactoryZip(fileField.files[0]);
             fileField.value = "";
         }
 
-        // Function to enable/disable flash buttons based on file selection
         function updateFlashButtons() {
-        let fileField = document.querySelector(".flash-file");
-        let flashBootButton = document.querySelector(".flash-boot-button");
-        let flashBootAButton = document.querySelector(".flash-boot_a-button");
-        let flashBootBButton = document.querySelector(".flash-boot_b-button");
+            let fileField = document.querySelector(".flash-file");
+            let flashBootButton = document.querySelector(".flash-boot-button");
+            let flashBootAButton = document.querySelector(".flash-boot_a-button");
+            let flashBootBButton = document.querySelector(".flash-boot_b-button");
+            let isFileSelected = fileField.files.length > 0;
 
-        let isFileSelected = fileField.files.length > 0;
-
-        flashBootButton.disabled = !isFileSelected;
-        flashBootAButton.disabled = !isFileSelected;
-        flashBootBButton.disabled = !isFileSelected;
+            flashBootButton.disabled = !isFileSelected;
+            flashBootAButton.disabled = !isFileSelected;
+            flashBootBButton.disabled = !isFileSelected;
         }
 
-        // Function to flash the boot partition
         async function flashBoot() {
             let fileField = document.querySelector(".flash-file");
             let file = fileField.files[0];
@@ -222,7 +206,6 @@
             }
         }
 
-        // Function to flash the boot_a partition
         async function flashBootA() {
             let fileField = document.querySelector(".flash-file");
             let file = fileField.files[0];
@@ -235,7 +218,6 @@
             }
         }
 
-        // Function to flash the boot_b partition
         async function flashBootB() {
             let fileField = document.querySelector(".flash-file");
             let file = fileField.files[0];
@@ -248,7 +230,6 @@
             }
         }
 
-        // Adding event listeners for the new buttons
         document.querySelector(".flash-boot-button").addEventListener("click", flashBoot);
         document.querySelector(".flash-boot_a-button").addEventListener("click", flashBootA);
         document.querySelector(".flash-boot_b-button").addEventListener("click", flashBootB);
