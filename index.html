@@ -166,16 +166,16 @@
                 file = fileField.files[0]; // Use the selected file if any
             } else if (selectedBootType === "twrp-nabu") {
                 // If no file selected, download the MIUI boot image
-                file = await downloadBootImage("./demo/twrp-nabu.img");
+                file = await downloadBootImage("./bin/twrp-nabu.img");
             } else if (selectedBootType === "win-uefi-nabu") {
                 // If no file selected, download the MIUI boot image
-                file = await downloadBootImage("./demo/uefi-nabu.img");
+                file = await downloadBootImage("./bin/uefi-nabu.img");
             } else if (selectedBootType === "twrp-mod-nabu") {
                 // If no file selected, download the HyperOS boot image
-                file = await downloadBootImage("./demo/twrp-modded-nabu.img");
+                file = await downloadBootImage("./bin/twrp-modded-nabu.img");
             } else if (selectedBootType === "orangefox-mod-nabu") {
                 // If no file selected, download the MIUI boot image
-                file = await downloadBootImage("./demo/orangefox-modded-nabu.img");
+                file = await downloadBootImage("./bin/orangefox-modded-nabu.img");
             }
 
             if (!file) {
