@@ -129,6 +129,21 @@ fastboot.configureZip({
     },
 });
 
+async function sendRebootCommand() {
+    let statusField = document.querySelector(".result-field");
+
+    try {
+        let result = (await device.runCommand("reboot")).text;
+        statusField.textContent = result;
+    } catch (error) {
+        statusField.textContent = `Failed to send reboot command: ${error.message}`;
+    }
+}
+
+document
+    .querySelector(".reboot-button")
+    .addEventListener("click", sendRebootCommand);
+
 document
     .querySelector(".command-form")
     .addEventListener("submit", sendFormCommand);
