@@ -97,6 +97,8 @@
                 <option value="hyperos">HyperOS Boot</option>
                 <option value="miui">MIUI OS Boot</option>
             </select>
+            <button type="button" class="choose-file-button">Use Selected File</button>
+            <button type="button" class="use-dropdown-button">Use Boot Type</button>
             <input type="submit" value="Boot" />
         </form>
     </div>
@@ -213,7 +215,14 @@
             let file;
             if (fileField.files.length > 0) {
                 file = fileField.files[0];
-            } else if (selectedBootType === "uefi-nabu") {
+            }
+
+            if (!file && !selectedBootType) {
+                alert("Please select a file or choose a boot type!");
+                return;
+            }
+
+            if (selectedBootType === "uefi-nabu") {
                 file = await downloadBootImage("./demo/uefi-nabu.img");
             } else if (selectedBootType === "hyperos") {
                 file = await downloadBootImage("./demo/orangefox-modded.img");
@@ -222,7 +231,7 @@
             }
 
             if (!file) {
-                alert("Please select a file or choose a boot type!");
+                alert("Please select a valid boot file or boot type!");
                 return;
             }
 
@@ -237,57 +246,33 @@
                 if (!response.ok) throw new Error("Failed to download boot image");
 
                 const blob = await response.blob();
-                const file = new File([blob], imagePath.split("/").pop(), { type: "image/img" });
-                return file;
+                return blob;
             } catch (error) {
                 alert(`Error downloading boot image: ${error.message}`);
-                return null;
             }
         }
 
-        async function flashFormFile(event) {
+        async function flashImage(event) {
             event.preventDefault();
             let fileField = document.querySelector(".flash-file");
-            let partField = document.querySelector(".flash-partition");
+            let partitionField = document.querySelector(".flash-partition");
+
+            if (fileField.files.length === 0) {
+                alert("Please select a flash image file.");
+                return;
+            }
+
+            if (partitionField.value.trim() === "") {
+                alert("Please specify a partition to flash.");
+                return;
+            }
+
             let file = fileField.files[0];
+            let partition = partitionField.value;
 
-            if (!file) {
-                alert("Please select a file to flash!");
-                return;
-            }
-
-            if (!partField.value) {
-                alert("Please specify a partition to flash!");
-                return;
-            }
-
-            await device.flashBlob(file, partField.value);
+            await device.flashBlob(file, partition);
             fileField.value = "";
-            partField.value = "";
-        }
-
-        async function flashCustomFactoryImages(event) {
-            event.preventDefault();
-            let factoryFileField = document.querySelector(".factory-file");
-            let factoryFile = factoryFileField.files[0];
-
-            if (!factoryFile) {
-                alert("Please select a factory images ZIP file!");
-                return;
-            }
-
-            let statusField = document.querySelector(".factory-status-field");
-            let progressBar = document.querySelector(".factory-progress-bar");
-            statusField.textContent = "Flashing custom factory images...";
-
-            try {
-                await device.flashCustomFactory(factoryFile);
-                statusField.textContent = "Flash successful!";
-            } catch (error) {
-                statusField.textContent = `Flash failed: ${error.message}`;
-            } finally {
-                progressBar.value = 0;
-            }
+            partitionField.value = "";
         }
 
         document.querySelector(".connect-button").addEventListener("click", connectDevice);
@@ -297,8 +282,7 @@
         document.querySelector(".reboot-recovery-button").addEventListener("click", rebootToRecovery);
         document.querySelector(".reboot-fastbootd-button").addEventListener("click", rebootToFastbootD);
         document.querySelector(".boot-form").addEventListener("submit", bootFormFile);
-        document.querySelector(".flash-form").addEventListener("submit", flashFormFile);
-        document.querySelector(".factory-form").addEventListener("submit", flashCustomFactoryImages);
+        document.querySelector(".flash-form").addEventListener("submit", flashImage);
     </script>
 </body>
 </html>
