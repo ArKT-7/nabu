@@ -32,19 +32,21 @@
     <hr />
 
     <div>
-        <form class="boot-form">
-            <label for="boot-file">Boot image:</label>
-            <input type="file" name="boot-file" class="boot-file" />
-            <select name="boot-type" class="boot-type">
-                <option value="">Select Boot Type</option>
-                <option value="twrp-nabu">Twrp Recovery Nabu</option>
-                <option value="win-uefi-nabu">Windows UEFI Boot Nabu</option>
-                <option value="twrp-mod-nabu">Twrp Modded Recovery Nabu</option>
-                <option value="orangefox-mod-nabu">OrangeFox Modded Recovery Nabu</option>
-            </select>
-            <input type="submit" value="Boot" />
-        </form>
-    </div>
+    <form class="boot-form">
+        <label for="boot-file">Boot image:</label>
+        <input type="file" name="boot-file" class="boot-file" />
+        <select name="boot-type" class="boot-type">
+            <option value="">Select Boot Type</option>
+            <option value="twrp-nabu">Twrp Recovery Nabu</option>
+            <option value="win-uefi-nabu">Windows UEFI Boot Nabu</option>
+            <option value="twrp-mod-nabu">Twrp Modded Recovery Nabu</option>
+            <option value="orangefox-mod-nabu">OrangeFox Modded Recovery Nabu</option>
+        </select>
+        <input type="submit" value="Boot" />
+        <progress class="download-progress" max="100" value="0" style="display:none;"></progress>
+    </form>
+</div>
+
 
     <hr />
 
