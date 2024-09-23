@@ -192,18 +192,46 @@
 
         // Function to download the boot image
         async function downloadBootImage(imagePath) {
-            try {
-                const response = await fetch(imagePath);
-                if (!response.ok) throw new Error("Failed to download boot image");
+    try {
+        const response = await fetch(imagePath);
+        if (!response.ok) throw new Error("Failed to download boot image");
 
-                const blob = await response.blob();
-                const file = new File([blob], imagePath.split("/").pop(), { type: "image/img" });
-                return file; // Return the downloaded file
-            } catch (error) {
-                alert(`Error downloading boot image: ${error.message}`);
-                return null; // Return null on error
-            }
+        // Get the total size of the file
+        const contentLength = response.headers.get("Content-Length");
+        const total = parseInt(contentLength, 10);
+        let loaded = 0;
+
+        const progressBar = document.querySelector(".download-progress");
+        progressBar.style.display = "block"; // Show the progress bar
+
+        // Create a reader to read the response body
+        const reader = response.body.getReader();
+        const chunks = []; // Store the downloaded chunks
+
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            chunks.push(value);
+            loaded += value.length;
+
+            // Update the progress bar
+            const percentage = (loaded / total) * 100;
+            progressBar.value = percentage;
         }
+
+        // Concatenate all the chunks into a single blob
+        const blob = new Blob(chunks);
+        const file = new File([blob], imagePath.split("/").pop(), { type: "image/img" });
+
+        progressBar.style.display = "none"; // Hide the progress bar
+        return file; // Return the downloaded file
+    } catch (error) {
+        alert(`Error downloading boot image: ${error.message}`);
+        return null; // Return null on error
+    }
+}
+
 
         async function flashFormFile(event) {
             event.preventDefault();
