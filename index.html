@@ -23,7 +23,8 @@
         </form>
         <button class="reboot-button">Reboot Device</button> <!-- Reboot button -->
         <button class="reboot-bootloader-button">Reboot to Bootloader</button> <!-- New reboot to bootloader button -->
-        <button class="reboot-recovery-button">Reboot to Recovery</button> <!-- New reboot to bootloader button -->
+        <button class="reboot-recovery-button">Reboot to Recovery</button> <!-- New reboot to recovery button -->
+        <button class="reboot-fastbootd-button">Reboot to FastbootD</button> <!-- New reboot to FastbootD button -->
         <p>Result:</p>
         <pre class="result-field"></pre>
     </div>
@@ -125,6 +126,12 @@
             document.querySelector(".result-field").textContent = result; // Display result
         }
 
+        async function rebootToFastbootD() {
+            let command = "reboot-fastboot"; // Command to send
+            let result = (await device.runCommand(command)).text;
+            document.querySelector(".result-field").textContent = result; // Display result
+        }
+
         async function bootFormFile(event) {
             event.preventDefault();
 
@@ -193,7 +200,8 @@
         document.querySelector(".factory-form").addEventListener("submit", flashSelectedFactoryZip);
         document.querySelector(".reboot-button").addEventListener("click", rebootDevice); // Event listener for reboot button
         document.querySelector(".reboot-bootloader-button").addEventListener("click", rebootToBootloader); // Event listener for reboot to bootloader button
-        document.querySelector(".reboot-recovery-button").addEventListener("click", rebootToRecovery); // Event listener for reboot to bootloader button
+        document.querySelector(".reboot-recovery-button").addEventListener("click", rebootToRecovery); // Event listener for reboot to Recovery button
+        document.querySelector(".reboot-fastbootd-button").addEventListener("click", rebootToFastbootD); // Event listener for reboot to Recovery button
     </script>
 </body>
 </html>
