@@ -110,11 +110,14 @@
         async function connectDevice() {
             let statusField = document.querySelector(".status-field");
             statusField.textContent = "Connecting...";
+            // Disable the button while connecting
+            document.querySelector(".connect-button").disabled = true;
 
             try {
                 await device.connect();
             } catch (error) {
                 statusField.textContent = `Failed to connect to device: ${error.message}`;
+                document.querySelector(".connect-button").disabled = false; // Re-enable the button
                 return;
             }
 
@@ -135,6 +138,7 @@
             }
 
             statusField.innerHTML = status;
+            document.querySelector(".connect-button").disabled = false; // Re-enable the button after connecting
         }
 
         async function sendFormCommand(event) {
@@ -216,72 +220,13 @@
                 case "twrp-nabu":
                     return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/twrp-nabu.img";
                 case "win-uefi-nabu":
-                    return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/uefi-nabu.img";
+                    return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/win-uefi-nabu.img";
                 case "twrp-mod-nabu":
-                    return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/twrp-modded-nabu.img";
+                    return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/twrp-mod-nabu.img";
                 case "orangefox-mod-nabu":
-                    return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/orangefox-modded-nabu.img";
+                    return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/orangefox-mod-nabu.img";
                 default:
                     return null;
-            }
-        }
-
-        async function downloadBootImage(imagePath) {
-            const progressBarContainer = document.querySelector('.progress-container');
-            const progressBar = document.querySelector('.progress-bar');
-            progressBarContainer.style.display = 'block'; // Show the progress bar
-
-            try {
-                const response = await fetch(imagePath);
-                if (!response.ok) throw new Error("Failed to download boot image");
-
-                const contentLength = response.headers.get('Content-Length');
-                const total = parseInt(contentLength, 10);
-                let loaded = 0;
-
-                const reader = response.body.getReader();
-                while (true) {
-                    const { done, value } = await reader.read();
-                    if (done) break;
-
-                    loaded += value.length;
-                    progressBar.style.width = `${(loaded / total) * 100}%`;
-                }
-
-                const blob = await response.blob();
-                return blob;
-            } catch (error) {
-                console.error("Error downloading image:", error);
-                alert("Error downloading image. Please try again.");
-            } finally {
-                progressBarContainer.style.display = 'none'; // Hide the progress bar
-            }
-        }
-
-        async function flashImage(event) {
-            event.preventDefault();
-            let flashFileField = document.querySelector(".flash-file");
-            let partitionField = document.querySelector(".flash-partition");
-
-            let file;
-            if (flashFileField.files.length > 0) {
-                file = flashFileField.files[0];
-            } else {
-                alert("Please select a flash image file!");
-                return;
-            }
-
-            let partition = partitionField.value.trim();
-            if (!partition) {
-                alert("Please specify a partition name to flash!");
-                return;
-            }
-
-            try {
-                await device.flashBlob(partition, file);
-                alert(Successfully flashed ${file.name} to ${partition});
-            } catch (error) {
-                alert(Failed to flash image: ${error.message});
             }
         }
 
@@ -291,9 +236,9 @@
             if (bootImage) {
                 try {
                     await device.flashBlob("boot", bootImage);
-                    alert(Successfully flashed ${bootImage.name} to boot);
+                    alert(`Successfully flashed ${bootImage.name} to boot`);
                 } catch (error) {
-                    alert(Failed to flash boot image: ${error.message});
+                    alert(`Failed to flash boot image: ${error.message}`);
                 }
             } else {
                 alert("Please select a boot image file!");
@@ -306,9 +251,9 @@
             if (bootAImage) {
                 try {
                     await device.flashBlob("boot_a", bootAImage);
-                    alert(Successfully flashed ${bootAImage.name} to boot_a);
+                    alert(`Successfully flashed ${bootAImage.name} to boot_a`);
                 } catch (error) {
-                    alert(Failed to flash boot image A: ${error.message});
+                    alert(`Failed to flash boot image A: ${error.message}`);
                 }
             } else {
                 alert("Please select a boot image file for boot A!");
@@ -321,27 +266,72 @@
             if (bootBImage) {
                 try {
                     await device.flashBlob("boot_b", bootBImage);
-                    alert(Successfully flashed ${bootBImage.name} to boot_b);
+                    alert(`Successfully flashed ${bootBImage.name} to boot_b`);
                 } catch (error) {
-                    alert(Failed to flash boot image B: ${error.message});
+                    alert(`Failed to flash boot image B: ${error.message}`);
                 }
             } else {
                 alert("Please select a boot image file for boot B!");
             }
         }
 
-        // Event Listeners
-        document.querySelector(".connect-button").addEventListener("click", connectDevice);
-        document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
-        document.querySelector(".reboot-button").addEventListener("click", rebootDevice);
-        document.querySelector(".reboot-bootloader-button").addEventListener("click", rebootToBootloader);
-        document.querySelector(".reboot-recovery-button").addEventListener("click", rebootToRecovery);
-        document.querySelector(".reboot-fastbootd-button").addEventListener("click", rebootToFastbootD);
-        document.querySelector(".boot-form").addEventListener("submit", bootFormFile);
-        document.querySelector(".flash-form").addEventListener("submit", flashImage);
-        document.querySelector(".flash-boot-button").addEventListener("click", flashBootImage);
-        document.querySelector(".flash-boot-a-button").addEventListener("click", flashBootAImage);
-        document.querySelector(".flash-boot-b-button").addEventListener("click", flashBootBImage);
+        async function flashImage(event) {
+            event.preventDefault();
+            let fileField = document.querySelector(".flash-file");
+            let partitionField = document.querySelector(".flash-partition");
+
+            if (fileField.files.length === 0) {
+                alert("Please select a flash image file!");
+                return;
+            }
+
+            let file = fileField.files[0];
+            let partition = partitionField.value.trim();
+            if (!partition) {
+                alert("Please enter a partition name!");
+                return;
+            }
+
+            try {
+                const progressBar = document.querySelector(".progress-bar");
+                const progressContainer = document.querySelector(".progress-container");
+                progressContainer.style.display = "block"; // Show progress bar
+
+                const totalSize = file.size;
+                let uploadedSize = 0;
+
+                await device.flashBlob(partition, file, {
+                    onProgress: (progress) => {
+                        uploadedSize += progress;
+                        const percentage = (uploadedSize / totalSize) * 100;
+                        progressBar.style.width = `${percentage}%`;
+                    }
+                });
+
+                alert(`Successfully flashed ${file.name} to ${partition}`);
+            } catch (error) {
+                console.error("Error flashing image:", error);
+                alert("Error flashing image. Please try again.");
+            } finally {
+                progressContainer.style.display = "none"; // Hide progress bar
+                fileField.value = "";
+                partitionField.value = ""; // Reset partition field
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelector(".connect-button").addEventListener("click", connectDevice);
+            document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
+            document.querySelector(".reboot-button").addEventListener("click", rebootDevice);
+            document.querySelector(".reboot-bootloader-button").addEventListener("click", rebootToBootloader);
+            document.querySelector(".reboot-recovery-button").addEventListener("click", rebootToRecovery);
+            document.querySelector(".reboot-fastbootd-button").addEventListener("click", rebootToFastbootD);
+            document.querySelector(".boot-form").addEventListener("submit", bootFormFile);
+            document.querySelector(".flash-form").addEventListener("submit", flashImage);
+            document.querySelector(".flash-boot-button").addEventListener("click", flashBootImage);
+            document.querySelector(".flash-boot-a-button").addEventListener("click", flashBootAImage);
+            document.querySelector(".flash-boot-b-button").addEventListener("click", flashBootBImage);
+        });
     </script>
 </body>
 </html>
