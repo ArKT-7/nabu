@@ -1,215 +1,205 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    />
-    <title>Flash .img Files by ArKt</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap"
-      rel="stylesheet"
-    />
-    <!-- Update paths for scripts based on their locations -->
-    <script src="dist/fastboot.mjs" type="module"></script>
-    <script src="download.js" type="module"></script>
-    <script src="ui.js" type="module"></script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flash .img files by ArKt</title>
+    <link rel="icon" href="https://img.icons8.com/fluency/48/windows-95.png" type="image/png">
     <style>
-      :root {
-        --primary-color: #1a73e8;
-        --secondary-color: #d3d3d3;
-        --background-color: #121212;
-        --text-color: #ffffff;
-        --button-bg-color: #2c2c2c;
-        --button-hover-bg-color: #3c3c3c;
-        --input-bg-color: #1e1e1e;
-        --input-text-color: #e0e0e0;
-        --border-radius: 12px;
-      }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #202124, #18191A);
+            color: #e8eaed;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #202124;
+        }
 
-      * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-        font-family: 'Roboto', sans-serif;
-      }
+        .container {
+            background: linear-gradient(135deg, #1c1f24, #3a3f44);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0px 15px 40px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            overflow: hidden;
+        }
 
-      body {
-        background-color: var(--background-color);
-        color: var(--text-color);
-        padding: 20px;
-      }
+        h2 {
+            color: #f8f9fa;
+            font-size: 24px;
+            margin: 10px 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #00d1ff, #0052cc);
+            -webkit-background-clip: text;
+            color: transparent;
+            animation: textGlow 3s ease-in-out infinite;
+        }
 
-      h3 {
-        margin: 0 0 15px 0;
-      }
+        form {
+            margin: 20px 0;
+            text-align: left;
+        }
 
-      div {
-        margin-bottom: 20px;
-        padding: 20px;
-        background-color: var(--button-bg-color);
-        border-radius: var(--border-radius);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-      }
+        label {
+            font-size: 16px;
+            color: #00FFFF;
+            margin-bottom: 5px;
+            display: block;
+        }
 
-      p {
-        font-size: 1.2rem;
-        margin-bottom: 15px;
-      }
+        input[type="text"], input[type="file"], input[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 12px;
+            border: none;
+            font-size: 16px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
 
-      button {
-        background-color: var(--button-bg-color);
-        color: var(--text-color);
-        border: none;
-        padding: 10px 20px;
-        font-size: 1rem;
-        border-radius: var(--border-radius);
-        cursor: pointer;
-        transition: background-color 0.2s ease;
-      }
+        input[type="text"], input[type="file"] {
+            background-color: #333;
+            color: #00FFFF;
+        }
 
-      button:hover {
-        background-color: var(--button-hover-bg-color);
-      }
+        input[type="submit"] {
+            background: linear-gradient(135deg, #0052cc, #3f87ff);
+            color: #fff;
+            cursor: pointer;
+        }
 
-      form {
-        display: flex;
-        flex-direction: column;
-      }
+        input[type="submit"]:hover {
+            transform: scale(1.05);
+        }
 
-      label {
-        margin-bottom: 8px;
-        font-weight: 500;
-      }
+        input[type="submit"]:active {
+            transform: scale(1);
+        }
 
-      input[type='text'],
-      input[type='file'] {
-        padding: 10px;
-        background-color: var(--input-bg-color);
-        color: var(--input-text-color);
-        border: 1px solid var(--secondary-color);
-        border-radius: var(--border-radius);
-        margin-bottom: 10px;
-      }
+        .status-field, .result-field, .factory-status-field, .factory-flash-log {
+            background-color: #1c1f24;
+            color: #00ff00;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
 
-      input[type='submit'] {
-        background-color: var(--primary-color);
-        color: var(--text-color);
-        border: none;
-        padding: 10px;
-        border-radius: var(--border-radius);
-        cursor: pointer;
-        transition: background-color 0.2s ease;
-      }
+        hr {
+            border: 0.5px solid #333;
+            margin: 20px 0;
+        }
 
-      input[type='submit']:hover {
-        background-color: #0f5bd6;
-      }
+        button {
+            background: linear-gradient(135deg, #0052cc, #3f87ff);
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: none;
+            font-size: 16px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
 
-      hr {
-        border: none;
-        height: 1px;
-        background-color: var(--secondary-color);
-        margin: 20px 0;
-      }
+        button:hover {
+            transform: scale(1.05);
+        }
 
-      .status-field,
-      .factory-status-field,
-      .result-field,
-      .factory-flash-log {
-        background-color: var(--input-bg-color);
-        color: var(--input-text-color);
-        padding: 10px;
-        border-radius: var(--border-radius);
-      }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #333;
+            border-radius: 12px;
+            margin-top: 10px;
+        }
 
-      .command-form,
-      .boot-form,
-      .flash-form,
-      .factory-form {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-      }
+        progress {
+            width: 100%;
+            border-radius: 12px;
+            background-color: #333;
+        }
 
-      .factory-progress-bar {
-        width: 100%;
-        height: 8px;
-        border-radius: var(--border-radius);
-        background-color: var(--secondary-color);
-      }
-
-      pre {
-        white-space: pre-wrap;
-        word-wrap: break-word;
-      }
-
-      .download-zip-button,
-      .flash-zip-button,
-      .reconnect-button {
-        margin-top: 10px;
-      }
+        @keyframes textGlow {
+            0% { text-shadow: 0 0 5px #00d1ff; }
+            50% { text-shadow: 0 0 10px #0052cc; }
+            100% { text-shadow: 0 0 5px #00d1ff; }
+        }
     </style>
-  </head>
+</head>
+<body>
+    <div class="container">
+        <h2>Flash .img Files by ArKt</h2>
+        
+        <div>
+            <p>Status: <span class="status-field">Not connected in Fastboot</span></p>
+            <button class="connect-button">Connect device Fastboot</button>
+        </div>
 
-  <body>
-    <div>
-      <p>Status: <span class="status-field">Not connected in Fastboot</span></p>
-      <button class="connect-button">Connect device Fastboot</button>
+        <hr />
+
+        <div>
+            <form class="command-form">
+                <label for="command">Command without fastboot lol:</label>
+                <input type="text" name="command" class="command-input" />
+                <input type="submit" value="Send" />
+            </form>
+            <p>Result:</p>
+            <pre class="result-field"></pre>
+        </div>
+
+        <hr />
+
+        <div>
+            <form class="boot-form">
+                <label for="boot-file">Boot image:</label>
+                <input type="file" name="boot-file" class="boot-file" />
+                <input type="submit" value="Boot" />
+            </form>
+        </div>
+
+        <hr />
+
+        <div>
+            <form class="flash-form">
+                <label for="flash-file">Flash image:</label>
+                <input type="file" name="flash-file" class="flash-file" />
+                <br />
+                <label for="flash-partition">Partition:</label>
+                <input type="text" name="flash-partition" class="flash-partition" />
+                <input type="submit" value="Flash" />
+            </form>
+        </div>
+
+        <hr />
+
+        <div>
+            <p>Status: <span class="factory-status-field"></span></p>
+            <progress class="factory-progress-bar" max="1" value="0"></progress>
+            <button class="reconnect-button" style="display: none;">Reconnect device</button>
+            <form class="factory-form">
+                <label for="factory-file">Flash custom factory images zip:</label>
+                <input type="file" name="factory-file" class="factory-file" />
+                <input type="submit" value="Flash selected zip" />
+            </form>
+            <br />
+            <span>Flash test zip (only works locally):</span>
+            <br />
+            <button class="download-zip-button">Download taimen factory zip</button>
+            <br />
+            <button class="flash-zip-button">Flash downloaded zip</button>
+            <br />
+            <pre class="factory-flash-log"></pre>
+        </div>
     </div>
-
-    <hr />
-
-    <div>
-      <form class="command-form">
-        <label for="command">Command without fastboot lol:</label>
-        <input type="text" name="command" class="command-input" />
-        <input type="submit" value="Send" />
-      </form>
-      <p>Result:</p>
-      <pre class="result-field"></pre>
-    </div>
-
-    <hr />
-
-    <div>
-      <form class="boot-form">
-        <label for="boot-file">Boot image:</label>
-        <input type="file" name="boot-file" class="boot-file" />
-        <input type="submit" value="Boot" />
-      </form>
-    </div>
-
-    <hr />
-
-    <div>
-      <form class="flash-form">
-        <label for="flash-file">Flash image:</label>
-        <input type="file" name="flash-file" class="flash-file" />
-        <label for="flash-partition">Partition:</label>
-        <input type="text" name="flash-partition" class="flash-partition" />
-        <input type="submit" value="Flash" />
-      </form>
-    </div>
-
-    <hr />
-
-    <div>
-      <p>Status: <span class="factory-status-field"></span></p>
-      <progress class="factory-progress-bar" max="1" value="0"></progress>
-      <button class="reconnect-button" style="display: none;">
-        <h3>Reconnect device</h3>
-      </button>
-      <form class="factory-form">
-        <label for="factory-file">Flash custom factory images zip:</label>
-        <input type="file" name="factory-file" class="factory-file" />
-        <input type="submit" value="Flash selected zip" />
-      </form>
-      <span>Flash test zip (only works locally):</span>
-      <button class="download-zip-button">Download taimen factory zip</button>
-      <button class="flash-zip-button">Flash downloaded zip</button>
-      <pre class="factory-flash-log"></pre>
-    </div>
-  </body>
+</body>
 </html>
