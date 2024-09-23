@@ -132,6 +132,11 @@ fastboot.configureZip({
 async function sendRebootCommand() {
     let statusField = document.querySelector(".result-field");
 
+    if (!device.connected) {
+        statusField.textContent = "Device is not connected!";
+        return;
+    }
+
     try {
         let result = (await device.runCommand("reboot")).text;
         statusField.textContent = result;
@@ -140,9 +145,14 @@ async function sendRebootCommand() {
     }
 }
 
+
 document
     .querySelector(".reboot-button")
-    .addEventListener("click", sendRebootCommand);
+    .addEventListener("click", () => {
+        console.log("Reboot button clicked");
+        sendRebootCommand();
+    });
+
 
 document
     .querySelector(".command-form")
