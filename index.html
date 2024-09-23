@@ -44,7 +44,6 @@
     <div>
         <form class="flash-form">
             <label for="flash-file">Flash image lol:</label>
-            <input type="file" name="flash-file" class="flash-file" onchange="updateFlashButtons()" />
             <br />
             <label for="flash-partition">Partition:</label>
             <input type="text" name="flash-partition" class="flash-partition" />
@@ -180,18 +179,6 @@
             let fileField = document.querySelector(".factory-file");
             await flashFactoryZip(fileField.files[0]);
             fileField.value = "";
-        }
-
-        function updateFlashButtons() {
-            let fileField = document.querySelector(".flash-file");
-            let flashBootButton = document.querySelector(".flash-boot-button");
-            let flashBootAButton = document.querySelector(".flash-boot_a-button");
-            let flashBootBButton = document.querySelector(".flash-boot_b-button");
-            let isFileSelected = fileField.files.length > 0;
-
-            flashBootButton.disabled = !isFileSelected;
-            flashBootAButton.disabled = !isFileSelected;
-            flashBootBButton.disabled = !isFileSelected;
         }
 
         async function flashBoot() {
