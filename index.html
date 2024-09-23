@@ -4,77 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flash .img files by ArKt</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Link to an external CSS file -->
     <script src="dist/fastboot.mjs" type="module"></script>
     <script src="download.js" type="module"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 20px;
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        div {
-            margin: 20px 0;
-            padding: 15px;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        label {
-            margin-right: 10px;
-        }
-        input[type="text"],
-        input[type="file"],
-        select {
-            padding: 8px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            width: calc(100% - 20px);
-        }
-        input[type="submit"],
-        button {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 10px 15px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        input[type="submit"]:hover,
-        button:hover {
-            background-color: #218838;
-        }
-        progress {
-            width: 100%;
-            margin-top: 10px;
-        }
-        .status-field, .factory-status-field {
-            font-weight: bold;
-            color: #d9534f; /* Bootstrap danger color */
-        }
-    </style>
 </head>
 <body>
-    <h1>Flash .img files by ArKt</h1>
-
     <div>
-        <p>Status: <span class="status-field">Not connected (Please connect device in Fastboot mode)</span></p>
-        <button class="connect-button">Connect Device in Fastboot</button>
+        <p>Status: <span class="status-field">Not connected in Fastboot</span></p>
+        <button class="connect-button">Connect device Fastboot</button>
     </div>
-
+    
     <hr />
 
     <div>
         <form class="command-form">
-            <label for="command">Command without Fastboot:</label>
-            <input type="text" name="command" class="command-input" required />
+            <label for="command">Command without fastboot:</label>
+            <input type="text" name="command" class="command-input" />
             <input type="submit" value="Send" />
         </form>
         <button class="reboot-button">Reboot Device</button>
@@ -89,16 +33,14 @@
 
     <div>
         <form class="boot-form">
-            <label for="boot-file">Boot Image:</label>
-            <input type="file" name="boot-file" class="boot-file" required />
+            <label for="boot-file">Boot image:</label>
+            <input type="file" name="boot-file" class="boot-file" />
             <select name="boot-type" class="boot-type">
                 <option value="">Select Boot Type</option>
-                <option value="uefi-nabu">UEFI WINDOWS BOOT</option>
+                <option value="uefi">Windows UEFI Boot</option>
                 <option value="hyperos">HyperOS Boot</option>
                 <option value="miui">MIUI OS Boot</option>
             </select>
-            <button type="button" class="choose-file-button">Use Selected File</button>
-            <button type="button" class="use-dropdown-button">Use Boot Type</button>
             <input type="submit" value="Boot" />
         </form>
     </div>
@@ -107,11 +49,11 @@
 
     <div>
         <form class="flash-form">
-            <label for="flash-file">Flash Image:</label>
-            <input type="file" name="flash-file" class="flash-file" required />
+            <label for="flash-file">Flash image:</label>
+            <input type="file" name="flash-file" class="flash-file" />
             <br />
             <label for="flash-partition">Partition:</label>
-            <input type="text" name="flash-partition" class="flash-partition" placeholder="e.g., boot, boot_a, boot_b" required />
+            <input type="text" name="flash-partition" class="flash-partition" />
             <input type="submit" value="Flash" />
         </form>
         <button class="flash-boot-button">Flash Boot</button>
@@ -124,13 +66,16 @@
     <div>
         <p>Status: <span class="factory-status-field"></span></p>
         <progress class="factory-progress-bar" max="1" value="0"></progress>
-        <button class="reconnect-button" style="display: none;">Reconnect Device</button>
+        <button class="reconnect-button" style="display: none;"><h3>Reconnect device</h3></button>
         <br />
         <form class="factory-form">
-            <label for="factory-file">Flash Custom Factory Images ZIP:</label>
-            <input type="file" name="factory-file" class="factory-file" required />
-            <input type="submit" value="Flash Selected ZIP" />
+            <label for="factory-file">Flash custom factory images zip:</label>
+            <br />
+            <input type="file" name="factory-file" class="factory-file" />
+            <br />
+            <input type="submit" value="Flash selected zip" />
         </form>
+        <br />
     </div>
 
     <script type="module">
@@ -158,6 +103,7 @@
             let slot = await device.getVariable("current-slot");
             let serial = await device.getVariable("serialno");
             
+            // Prepare the status message
             let deviceName = "";
             if (product === "nabu") {
                 deviceName = "Device name - Xiaomi Pad 5";
@@ -165,11 +111,13 @@
                 deviceName = "Device name - Samsung S23 Ultra";
             }
 
+            // Create the status message with line breaks
             let status = `Connected to - ${product} <br /> Current slot - ${slot} <br /> (serial: ${serial})`;
             if (deviceName) {
-                status += `<br />${deviceName}`;
+                status += `<br />${deviceName}`; // Add device name if it exists
             }
 
+            // Set the innerHTML to allow for line breaks
             statusField.innerHTML = status;
         }
 
@@ -214,67 +162,91 @@
 
             let file;
             if (fileField.files.length > 0) {
-                file = fileField.files[0];
-            }
-
-            if (!file && !selectedBootType) {
-                alert("Please select a file or choose a boot type!");
-                return;
-            }
-
-            if (selectedBootType === "uefi-nabu") {
+                file = fileField.files[0]; // Use the selected file if any
+            } else if (selectedBootType === "uefi") {
+                // If no file selected, download the MIUI boot image
                 file = await downloadBootImage("./demo/uefi-nabu.img");
             } else if (selectedBootType === "hyperos") {
-                file = await downloadBootImage("./demo/orangefox-modded.img");
+                // If no file selected, download the HyperOS boot image
+                file = await downloadBootImage("./demo/hyperosboot.img");
             } else if (selectedBootType === "miui") {
-                file = await downloadBootImage("./demo/orangefox-modded.img");
+                // If no file selected, download the MIUI boot image
+                file = await downloadBootImage("./demo/miuiboot.img");
             }
 
             if (!file) {
-                alert("Please select a valid boot file or boot type!");
+                alert("Please select a file or choose a boot type!");
                 return;
             }
 
             await device.bootBlob(file);
             fileField.value = "";
-            bootTypeSelect.selectedIndex = 0;
+            bootTypeSelect.selectedIndex = 0; // Reset selection
         }
 
+        // Function to download the boot image
         async function downloadBootImage(imagePath) {
             try {
                 const response = await fetch(imagePath);
                 if (!response.ok) throw new Error("Failed to download boot image");
 
                 const blob = await response.blob();
-                return blob;
+                const file = new File([blob], imagePath.split("/").pop(), { type: "image/img" });
+                return file; // Return the downloaded file
             } catch (error) {
                 alert(`Error downloading boot image: ${error.message}`);
+                return null; // Return null on error
             }
         }
 
-        async function flashImage(event) {
+        async function flashFormFile(event) {
             event.preventDefault();
             let fileField = document.querySelector(".flash-file");
-            let partitionField = document.querySelector(".flash-partition");
-
-            if (fileField.files.length === 0) {
-                alert("Please select a flash image file.");
-                return;
-            }
-
-            if (partitionField.value.trim() === "") {
-                alert("Please specify a partition to flash.");
-                return;
-            }
-
+            let partField = document.querySelector(".flash-partition");
             let file = fileField.files[0];
-            let partition = partitionField.value;
 
-            await device.flashBlob(file, partition);
+            // Check if a file is selected
+            if (!file) {
+                alert("Please select a file to flash!");
+                return;
+            }
+
+            // Check if a partition is specified
+            if (!partField.value) {
+                alert("Please specify a partition to flash!");
+                return;
+            }
+
+            await device.flashBlob(partField.value, file);
             fileField.value = "";
-            partitionField.value = "";
+            partField.value = "";
         }
 
+        // Function to handle flashing Boot partitions
+        async function handleFlash(partition) {
+            const fileField = document.querySelector(".flash-file");
+            const file = fileField.files[0];
+            if (!file) {
+                alert("Please select a file to flash!");
+                return;
+            }
+            await device.flashBlob(partition, file);
+            fileField.value = ""; // Clear the file input after flashing
+        }
+
+        // Flash Boot button functionality
+        const flashBootButton = document.querySelector(".flash-boot-button");
+        flashBootButton.addEventListener("click", () => handleFlash("boot"));
+
+        // Flash Boot A button functionality
+        const flashBootAButton = document.querySelector(".flash-boot-a-button");
+        flashBootAButton.addEventListener("click", () => handleFlash("boot_a"));
+
+        // Flash Boot B button functionality
+        const flashBootBButton = document.querySelector(".flash-boot-b-button");
+        flashBootBButton.addEventListener("click", () => handleFlash("boot_b"));
+
+        // Event Listeners
         document.querySelector(".connect-button").addEventListener("click", connectDevice);
         document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
         document.querySelector(".reboot-button").addEventListener("click", rebootDevice);
@@ -282,7 +254,7 @@
         document.querySelector(".reboot-recovery-button").addEventListener("click", rebootToRecovery);
         document.querySelector(".reboot-fastbootd-button").addEventListener("click", rebootToFastbootD);
         document.querySelector(".boot-form").addEventListener("submit", bootFormFile);
-        document.querySelector(".flash-form").addEventListener("submit", flashImage);
+        document.querySelector(".flash-form").addEventListener("submit", flashFormFile);
     </script>
 </body>
 </html>
