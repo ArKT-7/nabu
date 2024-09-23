@@ -17,14 +17,14 @@
 
     <div>
         <form class="command-form">
-            <label for="command">Command without fastboot lol hjghjhjhvvghcghcgfc:</label>
+            <label for="command">Command without fastboot lol:</label>
             <input type="text" name="command" class="command-input" />
             <input type="submit" value="Send" />
         </form>
-        <button class="reboot-button">Reboot Device</button> 
-        <button class="reboot-bootloader-button">Reboot to Bootloader</button> 
-        <button class="reboot-recovery-button">Reboot to Recovery</button> 
-        <button class="reboot-fastbootd-button">Reboot to FastbootD</button> 
+        <button class="reboot-button">Reboot Device</button>
+        <button class="reboot-bootloader-button">Reboot to Bootloader</button>
+        <button class="reboot-recovery-button">Reboot to Recovery</button>
+        <button class="reboot-fastbootd-button">Reboot to FastbootD</button>
         <p>Result:</p>
         <pre class="result-field"></pre>
     </div>
@@ -44,18 +44,16 @@
     <div>
         <form class="flash-form">
             <label for="flash-file">Flash image lol:</label>
-            <input type="file" name="flash-file" class="flash-file" onchange="updateFlashButtons()" />
-            <br />
-            <span>No file chosen</span> <!-- This will show the selected file name -->
+            <input type="file" name="flash-file" class="flash-file" />
             <br />
             <label for="flash-partition">Partition:</label>
             <input type="text" name="flash-partition" class="flash-partition" />
             <input type="submit" value="Flash" />
         </form>
-        <button class="flash-boot-button" disabled>Flash Boot</button>
-        <button class="flash-boot_a-button" disabled>Flash Boot_A</button>
-        <button class="flash-boot_b-button" disabled>Flash Boot_B</button>
-        <p class="flash-status-field" aria-live="polite"></p> 
+        <button class="flash-boot-button">Flash Boot</button>
+        <button class="flash-boot_a-button">Flash Boot_A</button>
+        <button class="flash-boot_b-button">Flash Boot_B</button>
+        <p class="flash-status-field" aria-live="polite"></p>
     </div>
 
     <hr />
@@ -82,6 +80,7 @@
         let device = new fastboot.FastbootDevice();
         window.device = device;
         let blobStore = new BlobStore();
+
         fastboot.setDebugLevel(2);
 
         async function connectDevice() {
@@ -90,16 +89,20 @@
 
             try {
                 await device.connect();
-                let product = await device.getVariable("product");
-                let serial = await device.getVariable("serialno");
-                statusField.textContent = `Connected to ${product} (serial: ${serial})`;
             } catch (error) {
                 statusField.textContent = `Failed to connect to device: ${error.message}`;
+                return;
             }
+
+            let product = await device.getVariable("product");
+            let serial = await device.getVariable("serialno");
+            let status = `Connected to ${product} (serial: ${serial})`;
+            statusField.textContent = status;
         }
 
         async function sendFormCommand(event) {
             event.preventDefault();
+
             let inputField = document.querySelector(".command-input");
             let command = inputField.value;
             let result = (await device.runCommand(command)).text;
@@ -133,6 +136,7 @@
 
         async function bootFormFile(event) {
             event.preventDefault();
+
             let fileField = document.querySelector(".boot-file");
             let file = fileField.files[0];
             await device.bootBlob(file);
@@ -141,15 +145,15 @@
 
         async function flashFormFile(event) {
             event.preventDefault();
+
             let fileField = document.querySelector(".flash-file");
             let partField = document.querySelector(".flash-partition");
             let file = fileField.files[0];
-
+            
             if (!file) {
                 alert("Please select a file to flash.");
                 return;
             }
-
             await device.flashBlob(partField.value, file);
             fileField.value = "";
             partField.value = "";
@@ -158,6 +162,7 @@
         async function flashFactoryZip(blob) {
             let statusField = document.querySelector(".factory-status-field");
             statusField.textContent = "Flashing...";
+
             let progressBar = document.querySelector(".factory-progress-bar");
 
             try {
@@ -171,34 +176,20 @@
                         progressBar.value = progress;
                     }
                 );
-                statusField.textContent = "Successfully flashed factory images";
             } catch (error) {
                 statusField.textContent = `Failed to flash zip: ${error.message}`;
+                throw error;
             }
+
+            statusField.textContent = "Successfully flashed factory images";
         }
 
         async function flashSelectedFactoryZip(event) {
             event.preventDefault();
+
             let fileField = document.querySelector(".factory-file");
             await flashFactoryZip(fileField.files[0]);
             fileField.value = "";
-        }
-
-        function updateFlashButtons() {
-            let fileField = document.querySelector(".flash-file");
-            let flashBootButton = document.querySelector(".flash-boot-button");
-            let flashBootAButton = document.querySelector(".flash-boot_a-button");
-            let flashBootBButton = document.querySelector(".flash-boot_b-button");
-            let isFileSelected = fileField.files.length > 0;
-
-            // Update button states based on file selection
-            flashBootButton.disabled = !isFileSelected;
-            flashBootAButton.disabled = !isFileSelected;
-            flashBootBButton.disabled = !isFileSelected;
-
-            // Update the display with the selected file name or default text
-            let selectedFileName = isFileSelected ? fileField.files[0].name : "No file chosen";
-            fileField.previousElementSibling.textContent = selectedFileName; // Update label text
         }
 
         async function flashBoot() {
@@ -209,10 +200,37 @@
                 await device.flashBlob("boot", file);
                 document.querySelector(".flash-status-field").textContent = "Successfully flashed boot partition.";
             } catch (error) {
-                document.querySelector(".flash-status-field").textContent = `Failed to flash boot partition: ${error.message}`;
+                alert(`Failed to flash boot: ${error.message}`);
             }
         }
 
+        async function flashBootA() {
+            let fileField = document.querySelector(".flash-file");
+            let file = fileField.files[0];
+
+            try {
+                await device.flashBlob("boot_a", file);
+                document.querySelector(".flash-status-field").textContent = "Successfully flashed boot_a partition.";
+            } catch (error) {
+                alert(`Failed to flash boot_a: ${error.message}`);
+            }
+        }
+
+        async function flashBootB() {
+            let fileField = document.querySelector(".flash-file");
+            let file = fileField.files[0];
+
+            try {
+                await device.flashBlob("boot_b", file);
+                document.querySelector(".flash-status-field").textContent = "Successfully flashed boot_b partition.";
+            } catch (error) {
+                alert(`Failed to flash boot_b: ${error.message}`);
+            }
+        }
+
+        document.querySelector(".flash-boot-button").addEventListener("click", flashBoot);
+        document.querySelector(".flash-boot_a-button").addEventListener("click", flashBootA);
+        document.querySelector(".flash-boot_b-button").addEventListener("click", flashBootB);
         document.querySelector(".connect-button").addEventListener("click", connectDevice);
         document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
         document.querySelector(".reboot-button").addEventListener("click", rebootDevice);
