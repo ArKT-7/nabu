@@ -37,9 +37,10 @@
             <input type="file" name="boot-file" class="boot-file" />
             <select name="boot-type" class="boot-type">
                 <option value="">Select Boot Type</option>
-                <option value="uefi">Windows UEFI Boot</option>
-                <option value="hyperos">HyperOS Boot</option>
-                <option value="miui">MIUI OS Boot</option>
+                <option value="twrp-nabu">Twrp Recovery Nabu</option>
+                <option value="win-uefi-nabu">Windows UEFI Boot Nabu</option>
+                <option value="twrp-mod-nabu">Twrp Modded Recovery Nabu</option>
+                <option value="orangefox-mod-nabu">OrangeFox Modded Recovery Nabu</option>
             </select>
             <input type="submit" value="Boot" />
         </form>
@@ -163,15 +164,18 @@
             let file;
             if (fileField.files.length > 0) {
                 file = fileField.files[0]; // Use the selected file if any
-            } else if (selectedBootType === "uefi") {
+            } else if (selectedBootType === "twrp-nabu") {
+                // If no file selected, download the MIUI boot image
+                file = await downloadBootImage("./demo/twrp-nabu.img");
+            } else if (selectedBootType === "win-uefi-nabu") {
                 // If no file selected, download the MIUI boot image
                 file = await downloadBootImage("./demo/uefi-nabu.img");
-            } else if (selectedBootType === "hyperos") {
+            } else if (selectedBootType === "twrp-mod-nabu") {
                 // If no file selected, download the HyperOS boot image
-                file = await downloadBootImage("./demo/hyperosboot.img");
-            } else if (selectedBootType === "miui") {
+                file = await downloadBootImage("./demo/twrp-modded-nabu.img");
+            } else if (selectedBootType === "orangefox-mod-nabu") {
                 // If no file selected, download the MIUI boot image
-                file = await downloadBootImage("./demo/miuiboot.img");
+                file = await downloadBootImage("./demo/orangefox-modded-nabu.img");
             }
 
             if (!file) {
