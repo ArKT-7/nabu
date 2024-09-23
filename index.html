@@ -43,7 +43,7 @@
 
     <div>
         <form class="flash-form">
-            <label for="flash-file">Flash image:</label>
+            <label for="flash-file">Flash image lol:</label>
             <input type="file" name="flash-file" class="flash-file" onchange="updateFlashButtons()" />
             <br />
             <label for="flash-partition">Partition:</label>
@@ -197,16 +197,16 @@
 
         // Function to enable/disable flash buttons based on file selection
         function updateFlashButtons() {
-            let fileField = document.querySelector(".flash-file");
-            let flashBootButton = document.querySelector(".flash-boot-button");
-            let flashBootAButton = document.querySelector(".flash-boot_a-button");
-            let flashBootBButton = document.querySelector(".flash-boot_b-button");
+        let fileField = document.querySelector(".flash-file");
+        let flashBootButton = document.querySelector(".flash-boot-button");
+        let flashBootAButton = document.querySelector(".flash-boot_a-button");
+        let flashBootBButton = document.querySelector(".flash-boot_b-button");
 
-            let isFileSelected = fileField.files.length > 0;
+        let isFileSelected = fileField.files.length > 0;
 
-            flashBootButton.disabled = !isFileSelected;
-            flashBootAButton.disabled = !isFileSelected;
-            flashBootBButton.disabled = !isFileSelected;
+        flashBootButton.disabled = !isFileSelected;
+        flashBootAButton.disabled = !isFileSelected;
+        flashBootBButton.disabled = !isFileSelected;
         }
 
         // Function to flash the boot partition
