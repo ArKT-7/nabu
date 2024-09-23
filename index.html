@@ -33,7 +33,7 @@
 
     <div>
         <form class="command-form">
-            <label for="command">Command without fastboot lolaaaaaaaaaaaaaaa:</label>
+            <label for="command">Command without fastboot:</label>
             <input type="text" name="command" class="command-input" />
             <input type="submit" value="Send" />
         </form>
@@ -197,13 +197,13 @@
         function getImagePath(selectedBootType) {
             switch (selectedBootType) {
                 case "twrp-nabu":
-                    return "./bin/twrp-nabu.img";
+                    return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/twrp-nabu.img";
                 case "win-uefi-nabu":
-                    return "./bin/uefi-nabu.img";
+                    return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/uefi-nabu.img";
                 case "twrp-mod-nabu":
-                    return "./bin/twrp-modded-nabu.img";
+                    return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/twrp-modded-nabu.img";
                 case "orangefox-mod-nabu":
-                    return "./bin/orangefox-modded-nabu.img";
+                    return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/orangefox-modded-nabu.img";
                 default:
                     return null;
             }
@@ -239,85 +239,67 @@
                 progressBarContainer.style.display = 'none'; // Hide the progress bar
                 return file; // Return the downloaded file
             } catch (error) {
-                progressBarContainer.style.display = 'none'; // Hide the progress bar on error
-                alert(`Error downloading boot image: ${error.message}`);
-                return null; // Return null on error
+                progress
+                console.error("Error downloading boot image:", error);
+                alert("Error downloading boot image. Please try again.");
+                progressBarContainer.style.display = 'none'; // Hide the progress bar
+                return null; // Return null in case of an error
             }
         }
 
         async function flashImage(event) {
             event.preventDefault();
-            let flashFileField = document.querySelector(".flash-file");
+            let fileField = document.querySelector(".flash-file");
             let partitionField = document.querySelector(".flash-partition");
 
             let file;
-            if (flashFileField.files.length > 0) {
-                file = flashFileField.files[0];
+            if (fileField.files.length > 0) {
+                file = fileField.files[0];
             } else {
                 alert("Please select a flash image file!");
                 return;
             }
 
-            let partition = partitionField.value.trim();
+            let partition = partitionField.value;
             if (!partition) {
-                alert("Please specify a partition name to flash!");
+                alert("Please specify a partition to flash!");
                 return;
             }
 
+            await device.flashBlob(file, partition);
+            fileField.value = "";
+            partitionField.value = "";
+        }
+
+        async function flashSelectedZip(event) {
+            event.preventDefault();
+            let fileField = document.querySelector(".factory-file");
+
+            let file;
+            if (fileField.files.length > 0) {
+                file = fileField.files[0];
+            } else {
+                alert("Please select a factory zip file!");
+                return;
+            }
+
+            const progressBarContainer = document.querySelector('.progress-container');
+            const progressBar = document.querySelector('.progress-bar');
+            progressBarContainer.style.display = 'block'; // Show the progress bar
+
             try {
-                await device.flashBlob(partition, file);
-                alert(`Successfully flashed ${file.name} to ${partition}`);
+                await device.flashFactoryZip(file);
+                alert("Flash completed successfully!");
             } catch (error) {
-                alert(`Failed to flash image: ${error.message}`);
+                console.error("Error flashing factory zip:", error);
+                alert("Error flashing factory zip. Please try again.");
+            } finally {
+                progressBarContainer.style.display = 'none'; // Hide the progress bar
             }
+
+            fileField.value = "";
         }
 
-        async function flashBootImage() {
-            let flashBootFile = document.querySelector(".boot-file");
-            let bootImage = flashBootFile.files.length > 0 ? flashBootFile.files[0] : null;
-            if (bootImage) {
-                try {
-                    await device.flashBlob("boot", bootImage);
-                    alert(`Successfully flashed ${bootImage.name} to boot`);
-                } catch (error) {
-                    alert(`Failed to flash boot image: ${error.message}`);
-                }
-            } else {
-                alert("Please select a boot image file!");
-            }
-        }
-
-        async function flashBootAImage() {
-            let flashBootAFile = document.querySelector(".boot-file");
-            let bootAImage = flashBootAFile.files.length > 0 ? flashBootAFile.files[0] : null;
-            if (bootAImage) {
-                try {
-                    await device.flashBlob("boot_a", bootAImage);
-                    alert(`Successfully flashed ${bootAImage.name} to boot_a`);
-                } catch (error) {
-                    alert(`Failed to flash boot image A: ${error.message}`);
-                }
-            } else {
-                alert("Please select a boot image file for boot A!");
-            }
-        }
-
-        async function flashBootBImage() {
-            let flashBootBFile = document.querySelector(".boot-file");
-            let bootBImage = flashBootBFile.files.length > 0 ? flashBootBFile.files[0] : null;
-            if (bootBImage) {
-                try {
-                    await device.flashBlob("boot_b", bootBImage);
-                    alert(`Successfully flashed ${bootBImage.name} to boot_b`);
-                } catch (error) {
-                    alert(`Failed to flash boot image B: ${error.message}`);
-                }
-            } else {
-                alert("Please select a boot image file for boot B!");
-            }
-        }
-
-        // Event Listeners
         document.querySelector(".connect-button").addEventListener("click", connectDevice);
         document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
         document.querySelector(".reboot-button").addEventListener("click", rebootDevice);
@@ -326,9 +308,7 @@
         document.querySelector(".reboot-fastbootd-button").addEventListener("click", rebootToFastbootD);
         document.querySelector(".boot-form").addEventListener("submit", bootFormFile);
         document.querySelector(".flash-form").addEventListener("submit", flashImage);
-        document.querySelector(".flash-boot-button").addEventListener("click", flashBootImage);
-        document.querySelector(".flash-boot-a-button").addEventListener("click", flashBootAImage);
-        document.querySelector(".flash-boot-b-button").addEventListener("click", flashBootBImage);
+        document.querySelector(".factory-form").addEventListener("submit", flashSelectedZip);
     </script>
 </body>
 </html>
