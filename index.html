@@ -17,14 +17,14 @@
 
     <div>
         <form class="command-form">
-            <label for="command">Command without fastboot aaaaaaaa:</label>
+            <label for="command">Command without fastboot:</label>
             <input type="text" name="command" class="command-input" />
             <input type="submit" value="Send" />
         </form>
-        <button class="reboot-button">Reboot Device</button> <!-- Reboot button -->
-        <button class="reboot-bootloader-button">Reboot to Bootloader</button> <!-- New reboot to bootloader button -->
-        <button class="reboot-recovery-button">Reboot to Recovery</button> <!-- New reboot to recovery button -->
-        <button class="reboot-fastbootd-button">Reboot to FastbootD</button> <!-- New reboot to FastbootD button -->
+        <button class="reboot-button">Reboot Device</button>
+        <button class="reboot-bootloader-button">Reboot to Bootloader</button>
+        <button class="reboot-recovery-button">Reboot to Recovery</button>
+        <button class="reboot-fastbootd-button">Reboot to FastbootD</button>
         <p>Result:</p>
         <pre class="result-field"></pre>
     </div>
@@ -50,9 +50,9 @@
             <input type="text" name="flash-partition" class="flash-partition" />
             <input type="submit" value="Flash" />
         </form>
-        <button class="flash-boot-button" disabled>Flash Boot</button>
-        <button class="flash-boot-a-button" disabled>Flash Boot A</button>
-        <button class="flash-boot-b-button" disabled>Flash Boot B</button>
+        <button class="flash-boot-button">Flash Boot</button>
+        <button class="flash-boot-a-button">Flash Boot A</button>
+        <button class="flash-boot-b-button">Flash Boot B</button>
     </div>
 
     <hr />
@@ -73,7 +73,6 @@
     </div>
 
     <script type="module">
-        // Importing necessary modules
         import * as fastboot from "./dist/fastboot.mjs";
         import { BlobStore } from "./download.js";
 
@@ -81,7 +80,6 @@
         window.device = device;
         let blobStore = new BlobStore();
 
-        // Enable verbose debug logging
         fastboot.setDebugLevel(2);
 
         async function connectDevice() {
@@ -103,7 +101,6 @@
 
         async function sendFormCommand(event) {
             event.preventDefault();
-
             let inputField = document.querySelector(".command-input");
             let command = inputField.value;
             let result = (await device.runCommand(command)).text;
@@ -112,32 +109,31 @@
         }
 
         async function rebootDevice() {
-            let command = "reboot"; // Command to send
+            let command = "reboot";
             let result = (await device.runCommand(command)).text;
-            document.querySelector(".result-field").textContent = result; // Display result
+            document.querySelector(".result-field").textContent = result;
         }
 
         async function rebootToBootloader() {
-            let command = "reboot-bootloader"; // Command to send
+            let command = "reboot-bootloader";
             let result = (await device.runCommand(command)).text;
-            document.querySelector(".result-field").textContent = result; // Display result
+            document.querySelector(".result-field").textContent = result;
         }
 
         async function rebootToRecovery() {
-            let command = "reboot-recovery"; // Command to send
+            let command = "reboot-recovery";
             let result = (await device.runCommand(command)).text;
-            document.querySelector(".result-field").textContent = result; // Display result
+            document.querySelector(".result-field").textContent = result;
         }
 
         async function rebootToFastbootD() {
-            let command = "reboot-fastboot"; // Command to send
+            let command = "reboot-fastboot";
             let result = (await device.runCommand(command)).text;
-            document.querySelector(".result-field").textContent = result; // Display result
+            document.querySelector(".result-field").textContent = result;
         }
 
         async function bootFormFile(event) {
             event.preventDefault();
-
             let fileField = document.querySelector(".boot-file");
             let file = fileField.files[0];
             await device.bootBlob(file);
@@ -146,7 +142,6 @@
 
         async function flashFormFile(event) {
             event.preventDefault();
-
             let fileField = document.querySelector(".flash-file");
             let partField = document.querySelector(".flash-partition");
             let file = fileField.files[0];
@@ -155,48 +150,33 @@
             partField.value = "";
         }
 
-        // Flash Boot button functionality
-        const flashBootButton = document.querySelector(".flash-boot-button");
-        flashBootButton.addEventListener("click", async () => {
+        // Function to handle flashing Boot partitions
+        async function handleFlash(partition) {
             const fileField = document.querySelector(".flash-file");
             const file = fileField.files[0];
-            const partition = "boot"; // Fixed partition for this button
+            if (!file) {
+                alert("Please select a file to flash!");
+                return;
+            }
             await device.flashBlob(partition, file);
             fileField.value = ""; // Clear the file input after flashing
-        });
+        }
+
+        // Flash Boot button functionality
+        const flashBootButton = document.querySelector(".flash-boot-button");
+        flashBootButton.addEventListener("click", () => handleFlash("boot"));
 
         // Flash Boot A button functionality
         const flashBootAButton = document.querySelector(".flash-boot-a-button");
-        flashBootAButton.addEventListener("click", async () => {
-            const fileField = document.querySelector(".flash-file");
-            const file = fileField.files[0];
-            const partition = "boot_a"; // Fixed partition for this button
-            await device.flashBlob(partition, file);
-            fileField.value = ""; // Clear the file input after flashing
-        });
+        flashBootAButton.addEventListener("click", () => handleFlash("boot_a"));
 
         // Flash Boot B button functionality
         const flashBootBButton = document.querySelector(".flash-boot-b-button");
-        flashBootBButton.addEventListener("click", async () => {
-            const fileField = document.querySelector(".flash-file");
-            const file = fileField.files[0];
-            const partition = "boot_b"; // Fixed partition for this button
-            await device.flashBlob(partition, file);
-            fileField.value = ""; // Clear the file input after flashing
-        });
-
-        // Enable/disable buttons based on file selection
-        document.querySelector(".flash-file").addEventListener("change", (event) => {
-            const fileSelected = event.target.files.length > 0;
-            flashBootButton.disabled = !fileSelected;
-            flashBootAButton.disabled = !fileSelected;
-            flashBootBButton.disabled = !fileSelected;
-        });
+        flashBootBButton.addEventListener("click", () => handleFlash("boot_b"));
 
         async function flashFactoryZip(blob) {
             let statusField = document.querySelector(".factory-status-field");
             statusField.textContent = "Flashing...";
-
             let progressBar = document.querySelector(".factory-progress-bar");
 
             try {
@@ -204,7 +184,6 @@
                     blob,
                     false,
                     reconnectCallback,
-                    // Progress callback
                     (action, item, progress) => {
                         let userAction = fastboot.USER_ACTION_MAP[action];
                         statusField.textContent = `${userAction} ${item}`;
@@ -221,13 +200,11 @@
 
         async function flashSelectedFactoryZip(event) {
             event.preventDefault();
-
             let fileField = document.querySelector(".factory-file");
             await flashFactoryZip(fileField.files[0]);
             fileField.value = "";
         }
 
-        // Update worker script paths
         fastboot.configureZip({
             workerScripts: {
                 inflate: ["./dist/vendor/z-worker-pako.js", "pako_inflate.min.js"],
