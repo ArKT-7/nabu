@@ -1,83 +1,215 @@
-<html>
-    <head>
-        <title>flash .img files by ArKt</title>
-        <!-- Update paths for scripts based on their locations -->
-        <script src="dist/fastboot.mjs" type="module"></script>
-        <script src="download.js" type="module"></script>
-        <script src="ui.js" type="module"></script>
-    </head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flash .img files by ArKt</title>
+    <!-- Update paths for scripts based on their locations -->
+    <script src="dist/fastboot.mjs" type="module"></script>
+    <script src="download.js" type="module"></script>
+</head>
+<body>
+    <div>
+        <p>Status: <span class="status-field">Not connected in Fastboot</span></p>
+        <button class="connect-button">Connect device Fastboot</button>
+    </div>
+    
+    <hr />
 
-    <body>
-        <div>
-            <p>Status: <span class="status-field">Not connected in Fastboot</span></p>
-            <button class="connect-button">Connect device Fastboot</button>
-        </div>
+    <div>
+        <form class="command-form">
+            <label for="command">Command without fastboot lol:</label>
+            <input type="text" name="command" class="command-input" />
+            <input type="submit" value="Send" />
+        </form>
+        <p>Result:</p>
+        <pre class="result-field"></pre>
+    </div>
 
-        <hr />
+    <hr />
 
-        <div>
-            <form class="command-form">
-                <label for="command">Command without fastboot lol:</label>
-                <input type="text" name="command" class="command-input" />
-                <input type="submit" value="Send" />
-            </form>
-            <p>Result:</p>
-            <pre class="result-field"></pre>
-        </div>
+    <div>
+        <form class="boot-form">
+            <label for="boot-file">Boot image:</label>
+            <input type="file" name="boot-file" class="boot-file" />
+            <input type="submit" value="Boot" />
+        </form>
+    </div>
 
-        <hr />
+    <hr />
 
-        <div>
-            <form class="boot-form">
-                <label for="boot-file">Boot image:</label>
-                <input type="file" name="boot-file" class="boot-file" />
-                <input type="submit" value="Boot" />
-            </form>
-        </div>
-
-        <hr />
-
-        <div>
-            <form class="flash-form">
-                <label for="flash-file">Flash image:</label>
-                <input type="file" name="flash-file" class="flash-file" />
-                <br />
-                <label for="flash-partition">Partition:</label>
-                <input
-                    type="text"
-                    name="flash-partition"
-                    class="flash-partition"
-                />
-                <input type="submit" value="Flash" />
-            </form>
-        </div>
-
-        <hr />
-
-        <div>
-            <p>Status: <span class="factory-status-field"></span></p>
-            <progress class="factory-progress-bar" max="1" value="0"></progress>
-            <button class="reconnect-button" style="display: none;"><h3>Reconnect device</h3></button>
+    <div>
+        <form class="flash-form">
+            <label for="flash-file">Flash image:</label>
+            <input type="file" name="flash-file" class="flash-file" />
             <br />
-            <form class="factory-form">
-                <label for="factory-file"
-                    >Flash custom factory images zip:</label
-                >
-                <br />
-                <input type="file" name="factory-file" class="factory-file" />
-                <br />
-                <input type="submit" value="Flash selected zip" />
-            </form>
+            <label for="flash-partition">Partition:</label>
+            <input type="text" name="flash-partition" class="flash-partition" />
+            <input type="submit" value="Flash" />
+        </form>
+    </div>
+
+    <hr />
+
+    <div>
+        <p>Status: <span class="factory-status-field"></span></p>
+        <progress class="factory-progress-bar" max="1" value="0"></progress>
+        <button class="reconnect-button" style="display: none;"><h3>Reconnect device</h3></button>
+        <br />
+        <form class="factory-form">
+            <label for="factory-file">Flash custom factory images zip:</label>
             <br />
-            <span>Flash test zip (only works locally):</span>
+            <input type="file" name="factory-file" class="factory-file" />
             <br />
-            <button class="download-zip-button">
-                Download taimen factory zip
-            </button>
-            <br />
-            <button class="flash-zip-button">Flash downloaded zip</button>
-            <br />
-            <pre class="factory-flash-log"></pre>
-        </div>
-    </body>
+            <input type="submit" value="Flash selected zip" />
+        </form>
+        <br />
+        <span>Flash test zip (only works locally):</span>
+        <br />
+        <button class="download-zip-button">Download taimen factory zip</button>
+        <br />
+        <button class="flash-zip-button">Flash downloaded zip</button>
+        <br />
+        <pre class="factory-flash-log"></pre>
+    </div>
+
+    <script type="module">
+        // Importing necessary modules
+        import * as fastboot from "./dist/fastboot.mjs";
+        import { BlobStore } from "./download.js";
+
+        let device = new fastboot.FastbootDevice();
+        window.device = device;
+        let blobStore = new BlobStore();
+
+        // Enable verbose debug logging
+        fastboot.setDebugLevel(2);
+
+        async function connectDevice() {
+            let statusField = document.querySelector(".status-field");
+            statusField.textContent = "Connecting...";
+
+            try {
+                await device.connect();
+            } catch (error) {
+                statusField.textContent = `Failed to connect to device: ${error.message}`;
+                return;
+            }
+
+            let product = await device.getVariable("product");
+            let serial = await device.getVariable("serialno");
+            let status = `Connected to ${product} (serial: ${serial})`;
+            statusField.textContent = status;
+        }
+
+        async function sendFormCommand(event) {
+            event.preventDefault();
+
+            let inputField = document.querySelector(".command-input");
+            let command = inputField.value;
+            let result = (await device.runCommand(command)).text;
+            document.querySelector(".result-field").textContent = result;
+            inputField.value = "";
+        }
+
+        async function bootFormFile(event) {
+            event.preventDefault();
+
+            let fileField = document.querySelector(".boot-file");
+            let file = fileField.files[0];
+            await device.bootBlob(file);
+            fileField.value = "";
+        }
+
+        async function flashFormFile(event) {
+            event.preventDefault();
+
+            let fileField = document.querySelector(".flash-file");
+            let partField = document.querySelector(".flash-partition");
+            let file = fileField.files[0];
+            await device.flashBlob(partField.value, file);
+            fileField.value = "";
+            partField.value = "";
+        }
+
+        async function downloadZip() {
+            let statusField = document.querySelector(".factory-status-field");
+            statusField.textContent = "Downloading...";
+
+            await blobStore.init();
+            try {
+                await blobStore.download("/releases/taimen-factory-2021.01.06.14.zip");
+            } catch (error) {
+                statusField.textContent = `Failed to download zip: ${error.message}`;
+                throw error;
+            }
+
+            statusField.textContent = "Downloaded";
+        }
+
+        function reconnectCallback() {
+            let reconnectButton = document.querySelector(".reconnect-button");
+            reconnectButton.style.display = "block";
+            reconnectButton.onclick = async () => {
+                await device.connect();
+                reconnectButton.style.display = "none";
+            };
+        }
+
+        async function flashFactoryZip(blob) {
+            let statusField = document.querySelector(".factory-status-field");
+            statusField.textContent = "Flashing...";
+
+            let progressBar = document.querySelector(".factory-progress-bar");
+
+            try {
+                await device.flashFactoryZip(
+                    blob,
+                    false,
+                    reconnectCallback,
+                    // Progress callback
+                    (action, item, progress) => {
+                        let userAction = fastboot.USER_ACTION_MAP[action];
+                        statusField.textContent = `${userAction} ${item}`;
+                        progressBar.value = progress;
+                    }
+                );
+            } catch (error) {
+                statusField.textContent = `Failed to flash zip: ${error.message}`;
+                throw error;
+            }
+
+            statusField.textContent = "Successfully flashed factory images";
+        }
+
+        async function flashSelectedFactoryZip(event) {
+            event.preventDefault();
+
+            let fileField = document.querySelector(".factory-file");
+            await flashFactoryZip(fileField.files[0]);
+            fileField.value = "";
+        }
+
+        async function flashDownloadedFactoryZip() {
+            await blobStore.init();
+            let blob = await blobStore.loadFile("taimen-factory-2021.01.06.14.zip");
+            await flashFactoryZip(blob);
+        }
+
+        // Update worker script paths
+        fastboot.configureZip({
+            workerScripts: {
+                inflate: ["./dist/vendor/z-worker-pako.js", "pako_inflate.min.js"],
+            },
+        });
+
+        document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
+        document.querySelector(".connect-button").addEventListener("click", connectDevice);
+        document.querySelector(".boot-form").addEventListener("submit", bootFormFile);
+        document.querySelector(".flash-form").addEventListener("submit", flashFormFile);
+        document.querySelector(".download-zip-button").addEventListener("click", downloadZip);
+        document.querySelector(".factory-form").addEventListener("submit", flashSelectedFactoryZip);
+        document.querySelector(".flash-zip-button").addEventListener("click", flashDownloadedFactoryZip);
+    </script>
+</body>
 </html>
