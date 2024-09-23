@@ -6,6 +6,22 @@
     <title>Flash .img files by ArKt</title>
     <script src="dist/fastboot.mjs" type="module"></script>
     <script src="download.js" type="module"></script>
+    <style>
+        .progress-container {
+            width: 100%;
+            height: 20px;
+            background-color: #f3f3f3;
+            border-radius: 5px;
+            overflow: hidden;
+            display: none; /* Initially hidden */
+        }
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: #4caf50;
+            transition: width 0.5s;
+        }
+    </style>
 </head>
 <body>
     <div>
@@ -17,7 +33,7 @@
 
     <div>
         <form class="command-form">
-            <label for="command">Command without fastboot asaasdandjkahj:</label>
+            <label for="command">Command without fastboot lol:</label>
             <input type="text" name="command" class="command-input" />
             <input type="submit" value="Send" />
         </form>
@@ -32,22 +48,19 @@
     <hr />
 
     <div>
-    <form class="boot-form">
-        <label for="boot-file">Boot image:</label>
-        <input type="file" name="boot-file" class="boot-file" />
-        <select name="boot-type" class="boot-type">
-            <option value="">Select Boot Type</option>
-            <option value="twrp-nabu">Twrp Recovery Nabu</option>
-            <option value="win-uefi-nabu">Windows UEFI Boot Nabu</option>
-            <option value="twrp-mod-nabu">Twrp Modded Recovery Nabu</option>
-            <option value="orangefox-mod-nabu">OrangeFox Modded Recovery Nabu</option>
-            <option value="test-nabu">test boot Nabu</option>
-        </select>
-        <input type="submit" value="Boot" />
-        <progress class="download-progress" max="100" value="0" style="display:none;"></progress>
-    </form>
-</div>
-
+        <form class="boot-form">
+            <label for="boot-file">Boot image:</label>
+            <input type="file" name="boot-file" class="boot-file" />
+            <select name="boot-type" class="boot-type">
+                <option value="">Select Boot Type</option>
+                <option value="twrp-nabu">Twrp Recovery Nabu</option>
+                <option value="win-uefi-nabu">Windows UEFI Boot Nabu</option>
+                <option value="twrp-mod-nabu">Twrp Modded Recovery Nabu</option>
+                <option value="orangefox-mod-nabu">OrangeFox Modded Recovery Nabu</option>
+            </select>
+            <input type="submit" value="Boot" />
+        </form>
+    </div>
 
     <hr />
 
@@ -69,7 +82,9 @@
 
     <div>
         <p>Status: <span class="factory-status-field"></span></p>
-        <progress class="factory-progress-bar" max="1" value="0"></progress>
+        <div class="progress-container">
+            <div class="progress-bar"></div>
+        </div>
         <button class="reconnect-button" style="display: none;"><h3>Reconnect device</h3></button>
         <br />
         <form class="factory-form">
@@ -107,7 +122,6 @@
             let slot = await device.getVariable("current-slot");
             let serial = await device.getVariable("serialno");
             
-            // Prepare the status message
             let deviceName = "";
             if (product === "nabu") {
                 deviceName = "Device name - Xiaomi Pad 5";
@@ -115,13 +129,11 @@
                 deviceName = "Device name - Samsung S23 Ultra";
             }
 
-            // Create the status message with line breaks
             let status = `Connected to - ${product} <br /> Current slot - ${slot} <br /> (serial: ${serial})`;
             if (deviceName) {
-                status += `<br />${deviceName}`; // Add device name if it exists
+                status += `<br />${deviceName}`;
             }
 
-            // Set the innerHTML to allow for line breaks
             statusField.innerHTML = status;
         }
 
@@ -166,22 +178,9 @@
 
             let file;
             if (fileField.files.length > 0) {
-                file = fileField.files[0]; // Use the selected file if any
-            } else if (selectedBootType === "twrp-nabu") {
-                // If no file selected, download the MIUI boot image
-                file = await downloadBootImage("./bin/twrp-nabu.img");
-            } else if (selectedBootType === "win-uefi-nabu") {
-                // If no file selected, download the MIUI boot image
-                file = await downloadBootImage("./bin/uefi-nabu.img");
-            } else if (selectedBootType === "twrp-mod-nabu") {
-                // If no file selected, download the HyperOS boot image
-                file = await downloadBootImage("./bin/twrp-modded-nabu.img");
-            } else if (selectedBootType === "orangefox-mod-nabu") {
-                // If no file selected, download the MIUI boot image
-                file = await downloadBootImage("./bin/orangefox-modded-nabu.img");
-            } else if (selectedBootType === "test-nabu") {
-                // If no file selected, download the MIUI boot image
-                file = await downloadBootImage("./bin/test-nabu.img");
+                file = fileField.files[0];
+            } else {
+                file = await downloadBootImage(getImagePath(selectedBootType));
             }
 
             if (!file) {
@@ -194,95 +193,129 @@
             bootTypeSelect.selectedIndex = 0; // Reset selection
         }
 
-        // Function to download the boot image
+        // Function to determine image path based on selected type
+        function getImagePath(selectedBootType) {
+            switch (selectedBootType) {
+                case "twrp-nabu":
+                    return "./bin/twrp-nabu.img";
+                case "win-uefi-nabu":
+                    return "./bin/uefi-nabu.img";
+                case "twrp-mod-nabu":
+                    return "./bin/twrp-modded-nabu.img";
+                case "orangefox-mod-nabu":
+                    return "./bin/orangefox-modded-nabu.img";
+                default:
+                    return null;
+            }
+        }
+
+        // Function to download the boot image with progress
         async function downloadBootImage(imagePath) {
-    try {
-        const response = await fetch(imagePath);
-        if (!response.ok) throw new Error("Failed to download boot image");
+            const progressBarContainer = document.querySelector('.progress-container');
+            const progressBar = document.querySelector('.progress-bar');
+            progressBarContainer.style.display = 'block'; // Show the progress bar
 
-        // Get the total size of the file
-        const contentLength = response.headers.get("Content-Length");
-        const total = parseInt(contentLength, 10);
-        let loaded = 0;
+            try {
+                const response = await fetch(imagePath);
+                if (!response.ok) throw new Error("Failed to download boot image");
 
-        const progressBar = document.querySelector(".download-progress");
-        progressBar.style.display = "block"; // Show the progress bar
+                const contentLength = response.headers.get('Content-Length');
+                const total = parseInt(contentLength, 10);
+                let loaded = 0;
 
-        // Create a reader to read the response body
-        const reader = response.body.getReader();
-        const chunks = []; // Store the downloaded chunks
+                const reader = response.body.getReader();
+                const chunks = [];
 
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    chunks.push(value);
+                    loaded += value.length;
+                    progressBar.style.width = `${(loaded / total) * 100}%`; // Update progress
+                }
 
-            chunks.push(value);
-            loaded += value.length;
-
-            // Update the progress bar
-            const percentage = (loaded / total) * 100;
-            progressBar.value = percentage;
+                const blob = new Blob(chunks);
+                const file = new File([blob], imagePath.split("/").pop(), { type: "image/img" });
+                progressBarContainer.style.display = 'none'; // Hide the progress bar
+                return file; // Return the downloaded file
+            } catch (error) {
+                progressBarContainer.style.display = 'none'; // Hide the progress bar on error
+                alert(`Error downloading boot image: ${error.message}`);
+                return null; // Return null on error
+            }
         }
 
-        // Concatenate all the chunks into a single blob
-        const blob = new Blob(chunks);
-        const file = new File([blob], imagePath.split("/").pop(), { type: "image/img" });
-
-        progressBar.style.display = "none"; // Hide the progress bar
-        return file; // Return the downloaded file
-    } catch (error) {
-        alert(`Error downloading boot image: ${error.message}`);
-        return null; // Return null on error
-    }
-}
-
-
-        async function flashFormFile(event) {
+        async function flashImage(event) {
             event.preventDefault();
-            let fileField = document.querySelector(".flash-file");
-            let partField = document.querySelector(".flash-partition");
-            let file = fileField.files[0];
+            let flashFileField = document.querySelector(".flash-file");
+            let partitionField = document.querySelector(".flash-partition");
 
-            // Check if a file is selected
-            if (!file) {
-                alert("Please select a file to flash!");
+            let file;
+            if (flashFileField.files.length > 0) {
+                file = flashFileField.files[0];
+            } else {
+                alert("Please select a flash image file!");
                 return;
             }
 
-            // Check if a partition is specified
-            if (!partField.value) {
-                alert("Please specify a partition to flash!");
+            let partition = partitionField.value.trim();
+            if (!partition) {
+                alert("Please specify a partition name to flash!");
                 return;
             }
 
-            await device.flashBlob(partField.value, file);
-            fileField.value = "";
-            partField.value = "";
+            try {
+                await device.flashBlob(partition, file);
+                alert(`Successfully flashed ${file.name} to ${partition}`);
+            } catch (error) {
+                alert(`Failed to flash image: ${error.message}`);
+            }
         }
 
-        // Function to handle flashing Boot partitions
-        async function handleFlash(partition) {
-            const fileField = document.querySelector(".flash-file");
-            const file = fileField.files[0];
-            if (!file) {
-                alert("Please select a file to flash!");
-                return;
+        async function flashBootImage() {
+            let flashBootFile = document.querySelector(".boot-file");
+            let bootImage = flashBootFile.files.length > 0 ? flashBootFile.files[0] : null;
+            if (bootImage) {
+                try {
+                    await device.flashBlob("boot", bootImage);
+                    alert(`Successfully flashed ${bootImage.name} to boot`);
+                } catch (error) {
+                    alert(`Failed to flash boot image: ${error.message}`);
+                }
+            } else {
+                alert("Please select a boot image file!");
             }
-            await device.flashBlob(partition, file);
-            fileField.value = ""; // Clear the file input after flashing
         }
 
-        // Flash Boot button functionality
-        const flashBootButton = document.querySelector(".flash-boot-button");
-        flashBootButton.addEventListener("click", () => handleFlash("boot"));
+        async function flashBootAImage() {
+            let flashBootAFile = document.querySelector(".boot-file");
+            let bootAImage = flashBootAFile.files.length > 0 ? flashBootAFile.files[0] : null;
+            if (bootAImage) {
+                try {
+                    await device.flashBlob("boot_a", bootAImage);
+                    alert(`Successfully flashed ${bootAImage.name} to boot_a`);
+                } catch (error) {
+                    alert(`Failed to flash boot image A: ${error.message}`);
+                }
+            } else {
+                alert("Please select a boot image file for boot A!");
+            }
+        }
 
-        // Flash Boot A button functionality
-        const flashBootAButton = document.querySelector(".flash-boot-a-button");
-        flashBootAButton.addEventListener("click", () => handleFlash("boot_a"));
-
-        // Flash Boot B button functionality
-        const flashBootBButton = document.querySelector(".flash-boot-b-button");
-        flashBootBButton.addEventListener("click", () => handleFlash("boot_b"));
+        async function flashBootBImage() {
+            let flashBootBFile = document.querySelector(".boot-file");
+            let bootBImage = flashBootBFile.files.length > 0 ? flashBootBFile.files[0] : null;
+            if (bootBImage) {
+                try {
+                    await device.flashBlob("boot_b", bootBImage);
+                    alert(`Successfully flashed ${bootBImage.name} to boot_b`);
+                } catch (error) {
+                    alert(`Failed to flash boot image B: ${error.message}`);
+                }
+            } else {
+                alert("Please select a boot image file for boot B!");
+            }
+        }
 
         // Event Listeners
         document.querySelector(".connect-button").addEventListener("click", connectDevice);
@@ -292,7 +325,10 @@
         document.querySelector(".reboot-recovery-button").addEventListener("click", rebootToRecovery);
         document.querySelector(".reboot-fastbootd-button").addEventListener("click", rebootToFastbootD);
         document.querySelector(".boot-form").addEventListener("submit", bootFormFile);
-        document.querySelector(".flash-form").addEventListener("submit", flashFormFile);
+        document.querySelector(".flash-form").addEventListener("submit", flashImage);
+        document.querySelector(".flash-boot-button").addEventListener("click", flashBootImage);
+        document.querySelector(".flash-boot-a-button").addEventListener("click", flashBootAImage);
+        document.querySelector(".flash-boot-b-button").addEventListener("click", flashBootBImage);
     </script>
 </body>
 </html>
