@@ -96,7 +96,7 @@
             let product = await device.getVariable("product");
             let slot = await device.getVariable("current-slot");
             let serial = await device.getVariable("serialno");
-            let status = `Connected to ${product} slot ${slot} (serial: ${serial})`;
+            let status = `Connected to = ${product} and Current slot = ${slot} (serial: ${serial})`;
             statusField.textContent = status;
         }
 
