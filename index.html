@@ -142,14 +142,28 @@
         }
 
         async function flashFormFile(event) {
-            event.preventDefault();
-            let fileField = document.querySelector(".flash-file");
-            let partField = document.querySelector(".flash-partition");
-            let file = fileField.files[0];
-            await device.flashBlob(partField.value, file);
-            fileField.value = "";
-            partField.value = "";
-        }
+    event.preventDefault();
+    let fileField = document.querySelector(".flash-file");
+    let partField = document.querySelector(".flash-partition");
+    let file = fileField.files[0];
+
+    // Check if a file is selected
+    if (!file) {
+        alert("Please select a file to flash!");
+        return;
+    }
+
+    // Check if a partition is specified
+    if (!partField.value) {
+        alert("Please specify a partition to flash!");
+        return;
+    }
+
+    await device.flashBlob(partField.value, file);
+    fileField.value = "";
+    partField.value = "";
+}
+
 
         // Function to handle flashing Boot partitions
         async function handleFlash(partition) {
