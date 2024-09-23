@@ -42,15 +42,19 @@
     <hr />
 
     <div>
-        <form class="flash-form">
+    <form class="flash-form">
             <label for="flash-file">Flash image:</label>
-            <input type="file" name="flash-file" class="flash-file" />
+            <input type="file" name="flash-file" class="flash-file" onchange="updateFlashButtons()" />
             <br />
             <label for="flash-partition">Partition:</label>
             <input type="text" name="flash-partition" class="flash-partition" />
             <input type="submit" value="Flash" />
         </form>
+        <button class="flash-boot-button" disabled>Flash Boot</button>
+        <button class="flash-boot_a-button" disabled>Flash Boot_A</button>
+        <button class="flash-boot_b-button" disabled>Flash Boot_B</button>
     </div>
+
 
     <hr />
 
