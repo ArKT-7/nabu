@@ -258,27 +258,79 @@
             }
         }
 
-        async function flashImage(event, partition) {
+        async function flashImage(event) {
             event.preventDefault();
-            const flashFileField = document.querySelector(".flash-file");
-            let imageFile;
+            let flashFileField = document.querySelector(".flash-file");
+            let partitionField = document.querySelector(".flash-partition");
 
+            let file;
             if (flashFileField.files.length > 0) {
-                imageFile = flashFileField.files[0];
+                file = flashFileField.files[0];
             } else {
-                alert("Please select an image file to flash!");
+                alert("Please select a flash image file!");
+                return;
+            }
+
+            let partition = partitionField.value.trim();
+            if (!partition) {
+                alert("Please specify a partition name to flash!");
                 return;
             }
 
             try {
-                await device.flashImage(partition, imageFile);
-                alert(`Image flashed to ${partition} successfully!`);
+                await device.flashBlob(partition, file);
+                alert(Successfully flashed ${file.name} to ${partition});
             } catch (error) {
-                console.error(`Error flashing image to ${partition}:`, error);
-                alert(`Error flashing image to ${partition}. Please try again.`);
+                alert(Failed to flash image: ${error.message});
             }
         }
 
+        async function flashBootImage() {
+            let flashBootFile = document.querySelector(".boot-file");
+            let bootImage = flashBootFile.files.length > 0 ? flashBootFile.files[0] : null;
+            if (bootImage) {
+                try {
+                    await device.flashBlob("boot", bootImage);
+                    alert(Successfully flashed ${bootImage.name} to boot);
+                } catch (error) {
+                    alert(Failed to flash boot image: ${error.message});
+                }
+            } else {
+                alert("Please select a boot image file!");
+            }
+        }
+
+        async function flashBootAImage() {
+            let flashBootAFile = document.querySelector(".boot-file");
+            let bootAImage = flashBootAFile.files.length > 0 ? flashBootAFile.files[0] : null;
+            if (bootAImage) {
+                try {
+                    await device.flashBlob("boot_a", bootAImage);
+                    alert(Successfully flashed ${bootAImage.name} to boot_a);
+                } catch (error) {
+                    alert(Failed to flash boot image A: ${error.message});
+                }
+            } else {
+                alert("Please select a boot image file for boot A!");
+            }
+        }
+
+        async function flashBootBImage() {
+            let flashBootBFile = document.querySelector(".boot-file");
+            let bootBImage = flashBootBFile.files.length > 0 ? flashBootBFile.files[0] : null;
+            if (bootBImage) {
+                try {
+                    await device.flashBlob("boot_b", bootBImage);
+                    alert(Successfully flashed ${bootBImage.name} to boot_b);
+                } catch (error) {
+                    alert(Failed to flash boot image B: ${error.message});
+                }
+            } else {
+                alert("Please select a boot image file for boot B!");
+            }
+        }
+
+        // Event Listeners
         document.querySelector(".connect-button").addEventListener("click", connectDevice);
         document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
         document.querySelector(".reboot-button").addEventListener("click", rebootDevice);
@@ -286,12 +338,10 @@
         document.querySelector(".reboot-recovery-button").addEventListener("click", rebootToRecovery);
         document.querySelector(".reboot-fastbootd-button").addEventListener("click", rebootToFastbootD);
         document.querySelector(".boot-form").addEventListener("submit", bootFormFile);
-        document.querySelector(".flash-form").addEventListener("submit", (event) => flashImage(event, document.querySelector(".flash-partition").value));
-        
-        // Event listeners for the flash buttons
-        document.querySelector(".flash-boot-button").addEventListener("click", (event) => flashImage(event, "boot"));
-        document.querySelector(".flash-boot-a-button").addEventListener("click", (event) => flashImage(event, "boot_a"));
-        document.querySelector(".flash-boot-b-button").addEventListener("click", (event) => flashImage(event, "boot_b"));
+        document.querySelector(".flash-form").addEventListener("submit", flashImage);
+        document.querySelector(".flash-boot-button").addEventListener("click", flashBootImage);
+        document.querySelector(".flash-boot-a-button").addEventListener("click", flashBootAImage);
+        document.querySelector(".flash-boot-b-button").addEventListener("click", flashBootBImage);
     </script>
 </body>
 </html>
