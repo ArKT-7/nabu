@@ -129,30 +129,6 @@ fastboot.configureZip({
     },
 });
 
-async function sendRebootCommand() {
-    let statusField = document.querySelector(".result-field");
-
-    if (!device.connected) {
-        statusField.textContent = "Device is not connected!";
-        return;
-    }
-
-    try {
-        let result = (await device.runCommand("reboot")).text;
-        statusField.textContent = result;
-    } catch (error) {
-        statusField.textContent = `Failed to send reboot command: ${error.message}`;
-    }
-}
-
-
-document
-    .querySelector(".reboot-button")
-    .addEventListener("click", () => {
-        console.log("Reboot button clicked");
-        sendRebootCommand();
-    });
-
 
 document
     .querySelector(".command-form")
