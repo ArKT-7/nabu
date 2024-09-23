@@ -1,5 +1,6 @@
 // @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&dn=expat.txt MIT
 
+// Update import paths after moving index.html to the main directory
 import * as fastboot from "./dist/fastboot.mjs";
 import { BlobStore } from "./download.js";
 
@@ -121,6 +122,7 @@ async function flashDownloadedFactoryZip() {
     await flashFactoryZip(blob);
 }
 
+// Update worker script paths
 fastboot.configureZip({
     workerScripts: {
         inflate: ["./dist/vendor/z-worker-pako.js", "pako_inflate.min.js"],
