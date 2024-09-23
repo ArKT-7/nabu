@@ -17,7 +17,7 @@
 
     <div>
         <form class="command-form">
-            <label for="command">Command without fastboot lolaaaaa:</label>
+            <label for="command">Command without fastboot asaasdandjkahj:</label>
             <input type="text" name="command" class="command-input" />
             <input type="submit" value="Send" />
         </form>
@@ -41,6 +41,7 @@
             <option value="win-uefi-nabu">Windows UEFI Boot Nabu</option>
             <option value="twrp-mod-nabu">Twrp Modded Recovery Nabu</option>
             <option value="orangefox-mod-nabu">OrangeFox Modded Recovery Nabu</option>
+            <option value="test-nabu">test boot Nabu</option>
         </select>
         <input type="submit" value="Boot" />
         <progress class="download-progress" max="100" value="0" style="display:none;"></progress>
@@ -178,6 +179,9 @@
             } else if (selectedBootType === "orangefox-mod-nabu") {
                 // If no file selected, download the MIUI boot image
                 file = await downloadBootImage("./bin/orangefox-modded-nabu.img");
+            } else if (selectedBootType === "test-nabu") {
+                // If no file selected, download the MIUI boot image
+                file = await downloadBootImage("./bin/test-nabu.img");
             }
 
             if (!file) {
