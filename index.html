@@ -103,13 +103,18 @@
         deviceName = "Device name - Xiaomi Pad 5";
     } else if (product === "dm3q") {
         deviceName = "Device name - Samsung S23 Ultra";
-    } else {
-        deviceName = ""; // Do not show anything for unknown devices
     }
 
-    let status = `Connected to - ${product} / Current slot - ${slot} / (serial: ${serial})${deviceName ? '\n' + deviceName : ''}`;
-    statusField.textContent = status;
+    // Create the status message with line breaks
+    let status = `Connected to - ${product} <br /> Current slot - ${slot} <br /> (serial: ${serial})`;
+    if (deviceName) {
+        status += `<br />${deviceName}`; // Add device name if it exists
+    }
+
+    // Set the innerHTML to allow for line breaks
+    statusField.innerHTML = status;
 }
+
 
 
         async function sendFormCommand(event) {
