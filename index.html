@@ -8,7 +8,6 @@
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap"
       rel="stylesheet"
     />
-    <!-- Update paths for scripts based on their locations -->
     <script src="dist/fastboot.mjs" type="module"></script>
     <script src="download.js" type="module"></script>
     <script src="ui.js" type="module"></script>
@@ -17,15 +16,13 @@
         --primary-color: #1a73e8;
         --secondary-color: #d3d3d3;
         --background-color: #121212;
-        --container-bg-color: #1e1e1e;
+        --container-bg-color: rgba(40, 40, 40, 0.9);
         --text-color: #ffffff;
         --button-bg-color: #2c2c2c;
         --button-hover-bg-color: #3c3c3c;
-        --input-bg-color: #2a2a2a;
+        --input-bg-color: #1e1e1e;
         --input-text-color: #e0e0e0;
         --border-radius: 20px;
-        --container-padding: 40px;
-        --container-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
       }
 
       * {
@@ -35,35 +32,27 @@
         font-family: 'Roboto', sans-serif;
       }
 
-      body,
-      html {
-        height: 100%;
-        margin: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+      body {
         background-color: var(--background-color);
         color: var(--text-color);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
       }
 
       .container {
         background-color: var(--container-bg-color);
         border-radius: var(--border-radius);
-        box-shadow: var(--container-shadow);
-        padding: var(--container-padding);
-        width: 100%;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        padding: 40px;
         max-width: 600px;
-        display: flex;
-        flex-direction: column;
-        gap: 30px;
+        width: 100%;
       }
 
       h3 {
         margin: 0 0 15px 0;
-      }
-
-      div {
-        margin-bottom: 20px;
       }
 
       p {
@@ -96,8 +85,8 @@
         font-weight: 500;
       }
 
-      input[type="text"],
-      input[type="file"] {
+      input[type='text'],
+      input[type='file'] {
         padding: 10px;
         background-color: var(--input-bg-color);
         color: var(--input-text-color);
@@ -106,7 +95,7 @@
         margin-bottom: 10px;
       }
 
-      input[type="submit"] {
+      input[type='submit'] {
         background-color: var(--primary-color);
         color: var(--text-color);
         border: none;
@@ -116,7 +105,7 @@
         transition: background-color 0.2s ease;
       }
 
-      input[type="submit"]:hover {
+      input[type='submit']:hover {
         background-color: #0f5bd6;
       }
 
@@ -135,6 +124,15 @@
         color: var(--input-text-color);
         padding: 10px;
         border-radius: var(--border-radius);
+      }
+
+      .command-form,
+      .boot-form,
+      .flash-form,
+      .factory-form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
       }
 
       .factory-progress-bar {
@@ -168,7 +166,7 @@
 
       <div>
         <form class="command-form">
-          <label for="command">Command without fastboot lollll:</label>
+          <label for="command">Command without fastboot lol:</label>
           <input type="text" name="command" class="command-input" />
           <input type="submit" value="Send" />
         </form>
@@ -180,7 +178,7 @@
 
       <div>
         <form class="boot-form">
-          <label for="boot-file">Boot image:</label>
+          <label for="boot-file">Boot image lol:</label>
           <input type="file" name="boot-file" class="boot-file" />
           <input type="submit" value="Boot" />
         </form>
