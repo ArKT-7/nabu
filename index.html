@@ -240,77 +240,42 @@
                 let loaded = 0;
 
                 const reader = response.body.getReader();
-                const chunks = [];
-
                 while (true) {
                     const { done, value } = await reader.read();
                     if (done) break;
-                    chunks.push(value);
+
                     loaded += value.length;
                     progressBar.style.width = `${(loaded / total) * 100}%`;
                 }
 
-                const blob = new Blob(chunks);
+                const blob = await response.blob();
                 return blob;
             } catch (error) {
-                console.error("Download error:", error);
-                alert("Error downloading boot image. Please try again.");
+                console.error("Error downloading image:", error);
+                alert("Error downloading image. Please try again.");
             } finally {
                 progressBarContainer.style.display = 'none'; // Hide the progress bar
             }
         }
 
-        async function flashFormFile(event) {
+        async function flashImage(event, partition) {
             event.preventDefault();
-            let fileField = document.querySelector(".flash-file");
-            let partitionField = document.querySelector(".flash-partition");
-            let file = fileField.files.length > 0 ? fileField.files[0] : null;
-            let partition = partitionField.value;
+            const flashFileField = document.querySelector(".flash-file");
+            let imageFile;
 
-            if (!file) {
-                alert("Please select a file to flash!");
-                return;
-            }
-            if (!partition) {
-                alert("Please enter a partition name!");
+            if (flashFileField.files.length > 0) {
+                imageFile = flashFileField.files[0];
+            } else {
+                alert("Please select an image file to flash!");
                 return;
             }
 
             try {
-                await device.flashBlob(file, partition);
-                alert(`Flashed ${file.name} to ${partition} successfully!`);
+                await device.flashImage(partition, imageFile);
+                alert(`Image flashed to ${partition} successfully!`);
             } catch (error) {
-                console.error("Error flashing image:", error);
-                alert("Error flashing image. Please try again.");
-            } finally {
-                fileField.value = ""; // Reset file input
-                partitionField.value = ""; // Reset partition input
-            }
-        }
-
-        async function flashSelectedZip(event) {
-            event.preventDefault();
-            let factoryField = document.querySelector(".factory-file");
-            let file = factoryField.files.length > 0 ? factoryField.files[0] : null;
-
-            if (!file) {
-                alert("Please select a custom factory images zip to flash!");
-                return;
-            }
-
-            const progressBarContainer = document.querySelector('.progress-container');
-            const progressBar = document.querySelector('.progress-bar');
-            progressBarContainer.style.display = 'block'; // Show the progress bar
-
-            try {
-                await device.flashBlob(file, "zip");
-                alert("Custom factory images zip flashed successfully!");
-            } catch (error) {
-                console.error("Error flashing factory images zip:", error);
-                alert("Error flashing custom factory images zip. Please try again.");
-            } finally {
-                progressBarContainer.style.display = 'none'; // Hide the progress bar
-                factoryField.value = ""; // Reset file input
+                console.error(`Error flashing image to ${partition}:`, error);
+                alert(`Error flashing image to ${partition}. Please try again.`);
             }
         }
 
@@ -321,8 +286,12 @@
         document.querySelector(".reboot-recovery-button").addEventListener("click", rebootToRecovery);
         document.querySelector(".reboot-fastbootd-button").addEventListener("click", rebootToFastbootD);
         document.querySelector(".boot-form").addEventListener("submit", bootFormFile);
-        document.querySelector(".flash-form").addEventListener("submit", flashFormFile);
-        document.querySelector(".factory-form").addEventListener("submit", flashSelectedZip);
+        document.querySelector(".flash-form").addEventListener("submit", (event) => flashImage(event, document.querySelector(".flash-partition").value));
+        
+        // Event listeners for the flash buttons
+        document.querySelector(".flash-boot-button").addEventListener("click", (event) => flashImage(event, "boot"));
+        document.querySelector(".flash-boot-a-button").addEventListener("click", (event) => flashImage(event, "boot_a"));
+        document.querySelector(".flash-boot-b-button").addEventListener("click", (event) => flashImage(event, "boot_b"));
     </script>
 </body>
 </html>
