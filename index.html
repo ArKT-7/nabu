@@ -140,7 +140,7 @@
 <div class="container">
     <form class="boot-form">
         <label for="boot-file">Boot image:</label>
-        <input type="file" name="boot-file" class="boot-file" />
+        <input type="file" name="boot-file" class="boot-file" accept=".img" />
         <select name="boot-type" class="boot-type">
             <option value="">Select Boot Images for Nabu</option>
             <option value="twrp-nabu">Twrp Recovery Nabu</option>
@@ -164,7 +164,7 @@
     <div class="container">
         <form class="flash-form">
             <label for="flash-file">Flash image:</label>
-            <input type="file" name="flash-file" class="flash-file" />
+            <input type="file" name="flash-file" class="flash-file" accept=".img" />
             <br />
             <label for="flash-partition">Partition:</label>
             <input type="text" name="flash-partition" class="flash-partition" placeholder="Enter partition like- boot, dtbo, cust, recovery, etc. "/>
