@@ -80,23 +80,6 @@
 
     <hr />
 
-    <div>
-        <p>Status: <span class="factory-status-field"></span></p>
-        <div class="progress-container">
-            <div class="progress-bar"></div>
-        </div>
-        <button class="reconnect-button" style="display: none;"><h3>Reconnect device</h3></button>
-        <br />
-        <form class="factory-form">
-            <label for="factory-file">Flash custom factory images zip:</label>
-            <br />
-            <input type="file" name="factory-file" class="factory-file" />
-            <br />
-            <input type="submit" value="Flash selected zip" />
-        </form>
-        <br />
-    </div>
-
     <script type="module">
         import * as fastboot from "./dist/fastboot.mjs";
         import { BlobStore } from "./download.js";
@@ -306,30 +289,6 @@
         flashBootBButton.addEventListener("click", () => handleFlash("boot_b"));
 
 
-        async function flashCustomFactoryImages(event) {
-            event.preventDefault();
-            let factoryFileField = document.querySelector(".factory-file");
-            if (!factoryFileField.files.length) {
-                alert("Please select a custom factory images zip file!");
-                return;
-            }
-
-            let file = factoryFileField.files[0];
-            const progressBarContainer = document.querySelector('.progress-container');
-            const progressBar = document.querySelector('.progress-bar');
-            progressBarContainer.style.display = 'block'; // Show the progress bar
-
-            try {
-                await device.flashBlob(file, "flash_custom_factory_images"); // Adjust the command as necessary
-                alert("Flashed custom factory images successfully!");
-            } catch (error) {
-                console.error("Error flashing factory images:", error);
-                alert("Error flashing factory images. Please try again.");
-            } finally {
-                progressBarContainer.style.display = 'none'; // Hide the progress bar
-            }
-        }
-
         document.querySelector(".connect-button").addEventListener("click", connectDevice);
         document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
         document.querySelector(".reboot-button").addEventListener("click", rebootDevice);
@@ -337,7 +296,6 @@
         document.querySelector(".reboot-recovery-button").addEventListener("click", rebootToRecovery);
         document.querySelector(".reboot-fastbootd-button").addEventListener("click", rebootToFastbootD);
         document.querySelector(".boot-form").addEventListener("submit", bootFormFile);
-        document.querySelector(".factory-form").addEventListener("submit", flashCustomFactoryImages);
         document.querySelector(".flash-form").addEventListener("submit", flashFormFile);
     </script>
 </body>
