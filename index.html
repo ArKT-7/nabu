@@ -308,60 +308,61 @@ function handleDisconnect() {
         }
 
         async function bootFormFile(event) {
-            event.preventDefault();
-            let fileField = document.querySelector(".boot-file");
-            let bootTypeSelect = document.querySelector(".boot-type");
-            let selectedBootType = bootTypeSelect.value;
+        event.preventDefault();
+        const fileField = document.querySelector("#boot-file");
+        const bootTypeSelect = document.querySelector(".boot-type");
+        const selectedBootType = bootTypeSelect.value;
 
-            let file;
-            if (fileField.files.length > 0) {
-                file = fileField.files[0];
-            } else if (selectedBootType) {
-                file = await downloadBootImage(getImagePath(selectedBootType));
-            } else {
-                alert("Please select a boot image file or choose a boot type!");
-                return;
-            }
-
-            if (!file) {
-                alert("Failed to obtain a valid boot image.");
-                return;
-            }
-
-            try {
-                await device.bootBlob(file);
-                alert("Boot image booted successfully!");
-            } catch (error) {
-                console.error("Error booting image:", error);
-                alert("Error booting image. Please try again.");
-            } finally {
-                fileField.value = "";
-                bootTypeSelect.selectedIndex = 0; // Reset selection
-            }
+        if (!fileField.files.length && !selectedBootType) {
+            alert("Please select a boot image file or choose a boot type!");
+            return;
         }
 
-        function getImagePath(selectedBootType) {
-            switch (selectedBootType) {
-                case "twrp-nabu":
-                    return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/twrp-nabu.img";
-                case "win-uefi-nabu":
-                    return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/uefi-nabu.img";
-                case "twrp-mod-nabu":
-                    return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/twrp-modded-nabu.img";
-                case "orangefox-mod-nabu":
-                    return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/orangefox-modded-nabu.img";
-                default:
-                    return null;
-            }
+        let file = fileField.files[0] || await downloadBootImage(getImagePath(selectedBootType));
+
+        if (!file) {
+            alert("Failed to obtain a valid boot image.");
+            return;
         }
-        
-        function validateFile(input) {
-        const file = input.files[0];
-        if (file && !file.name.endsWith('.img')) {
-            alert('Please select a .img file only.');
-            input.value = ''; // Clear the invalid file
-            }
+
+        try {
+            await device.bootBlob(file);
+            alert("Boot image booted successfully!");
+        } catch (error) {
+            console.error("Error booting image:", error);
+            alert("Error booting image. Please try again.");
+        } finally {
+            fileField.value = "";
+            bootTypeSelect.selectedIndex = 0;
         }
+    }
+
+    // Validate selected file (for both boot and flash)
+    function validateFile(inputElement) {
+        const file = inputElement.files[0];
+        if (!file || !file.name.endsWith('.img')) {
+            alert('Please select a valid .img file.');
+            inputElement.value = ''; // Clear invalid selection
+        }
+    }
+
+    // Function to get image path based on boot type
+    function getImagePath(selectedBootType) {
+        switch (selectedBootType) {
+            case "twrp-nabu":
+                return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/twrp-nabu.img";
+            case "win-uefi-nabu":
+                return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/win-uefi-nabu.img";
+            case "twrp-mod-nabu":
+                return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/twrp-mod-nabu.img";
+            case "orangefox-mod-nabu":
+                return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/orangefox-mod-nabu.img";
+            default:
+                return null;
+        }
+    }
+
+    
 
         async function downloadBootImage(imagePath) {
             const progressBarContainer = document.querySelector('.progress-container');
@@ -397,28 +398,31 @@ function handleDisconnect() {
             }
         }
 
-        async function flashFormFile(event) {
-            event.preventDefault();
-            let fileField = document.querySelector(".flash-file");
-            let partField = document.querySelector(".flash-partition");
-            let file = fileField.files[0];
+        // Handle form submission for flash image
+    async function flashFormFile(event) {
+        event.preventDefault();
+        const fileField = document.querySelector(".flash-file");
+        const partitionField = document.querySelector(".flash-partition");
 
-            // Check if a file is selected
-            if (!file) {
-                alert("Please select a file to flash!");
-                return;
-            }
-
-            // Check if a partition is specified
-            if (!partField.value) {
-                alert("Please specify a partition to flash!");
-                return;
-            }
-
-            await device.flashBlob(partField.value, file);
-            fileField.value = "";
-            partField.value = "";
+        if (!fileField.files.length || !partitionField.value.trim()) {
+            alert("Please select a valid .img file and enter a partition name.");
+            return;
         }
+
+        const file = fileField.files[0];
+        const partition = partitionField.value;
+
+        try {
+            await device.flashBlob(partition, file);
+            alert(`Image flashed to ${partition} successfully!`);
+        } catch (error) {
+            console.error("Error flashing image:", error);
+            alert("Error flashing image. Please try again.");
+        } finally {
+            fileField.value = "";
+            partitionField.value = "";
+        }
+    }
 
         // Function to handle flashing Boot partitions
         // Function to handle flashing Boot partitions
