@@ -7,81 +7,80 @@
     <script src="dist/fastboot.mjs" type="module"></script>
     <script src="download.js" type="module"></script>
     <style>
-    body {
-        background-color: #f0f0f0; /* Light background for contrast */
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern font */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh; /* Full height */
-        margin: 0; /* Remove default margin */
-    }
+        body {
+            background-color: #f0f0f0; /* Light background for contrast */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern font */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Full height */
+            margin: 0; /* Remove default margin */
+        }
 
-    .container {
-        background: white; /* White background for the container */
-        border-radius: 20px; /* Rounded corners */
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Floating effect */
-        padding: 20px; /* Padding inside the container */
-        width: 90%; /* Responsive width */
-        max-width: 600px; /* Maximum width */
-        box-sizing: border-box; /* Include padding in width */
-    }
+        .container {
+            background: white; /* White background for the container */
+            border-radius: 20px; /* Rounded corners */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Floating effect */
+            padding: 20px; /* Padding inside the container */
+            width: 90%; /* Responsive width */
+            max-width: 600px; /* Maximum width */
+            box-sizing: border-box; /* Include padding in width */
+        }
 
-    h1 {
-        text-align: center;
-        color: #333; /* Dark text */
-        margin-bottom: 20px; /* Space below the title */
-    }
+        h1 {
+            text-align: center;
+            color: #333; /* Dark text */
+            margin-bottom: 20px; /* Space below the title */
+        }
 
-    p, label {
-        font-size: 14px; /* Standard font size */
-        color: #666; /* Lighter text color */
-    }
+        p, label {
+            font-size: 14px; /* Standard font size */
+            color: #666; /* Lighter text color */
+        }
 
-    input[type="text"], input[type="file"], select {
-        width: 100%; /* Full width */
-        padding: 10px; /* Padding for inputs */
-        margin: 10px 0; /* Space around inputs */
-        border: 1px solid #ccc; /* Border color */
-        border-radius: 5px; /* Slightly rounded corners */
-        box-sizing: border-box; /* Include padding in width */
-    }
+        input[type="text"], input[type="file"], select {
+            width: 100%; /* Full width */
+            padding: 10px; /* Padding for inputs */
+            margin: 10px 0; /* Space around inputs */
+            border: 1px solid #ccc; /* Border color */
+            border-radius: 5px; /* Slightly rounded corners */
+            box-sizing: border-box; /* Include padding in width */
+        }
 
-    button {
-        background-color: #4caf50; /* Button color */
-        color: white; /* Button text color */
-        border: none; /* No border */
-        border-radius: 5px; /* Rounded corners */
-        padding: 10px; /* Padding for buttons */
-        width: 100%; /* Full width */
-        cursor: pointer; /* Pointer cursor on hover */
-        font-size: 16px; /* Button text size */
-        margin: 10px 0; /* Space around buttons */
-        transition: background-color 0.3s; /* Smooth color transition */
-    }
+        button {
+            background-color: #4caf50; /* Button color */
+            color: white; /* Button text color */
+            border: none; /* No border */
+            border-radius: 5px; /* Rounded corners */
+            padding: 10px; /* Padding for buttons */
+            width: 100%; /* Full width */
+            cursor: pointer; /* Pointer cursor on hover */
+            font-size: 16px; /* Button text size */
+            margin: 10px 0; /* Space around buttons */
+            transition: background-color 0.3s; /* Smooth color transition */
+        }
 
-    button:hover {
-        background-color: #45a049; /* Darker green on hover */
-    }
+        button:hover {
+            background-color: #45a049; /* Darker green on hover */
+        }
 
-    .progress-container {
-        display: none; /* Initially hidden */
-        width: 100%; /* Full width */
-        height: 20px; /* Progress bar height */
-        background-color: #e0e0e0; /* Light background for progress */
-        border-radius: 5px; /* Rounded corners */
-        overflow: hidden; /* Hide overflow */
-        margin-top: 10px; /* Space above progress bar */
-    }
+        .progress-container {
+            display: none; /* Initially hidden */
+            width: 100%; /* Full width */
+            height: 20px; /* Progress bar height */
+            background-color: #e0e0e0; /* Light background for progress */
+            border-radius: 5px; /* Rounded corners */
+            overflow: hidden; /* Hide overflow */
+            margin-top: 10px; /* Space above progress bar */
+        }
 
-    .progress-bar {
-        height: 100%; /* Full height */
-        width: 0%; /* Start width at 0 */
-        background-color: #4caf50; /* Progress bar color */
-        transition: width 0.5s; /* Smooth width transition */
-    }
-</style>
-
+        .progress-bar {
+            height: 100%; /* Full height */
+            width: 0%; /* Start width at 0 */
+            background-color: #4caf50; /* Progress bar color */
+            transition: width 0.5s; /* Smooth width transition */
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -144,9 +143,7 @@
             <div class="progress-bar"></div>
         </div>
     </div>
-</body>
 
-    
     <script type="module">
         import * as fastboot from "./dist/fastboot.mjs";
         import { BlobStore } from "./download.js";
