@@ -7,122 +7,94 @@
     <script src="dist/fastboot.mjs" type="module"></script>
     <script src="download.js" type="module"></script>
     <style>
-        /* Root Styling */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f4f8;
-            color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh; 
-            margin: 0;
-            padding: 20px; 
-            box-sizing: border-box; 
-        }
+    body {
+        background-color: #f0f0f0; /* Light background for contrast */
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern font */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh; /* Full height */
+        margin: 0; /* Remove default margin */
+    }
 
-        /* Main Container */
-        .container {
-            background-color: #fff;
-            border-radius: 15px;
-            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            max-width: 900px; 
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            box-sizing: border-box; 
-        }
+    .container {
+        background: white; /* White background for the container */
+        border-radius: 20px; /* Rounded corners */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Floating effect */
+        padding: 20px; /* Padding inside the container */
+        width: 90%; /* Responsive width */
+        max-width: 600px; /* Maximum width */
+        box-sizing: border-box; /* Include padding in width */
+    }
 
-        /* Title */
-        h1 {
-            text-align: center;
-            color: #0078D4;
-            font-size: 22px; /* Reduced font size for compactness */
-            margin-bottom: 15px;
-        }
+    h1 {
+        text-align: center;
+        color: #333; /* Dark text */
+        margin-bottom: 20px; /* Space below the title */
+    }
 
-        /* Centering Flex Containers */
-        .flex-center {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
+    p, label {
+        font-size: 14px; /* Standard font size */
+        color: #666; /* Lighter text color */
+    }
 
-        /* Input and Button Styles */
-        input[type="text"], input[type="file"], select {
-            width: 100%;
-            padding: 8px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            margin-top: 10px;
-            margin-bottom: 15px;
-            font-size: 14px; /* Smaller font for compactness */
-            box-sizing: border-box; 
-        }
+    input[type="text"], input[type="file"], select {
+        width: 100%; /* Full width */
+        padding: 10px; /* Padding for inputs */
+        margin: 10px 0; /* Space around inputs */
+        border: 1px solid #ccc; /* Border color */
+        border-radius: 5px; /* Slightly rounded corners */
+        box-sizing: border-box; /* Include padding in width */
+    }
 
-        input[type="submit"], button {
-            padding: 10px 15px;
-            border-radius: 8px;
-            border: none;
-            background-color: #0078D4;
-            color: white;
-            font-size: 14px; /* Smaller font */
-            cursor: pointer;
-            margin-top: 5px;
-            transition: background-color 0.3s;
-        }
+    button {
+        background-color: #4caf50; /* Button color */
+        color: white; /* Button text color */
+        border: none; /* No border */
+        border-radius: 5px; /* Rounded corners */
+        padding: 10px; /* Padding for buttons */
+        width: 100%; /* Full width */
+        cursor: pointer; /* Pointer cursor on hover */
+        font-size: 16px; /* Button text size */
+        margin: 10px 0; /* Space around buttons */
+        transition: background-color 0.3s; /* Smooth color transition */
+    }
 
-        input[type="submit"]:hover, button:hover {
-            background-color: #0056a1; /* Darker shade on hover */
-        }
+    button:hover {
+        background-color: #45a049; /* Darker green on hover */
+    }
 
-        /* Result Display */
-        pre.result-field {
-            background-color: #f3f3f3;
-            padding: 10px;
-            border-radius: 8px;
-            width: 100%;
-            min-height: 50px;
-            margin-top: 10px;
-            overflow: auto;
-            box-sizing: border-box; 
-        }
+    .progress-container {
+        display: none; /* Initially hidden */
+        width: 100%; /* Full width */
+        height: 20px; /* Progress bar height */
+        background-color: #e0e0e0; /* Light background for progress */
+        border-radius: 5px; /* Rounded corners */
+        overflow: hidden; /* Hide overflow */
+        margin-top: 10px; /* Space above progress bar */
+    }
 
-        /* Progress Bar */
-        .progress-container {
-            width: 100%;
-            height: 15px; /* Reduced height for compactness */
-            background-color: #e0e0e0;
-            border-radius: 8px;
-            margin-top: 15px;
-            overflow: hidden; 
-            display: none; 
-        }
+    .progress-bar {
+        height: 100%; /* Full height */
+        width: 0%; /* Start width at 0 */
+        background-color: #4caf50; /* Progress bar color */
+        transition: width 0.5s; /* Smooth width transition */
+    }
+</style>
 
-        .progress-bar {
-            height: 100%;
-            width: 0%;
-            background-color: #4caf50;
-            transition: width 0.5s;
-        }
-    </style>
 </head>
 <body>
     <div class="container">
         <h1>Flash .img files by ArKt</h1>
+        <p>Status: <span class="status-field">Not connected in Fastboot</span></p>
+        <button class="connect-button">Connect device Fastboot</button>
 
-        <div class="status-section flex-center">
-            <p>Status: <span class="status-field">Not connected in Fastboot</span></p>
-            <button class="connect-button">Connect device Fastboot</button>
-        </div>
+        <hr />
 
-        <div class="command-section">
+        <div>
             <form class="command-form">
                 <label for="command">Command without fastboot:</label>
-                <input type="text" name="command" class="command-input" placeholder="Enter command here" />
+                <input type="text" name="command" class="command-input" />
                 <input type="submit" value="Send" />
             </form>
             <button class="reboot-button">Reboot Device</button>
@@ -133,7 +105,9 @@
             <pre class="result-field"></pre>
         </div>
 
-        <div class="boot-section">
+        <hr />
+
+        <div>
             <form class="boot-form">
                 <label for="boot-file">Boot image:</label>
                 <input type="file" name="boot-file" class="boot-file" />
@@ -148,13 +122,15 @@
             </form>
         </div>
 
-        <div class="flash-section">
+        <hr />
+
+        <div>
             <form class="flash-form">
                 <label for="flash-file">Flash image:</label>
                 <input type="file" name="flash-file" class="flash-file" />
                 <br />
                 <label for="flash-partition">Partition:</label>
-                <input type="text" name="flash-partition" class="flash-partition" placeholder="Enter partition name" />
+                <input type="text" name="flash-partition" class="flash-partition" />
                 <input type="submit" value="Flash" />
             </form>
             <button class="flash-boot-button">Flash Boot</button>
@@ -162,10 +138,14 @@
             <button class="flash-boot-b-button">Flash Boot B</button>
         </div>
 
+        <hr />
+
         <div class="progress-container">
             <div class="progress-bar"></div>
         </div>
     </div>
+</body>
+
     
     <script type="module">
         import * as fastboot from "./dist/fastboot.mjs";
