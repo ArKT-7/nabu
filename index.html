@@ -3,144 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flash .img Files by ArKt</title>
-    <link rel="icon" href="https://img.icons8.com/fluency/48/windows-95.png" type="image/png">
+    <title>Flash .img files by ArKt</title>
+    <script src="dist/fastboot.mjs" type="module"></script>
+    <script src="download.js" type="module"></script>
     <style>
+        /* Root Styling */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #202124, #18191A);
-            color: #e8eaed;
-            margin: 0;
-            padding: 0;
+            background-color: #f0f4f8;
+            color: #333;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            overflow: hidden;
+            margin: 0;
         }
 
+        /* Main Container */
         .container {
-            background: linear-gradient(135deg, #1c1f24, #3a3f44);
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0px 15px 40px rgba(0, 0, 0, 0.3);
-            max-width: 500px;
-            width: 90%;
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Title */
+        h1 {
             text-align: center;
-            position: relative;
-        }
-
-        h2 {
-            margin: 10px 0;
+            color: #0078D4;
             font-size: 24px;
-            color: #f8f9fa;
+            margin-bottom: 20px;
         }
 
-        .theme-switch {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #0052cc;
+        /* Status and Command Section */
+        .status-section, .command-section, .boot-section, .flash-section {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        /* Buttons */
+        button {
+            background-color: #0078D4;
             color: white;
             border: none;
-            border-radius: 8px;
-            padding: 8px 12px;
+            border-radius: 10px;
+            padding: 10px 20px;
             cursor: pointer;
-        }
-
-        select, button, input[type="file"] {
-            width: 100%;
-            padding: 12px 20px;
-            margin: 8px 0;
-            border-radius: 12px;
-            border: none;
             font-size: 16px;
-            cursor: pointer;
-            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-            background: #ffffff;
-            color: #00FFFF;
+            transition: background-color 0.3s ease;
         }
 
-        button {
-            background: linear-gradient(135deg, #0052cc, #3f87ff);
-            color: #fff;
-            margin-top: 20px;
+        button:hover {
+            background-color: #005a9e;
         }
 
-        .status-field, .result-field {
-            margin-top: 20px;
-            color: #f8f9fa;
+        button:disabled {
+            background-color: #a0a0a0;
+            cursor: not-allowed;
         }
 
+        /* Inputs and Selects */
+        input[type="text"], input[type="file"], select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        /* Result Display */
+        pre.result-field {
+            background-color: #f3f3f3;
+            padding: 15px;
+            border-radius: 10px;
+            width: 100%;
+            min-height: 50px;
+            margin-top: 10px;
+            overflow: auto;
+        }
+
+        /* Progress Bar */
         .progress-container {
-            display: none;
+            width: 100%;
+            height: 20px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
             margin-top: 20px;
+            overflow: hidden;
+            display: none; /* Initially hidden */
         }
 
         .progress-bar {
-            width: 100%;
-            height: 10px;
-            background: #4caf50;
-            border-radius: 8px;
+            height: 100%;
+            width: 0%;
+            background-color: #4caf50;
+            transition: width 0.5s;
         }
 
-        @media (max-width: 768px) {
-            body {
-                padding: 20px;
-            }
+        /* Centering Flex Containers */
+        .flex-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
 
-            .container {
-                padding: 20px;
-            }
-
-            select, button {
-                font-size: 14px;
-                padding: 10px 15px;
-            }
+        /* Command Form Alignment */
+        .command-section form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <button class="theme-switch">🌙</button>
-        <h2>Flash .img Files</h2>
+        <h1>Flash .img files by ArKt</h1>
 
-        <button class="connect-button">Connect Device</button>
-        <p class="status-field">Not connected in Fastboot</p>
+        <div class="status-section flex-center">
+            <p>Status: <span class="status-field">Not connected in Fastboot</span></p>
+            <button class="connect-button">Connect device Fastboot</button>
+        </div>
 
-        <h5>Select Boot Type:</h5>
-        <select class="boot-type">
-            <option value="">Select...</option>
-            <option value="twrp-nabu">TWRP Nabu</option>
-            <option value="win-uefi-nabu">Win UEFI Nabu</option>
-            <option value="twrp-mod-nabu">TWRP Mod Nabu</option>
-            <option value="orangefox-mod-nabu">OrangeFox Mod Nabu</option>
-        </select>
+        <div class="command-section">
+            <form class="command-form">
+                <label for="command">Command without fastboot:</label>
+                <input type="text" name="command" class="command-input" placeholder="Enter command here" />
+                <input type="submit" value="Send" />
+            </form>
+            <button class="reboot-button">Reboot Device</button>
+            <button class="reboot-bootloader-button">Reboot to Bootloader</button>
+            <button class="reboot-recovery-button">Reboot to Recovery</button>
+            <button class="reboot-fastbootd-button">Reboot to FastbootD</button>
+            <p>Result:</p>
+            <pre class="result-field"></pre>
+        </div>
 
-        <h5>Select Boot Image File:</h5>
-        <input type="file" class="boot-file" accept=".img">
+        <div class="boot-section">
+            <form class="boot-form">
+                <label for="boot-file">Boot image:</label>
+                <input type="file" name="boot-file" class="boot-file" />
+                <select name="boot-type" class="boot-type">
+                    <option value="">Select Boot Type</option>
+                    <option value="twrp-nabu">Twrp Recovery Nabu</option>
+                    <option value="win-uefi-nabu">Windows UEFI Boot Nabu</option>
+                    <option value="twrp-mod-nabu">Twrp Modded Recovery Nabu</option>
+                    <option value="orangefox-mod-nabu">OrangeFox Modded Recovery Nabu</option>
+                </select>
+                <input type="submit" value="Boot" />
+            </form>
+        </div>
 
-        <button class="boot-button">Boot Image</button>
-        
-        <h5>Flash Image File:</h5>
-        <input type="file" class="flash-file" accept=".img">
-        
-        <h5>Select Partition:</h5>
-        <select class="flash-partition">
-            <option value="boot">Boot</option>
-            <option value="boot_a">Boot A</option>
-            <option value="boot_b">Boot B</option>
-        </select>
-
-        <button class="flash-button">Flash Image</button>
+        <div class="flash-section">
+            <form class="flash-form">
+                <label for="flash-file">Flash image:</label>
+                <input type="file" name="flash-file" class="flash-file" />
+                <br />
+                <label for="flash-partition">Partition:</label>
+                <input type="text" name="flash-partition" class="flash-partition" placeholder="Enter partition name" />
+                <input type="submit" value="Flash" />
+            </form>
+            <button class="flash-boot-button">Flash Boot</button>
+            <button class="flash-boot-a-button">Flash Boot A</button>
+            <button class="flash-boot-b-button">Flash Boot B</button>
+        </div>
 
         <div class="progress-container">
             <div class="progress-bar"></div>
         </div>
-
-        <p class="result-field"></p>
     </div>
-
+    
     <script type="module">
         import * as fastboot from "./dist/fastboot.mjs";
         import { BlobStore } from "./download.js";
@@ -150,17 +189,6 @@
         let blobStore = new BlobStore();
 
         fastboot.setDebugLevel(2);
-
-        document.querySelector(".theme-switch").addEventListener("click", function() {
-            const body = document.body;
-            body.classList.toggle("dark-mode");
-            if (body.classList.contains("dark-mode")) {
-                this.textContent = "☀️";
-            } else {
-                this.textContent = "🌙";
-            }
-        });
-
 
        function toggleElements(disable) {
     const formElements = document.querySelectorAll("input, button, select");
