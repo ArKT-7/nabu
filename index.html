@@ -445,16 +445,6 @@ function handleDisconnect() {
                 return;
             }
 
-            
-            try {
-        // Attempt to flash the partition
-        await device.flashBlob(partition, file);
-        alert(`Successfully flashed ${partition}`);
-    } catch (error) {
-        // If there's an error, display a failure message
-        alert(`Failed to flash ${partition}: ${error.message}`);
-    }
-
             await device.flashBlob(partField.value, file);
             fileField.value = "";
             partField.value = "";
