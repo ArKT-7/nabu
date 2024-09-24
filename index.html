@@ -175,30 +175,29 @@
         <button class="button flash-boot-b-button">Flash to Boot B</button>
     </div>
 
-   <hr />
+    <hr />
 
+    <!-- NEW: Flash Rooted Boot Image Section -->
     <div class="container">
-        <form class="flash-form">
-            <label for="flash-partition">Select Boot Image:</label>
-            <select name="flash-image" class="flash-image">
-                <option value="">Choose a Boot Image</option>
-                <option value="hyper-os">Hyper OS Boot Image</option>
-                <option value="miui-os">MIUI Boot Image</option>
+        <h2>Flash Boot Image to Boot Partition</h2>
+        <form class="flash-root-form">
+            <label for="root-image-type">Select Rooted Boot Image:</label>
+            <select name="root-image-type" class="root-image-type">
+                <option value="">Select Rooted Boot Image</option>
+                <option value="hyperos-rooted">Hyper OS Rooted Image</option>
+                <option value="miui-rooted">MIUI Rooted Image</option>
             </select>
-            <label for="flash-partition">Partition:</label>
-            <select name="flash-partition" class="flash-partition">
-                <option value="boot">Boot</option>
-                <option value="boot_a">Boot A</option>
-                <option value="boot_b">Boot B</option>
-            </select>
-            <input type="submit" value="Flash" class="button" />
+            <br />
+            <label for="root-image-file">Rooted Image File:</label>
+            <input type="file" name="root-image-file" class="root-image-file" />
+            <input type="submit" value="Flash Rooted Image to Boot A" class="button" />
         </form>
-        <div class="progress-container" style="display: none;"> <!-- Keep it hidden initially -->
+
+        <!-- Progress bar for rooted image flash -->
+        <div class="progress-container">
             <div class="progress-bar"></div>
         </div>
     </div>
-
-    <hr />
 
     <script type="module">
         import * as fastboot from "./dist/fastboot.mjs";
