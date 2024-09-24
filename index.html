@@ -175,6 +175,29 @@
         <button class="button flash-boot-b-button">Flash to Boot B</button>
     </div>
 
+   <hr />
+
+    <div class="container">
+        <form class="flash-form">
+            <label for="flash-partition">Select Boot Image:</label>
+            <select name="flash-image" class="flash-image">
+                <option value="">Choose a Boot Image</option>
+                <option value="hyper-os">Hyper OS Boot Image</option>
+                <option value="miui-os">MIUI Boot Image</option>
+            </select>
+            <label for="flash-partition">Partition:</label>
+            <select name="flash-partition" class="flash-partition">
+                <option value="boot">Boot</option>
+                <option value="boot_a">Boot A</option>
+                <option value="boot_b">Boot B</option>
+            </select>
+            <input type="submit" value="Flash" class="button" />
+        </form>
+        <div class="progress-container" style="display: none;"> <!-- Keep it hidden initially -->
+            <div class="progress-bar"></div>
+        </div>
+    </div>
+
     <hr />
 
     <script type="module">
