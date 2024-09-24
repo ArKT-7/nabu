@@ -330,14 +330,9 @@ function handleDisconnect() {
         }
 
         async function runRebootCommand(command, successMessage) {
-            try {
                 let result = (await device.runCommand(command)).text;
                 document.querySelector(".result-field").textContent = result;
-                alert(successMessage);
-            } catch (error) {
-                console.error("Error during reboot:", error);
-                alert("Error during reboot. Please try again.");
-            }
+                inputField.value = "";
         }
 
        
