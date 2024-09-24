@@ -314,54 +314,6 @@
             }
         }
 
-        async function flashFormFile(event) {
-            event.preventDefault();
-            let fileField = document.querySelector(".flash-file");
-            let partField = document.querySelector(".flash-partition");
-            let file = fileField.files[0];
-
-            // Check if a file is selected
-            if (!file) {
-                alert("Please select a file to flash!");
-                return;
-            }
-
-            // Check if a partition is specified
-            if (!partField.value) {
-                alert("Please specify a partition to flash!");
-                return;
-            }
-
-            await device.flashBlob(partField.value, file);
-            fileField.value = "";
-            partField.value = "";
-        }
-
-        // Function to handle flashing Boot partitions
-        async function handleFlash(partition) {
-            const fileField = document.querySelector(".flash-file");
-            const file = fileField.files[0];
-            if (!file) {
-                alert("Please select a file to flash!");
-                return;
-            }
-            await device.flashBlob(partition, file);
-            fileField.value = ""; // Clear the file input after flashing
-        }
-
-        // Flash Boot button functionality
-        const flashBootButton = document.querySelector(".flash-boot-button");
-        flashBootButton.addEventListener("click", () => handleFlash("boot"));
-
-        // Flash Boot A button functionality
-        const flashBootAButton = document.querySelector(".flash-boot-a-button");
-        flashBootAButton.addEventListener("click", () => handleFlash("boot_a"));
-
-        // Flash Boot B button functionality
-        const flashBootBButton = document.querySelector(".flash-boot-b-button");
-        flashBootBButton.addEventListener("click", () => handleFlash("boot_b"));
-
-
         document.querySelector(".connect-button").addEventListener("click", connectDevice);
         document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
         document.querySelector(".reboot-button").addEventListener("click", rebootDevice);
@@ -370,6 +322,7 @@
         document.querySelector(".reboot-fastbootd-button").addEventListener("click", rebootToFastbootD);
         document.querySelector(".boot-form").addEventListener("submit", bootFormFile);
         document.querySelector(".flash-form").addEventListener("submit", flashFormFile);
+        document.querySelector(".factory-form").addEventListener("submit", flashSelectedZip);
     </script>
 </body>
 </html>
