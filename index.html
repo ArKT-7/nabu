@@ -124,7 +124,6 @@
 </head>
 <body>
     <h1>Fastboot Tool by ArKt</h1>
-    <button class="theme-switch">Toggle Dark Mode</button> <!-- Dark Mode Switch -->
     <div class="container">
         <p class="status-field">Not connected in Fastboot</p>
         <button class="button connect-button">Connect device Fastboot</button>
@@ -429,19 +428,6 @@ function handleDisconnect() {
         // Flash Boot B button functionality
         const flashBootBButton = document.querySelector(".flash-boot-b-button");
         flashBootBButton.addEventListener("click", () => handleFlash("boot_b"));
-
-        const themeSwitchButton = document.querySelector(".theme-switch-button");
-        const body = document.body;
-
-    // Function to toggle the theme
-        const toggleTheme = () => {
-        body.classList.toggle("dark-theme");
-        const isDarkTheme = body.classList.contains("dark-theme");
-        themeSwitchButton.textContent = isDarkTheme ? "Switch to Light Mode" : "Switch to Dark Mode";
-        };
-
-    // Add event listener for the theme switch button
-        themeSwitchButton.addEventListener("click", toggleTheme);
 
 
         document.querySelector(".connect-button").addEventListener("click", connectDevice);
