@@ -213,12 +213,22 @@
 
          // Validation function to allow only .img files
         function validateFile(inputElement) {
-            const file = inputElement.files[0];
-            if (!file || !file.name.endsWith('.img')) {
-                alert('Please select a valid .img file.');
-                inputElement.value = ''; // Clear invalid file input
-            }
+    const file = inputElement.files[0];
+    const errorMessage = document.createElement('p');
+    errorMessage.style.color = 'red';
+    
+    if (!file || !file.name.endsWith('.img')) {
+        errorMessage.textContent = 'Please select a valid .img file.';
+        inputElement.parentNode.appendChild(errorMessage); // Add error message to the form
+        inputElement.value = ''; // Clear invalid file input
+    } else {
+        const existingError = inputElement.parentNode.querySelector('p');
+        if (existingError) {
+            existingError.remove(); // Remove error message if file is valid
         }
+    }
+}
+
 
 
        function toggleElements(disable) {
