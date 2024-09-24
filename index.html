@@ -539,18 +539,18 @@ async function runRebootCommand(command, successMessage) {
             return;
         }
 
-         try {
-            await device.flashBlob(partField.value, file);
-            alert(`Successfully flashed ${partField.value}`);
+        try {
+            await device.flashBlob(partition, file);
+            alert(`Successfully flashed ${partition}`);
         } catch (error) {
-            alert(`Failed to flash ${partField.value} : ${error.message}`);
+            alert(`Failed to flash ${partition}: ${error.message}`);
         } finally {
             fileField.value = "";
             partField.value = "";
             hideProgressOverlay();
             await checkDeviceConnection(); // Check if device is still connected
         }
-    }
+    }  
 
 
       
