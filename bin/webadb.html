@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ADB Device Manager</title>
+  <script src="https://cdn.jsdelivr.net/gh/webadb/webadb.js@master/webadb.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 50px;
+      text-align: center;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+    }
+    #status {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>ADB Device Manager</h1>
+  
+  <button id="connectBtn">Connect to Device</button>
+  <button id="rebootBtn" disabled>Reboot Device</button>
+
+  <div id="status">Status: Not Connected</div>
+
+  <script>
+    // Initialize WebADB instance
+    const adb = new WebADB();
+
+    // Get button and status elements
+    const connectBtn = document.getElementById('connectBtn');
+    const rebootBtn = document.getElementById('rebootBtn');
+    const statusDiv = document.getElementById('status');
+    let device;
+
+    // Connect to the device
+    connectBtn.addEventListener('click', async () => {
+      try {
+        device = await adb.requestDevice(); // Request device connection via ADB
+        await device.connect(); // Establish connection
+        statusDiv.textContent = 'Status: Connected to ' + device.serial;
+        rebootBtn.disabled = false; // Enable reboot button
+      } catch (error) {
+        console.error('Connection failed:', error);
+        statusDiv.textContent = 'Status: Connection Failed';
+      }
+    });
+
+    // Reboot the connected device
+    rebootBtn.addEventListener('click', async () => {
+      if (device) {
+        try {
+          await device.shell('reboot'); // Send reboot command via ADB
+          statusDiv.textContent = 'Status: Rebooting device...';
+        } catch (error) {
+          console.error('Reboot failed:', error);
+          statusDiv.textContent = 'Status: Reboot Failed';
+        }
+      }
+    });
+  </script>
+</body>
+</html>
