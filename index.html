@@ -131,6 +131,7 @@
         <button class="button reboot-bootloader-button">Reboot to Bootloader</button>
         <button class="button reboot-recovery-button">Reboot to Recovery</button>
         <button class="button reboot-fastbootd-button">Reboot to FastbootD</button>
+        <button class="button reboot-edl-button">Reboot to EDL</button>
         <p>Result:</p>
         <pre class="result-field"></pre>
     </div>
@@ -323,6 +324,10 @@ function handleDisconnect() {
             await runRebootCommand("reboot-fastboot", "Rebooted to FastbootD successfully!");
         }
 
+        async function rebootToEDL() {
+            await runRebootCommand("oem edl", "Rebooted to EDL successfully!");
+        }
+
         async function runRebootCommand(command, successMessage) {
             try {
                 let result = (await device.runCommand(command)).text;
@@ -481,6 +486,7 @@ flashBootBButton.addEventListener("click", () => handleFlash("boot_b"));
         document.querySelector(".reboot-bootloader-button").addEventListener("click", rebootToBootloader);
         document.querySelector(".reboot-recovery-button").addEventListener("click", rebootToRecovery);
         document.querySelector(".reboot-fastbootd-button").addEventListener("click", rebootToFastbootD);
+        document.querySelector(".reboot-edl-button").addEventListener("click", rebootToEDL);
         document.querySelector(".boot-form").addEventListener("submit", bootFormFile);
         document.querySelector(".flash-form").addEventListener("submit", flashFormFile);
     </script>
