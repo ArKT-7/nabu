@@ -135,7 +135,7 @@
         <label for="boot-file">Boot image:</label>
         <input type="file" name="boot-file" class="boot-file" />
         <select name="boot-type" class="boot-type">
-            <option value="">Select Boot Type</option>
+            <option value="">Select Boot Images for Nabu</option>
             <option value="twrp-nabu">Twrp Recovery Nabu</option>
             <option value="win-uefi-nabu">Windows UEFI Boot Nabu</option>
             <option value="twrp-mod-nabu">Twrp Modded Recovery Nabu</option>
@@ -146,6 +146,7 @@
         <!-- Progress Bar Inside the Form -->
         <div class="progress-container" style="display: none;"> <!-- Keep it hidden initially -->
             <div class="progress-bar"></div>
+            <h1>Downlaoding</h1>
         </div>
     </form>
 </div>
@@ -162,9 +163,9 @@
             <input type="text" name="flash-partition" class="flash-partition" />
             <input type="submit" value="Flash" class="button" />
         </form>
-        <button class="button flash-boot-button">Flash Boot</button>
-        <button class="button flash-boot-a-button">Flash Boot A</button>
-        <button class="button flash-boot-b-button">Flash Boot B</button>
+        <button class="button flash-boot-button">Flash to Boot</button>
+        <button class="button flash-boot-a-button">Flash to Boot A</button>
+        <button class="button flash-boot-b-button">Flash to Boot B</button>
     </div>
 
     <hr />
