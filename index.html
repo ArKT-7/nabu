@@ -331,43 +331,45 @@ function handleDisconnect() {
         }
 
          async function downloadBootImage(imagePath) {
-            const progressBarContainer = document.querySelector('.progress-container');
-            const progressBar = document.querySelector('.progress-bar');
-            const progressText = document.querySelector('.progress-text');
-            progressBarContainer.style.display = 'block'; // Show the progress bar
-            progressText.style.display = 'block'; // Show the progress text
+    const progressBarContainer = document.querySelector('.progress-container');
+    const progressBar = document.querySelector('.progress-bar');
+    const progressText = document.querySelector('.progress-text');
+    
+    progressBarContainer.style.display = 'block'; // Show the progress bar
+    progressText.style.display = 'block'; // Show the progress text
 
-            try {
-                const response = await fetch(imagePath);
-                if (!response.ok) throw new Error("Failed to download boot image");
+    try {
+        const response = await fetch(imagePath);
+        if (!response.ok) throw new Error("Failed to download boot image");
 
-                const contentLength = response.headers.get('Content-Length');
-                const total = parseInt(contentLength, 10);
-                let loaded = 0;
+        const contentLength = response.headers.get('Content-Length');
+        const total = parseInt(contentLength, 10);
+        let loaded = 0;
 
-                const reader = response.body.getReader();
-                const chunks = [];
+        const reader = response.body.getReader();
+        const chunks = [];
 
-                while (true) {
-                    const { done, value } = await reader.read();
-                    if (done) break;
-                    chunks.push(value);
-                    loaded += value.length;
-                    const percentage = (loaded / total) * 100;
-                    progressBar.style.width = `${percentage}%`;
-                    progressText.textContent = `Downloading: ${percentage.toFixed(2)}%`; // Update percentage text
-                }
-
-                const blob = new Blob(chunks);
-                return blob;
-            } catch (error) {
-                console.error("Download error:", error);
-                alert("Error downloading boot image. Please try again.");
-            } finally {
-                progressBarContainer.style.display = 'none'; // Hide the progress bar
-                progressText.style.display = 'none'; // Hide the progress text
-            }
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            chunks.push(value);
+            loaded += value.length;
+            const percentage = (loaded / total) * 100;
+            progressBar.style.width = `${percentage}%`;
+            progressText.textContent = `Downloading: ${percentage.toFixed(2)}%`; // Update percentage text
         }
+
+        const blob = new Blob(chunks);
+        return blob;
+    } catch (error) {
+        console.error("Download error:", error);
+        alert("Error downloading boot image. Please try again.");
+    } finally {
+        progressBarContainer.style.display = 'none'; // Hide the progress bar
+        progressText.style.display = 'none'; // Hide the progress text
+    }
+}
+
 
         
 
