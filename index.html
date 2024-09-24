@@ -33,7 +33,7 @@
 
     <div>
         <form class="command-form">
-            <label for="command">Command without fastboot:</label>
+            <label for="command">Command without fastboot loltest:</label>
             <input type="text" name="command" class="command-input" />
             <input type="submit" value="Send" />
         </form>
@@ -282,6 +282,51 @@
                 partitionField.value = ""; // Reset partition field
             }
         }
+        
+         async function flashBootImage() {
+            let flashBootFile = document.querySelector(".boot-file");
+            let bootImage = flashBootFile.files.length > 0 ? flashBootFile.files[0] : null;
+            if (bootImage) {
+                try {
+                    await device.flashBlob("boot", bootImage);
+                    alert(`Successfully flashed ${bootImage.name} to boot`);
+                } catch (error) {
+                    alert(`Failed to flash boot image: ${error.message}`);
+                }
+            } else {
+                alert("Please select a boot image file!");
+            }
+        }
+
+        async function flashBootAImage() {
+            let flashBootAFile = document.querySelector(".boot-file");
+            let bootAImage = flashBootAFile.files.length > 0 ? flashBootAFile.files[0] : null;
+            if (bootAImage) {
+                try {
+                    await device.flashBlob("boot_a", bootAImage);
+                    alert(`Successfully flashed ${bootAImage.name} to boot_a`);
+                } catch (error) {
+                    alert(`Failed to flash boot image A: ${error.message}`);
+                }
+            } else {
+                alert("Please select a boot image file for boot A!");
+            }
+        }
+
+        async function flashBootBImage() {
+            let flashBootBFile = document.querySelector(".boot-file");
+            let bootBImage = flashBootBFile.files.length > 0 ? flashBootBFile.files[0] : null;
+            if (bootBImage) {
+                try {
+                    await device.flashBlob("boot_b", bootBImage);
+                    alert(`Successfully flashed ${bootBImage.name} to boot_b`);
+                } catch (error) {
+                    alert(`Failed to flash boot image B: ${error.message}`);
+                }
+            } else {
+                alert("Please select a boot image file for boot B!");
+            }
+        }
 
         async function flashCustomFactoryImages(event) {
             event.preventDefault();
@@ -314,9 +359,12 @@
         document.querySelector(".reboot-recovery-button").addEventListener("click", rebootToRecovery);
         document.querySelector(".reboot-fastbootd-button").addEventListener("click", rebootToFastbootD);
         document.querySelector(".boot-form").addEventListener("submit", bootFormFile);
-        document.querySelector(".flash-form").addEventListener("submit", flashFormFile);
-        
         document.querySelector(".factory-form").addEventListener("submit", flashCustomFactoryImages);
+        document.querySelector(".flash-form").addEventListener("submit", flashFormFile);
+        document.querySelector(".flash-boot-button").addEventListener("click", flashBootImage);
+        document.querySelector(".flash-boot-a-button").addEventListener("click", flashBootAImage);
+        document.querySelector(".flash-boot-b-button").addEventListener("click", flashBootBImage);
+    
     </script>
 </body>
 </html>
