@@ -290,7 +290,6 @@ pre.result-field {
     }
 
     async function connectDevice() {
-        showProgressOverlay();
         let statusField = document.querySelector(".status-field");
         statusField.textContent = "Connecting...";
 
@@ -323,7 +322,6 @@ pre.result-field {
         statusField.innerHTML = status;
 
         toggleElements(false); // Enable all elements when connected
-        hideProgressOverlay();
     }
 
     toggleElements(true); // Initially disable all features
@@ -372,10 +370,8 @@ pre.result-field {
     }
 
     async function runRebootCommand(command, successMessage) {
-        showProgressOverlay();
         let result = (await device.runCommand(command)).text;
         document.querySelector(".result-field").textContent = result;
-        hideProgressOverlay();
     }
 
     async function bootFormFile(event) {
