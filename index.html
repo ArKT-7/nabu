@@ -539,11 +539,11 @@ async function runRebootCommand(command, successMessage) {
             return;
         }
 
-        try {
-            await device.flashBlob(partition, file);
-            alert(`Successfully flashed ${partition}`);
+         try {
+            await device.flashBlob(partField.value, file);
+            alert(`Successfully flashed ${partField.value}`);
         } catch (error) {
-            alert(`Failed to flash ${partition}: ${error.message}`);
+            alert(`Failed to flash ${partField.value} : ${error.message}`);
         } finally {
             fileField.value = "";
             partField.value = "";
@@ -552,6 +552,8 @@ async function runRebootCommand(command, successMessage) {
         }
     }
 
+
+      
     const flashBootButton = document.querySelector(".flash-boot-button");
     flashBootButton.addEventListener("click", () => handleFlash("boot"));
 
