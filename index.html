@@ -7,79 +7,72 @@
     <script src="dist/fastboot.mjs" type="module"></script>
     <script src="download.js" type="module"></script>
     <style>
-        body {
-            background-color: #f0f0f0; /* Light background for contrast */
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern font */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh; /* Full height */
-            margin: 0; /* Remove default margin */
-        }
+       /* General body styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #121212; /* Dark background */
+    color: #ffffff; /* Light text */
+}
 
-        .container {
-            background: white; /* White background for the container */
-            border-radius: 20px; /* Rounded corners */
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Floating effect */
-            padding: 20px; /* Padding inside the container */
-            width: 90%; /* Responsive width */
-            max-width: 600px; /* Maximum width */
-            box-sizing: border-box; /* Include padding in width */
-        }
+/* Main container styles */
+.container {
+    max-width: 800px; /* Set a maximum width */
+    margin: 20px auto; /* Center the container with margin */
+    padding: 20px; /* Add padding inside the container */
+    border-radius: 15px; /* Rounded corners */
+    background-color: #1e1e1e; /* Darker background for container */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+    overflow: auto; /* Handle overflow */
+}
 
-        h1 {
-            text-align: center;
-            color: #333; /* Dark text */
-            margin-bottom: 20px; /* Space below the title */
-        }
+/* Button styles */
+button {
+    background-color: #6200ea; /* Purple background */
+    color: white; /* White text */
+    border: none; /* Remove default border */
+    border-radius: 8px; /* Rounded corners */
+    padding: 10px 15px; /* Padding inside buttons */
+    cursor: pointer; /* Pointer cursor */
+    font-size: 16px; /* Font size */
+    transition: background-color 0.3s; /* Smooth transition for hover */
+    margin: 5px; /* Margin between buttons */
+}
 
-        p, label {
-            font-size: 14px; /* Standard font size */
-            color: #666; /* Lighter text color */
-        }
+button:hover {
+    background-color: #3700b3; /* Darker purple on hover */
+}
 
-        input[type="text"], input[type="file"], select {
-            width: 100%; /* Full width */
-            padding: 10px; /* Padding for inputs */
-            margin: 10px 0; /* Space around inputs */
-            border: 1px solid #ccc; /* Border color */
-            border-radius: 5px; /* Slightly rounded corners */
-            box-sizing: border-box; /* Include padding in width */
-        }
+/* Style for progress bars */
+.progress {
+    width: 100%; /* Full width */
+    background-color: #444; /* Darker background for progress bar */
+    border-radius: 10px; /* Rounded corners */
+    margin: 10px 0; /* Margin above and below */
+}
 
-        button {
-            background-color: #4caf50; /* Button color */
-            color: white; /* Button text color */
-            border: none; /* No border */
-            border-radius: 5px; /* Rounded corners */
-            padding: 10px; /* Padding for buttons */
-            width: 100%; /* Full width */
-            cursor: pointer; /* Pointer cursor on hover */
-            font-size: 16px; /* Button text size */
-            margin: 10px 0; /* Space around buttons */
-            transition: background-color 0.3s; /* Smooth color transition */
-        }
+/* Style for progress fill */
+.progress-fill {
+    height: 20px; /* Height of the progress fill */
+    background-color: #6200ea; /* Purple fill */
+    border-radius: 10px; /* Rounded corners */
+}
 
-        button:hover {
-            background-color: #45a049; /* Darker green on hover */
-        }
+/* For dark mode switch button */
+#theme-toggle {
+    position: fixed; /* Fixed position */
+    top: 20px; /* Top position */
+    right: 20px; /* Right position */
+    background-color: #6200ea; /* Purple background */
+    color: white; /* White text */
+    border: none; /* Remove border */
+    border-radius: 50%; /* Circular button */
+    width: 40px; /* Width */
+    height: 40px; /* Height */
+    cursor: pointer; /* Pointer cursor */
+}
 
-        .progress-container {
-            display: none; /* Initially hidden */
-            width: 100%; /* Full width */
-            height: 20px; /* Progress bar height */
-            background-color: #e0e0e0; /* Light background for progress */
-            border-radius: 5px; /* Rounded corners */
-            overflow: hidden; /* Hide overflow */
-            margin-top: 10px; /* Space above progress bar */
-        }
-
-        .progress-bar {
-            height: 100%; /* Full height */
-            width: 0%; /* Start width at 0 */
-            background-color: #4caf50; /* Progress bar color */
-            transition: width 0.5s; /* Smooth width transition */
-        }
     </style>
 </head>
 <body>
