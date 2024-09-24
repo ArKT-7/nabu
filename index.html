@@ -261,6 +261,7 @@ pre.result-field {
             button.disabled = false;
         });
     }
+       
 
     // Validation function to allow only .img files
     function validateFile(inputElement) {
@@ -332,6 +333,21 @@ pre.result-field {
         toggleElements(true); // Disable all elements on disconnect
     }
 
+       // Function to check if the device is still connected after operations
+async function checkDeviceConnection() {
+    let statusField = document.querySelector(".status-field");
+
+    try {
+        let product = await device.getVariable("product");
+        if (product) {
+            statusField.textContent = "Device is still connected in Fastboot mode.";
+        }
+    } catch (error) {
+        statusField.textContent = "Device disconnected!";
+        toggleElements(true); // Disable all elements on disconnect
+    }
+}
+
     async function sendFormCommand(event) {
         event.preventDefault();
         showProgressOverlay();
@@ -369,10 +385,23 @@ pre.result-field {
         await runRebootCommand("oem edl", "Rebooted to EDL successfully!");
     }
 
-    async function runRebootCommand(command, successMessage) {
+   //async function runRebootCommand(command, successMessage) {
+       // let result = (await device.runCommand(command)).text;
+       // document.querySelector(".result-field").textContent = result;
+   // } 
+
+       // After rebooting
+async function runRebootCommand(command, successMessage) {
+    try {
         let result = (await device.runCommand(command)).text;
         document.querySelector(".result-field").textContent = result;
+        alert(successMessage);
+    } catch (error) {
+        alert(`Error during reboot: ${error.message}`);
+    } finally {
+        await checkDeviceConnection(); // Check if device is still connected after reboot
     }
+}
 
     async function bootFormFile(event) {
         event.preventDefault();
@@ -408,6 +437,7 @@ pre.result-field {
             fileField.value = ""; // Reset file input after use
             bootTypeSelect.selectedIndex = 0; // Reset selection
             hideProgressOverlay();
+            await checkDeviceConnection(); // Check if device is still connected
         }
     }
 
@@ -488,6 +518,7 @@ pre.result-field {
             fileField.value = "";
             partField.value = "";
             hideProgressOverlay();
+            await checkDeviceConnection(); // Check if device is still connected
         }
     }
 
