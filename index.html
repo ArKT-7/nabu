@@ -7,97 +7,72 @@
     <script src="dist/fastboot.mjs" type="module"></script>
     <script src="download.js" type="module"></script>
     <style>
-        /* Root Styling */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: rgba(0, 0, 0, 0.5); /* Dim background for focus effect */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
+        /* Dark and Light theme styling */
+        :root {
+            --bg-color-light: #f0f0f0;
+            --text-color-light: #333;
+            --bg-color-dark: #1e1e1e;
+            --text-color-dark: #f1f1f1;
         }
 
-        /* Main Floating Container */
+        body.light-mode {
+            background-color: var(--bg-color-light);
+            color: var(--text-color-light);
+        }
+
+        body.dark-mode {
+            background-color: var(--bg-color-dark);
+            color: var(--text-color-dark);
+        }
+
         .container {
-            background-color: #fff;
+            width: 400px;
+            height: 600px;
+            background-color: white;
             border-radius: 20px;
-            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.15); /* Strong shadow for floating effect */
-            padding: 30px;
-            max-width: 450px; /* Reduced width for smaller, centered container */
-            width: 100%;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            margin: auto;
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 20px;
             display: flex;
             flex-direction: column;
+            justify-content: center;
             align-items: center;
         }
 
-        /* Title */
-        h1 {
-            text-align: center;
-            color: #0078D4;
-            font-size: 20px; /* Smaller title */
-            margin-bottom: 15px;
+        .container.dark-mode {
+            background-color: #2e2e2e;
         }
 
-        /* Status and Command Section */
-        .status-section, .command-section, .boot-section, .flash-section {
-            width: 100%;
-            margin-bottom: 15px; /* Increased space between sections */
-        }
-
-        /* Buttons */
         button {
-            background-color: #0078D4;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            padding: 10px 15px; /* Reduced padding for compact buttons */
-            cursor: pointer;
-            font-size: 14px; /* Smaller button font */
-            transition: background-color 0.3s ease;
-            margin-bottom: 10px; /* Space between buttons */
-        }
-
-        button:hover {
-            background-color: #005a9e;
-        }
-
-        button:disabled {
-            background-color: #a0a0a0;
-            cursor: not-allowed;
-        }
-
-        /* Inputs and Selects */
-        input[type="text"], input[type="file"], select {
-            width: 100%;
-            padding: 10px;
-            border-radius: 10px;
-            border: 1px solid #ccc;
-            margin-top: 5px;
-            margin-bottom: 15px; /* More space between form fields */
-            font-size: 14px;
-        }
-
-        /* Result Display */
-        pre.result-field {
-            background-color: #f3f3f3;
-            padding: 15px;
-            border-radius: 10px;
-            width: 100%;
-            min-height: 50px;
             margin-top: 10px;
-            overflow: auto;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
         }
 
-        /* Progress Bar */
+        /* Switch button for dark/light mode */
+        .theme-switch {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: #ccc;
+            border-radius: 20px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
         .progress-container {
             width: 100%;
             height: 20px;
-            background-color: #e0e0e0;
-            border-radius: 10px;
-            margin-top: 15px;
+            background-color: #f3f3f3;
+            border-radius: 5px;
             overflow: hidden;
             display: none; /* Initially hidden */
+            margin-bottom: 15px;
         }
 
         .progress-bar {
@@ -107,74 +82,69 @@
             transition: width 0.5s;
         }
 
-        /* Centering Flex Containers */
-        .flex-center {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
+        /* Styling inputs, buttons, and forms */
+        form {
+            width: 100%;
+            margin-bottom: 15px;
         }
 
-        /* Command Form Alignment */
-        .command-section form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        input[type="file"], input[type="text"], select {
+            width: 100%;
+            margin: 5px 0;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        input[type="submit"], button {
+            background-color: #007bff;
+            color: white;
+            border-radius: 8px;
         }
     </style>
 </head>
-<body>
+<body class="light-mode">
     <div class="container">
-        <h1>Flash .img files by ArKt</h1>
-
-        <div class="status-section flex-center">
-            <p>Status: <span class="status-field">Not connected in Fastboot</span></p>
-            <button class="connect-button">Connect device Fastboot</button>
-        </div>
-
-        <div class="command-section">
-            <form class="command-form">
-                <label for="command">Command without fastboot:</label>
-                <input type="text" name="command" class="command-input" placeholder="Enter command here" />
-                <input type="submit" value="Send" />
-            </form>
-            <button class="reboot-button">Reboot Device</button>
-            <button class="reboot-bootloader-button">Reboot to Bootloader</button>
-            <button class="reboot-recovery-button">Reboot to Recovery</button>
-            <button class="reboot-fastbootd-button">Reboot to FastbootD</button>
-            <p>Result:</p>
-            <pre class="result-field"></pre>
-        </div>
-
-        <div class="boot-section">
-            <form class="boot-form">
-                <label for="boot-file">Boot image:</label>
-                <input type="file" name="boot-file" class="boot-file" />
-                <select name="boot-type" class="boot-type">
-                    <option value="">Select Boot Type</option>
-                    <option value="twrp-nabu">Twrp Recovery Nabu</option>
-                    <option value="win-uefi-nabu">Windows UEFI Boot Nabu</option>
-                    <option value="twrp-mod-nabu">Twrp Modded Recovery Nabu</option>
-                    <option value="orangefox-mod-nabu">OrangeFox Modded Recovery Nabu</option>
-                </select>
-                <input type="submit" value="Boot" />
-            </form>
-        </div>
-
-        <div class="flash-section">
-            <form class="flash-form">
-                <label for="flash-file">Flash image:</label>
-                <input type="file" name="flash-file" class="flash-file" />
-                <br />
-                <label for="flash-partition">Partition:</label>
-                <input type="text" name="flash-partition" class="flash-partition" placeholder="Enter partition name" />
-                <input type="submit" value="Flash" />
-            </form>
-            <button class="flash-boot-button">Flash Boot</button>
-            <button class="flash-boot-a-button">Flash Boot A</button>
-            <button class="flash-boot-b-button">Flash Boot B</button>
-        </div>
-
+        <div class="theme-switch">🌙</div>
+        <p>Status: <span class="status-field">Not connected in Fastboot</span></p>
+        <button class="connect-button">Connect device Fastboot</button>
+        <hr />
+        <form class="command-form">
+            <label for="command">Command without fastboot:</label>
+            <input type="text" name="command" class="command-input" />
+            <input type="submit" value="Send" />
+        </form>
+        <button class="reboot-button">Reboot Device</button>
+        <button class="reboot-bootloader-button">Reboot to Bootloader</button>
+        <button class="reboot-recovery-button">Reboot to Recovery</button>
+        <button class="reboot-fastbootd-button">Reboot to FastbootD</button>
+        <p>Result:</p>
+        <pre class="result-field"></pre>
+        <hr />
+        <form class="boot-form">
+            <label for="boot-file">Boot image:</label>
+            <input type="file" name="boot-file" class="boot-file" />
+            <select name="boot-type" class="boot-type">
+                <option value="">Select Boot Type</option>
+                <option value="twrp-nabu">Twrp Recovery Nabu</option>
+                <option value="win-uefi-nabu">Windows UEFI Boot Nabu</option>
+                <option value="twrp-mod-nabu">Twrp Modded Recovery Nabu</option>
+                <option value="orangefox-mod-nabu">OrangeFox Modded Recovery Nabu</option>
+            </select>
+            <input type="submit" value="Boot" />
+        </form>
+        <hr />
+        <form class="flash-form">
+            <label for="flash-file">Flash image:</label>
+            <input type="file" name="flash-file" class="flash-file" />
+            <br />
+            <label for="flash-partition">Partition:</label>
+            <input type="text" name="flash-partition" class="flash-partition" />
+            <input type="submit" value="Flash" />
+        </form>
+        <button class="flash-boot-button">Flash Boot</button>
+        <button class="flash-boot-a-button">Flash Boot A</button>
+        <button class="flash-boot-b-button">Flash Boot B</button>
         <div class="progress-container">
             <div class="progress-bar"></div>
         </div>
@@ -189,6 +159,17 @@
         let blobStore = new BlobStore();
 
         fastboot.setDebugLevel(2);
+
+        document.querySelector(".theme-switch").addEventListener("click", function() {
+            const body = document.body;
+            body.classList.toggle("dark-mode");
+            if (body.classList.contains("dark-mode")) {
+                this.textContent = "☀️";
+            } else {
+                this.textContent = "🌙";
+            }
+        });
+
 
        function toggleElements(disable) {
     const formElements = document.querySelectorAll("input, button, select");
