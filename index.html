@@ -139,22 +139,23 @@
 
 <div class="container">
     <form class="boot-form">
-    <label for="boot-file">Boot image:</label>
-    <input type="file" id="boot-file" name="boot-file" accept=".img" onchange="handleFileSelection(this)" />
-    <select name="boot-type" class="boot-type" onchange="handleDropdownSelection(this)">
-        <option value="">Select Boot Images for Nabu</option>
-        <option value="twrp-nabu">Twrp Recovery Nabu</option>
-        <option value="win-uefi-nabu">Windows UEFI Boot Nabu</option>
-        <option value="twrp-mod-nabu">Twrp Modded Recovery Nabu</option>
-        <option value="orangefox-mod-nabu">OrangeFox Modded Recovery Nabu</option>
-    </select>
-    <input type="submit" value="Boot" class="button" />
-    
-    <!-- Progress Bar Inside the Form -->
-    <div class="progress-container" style="display: none;"> <!-- Keep it hidden initially -->
-        <div class="progress-bar"></div>
-    </div>
-</form>
+        <label for="boot-file">Boot image:</label>
+        <input type="file" id="boot-file" name="boot-file" accept=".img" onchange="validateFile(this)" />
+        <select name="boot-type" class="boot-type">
+            <option value="">Select Boot Images for Nabu</option>
+            <option value="twrp-nabu">Twrp Recovery Nabu</option>
+            <option value="win-uefi-nabu">Windows UEFI Boot Nabu</option>
+            <option value="twrp-mod-nabu">Twrp Modded Recovery Nabu</option>
+            <option value="orangefox-mod-nabu">OrangeFox Modded Recovery Nabu</option>
+        </select>
+        <input type="submit" value="Boot" class="button" />
+        
+        <!-- Progress Bar Inside the Form -->
+        <div class="progress-container" style="display: none;"> <!-- Keep it hidden initially -->
+            <div class="progress-bar"></div>
+        
+        </div>
+    </form>
 </div>
 
 
@@ -306,58 +307,38 @@ function handleDisconnect() {
             }
         }
 
-        function handleFileSelection(fileInput) {
-    let dropdown = document.querySelector(".boot-type");
-    if (fileInput.files.length > 0) {
-        dropdown.disabled = true;  // Disable dropdown if a file is selected
-    } else {
-        dropdown.disabled = false; // Enable dropdown if no file is selected
-    }
-}
+        async function bootFormFile(event) {
+            event.preventDefault();
+            let fileField = document.querySelector(".boot-file");
+            let bootTypeSelect = document.querySelector(".boot-type");
+            let selectedBootType = bootTypeSelect.value;
 
-function handleDropdownSelection(dropdown) {
-    let fileInput = document.querySelector("#boot-file");
-    if (dropdown.value !== "") {
-        fileInput.disabled = true;  // Disable file input if a dropdown option is selected
-    } else {
-        fileInput.disabled = false; // Enable file input if no dropdown option is selected
-    }
-}
+            let file;
+            if (fileField.files.length > 0) {
+                file = fileField.files[0];
+            } else if (selectedBootType) {
+                file = await downloadBootImage(getImagePath(selectedBootType));
+            } else {
+                alert("Please select a boot image file or choose a boot type!");
+                return;
+            }
 
-async function bootFormFile(event) {
-    event.preventDefault();
-    let fileField = document.querySelector("#boot-file");
-    let bootTypeSelect = document.querySelector(".boot-type");
-    let selectedBootType = bootTypeSelect.value;
+            if (!file) {
+                alert("Failed to obtain a valid boot image.");
+                return;
+            }
 
-    let file;
-    if (fileField.files.length > 0) {
-        file = fileField.files[0];
-    } else if (selectedBootType) {
-        file = await downloadBootImage(getImagePath(selectedBootType));
-    } else {
-        alert("Please select a boot image file or choose a boot type!");
-        return;
-    }
-
-    if (!file) {
-        alert("Failed to obtain a valid boot image.");
-        return;
-    }
-
-    try {
-        await device.bootBlob(file);
-        alert("Boot image booted successfully!");
-    } catch (error) {
-        console.error("Error booting image:", error);
-        alert("Error booting image. Please try again.");
-    } finally {
-        fileField.value = "";
-        bootTypeSelect.selectedIndex = 0; // Reset selection
-        fileField.disabled = false; // Re-enable file input
-        bootTypeSelect.disabled = false; // Re-enable dropdown
-    }
-}
+            try {
+                await device.bootBlob(file);
+                alert("Boot image booted successfully!");
+            } catch (error) {
+                console.error("Error booting image:", error);
+                alert("Error booting image. Please try again.");
+            } finally {
+                fileField.value = "";
+                bootTypeSelect.selectedIndex = 0; // Reset selection
+            }
+        }
 
         function getImagePath(selectedBootType) {
             switch (selectedBootType) {
