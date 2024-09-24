@@ -476,6 +476,9 @@ async function handleFlash(partition) {
 // Flash Boot button functionality
 const flashBootButton = document.querySelector(".flash-boot-button");
 flashBootButton.addEventListener("click", () => handleFlash("boot"));
+
+const flashBootABButton = document.querySelector(".flash-boot-ab-button");
+flashBootABButton.addEventListener("click", () => handleFlash("boot_ab"));
         
 // Flash Boot A button functionality
 const flashBootAButton = document.querySelector(".flash-boot-a-button");
