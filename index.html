@@ -179,24 +179,25 @@
 
     <!-- New Container for Downloading and Flashing Images -->
     <div class="container">
-        <form class="flash-image-form">
-            <label for="flash-boot-file">Download and Flash Boot Image:</label>
-            <input type="file" name="flash-boot-file" class="flash-boot-file" />
-            <select name="flash-boot-type" class="flash-boot-type">
-                <option value="">Select Boot Images for Flashing</option>
-                <option value="twrp-nabu">Twrp Recovery Nabu</option>
-                <option value="win-uefi-nabu">Windows UEFI Boot Nabu</option>
-                <option value="twrp-mod-nabu">Twrp Modded Recovery Nabu</option>
-                <option value="orangefox-mod-nabu">OrangeFox Modded Recovery Nabu</option>
-            </select>
-            <button class="button flash-boot-button">Flash to Boot</button>
-            <button class="button flash-boot-a-button">Flash to Boot A</button>
-            <button class="button flash-boot-b-button">Flash to Boot B</button>
-            <div class="progress-container" style="display: none;">
-                <div class="progress-bar"></div>
-            </div>
-        </form>
-    </div>
+    <form class="flash-image-form">
+        <label for="flash-boot-file">Download and Flash Boot Image:</label>
+        <input type="file" name="flash-boot-file" class="flash-boot-file" />
+        <select name="flash-boot-type" class="flash-boot-type">
+            <option value="">Select Boot Images for Flashing</option>
+            <option value="twrp-nabu">Twrp Recovery Nabu</option>
+            <option value="win-uefi-nabu">Windows UEFI Boot Nabu</option>
+            <option value="twrp-mod-nabu">Twrp Modded Recovery Nabu</option>
+            <option value="orangefox-mod-nabu">OrangeFox Modded Recovery Nabu</option>
+        </select>
+        <button type="button" class="button flash-boot-button">Flash to Boot</button>
+        <button type="button" class="button flash-boot-a-button">Flash to Boot A</button>
+        <button type="button" class="button flash-boot-b-button">Flash to Boot B</button>
+        <div class="progress-container" style="display: none;">
+            <div class="progress-bar"></div>
+        </div>
+    </form>
+</div>
+
 
     <hr />
 
