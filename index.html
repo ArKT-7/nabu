@@ -3,149 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fastboot tool by ArKt</title>
+    <title>Flash .img files by ArKt</title>
+    <link rel="stylesheet" href="styles.css">
     <script src="dist/fastboot.mjs" type="module"></script>
     <script src="download.js" type="module"></script>
     <style>
-       /* General body styles */
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-.container {
-    background-color: #ffffff;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    padding: 30px;
-    width: 90%;
-    max-width: 500px;
-    text-align: center;
-}
+        h1 {
+            color: #4a4a4a;
+        }
 
-h1 {
-    margin-bottom: 20px;
-}
+        .container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 600px;
+            margin: 10px;
+        }
 
-.button-group {
-    display: flex;
-    flex-direction: column;
-    gap: 10px; /* Space between buttons */
-}
+        .button {
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            margin: 5px 0;
+            width: 100%;
+        }
 
-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    padding: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
+        .button:hover {
+            background-color: #0056b3;
+            transform: scale(1.02);
+        }
 
-button:hover {
-    background-color: #0056b3;
-    transform: scale(1.05);
-}
+        .button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
 
-input[type="file"] {
-    margin: 20px 0;
-}
+        input[type="text"],
+        input[type="file"],
+        select {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
 
-.progress-bar {
-    background-color: #e0e0e0;
-    border-radius: 10px;
-    height: 20px;
-    width: 100%;
-    margin: 20px 0;
-}
+        label {
+            font-weight: bold;
+        }
 
-.progress {
-    background-color: #007bff;
-    height: 100%;
-    width: 0;
-    border-radius: 10px;
-    transition: width 0.3s ease;
-}
+        .progress-container {
+            width: 100%;
+            height: 20px;
+            background-color: #f3f3f3;
+            border-radius: 5px;
+            overflow: hidden;
+            display: none; /* Initially hidden */
+            margin-top: 10px;
+        }
 
-#themeSwitch {
-    background-color: #6c757d;
-    color: white;
-}
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: #4caf50;
+            transition: width 0.5s;
+        }
 
-#themeSwitch:hover {
-    background-color: #5a6268;
-}
+        .status-field {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
 
+        pre.result-field {
+            background-color: #f3f3f3;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            max-height: 200px;
+            border: 1px solid #ccc;
+        }
     </style>
 </head>
 <body>
+    <h1>Flash .img files by ArKt</h1>
     <div class="container">
-        <h1>Flash .img files by ArKt</h1>
-        <p>Status: <span class="status-field">Not connected in Fastboot</span></p>
-        <button class="connect-button">Connect device Fastboot</button>
+        <p class="status-field">Not connected in Fastboot</p>
+        <button class="button connect-button">Connect device Fastboot</button>
+    </div>
+    
+    <hr />
 
-        <hr />
+    <div class="container">
+        <form class="command-form">
+            <label for="command">Command without fastboot:</label>
+            <input type="text" name="command" class="command-input" />
+            <input type="submit" value="Send" class="button" />
+        </form>
+        <button class="button reboot-button">Reboot Device</button>
+        <button class="button reboot-bootloader-button">Reboot to Bootloader</button>
+        <button class="button reboot-recovery-button">Reboot to Recovery</button>
+        <button class="button reboot-fastbootd-button">Reboot to FastbootD</button>
+        <p>Result:</p>
+        <pre class="result-field"></pre>
+    </div>
 
-        <div>
-            <form class="command-form">
-                <label for="command">Command without fastboot:</label>
-                <input type="text" name="command" class="command-input" />
-                <input type="submit" value="Send" />
-            </form>
-            <button class="reboot-button">Reboot Device</button>
-            <button class="reboot-bootloader-button">Reboot to Bootloader</button>
-            <button class="reboot-recovery-button">Reboot to Recovery</button>
-            <button class="reboot-fastbootd-button">Reboot to FastbootD</button>
-            <p>Result:</p>
-            <pre class="result-field"></pre>
-        </div>
+    <hr />
 
-        <hr />
+    <div class="container">
+        <form class="boot-form">
+            <label for="boot-file">Boot image:</label>
+            <input type="file" name="boot-file" class="boot-file" />
+            <select name="boot-type" class="boot-type">
+                <option value="">Select Boot Type</option>
+                <option value="twrp-nabu">Twrp Recovery Nabu</option>
+                <option value="win-uefi-nabu">Windows UEFI Boot Nabu</option>
+                <option value="twrp-mod-nabu">Twrp Modded Recovery Nabu</option>
+                <option value="orangefox-mod-nabu">OrangeFox Modded Recovery Nabu</option>
+            </select>
+            <input type="submit" value="Boot" class="button" />
+        </form>
+    </div>
 
-        <div>
-            <form class="boot-form">
-                <label for="boot-file">Boot image:</label>
-                <input type="file" name="boot-file" class="boot-file" />
-                <select name="boot-type" class="boot-type">
-                    <option value="">Select Boot Type</option>
-                    <option value="twrp-nabu">Twrp Recovery Nabu</option>
-                    <option value="win-uefi-nabu">Windows UEFI Boot Nabu</option>
-                    <option value="twrp-mod-nabu">Twrp Modded Recovery Nabu</option>
-                    <option value="orangefox-mod-nabu">OrangeFox Modded Recovery Nabu</option>
-                </select>
-                <input type="submit" value="Boot" />
-            </form>
-        </div>
+    <hr />
 
-        <hr />
+    <div class="container">
+        <form class="flash-form">
+            <label for="flash-file">Flash image:</label>
+            <input type="file" name="flash-file" class="flash-file" />
+            <br />
+            <label for="flash-partition">Partition:</label>
+            <input type="text" name="flash-partition" class="flash-partition" />
+            <input type="submit" value="Flash" class="button" />
+        </form>
+        <button class="button flash-boot-button">Flash Boot</button>
+        <button class="button flash-boot-a-button">Flash Boot A</button>
+        <button class="button flash-boot-b-button">Flash Boot B</button>
+    </div>
 
-        <div>
-            <form class="flash-form">
-                <label for="flash-file">Flash image:</label>
-                <input type="file" name="flash-file" class="flash-file" />
-                <br />
-                <label for="flash-partition">Partition:</label>
-                <input type="text" name="flash-partition" class="flash-partition" />
-                <input type="submit" value="Flash" />
-            </form>
-            <button class="flash-boot-button">Flash Boot</button>
-            <button class="flash-boot-a-button">Flash Boot A</button>
-            <button class="flash-boot-b-button">Flash Boot B</button>
-        </div>
+    <hr />
 
-        <hr />
-
-        <div class="progress-container">
-            <div class="progress-bar"></div>
-        </div>
+    <div class="progress-container">
+        <div class="progress-bar"></div>
     </div>
 
     <script type="module">
