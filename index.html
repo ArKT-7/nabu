@@ -144,11 +144,10 @@
         <input type="submit" value="Boot" class="button" />
         
         <!-- Progress Bar Inside the Form -->
-        <div class="progress-container" style="display: none;">
+        <div class="progress-container" style="display: none;"> <!-- Keep it hidden initially -->
             <div class="progress-bar"></div>
-            <h1>Downloading <span class="progress-percentage">0%</span></h1>
+            <h1>Downlaoding</h1>
         </div>
-
     </form>
 </div>
 
@@ -199,7 +198,7 @@ async function connectDevice() {
     try {
         await device.connect();
     } catch (error) {
-        statusField.textContent = `Failed to connect to device: ${error.message}`;
+        statusField.textContent = Failed to connect to device: ${error.message};
         return;
     }
 
@@ -214,9 +213,9 @@ async function connectDevice() {
         deviceName = "Device name - Samsung S23 Ultra";
     }
 
-    let status = `Connected to - ${product} <br /> Current slot - ${slot} <br /> (serial: ${serial})`;
+    let status = Connected to - ${product} <br /> Current slot - ${slot} <br /> (serial: ${serial});
     if (deviceName) {
-        status += `<br />${deviceName}`;
+        status += <br />${deviceName};
     }
 
     statusField.innerHTML = status;
@@ -326,42 +325,38 @@ function handleDisconnect() {
         }
 
         async function downloadBootImage(imagePath) {
-    const progressBarContainer = document.querySelector('.progress-container');
-    const progressBar = document.querySelector('.progress-bar');
-    const progressPercentage = document.querySelector('.progress-percentage');
-    progressBarContainer.style.display = 'block'; // Show the progress bar
+            const progressBarContainer = document.querySelector('.progress-container');
+            const progressBar = document.querySelector('.progress-bar');
+            progressBarContainer.style.display = 'block'; // Show the progress bar
 
-    try {
-        const response = await fetch(imagePath);
-        if (!response.ok) throw new Error("Failed to download boot image");
+            try {
+                const response = await fetch(imagePath);
+                if (!response.ok) throw new Error("Failed to download boot image");
 
-        const contentLength = response.headers.get('Content-Length');
-        const total = parseInt(contentLength, 10);
-        let loaded = 0;
+                const contentLength = response.headers.get('Content-Length');
+                const total = parseInt(contentLength, 10);
+                let loaded = 0;
 
-        const reader = response.body.getReader();
-        const chunks = [];
+                const reader = response.body.getReader();
+                const chunks = [];
 
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            chunks.push(value);
-            loaded += value.length;
-            const percentage = ((loaded / total) * 100).toFixed(2);
-            progressBar.style.width = `${percentage}%`;
-            progressPercentage.textContent = `${percentage}%`; // Update the percentage text
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    chunks.push(value);
+                    loaded += value.length;
+                    progressBar.style.width = ${(loaded / total) * 100}%;
+                }
+
+                const blob = new Blob(chunks);
+                return blob;
+            } catch (error) {
+                console.error("Download error:", error);
+                alert("Error downloading boot image. Please try again.");
+            } finally {
+                progressBarContainer.style.display = 'none'; // Hide the progress bar
+            }
         }
-
-        const blob = new Blob(chunks);
-        return blob;
-    } catch (error) {
-        console.error("Download error:", error);
-        alert("Error downloading boot image. Please try again.");
-    } finally {
-        progressBarContainer.style.display = 'none'; // Hide the progress bar
-    }
-}
-
 
         async function flashFormFile(event) {
             event.preventDefault();
