@@ -13,27 +13,33 @@
             background-color: #f3f3f3;
             border-radius: 5px;
             overflow: hidden;
-            display: none; /* Initially hidden */
+            display: none;
         }
         .progress-bar {
             height: 100%;
             width: 0%;
             background-color: #4caf50;
-            transition: width 0.5s;
+            transition: width 0.5s ease-in-out;
         }
     </style>
 </head>
 <body>
+    <!-- Progress Bar Section -->
+    <div class="progress-container">
+        <div class="progress-bar"></div>
+    </div>
+
+    <!-- Rest of your code -->
     <div>
         <p>Status: <span class="status-field">Not connected in Fastboot</span></p>
-        <button class="connect-button">Connect device Fastboot </button>
+        <button class="connect-button">Connect device Fastboot</button>
     </div>
-    
+
     <hr />
 
     <div>
         <form class="command-form">
-            <label for="command">Command without fastboot testestetset:</label>
+            <label for="command">Command without fastboot:</label>
             <input type="text" name="command" class="command-input" />
             <input type="submit" value="Send" />
         </form>
@@ -85,7 +91,7 @@
         import { BlobStore } from "./download.js";
 
         let device = new fastboot.FastbootDevice();
-        let isConnected = false; // Flag to track the connection status
+        let isConnected = false;
 
         async function connectDevice() {
             let statusField = document.querySelector(".status-field");
@@ -93,10 +99,10 @@
 
             try {
                 await device.connect();
-                isConnected = true; // Set connected flag to true
+                isConnected = true;
             } catch (error) {
                 statusField.textContent = `Failed to connect to device: ${error.message}`;
-                isConnected = false; // Set connected flag to false
+                isConnected = false;
                 return;
             }
 
@@ -135,18 +141,6 @@
 
         async function rebootDevice() {
             await runRebootCommand("reboot", "Device rebooted successfully!");
-        }
-
-        async function rebootToBootloader() {
-            await runRebootCommand("reboot-bootloader", "Rebooted to Bootloader successfully!");
-        }
-
-        async function rebootToRecovery() {
-            await runRebootCommand("reboot-recovery", "Rebooted to Recovery successfully!");
-        }
-
-        async function rebootToFastbootD() {
-            await runRebootCommand("reboot-fastboot", "Rebooted to FastbootD successfully!");
         }
 
         async function runRebootCommand(command, successMessage) {
@@ -189,7 +183,7 @@
                 alert("Error booting image. Please try again.");
             } finally {
                 fileField.value = "";
-                bootTypeSelect.selectedIndex = 0; // Reset selection
+                bootTypeSelect.selectedIndex = 0; 
             }
         }
 
@@ -211,7 +205,7 @@
         async function downloadBootImage(imagePath) {
             const progressBarContainer = document.querySelector('.progress-container');
             const progressBar = document.querySelector('.progress-bar');
-            progressBarContainer.style.display = 'block'; // Show the progress bar
+            progressBarContainer.style.display = 'block'; 
 
             try {
                 const response = await fetch(imagePath);
@@ -229,7 +223,7 @@
                     if (done) break;
                     chunks.push(value);
                     loaded += value.length;
-                    progressBar.style.width = `${(loaded / total) * 100}%`; // Update progress
+                    progressBar.style.width = `${(loaded / total) * 100}%`; 
                 }
 
                 return new Blob(chunks);
@@ -237,7 +231,7 @@
                 console.error("Error downloading boot image:", error);
                 alert("Error downloading boot image. Please try again.");
             } finally {
-                progressBarContainer.style.display = 'none'; // Hide the progress bar
+                progressBarContainer.style.display = 'none'; 
             }
         }
 
