@@ -166,6 +166,9 @@ pre.result-field {
     <button class="button reboot-recovery-button">Reboot to Recovery</button>
     <button class="button reboot-fastbootd-button">Reboot to FastbootD</button>
     <button class="button reboot-edl-button">Reboot to EDL</button>
+    <!-- Result field to display command outputs -->
+<pre class="result-field" style="display: none;"></pre>
+
 </div>
 
 <hr />
@@ -349,21 +352,24 @@ async function checkDeviceConnection() {
 }
 
     async function sendFormCommand(event) {
-        event.preventDefault();
-        showProgressOverlay();
-        let inputField = document.querySelector(".command-input");
-        let command = inputField.value;
-        if (!command.trim()) {
-            alert("Please enter a command!");
-            hideProgressOverlay();
-            return;
-        }
-
-        let result = (await device.runCommand(command)).text;
-        document.querySelector(".result-field").textContent = result;
-        inputField.value = "";
+    event.preventDefault();
+    showProgressOverlay();
+    let inputField = document.querySelector(".command-input");
+    let command = inputField.value;
+    if (!command.trim()) {
+        alert("Please enter a command!");
         hideProgressOverlay();
+        return;
     }
+
+    let result = (await device.runCommand(command)).text;
+    let resultField = document.querySelector(".result-field");
+    resultField.textContent = result;
+    resultField.style.display = 'block'; // Show the result field
+    inputField.value = "";
+    hideProgressOverlay();
+}
+
 
     async function rebootDevice() {
         await runRebootCommand("reboot", "Device rebooted successfully!");
