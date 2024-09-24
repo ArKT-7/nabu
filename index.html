@@ -297,7 +297,7 @@ pre.result-field {
             await device.connect();
         } catch (error) {
             statusField.textContent = `Failed to connect to device: ${error.message}`;
-            hideProgressOverlay();
+            toggleElements(true); // Enable all elements when connected
             return;
         }
 
