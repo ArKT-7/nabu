@@ -546,7 +546,9 @@ async function runRebootCommand(command, successMessage) {
             alert(`Failed to flash ${partition}: ${error.message}`);
         } finally {
             fileField.value = "";
+            partField.value = "";
             hideProgressOverlay();
+            await checkDeviceConnection(); // Check if device is still connected
         }
     }
 
