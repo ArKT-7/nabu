@@ -171,9 +171,10 @@
             <input type="text" name="flash-partition" class="flash-partition" placeholder="Enter partition like- boot, dtbo, cust, recovery, etc. "/>
             <input type="submit" value="Flash" class="button" />
         </form>
-        <button class="button flash-boot-button">Flash to Boot</button>
-        <button class="button flash-boot-a-button">Flash to Boot A</button>
-        <button class="button flash-boot-b-button">Flash to Boot B</button>
+        <button class="button flash-boot-button">Flash to Boot (current slot)</button>
+        <button class="button flash-boot-ab-button">Flash to Boot_ab (both slots)</button>
+        <button class="button flash-boot-a-button">Flash to Boot A only</button>
+        <button class="button flash-boot-b-button">Flash to Boot B only</button>
     </div>
 
     <hr />
@@ -471,6 +472,10 @@ async function handleFlash(partition) {
 const flashBootButton = document.querySelector(".flash-boot-button");
 flashBootButton.addEventListener("click", () => handleFlash("boot"));
 
+        // Flash Boot A button functionality
+const flashBootAButton = document.querySelector(".flash-boot-ab-button");
+flashBootAButton.addEventListener("click", () => handleFlash("boot_ab"));
+        
 // Flash Boot A button functionality
 const flashBootAButton = document.querySelector(".flash-boot-a-button");
 flashBootAButton.addEventListener("click", () => handleFlash("boot_a"));
