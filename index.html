@@ -7,62 +7,30 @@
     <script src="dist/fastboot.mjs" type="module"></script>
     <script src="download.js" type="module"></script>
     <style>
-        /* Dark and Light theme styling */
-        :root {
-            --bg-color-light: #f0f0f0;
-            --text-color-light: #333;
-            --bg-color-dark: #1e1e1e;
-            --text-color-dark: #f1f1f1;
-        }
-
-        body.light-mode {
-            background-color: var(--bg-color-light);
-            color: var(--text-color-light);
-        }
-
-        body.dark-mode {
-            background-color: var(--bg-color-dark);
-            color: var(--text-color-dark);
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
 
         .container {
-            width: 400px;
-            height: 600px;
             background-color: white;
-            border-radius: 20px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            margin: auto;
-            position: relative;
-            top: 50%;
-            transform: translateY(-50%);
+            border-radius: 15px;
             padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: relative;
         }
 
-        .container.dark-mode {
-            background-color: #2e2e2e;
-        }
-
-        button {
-            margin-top: 10px;
-            padding: 10px 15px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-        }
-
-        /* Switch button for dark/light mode */
-        .theme-switch {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background-color: #ccc;
-            border-radius: 20px;
-            padding: 5px 10px;
-            cursor: pointer;
+        .dark-theme {
+            background-color: #333;
+            color: white;
         }
 
         .progress-container {
@@ -72,9 +40,7 @@
             border-radius: 5px;
             overflow: hidden;
             display: none; /* Initially hidden */
-            margin-bottom: 15px;
         }
-
         .progress-bar {
             height: 100%;
             width: 0%;
@@ -82,69 +48,96 @@
             transition: width 0.5s;
         }
 
-        /* Styling inputs, buttons, and forms */
-        form {
-            width: 100%;
-            margin-bottom: 15px;
-        }
-
-        input[type="file"], input[type="text"], select {
-            width: 100%;
-            margin: 5px 0;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-        }
-
-        input[type="submit"], button {
-            background-color: #007bff;
+        .theme-switch {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            padding: 5px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4caf50;
             color: white;
-            border-radius: 8px;
+        }
+
+        /* Add some spacing for buttons */
+        button {
+            margin: 5px 0;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4caf50;
+            color: white;
+            cursor: pointer;
+        }
+
+        input[type="text"], input[type="file"], select {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
     </style>
 </head>
-<body class="light-mode">
+<body>
     <div class="container">
-        <div class="theme-switch">🌙</div>
+        <button class="theme-switch">Toggle Dark Theme</button>
         <p>Status: <span class="status-field">Not connected in Fastboot</span></p>
         <button class="connect-button">Connect device Fastboot</button>
+        
         <hr />
-        <form class="command-form">
-            <label for="command">Command without fastboot:</label>
-            <input type="text" name="command" class="command-input" />
-            <input type="submit" value="Send" />
-        </form>
-        <button class="reboot-button">Reboot Device</button>
-        <button class="reboot-bootloader-button">Reboot to Bootloader</button>
-        <button class="reboot-recovery-button">Reboot to Recovery</button>
-        <button class="reboot-fastbootd-button">Reboot to FastbootD</button>
-        <p>Result:</p>
-        <pre class="result-field"></pre>
+
+        <div>
+            <form class="command-form">
+                <label for="command">Command without fastboot:</label>
+                <input type="text" name="command" class="command-input" />
+                <input type="submit" value="Send" />
+            </form>
+            <button class="reboot-button">Reboot Device</button>
+            <button class="reboot-bootloader-button">Reboot to Bootloader</button>
+            <button class="reboot-recovery-button">Reboot to Recovery</button>
+            <button class="reboot-fastbootd-button">Reboot to FastbootD</button>
+            <p>Result:</p>
+            <pre class="result-field"></pre>
+        </div>
+
         <hr />
-        <form class="boot-form">
-            <label for="boot-file">Boot image:</label>
-            <input type="file" name="boot-file" class="boot-file" />
-            <select name="boot-type" class="boot-type">
-                <option value="">Select Boot Type</option>
-                <option value="twrp-nabu">Twrp Recovery Nabu</option>
-                <option value="win-uefi-nabu">Windows UEFI Boot Nabu</option>
-                <option value="twrp-mod-nabu">Twrp Modded Recovery Nabu</option>
-                <option value="orangefox-mod-nabu">OrangeFox Modded Recovery Nabu</option>
-            </select>
-            <input type="submit" value="Boot" />
-        </form>
+
+        <div>
+            <form class="boot-form">
+                <label for="boot-file">Boot image:</label>
+                <input type="file" name="boot-file" class="boot-file" />
+                <select name="boot-type" class="boot-type">
+                    <option value="">Select Boot Type</option>
+                    <option value="twrp-nabu">Twrp Recovery Nabu</option>
+                    <option value="win-uefi-nabu">Windows UEFI Boot Nabu</option>
+                    <option value="twrp-mod-nabu">Twrp Modded Recovery Nabu</option>
+                    <option value="orangefox-mod-nabu">OrangeFox Modded Recovery Nabu</option>
+                </select>
+                <input type="submit" value="Boot" />
+            </form>
+        </div>
+
         <hr />
-        <form class="flash-form">
-            <label for="flash-file">Flash image:</label>
-            <input type="file" name="flash-file" class="flash-file" />
-            <br />
-            <label for="flash-partition">Partition:</label>
-            <input type="text" name="flash-partition" class="flash-partition" />
-            <input type="submit" value="Flash" />
-        </form>
-        <button class="flash-boot-button">Flash Boot</button>
-        <button class="flash-boot-a-button">Flash Boot A</button>
-        <button class="flash-boot-b-button">Flash Boot B</button>
+
+        <div>
+            <form class="flash-form">
+                <label for="flash-file">Flash image:</label>
+                <input type="file" name="flash-file" class="flash-file" />
+                <br />
+                <label for="flash-partition">Partition:</label>
+                <input type="text" name="flash-partition" class="flash-partition" />
+                <input type="submit" value="Flash" />
+            </form>
+            <button class="flash-boot-button">Flash Boot</button>
+            <button class="flash-boot-a-button">Flash Boot A</button>
+            <button class="flash-boot-b-button">Flash Boot B</button>
+        </div>
+
+        <hr />
+
         <div class="progress-container">
             <div class="progress-bar"></div>
         </div>
