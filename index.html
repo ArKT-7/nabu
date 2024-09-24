@@ -413,28 +413,39 @@ function handleDisconnect() {
         }
 
         // Function to handle flashing Boot partitions
-        async function handleFlash(partition) {
-            const fileField = document.querySelector(".flash-file");
-            const file = fileField.files[0];
-            if (!file) {
-                alert("Please select a file to flash!");
-                return;
-            }
-            await device.flashBlob(partition, file);
-            fileField.value = ""; // Clear the file input after flashing
-        }
+        // Function to handle flashing Boot partitions
+async function handleFlash(partition) {
+    const fileField = document.querySelector(".flash-file");
+    const file = fileField.files[0];
 
-        // Flash Boot button functionality
-        const flashBootButton = document.querySelector(".flash-boot-button");
-        flashBootButton.addEventListener("click", () => handleFlash("boot"));
+    if (!file) {
+        alert("Please select a file to flash!");
+        return;
+    }
 
-        // Flash Boot A button functionality
-        const flashBootAButton = document.querySelector(".flash-boot-a-button");
-        flashBootAButton.addEventListener("click", () => handleFlash("boot_a"));
+    try {
+        // Attempt to flash the partition
+        await device.flashBlob(partition, file);
+        alert(`Successfully flashed ${partition}`);
+    } catch (error) {
+        // If there's an error, display a failure message
+        alert(`Failed to flash ${partition}: ${error.message}`);
+    } finally {
+        fileField.value = ""; // Clear the file input after flashing
+    }
+}
 
-        // Flash Boot B button functionality
-        const flashBootBButton = document.querySelector(".flash-boot-b-button");
-        flashBootBButton.addEventListener("click", () => handleFlash("boot_b"));
+// Flash Boot button functionality
+const flashBootButton = document.querySelector(".flash-boot-button");
+flashBootButton.addEventListener("click", () => handleFlash("boot"));
+
+// Flash Boot A button functionality
+const flashBootAButton = document.querySelector(".flash-boot-a-button");
+flashBootAButton.addEventListener("click", () => handleFlash("boot_a"));
+
+// Flash Boot B button functionality
+const flashBootBButton = document.querySelector(".flash-boot-b-button");
+flashBootBButton.addEventListener("click", () => handleFlash("boot_b"));
 
 
         document.querySelector(".connect-button").addEventListener("click", connectDevice);
