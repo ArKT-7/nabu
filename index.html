@@ -259,74 +259,75 @@
         }
 
         async function flashFormFile(event) {
-            event.preventDefault();
-            let fileField = document.querySelector(".flash-file");
-            let partitionField = document.querySelector(".flash-partition");
-            let partition = partitionField.value;
+    event.preventDefault();
+    let fileField = document.querySelector(".flash-file");
+    let partitionField = document.querySelector(".flash-partition");
+    let partition = partitionField.value;
 
-            if (!fileField.files.length || !partition.trim()) {
-                alert("Please select a flash image file and enter a partition!");
-                return;
-            }
+    if (!fileField.files.length || !partition.trim()) {
+        alert("Please select a flash image file and enter a partition!");
+        return;
+    }
 
-            let file = fileField.files[0];
+    let file = fileField.files[0];
 
-            try {
-                await device.flashBlob(file, partition);
-                alert(`Flashed ${partition} successfully!`);
-            } catch (error) {
-                console.error("Error flashing image:", error);
-                alert("Error flashing image. Please try again.");
-            } finally {
-                fileField.value = "";
-                partitionField.value = ""; // Reset partition field
-            }
+    try {
+        await device.flashBlob(file, partition);
+        alert(`Flashed ${file.name} to ${partition} successfully!`);
+    } catch (error) {
+        console.error("Error flashing image:", error);
+        alert(`Error flashing image to ${partition}. Please try again.`);
+    } finally {
+        fileField.value = "";
+        partitionField.value = ""; // Reset partition field
+    }
+}
+
+async function flashBootImage() {
+    let flashBootFile = document.querySelector(".boot-file");
+    let bootImage = flashBootFile.files.length > 0 ? flashBootFile.files[0] : null;
+    if (bootImage) {
+        try {
+            await device.flashBlob(bootImage, "boot");
+            alert(`Successfully flashed ${bootImage.name} to boot`);
+        } catch (error) {
+            alert(`Failed to flash boot image: ${error.message}`);
         }
-        
-         async function flashBootImage() {
-            let flashBootFile = document.querySelector(".boot-file");
-            let bootImage = flashBootFile.files.length > 0 ? flashBootFile.files[0] : null;
-            if (bootImage) {
-                try {
-                    await device.flashBlob("boot", bootImage);
-                    alert(`Successfully flashed ${bootImage.name} to boot`);
-                } catch (error) {
-                    alert(`Failed to flash boot image: ${error.message}`);
-                }
-            } else {
-                alert("Please select a boot image file!");
-            }
-        }
+    } else {
+        alert("Please select a boot image file!");
+    }
+}
 
-        async function flashBootAImage() {
-            let flashBootAFile = document.querySelector(".boot-file");
-            let bootAImage = flashBootAFile.files.length > 0 ? flashBootAFile.files[0] : null;
-            if (bootAImage) {
-                try {
-                    await device.flashBlob("boot_a", bootAImage);
-                    alert(`Successfully flashed ${bootAImage.name} to boot_a`);
-                } catch (error) {
-                    alert(`Failed to flash boot image A: ${error.message}`);
-                }
-            } else {
-                alert("Please select a boot image file for boot A!");
-            }
+async function flashBootAImage() {
+    let flashBootAFile = document.querySelector(".boot-file");
+    let bootAImage = flashBootAFile.files.length > 0 ? flashBootAFile.files[0] : null;
+    if (bootAImage) {
+        try {
+            await device.flashBlob(bootAImage, "boot_a");
+            alert(`Successfully flashed ${bootAImage.name} to boot_a`);
+        } catch (error) {
+            alert(`Failed to flash boot image A: ${error.message}`);
         }
+    } else {
+        alert("Please select a boot image file for boot A!");
+    }
+}
 
-        async function flashBootBImage() {
-            let flashBootBFile = document.querySelector(".boot-file");
-            let bootBImage = flashBootBFile.files.length > 0 ? flashBootBFile.files[0] : null;
-            if (bootBImage) {
-                try {
-                    await device.flashBlob("boot_b", bootBImage);
-                    alert(`Successfully flashed ${bootBImage.name} to boot_b`);
-                } catch (error) {
-                    alert(`Failed to flash boot image B: ${error.message}`);
-                }
-            } else {
-                alert("Please select a boot image file for boot B!");
-            }
+async function flashBootBImage() {
+    let flashBootBFile = document.querySelector(".boot-file");
+    let bootBImage = flashBootBFile.files.length > 0 ? flashBootBFile.files[0] : null;
+    if (bootBImage) {
+        try {
+            await device.flashBlob(bootBImage, "boot_b");
+            alert(`Successfully flashed ${bootBImage.name} to boot_b`);
+        } catch (error) {
+            alert(`Failed to flash boot image B: ${error.message}`);
         }
+    } else {
+        alert("Please select a boot image file for boot B!");
+    }
+}
+
 
         async function flashCustomFactoryImages(event) {
             event.preventDefault();
