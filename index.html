@@ -365,10 +365,13 @@ function handleDisconnect() {
         console.error("Download error:", error);
         alert("Error downloading boot image. Please try again.");
     } finally {
+    // Keep the progress bar and text visible for a moment before hiding
+    setTimeout(() => {
         progressBarContainer.style.display = 'none'; // Hide the progress bar
         progressText.style.display = 'none'; // Hide the progress text
-    }
+    }, 2000); // Keeps it visible for 2 seconds
 }
+
 
 
         
