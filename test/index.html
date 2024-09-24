@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
-    <script src="dist/fastboot.mjs" type="module"></script>
-    <script src="download.js" type="module"></script>
+    <script src="../dist/fastboot.mjs" type="module"></script>
+    <script src="./download.js" type="module"></script>
     <meta property="og:title" content="Fastboot Tool by ArKt" />
     <meta property="og:description" content="It can boot Images like recovery and can flash images in any partition" />
     <meta property="og:url" content="https://arkt-7.github.io/nabu/" />
@@ -204,7 +204,7 @@
     <hr />
  -->
     <script type="module">
-        import * as fastboot from "./dist/fastboot.mjs";
+        import * as fastboot from "../dist/fastboot.mjs";
         import { BlobStore } from "./download.js";
 
         let device = new fastboot.FastbootDevice();
