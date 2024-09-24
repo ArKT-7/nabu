@@ -339,38 +339,43 @@ function handleDisconnect() {
             }
         }
 
+       
         async function bootFormFile(event) {
-            event.preventDefault();
-            let fileField = document.querySelector(".boot-file");
-            let bootTypeSelect = document.querySelector(".boot-type");
-            let selectedBootType = bootTypeSelect.value;
+    event.preventDefault();
+    let fileField = document.querySelector("#boot-file"); // Change to correct selector
+    let bootTypeSelect = document.querySelector(".boot-type");
+    let selectedBootType = bootTypeSelect.value;
 
-            let file;
-            if (fileField.files.length > 0) {
-                file = fileField.files[0];
-            } else if (selectedBootType) {
-                file = await downloadBootImage(getImagePath(selectedBootType));
-            } else {
-                alert("Please select a boot image file or choose a boot type!");
-                return;
-            }
+    let file;
+    // Check if a file is selected first
+    if (fileField.files.length > 0) {
+        file = fileField.files[0];
+    } 
+    // Check if a boot type is selected
+    else if (selectedBootType) {
+        file = await downloadBootImage(getImagePath(selectedBootType));
+    } else {
+        alert("Please select a boot image file or choose a boot type!");
+        return;
+    }
 
-            if (!file) {
-                alert("Failed to obtain a valid boot image.");
-                return;
-            }
+    if (!file) {
+        alert("Failed to obtain a valid boot image.");
+        return;
+    }
 
-            try {
-                await device.bootBlob(file);
-                alert("Boot image booted successfully!");
-            } catch (error) {
-                console.error("Error booting image:", error);
-                alert("Error booting image. Please try again.");
-            } finally {
-                fileField.value = "";
-                bootTypeSelect.selectedIndex = 0; // Reset selection
-            }
-        }
+    try {
+        await device.bootBlob(file);
+        alert("Boot image booted successfully!");
+    } catch (error) {
+        console.error("Error booting image:", error);
+        alert("Error booting image. Please try again.");
+    } finally {
+        fileField.value = ""; // Reset file input after use
+        bootTypeSelect.selectedIndex = 0; // Reset selection
+    }
+}
+
 
         function getImagePath(selectedBootType) {
             switch (selectedBootType) {
