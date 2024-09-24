@@ -94,35 +94,56 @@
 
         fastboot.setDebugLevel(2);
 
-        async function connectDevice() {
-            let statusField = document.querySelector(".status-field");
-            statusField.textContent = "Connecting...";
+       function toggleElements(disable) {
+    const formElements = document.querySelectorAll("input, button, select");
+    formElements.forEach((element) => {
+        element.disabled = disable;
+    });
+}
 
-            try {
-                await device.connect();
-            } catch (error) {
-                statusField.textContent = `Failed to connect to device: ${error.message}`;
-                return;
-            }
+async function connectDevice() {
+    let statusField = document.querySelector(".status-field");
+    statusField.textContent = "Connecting...";
 
-            let product = await device.getVariable("product");
-            let slot = await device.getVariable("current-slot");
-            let serial = await device.getVariable("serialno");
-            
-            let deviceName = "";
-            if (product === "nabu") {
-                deviceName = "Device name - Xiaomi Pad 5";
-            } else if (product === "dm3q") {
-                deviceName = "Device name - Samsung S23 Ultra";
-            }
+    try {
+        await device.connect();
+    } catch (error) {
+        statusField.textContent = `Failed to connect to device: ${error.message}`;
+        return;
+    }
 
-            let status = `Connected to - ${product} <br /> Current slot - ${slot} <br /> (serial: ${serial})`;
-            if (deviceName) {
-                status += `<br />${deviceName}`;
-            }
+    let product = await device.getVariable("product");
+    let slot = await device.getVariable("current-slot");
+    let serial = await device.getVariable("serialno");
+    
+    let deviceName = "";
+    if (product === "nabu") {
+        deviceName = "Device name - Xiaomi Pad 5";
+    } else if (product === "dm3q") {
+        deviceName = "Device name - Samsung S23 Ultra";
+    }
 
-            statusField.innerHTML = status;
-        }
+    let status = `Connected to - ${product} <br /> Current slot - ${slot} <br /> (serial: ${serial})`;
+    if (deviceName) {
+        status += `<br />${deviceName}`;
+    }
+
+    statusField.innerHTML = status;
+
+    // Enable all elements when connected
+    toggleElements(false);
+}
+
+// Initially disable all features
+toggleElements(true);
+
+// Call this when the device disconnects or connection fails
+function handleDisconnect() {
+    let statusField = document.querySelector(".status-field");
+    statusField.textContent = "Not connected in Fastboot";
+    toggleElements(true); // Disable all elements on disconnect
+}
+
 
         async function sendFormCommand(event) {
             event.preventDefault();
