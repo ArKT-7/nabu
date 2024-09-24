@@ -354,6 +354,14 @@ function handleDisconnect() {
                     return null;
             }
         }
+        
+        function validateFile(input) {
+        const file = input.files[0];
+        if (file && !file.name.endsWith('.img')) {
+            alert('Please select a .img file only.');
+            input.value = ''; // Clear the invalid file
+            }
+        }
 
         async function downloadBootImage(imagePath) {
             const progressBarContainer = document.querySelector('.progress-container');
@@ -447,17 +455,7 @@ flashBootAButton.addEventListener("click", () => handleFlash("boot_a"));
 const flashBootBButton = document.querySelector(".flash-boot-b-button");
 flashBootBButton.addEventListener("click", () => handleFlash("boot_b"));
 
-        function validateFile(input) {
-    const filePath = input.value;
-    // Allow only .img files
-    const allowedExtensions = /(\.img)$/i;
-
-    if (!allowedExtensions.exec(filePath)) {
-        alert('Invalid file type. Please select an .img file.');
-        input.value = ''; // Clear the input
-        return false;
-    }
-}
+   
 
 
         document.querySelector(".connect-button").addEventListener("click", connectDevice);
