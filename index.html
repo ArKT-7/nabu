@@ -202,249 +202,275 @@
     <hr />
 
     <script type="module">
-        import * as fastboot from "./dist/fastboot.mjs";
-        import { BlobStore } from "./download.js";
+    import * as fastboot from "./dist/fastboot.mjs";
+    import { BlobStore } from "./download.js";
 
-        let device = new fastboot.FastbootDevice();
-        window.device = device;
-        let blobStore = new BlobStore();
+    let device = new fastboot.FastbootDevice();
+    window.device = device;
+    let blobStore = new BlobStore();
 
-        fastboot.setDebugLevel(2);
+    fastboot.setDebugLevel(2);
 
-       function toggleElements(disable) {
-    const formElements = document.querySelectorAll("input, button, select");
-    formElements.forEach((element) => {
-        // Exclude the "Connect" button from being disabled
-        if (!element.classList.contains('connect-button')) {
-            element.disabled = disable;
-        }
-    });
-}
-
-
-async function connectDevice() {
-    let statusField = document.querySelector(".status-field");
-    statusField.textContent = "Connecting...";
-
-    try {
-        await device.connect();
-    } catch (error) {
-        statusField.textContent = `Failed to connect to device: ${error.message}`;
-        return;
-    }
-
-    let product = await device.getVariable("product");
-    let slot = await device.getVariable("current-slot");
-    let serial = await device.getVariable("serialno");
-    
-    let deviceName = "";
-    if (product === "nabu") {
-        deviceName = "Device name - Xiaomi Pad 5";
-    } else if (product === "dm3q") {
-        deviceName = "Device name - Samsung S23 Ultra";
-    }
-
-    let status = `Connected to - ${product} <br /> Current slot - ${slot} <br /> (serial: ${serial})`;
-    if (deviceName) {
-        status += `<br />${deviceName}`;
-    }
-
-    statusField.innerHTML = status;
-
-    // Enable all elements when connected
-    toggleElements(false);
-}
-
-// Initially disable all features
-toggleElements(true);
-
-// Call this when the device disconnects or connection fails
-function handleDisconnect() {
-    let statusField = document.querySelector(".status-field");
-    statusField.textContent = "Not connected in Fastboot";
-    toggleElements(true); // Disable all elements on disconnect
-}
-
-
-        async function sendFormCommand(event) {
-            event.preventDefault();
-            let inputField = document.querySelector(".command-input");
-            let command = inputField.value;
-            if (!command.trim()) {
-                alert("Please enter a command!");
-                return;
+    function toggleElements(disable) {
+        const formElements = document.querySelectorAll("input, button, select");
+        formElements.forEach((element) => {
+            // Exclude the "Connect" button from being disabled
+            if (!element.classList.contains('connect-button')) {
+                element.disabled = disable;
             }
+        });
+    }
 
+    async function connectDevice() {
+        let statusField = document.querySelector(".status-field");
+        statusField.textContent = "Connecting...";
+
+        try {
+            await device.connect();
+        } catch (error) {
+            statusField.textContent = `Failed to connect to device: ${error.message}`;
+            return;
+        }
+
+        let product = await device.getVariable("product");
+        let slot = await device.getVariable("current-slot");
+        let serial = await device.getVariable("serialno");
+
+        let deviceName = "";
+        if (product === "nabu") {
+            deviceName = "Device name - Xiaomi Pad 5";
+        } else if (product === "dm3q") {
+            deviceName = "Device name - Samsung S23 Ultra";
+        }
+
+        let status = `Connected to - ${product} <br /> Current slot - ${slot} <br /> (serial: ${serial})`;
+        if (deviceName) {
+            status += `<br />${deviceName}`;
+        }
+
+        statusField.innerHTML = status;
+
+        // Enable all elements when connected
+        toggleElements(false);
+    }
+
+    // Initially disable all features
+    toggleElements(true);
+
+    // Call this when the device disconnects or connection fails
+    function handleDisconnect() {
+        let statusField = document.querySelector(".status-field");
+        statusField.textContent = "Not connected in Fastboot";
+        toggleElements(true); // Disable all elements on disconnect
+    }
+
+    async function sendFormCommand(event) {
+        event.preventDefault();
+        let inputField = document.querySelector(".command-input");
+        let command = inputField.value;
+        if (!command.trim()) {
+            alert("Please enter a command!");
+            return;
+        }
+
+        let result = (await device.runCommand(command)).text;
+        document.querySelector(".result-field").textContent = result;
+        inputField.value = "";
+    }
+
+    async function rebootDevice() {
+        await runRebootCommand("reboot", "Device rebooted successfully!");
+    }
+
+    async function rebootToBootloader() {
+        await runRebootCommand("reboot-bootloader", "Rebooted to Bootloader successfully!");
+    }
+
+    async function rebootToRecovery() {
+        await runRebootCommand("reboot-recovery", "Rebooted to Recovery successfully!");
+    }
+
+    async function rebootToFastbootD() {
+        await runRebootCommand("reboot-fastboot", "Rebooted to FastbootD successfully!");
+    }
+
+    async function runRebootCommand(command, successMessage) {
+        try {
             let result = (await device.runCommand(command)).text;
             document.querySelector(".result-field").textContent = result;
-            inputField.value = "";
+            alert(successMessage);
+        } catch (error) {
+            console.error("Error during reboot:", error);
+            alert("Error during reboot. Please try again.");
+        }
+    }
+
+    async function bootFormFile(event) {
+        event.preventDefault();
+        let fileField = document.querySelector(".boot-file");
+        let bootTypeSelect = document.querySelector(".boot-type");
+        let selectedBootType = bootTypeSelect.value;
+
+        let file;
+        if (fileField.files.length > 0) {
+            file = fileField.files[0];
+        } else if (selectedBootType) {
+            file = await downloadBootImage(getImagePath(selectedBootType));
+        } else {
+            alert("Please select a boot image file or choose a boot type!");
+            return;
         }
 
-        async function rebootDevice() {
-            await runRebootCommand("reboot", "Device rebooted successfully!");
+        if (!file) {
+            alert("Failed to obtain a valid boot image.");
+            return;
         }
 
-        async function rebootToBootloader() {
-            await runRebootCommand("reboot-bootloader", "Rebooted to Bootloader successfully!");
-        }
-
-        async function rebootToRecovery() {
-            await runRebootCommand("reboot-recovery", "Rebooted to Recovery successfully!");
-        }
-
-        async function rebootToFastbootD() {
-            await runRebootCommand("reboot-fastboot", "Rebooted to FastbootD successfully!");
-        }
-
-        async function runRebootCommand(command, successMessage) {
-            try {
-                let result = (await device.runCommand(command)).text;
-                document.querySelector(".result-field").textContent = result;
-                alert(successMessage);
-            } catch (error) {
-                console.error("Error during reboot:", error);
-                alert("Error during reboot. Please try again.");
-            }
-        }
-
-        async function bootFormFile(event) {
-            event.preventDefault();
-            let fileField = document.querySelector(".boot-file");
-            let bootTypeSelect = document.querySelector(".boot-type");
-            let selectedBootType = bootTypeSelect.value;
-
-            let file;
-            if (fileField.files.length > 0) {
-                file = fileField.files[0];
-            } else if (selectedBootType) {
-                file = await downloadBootImage(getImagePath(selectedBootType));
-            } else {
-                alert("Please select a boot image file or choose a boot type!");
-                return;
-            }
-
-            if (!file) {
-                alert("Failed to obtain a valid boot image.");
-                return;
-            }
-
-            try {
-                await device.bootBlob(file);
-                alert("Boot image booted successfully!");
-            } catch (error) {
-                console.error("Error booting image:", error);
-                alert("Error booting image. Please try again.");
-            } finally {
-                fileField.value = "";
-                bootTypeSelect.selectedIndex = 0; // Reset selection
-            }
-        }
-
-        function getImagePath(selectedBootType) {
-            switch (selectedBootType) {
-                case "twrp-nabu":
-                    return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/twrp-nabu.img";
-                case "win-uefi-nabu":
-                    return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/uefi-nabu.img";
-                case "twrp-mod-nabu":
-                    return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/twrp-modded-nabu.img";
-                case "orangefox-mod-nabu":
-                    return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/orangefox-modded-nabu.img";
-                default:
-                    return null;
-            }
-        }
-
-        async function downloadBootImage(imagePath) {
-            const progressBarContainer = document.querySelector('.progress-container');
-            const progressBar = document.querySelector('.progress-bar');
-            progressBarContainer.style.display = 'block'; // Show the progress bar
-
-            try {
-                const response = await fetch(imagePath);
-                if (!response.ok) throw new Error("Failed to download boot image");
-
-                const contentLength = response.headers.get('Content-Length');
-                const total = parseInt(contentLength, 10);
-                let loaded = 0;
-
-                const reader = response.body.getReader();
-                const chunks = [];
-
-                while (true) {
-                    const { done, value } = await reader.read();
-                    if (done) break;
-                    chunks.push(value);
-                    loaded += value.length;
-                    progressBar.style.width = `${(loaded / total) * 100}%`;
-                }
-
-                const blob = new Blob(chunks);
-                return blob;
-            } catch (error) {
-                console.error("Download error:", error);
-                alert("Error downloading boot image. Please try again.");
-            } finally {
-                progressBarContainer.style.display = 'none'; // Hide the progress bar
-            }
-        }
-
-        async function flashFormFile(event) {
-            event.preventDefault();
-            let fileField = document.querySelector(".flash-file");
-            let partField = document.querySelector(".flash-partition");
-            let file = fileField.files[0];
-
-            // Check if a file is selected
-            if (!file) {
-                alert("Please select a file to flash!");
-                return;
-            }
-
-            // Check if a partition is specified
-            if (!partField.value) {
-                alert("Please specify a partition to flash!");
-                return;
-            }
-
-            await device.flashBlob(partField.value, file);
+        try {
+            await device.bootBlob(file);
+            alert("Boot image booted successfully!");
+        } catch (error) {
+            console.error("Error booting image:", error);
+            alert("Error booting image. Please try again.");
+        } finally {
             fileField.value = "";
-            partField.value = "";
+            bootTypeSelect.selectedIndex = 0; // Reset selection
+        }
+    }
+
+    async function flashFormFile(event) {
+        event.preventDefault();
+        let fileField = document.querySelector(".flash-file");
+        let partField = document.querySelector(".flash-partition");
+        let file = fileField.files[0];
+
+        // Check if a file is selected
+        if (!file) {
+            alert("Please select a file to flash!");
+            return;
         }
 
-        // Function to handle flashing Boot partitions
-        async function handleFlash(partition) {
-            const fileField = document.querySelector(".flash-file");
-            const file = fileField.files[0];
-            if (!file) {
-                alert("Please select a file to flash!");
-                return;
+        // Check if a partition is specified
+        if (!partField.value) {
+            alert("Please specify a partition to flash!");
+            return;
+        }
+
+        await device.flashBlob(partField.value, file);
+        fileField.value = "";
+        partField.value = "";
+    }
+
+    async function downloadBootImage(imagePath) {
+        const progressBarContainer = document.querySelector('.progress-container');
+        const progressBar = document.querySelector('.progress-bar');
+        progressBarContainer.style.display = 'block'; // Show the progress bar
+
+        try {
+            const response = await fetch(imagePath);
+            if (!response.ok) throw new Error("Failed to download boot image");
+
+            const contentLength = response.headers.get('Content-Length');
+            const total = parseInt(contentLength, 10);
+            let loaded = 0;
+
+            const reader = response.body.getReader();
+            const chunks = [];
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                chunks.push(value);
+                loaded += value.length;
+                progressBar.style.width = `${(loaded / total) * 100}%`;
             }
-            await device.flashBlob(partition, file);
-            fileField.value = ""; // Clear the file input after flashing
+
+            const blob = new Blob(chunks);
+            return blob;
+        } catch (error) {
+            console.error("Download error:", error);
+            alert("Error downloading boot image. Please try again.");
+        } finally {
+            progressBarContainer.style.display = 'none'; // Hide the progress bar
+        }
+    }
+
+    async function handleFlash(partition) {
+        const fileField = document.querySelector(".flash-boot-file");
+        const bootTypeSelect = document.querySelector(".flash-boot-type");
+        let file;
+
+        if (fileField.files.length > 0) {
+            file = fileField.files[0];
+        } else if (bootTypeSelect.value) {
+            file = await downloadBootImage(getImagePath(bootTypeSelect.value));
+        } else {
+            alert("Please select a boot image file or choose a boot type!");
+            return;
         }
 
-        // Flash Boot button functionality
-        const flashBootButton = document.querySelector(".flash-boot-button");
-        flashBootButton.addEventListener("click", () => handleFlash("boot"));
+        if (!file) {
+            alert("Failed to obtain a valid boot image.");
+            return;
+        }
 
-        // Flash Boot A button functionality
-        const flashBootAButton = document.querySelector(".flash-boot-a-button");
-        flashBootAButton.addEventListener("click", () => handleFlash("boot_a"));
+        const progressContainer = document.querySelector(".progress-container");
+        const progressBar = document.querySelector(".progress-bar");
+        progressContainer.style.display = "block";
 
-        // Flash Boot B button functionality
-        const flashBootBButton = document.querySelector(".flash-boot-b-button");
-        flashBootBButton.addEventListener("click", () => handleFlash("boot_b"));
+        try {
+            // Flash the image to the selected partition
+            await device.flashBlob(file, partition, (progress) => {
+                // Update the progress bar
+                progressBar.style.width = `${progress * 100}%`;
+            });
+            alert(`Boot image flashed successfully to ${partition}!`);
+        } catch (error) {
+            console.error(`Error flashing image to ${partition}:`, error);
+            alert("Error flashing image. Please try again.");
+        } finally {
+            fileField.value = ""; // Reset file input
+            bootTypeSelect.selectedIndex = 0; // Reset selection
+            progressContainer.style.display = "none"; // Hide progress bar
+            progressBar.style.width = "0%"; // Reset progress bar
+        }
+    }
 
+    function getImagePath(selectedBootType) {
+        switch (selectedBootType) {
+            case "twrp-nabu":
+                return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/twrp-nabu.img";
+            case "win-uefi-nabu":
+                return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/uefi-nabu.img";
+            case "twrp-mod-nabu":
+                return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/twrp-mod-nabu.img";
+            case "orangefox-mod-nabu":
+                return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/orangefox-mod-nabu.img";
+            default:
+                return null;
+        }
+    }
 
-        document.querySelector(".connect-button").addEventListener("click", connectDevice);
-        document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
-        document.querySelector(".reboot-button").addEventListener("click", rebootDevice);
-        document.querySelector(".reboot-bootloader-button").addEventListener("click", rebootToBootloader);
-        document.querySelector(".reboot-recovery-button").addEventListener("click", rebootToRecovery);
-        document.querySelector(".reboot-fastbootd-button").addEventListener("click", rebootToFastbootD);
-        document.querySelector(".boot-form").addEventListener("submit", bootFormFile);
-        document.querySelector(".flash-form").addEventListener("submit", flashFormFile);
-    </script>
+    // Flash Boot button functionality
+    document.querySelector(".flash-boot-button").addEventListener("click", () => handleFlash("boot"));
+
+    // Flash Boot A button functionality
+    document.querySelector(".flash-boot-a-button").addEventListener("click", () => handleFlash("boot_a"));
+
+    // Flash Boot B button functionality
+    document.querySelector(".flash-boot-b-button").addEventListener("click", () => handleFlash("boot_b"));
+
+    // Event listeners for other functions
+    document.querySelector(".connect-button").addEventListener("click", connectDevice);
+    document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
+    document.querySelector(".reboot-button").addEventListener("click", rebootDevice);
+    document.querySelector(".reboot-bootloader-button").addEventListener("click", rebootToBootloader);
+    document.querySelector(".reboot-recovery-button").addEventListener("click", rebootToRecovery);
+    document.querySelector(".reboot-fastboot-button").addEventListener("click", rebootToFastbootD);
+    document.querySelector(".boot-form").addEventListener("submit", bootFormFile);
+    document.querySelector(".flash-form").addEventListener("submit", flashFormFile);
+    device.addEventListener("disconnect", handleDisconnect);
+</script>
+
 </body>
 </html>
