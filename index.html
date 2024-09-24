@@ -140,7 +140,7 @@
 <div class="container">
     <form class="boot-form">
         <label for="boot-file">Boot image:</label>
-        <input type="file" name="boot-file" class="boot-file" accept=".img" />
+        <input type="file" id="boot-file" name="boot-file" accept=".img" onchange="validateFile(this)" />
         <select name="boot-type" class="boot-type">
             <option value="">Select Boot Images for Nabu</option>
             <option value="twrp-nabu">Twrp Recovery Nabu</option>
@@ -164,7 +164,7 @@
     <div class="container">
         <form class="flash-form">
             <label for="flash-file">Flash image:</label>
-            <input type="file" name="flash-file" class="flash-file" accept=".img" />
+            <input type="file" name="flash-file" class="flash-file" accept=".img" onchange="validateFile(this)" />
             <br />
             <label for="flash-partition">Partition:</label>
             <input type="text" name="flash-partition" class="flash-partition" placeholder="Enter partition like- boot, dtbo, cust, recovery, etc. "/>
@@ -446,6 +446,18 @@ flashBootAButton.addEventListener("click", () => handleFlash("boot_a"));
 // Flash Boot B button functionality
 const flashBootBButton = document.querySelector(".flash-boot-b-button");
 flashBootBButton.addEventListener("click", () => handleFlash("boot_b"));
+
+        function validateFile(input) {
+    const filePath = input.value;
+    // Allow only .img files
+    const allowedExtensions = /(\.img)$/i;
+
+    if (!allowedExtensions.exec(filePath)) {
+        alert('Invalid file type. Please select an .img file.');
+        input.value = ''; // Clear the input
+        return false;
+    }
+}
 
 
         document.querySelector(".connect-button").addEventListener("click", connectDevice);
