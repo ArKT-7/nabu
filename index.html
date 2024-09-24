@@ -97,9 +97,13 @@
        function toggleElements(disable) {
     const formElements = document.querySelectorAll("input, button, select");
     formElements.forEach((element) => {
-        element.disabled = disable;
+        // Exclude the "Connect" button from being disabled
+        if (!element.classList.contains('connect-button')) {
+            element.disabled = disable;
+        }
     });
 }
+
 
 async function connectDevice() {
     let statusField = document.querySelector(".status-field");
