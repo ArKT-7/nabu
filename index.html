@@ -198,7 +198,7 @@ async function connectDevice() {
     try {
         await device.connect();
     } catch (error) {
-        statusField.textContent = Failed to connect to device: ${error.message};
+        statusField.textContent = `Failed to connect to device: ${error.message}`;
         return;
     }
 
@@ -213,9 +213,9 @@ async function connectDevice() {
         deviceName = "Device name - Samsung S23 Ultra";
     }
 
-    let status = Connected to - ${product} <br /> Current slot - ${slot} <br /> (serial: ${serial});
+    let status = `Connected to - ${product} <br /> Current slot - ${slot} <br /> (serial: ${serial})`;
     if (deviceName) {
-        status += <br />${deviceName};
+        status += `<br />${deviceName}`;
     }
 
     statusField.innerHTML = status;
@@ -345,7 +345,7 @@ function handleDisconnect() {
                     if (done) break;
                     chunks.push(value);
                     loaded += value.length;
-                    progressBar.style.width = ${(loaded / total) * 100}%;
+                    progressBar.style.width = `${(loaded / total) * 100}%`;
                 }
 
                 const blob = new Blob(chunks);
