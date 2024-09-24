@@ -529,28 +529,29 @@ async function runRebootCommand(command, successMessage) {
     }
 
     async function handleFlash(partition) {
-        showProgressOverlay();
-        const fileField = document.querySelector(".flash-file");
-        const file = fileField.files[0];
+    showProgressOverlay();
+    const fileField = document.querySelector(".flash-file");
+    const file = fileField.files[0];
 
-        if (!file) {
-            alert("Please select a file to flash!");
-            hideProgressOverlay();
-            return;
-        }
+    if (!file) {
+        alert("Please select a file to flash!");
+        hideProgressOverlay();
+        return;
+    }
 
-        try {
-            await device.flashBlob(partition, file);
-            alert(`Successfully flashed ${partition}`);
-        } catch (error) {
-            alert(`Failed to flash ${partition}: ${error.message}`);
-        } finally {
-            fileField.value = "";
-            partField.value = "";
-            hideProgressOverlay();
-            await checkDeviceConnection(); // Check if device is still connected
-        }
-    }  
+    try {
+        await device.flashBlob(partition, file);
+        alert(`Successfully flashed ${partition}`);
+    } catch (error) {
+        alert(`Failed to flash ${partition}: ${error.message}`);
+    } finally {
+        fileField.value = "";
+        partField.value = "";
+        hideProgressOverlay();
+        await checkDeviceConnection(); // Check if device is still connected
+    }
+}
+
 
 
       
