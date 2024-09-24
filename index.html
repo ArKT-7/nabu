@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="styles.css">
     <script src="dist/fastboot.mjs" type="module"></script>
     <script src="download.js" type="module"></script>
-    <meta property="og:title" content="Fastboot Tool by ArKt" />
+    <meta property="og:title" content="Windows 11 ARM64 Downloader" />
     <meta property="og:description" content="It can boot Images like recovery and can flash images in any partition" />
     <meta property="og:url" content="https://arkt-7.github.io/nabu/" />
     <meta property="og:type" content="website" />
@@ -176,30 +176,6 @@
     </div>
 
     <hr />
-
-    <!-- NEW: Flash Rooted Boot Image Section -->
-    <div class="container">
-        <h2>Flash Boot Image to Boot Partition</h2>
-        <form class="flash-root-form">
-            <label for="root-image-type">Select Rooted Boot Image:</label>
-            <select name="root-image-type" class="root-image-type">
-                <option value="">Select Rooted Boot Image</option>
-                <option value="hyperos-rooted">Hyper OS Rooted Image</option>
-                <option value="miui-rooted">MIUI Rooted Image</option>
-            </select>
-            <br />
-            <label for="root-image-file">Rooted Image File:</label>
-            <input type="file" name="root-image-file" class="root-image-file" />
-            <input type="submit" value="Flash Rooted Image to Boot A" class="button" />
-        </form>
-
-        <!-- Progress bar for rooted image flash -->
-        <div class="progress-container">
-            <div class="progress-bar"></div>
-        </div>
-    </div>
-
-     <hr />
 
     <script type="module">
         import * as fastboot from "./dist/fastboot.mjs";
