@@ -9,68 +9,79 @@
     <style>
        /* General body styles */
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
     margin: 0;
     padding: 0;
-    background-color: #121212; /* Dark background */
-    color: #ffffff; /* Light text */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
-/* Main container styles */
 .container {
-    max-width: 800px; /* Set a maximum width */
-    margin: 20px auto; /* Center the container with margin */
-    padding: 20px; /* Add padding inside the container */
-    border-radius: 15px; /* Rounded corners */
-    background-color: #1e1e1e; /* Darker background for container */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Shadow for depth */
-    overflow: auto; /* Handle overflow */
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
 }
 
-/* Button styles */
+h1 {
+    margin-bottom: 20px;
+}
+
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Space between buttons */
+}
+
 button {
-    background-color: #6200ea; /* Purple background */
-    color: white; /* White text */
-    border: none; /* Remove default border */
-    border-radius: 8px; /* Rounded corners */
-    padding: 10px 15px; /* Padding inside buttons */
-    cursor: pointer; /* Pointer cursor */
-    font-size: 16px; /* Font size */
-    transition: background-color 0.3s; /* Smooth transition for hover */
-    margin: 5px; /* Margin between buttons */
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 button:hover {
-    background-color: #3700b3; /* Darker purple on hover */
+    background-color: #0056b3;
+    transform: scale(1.05);
 }
 
-/* Style for progress bars */
+input[type="file"] {
+    margin: 20px 0;
+}
+
+.progress-bar {
+    background-color: #e0e0e0;
+    border-radius: 10px;
+    height: 20px;
+    width: 100%;
+    margin: 20px 0;
+}
+
 .progress {
-    width: 100%; /* Full width */
-    background-color: #444; /* Darker background for progress bar */
-    border-radius: 10px; /* Rounded corners */
-    margin: 10px 0; /* Margin above and below */
+    background-color: #007bff;
+    height: 100%;
+    width: 0;
+    border-radius: 10px;
+    transition: width 0.3s ease;
 }
 
-/* Style for progress fill */
-.progress-fill {
-    height: 20px; /* Height of the progress fill */
-    background-color: #6200ea; /* Purple fill */
-    border-radius: 10px; /* Rounded corners */
+#themeSwitch {
+    background-color: #6c757d;
+    color: white;
 }
 
-/* For dark mode switch button */
-#theme-toggle {
-    position: fixed; /* Fixed position */
-    top: 20px; /* Top position */
-    right: 20px; /* Right position */
-    background-color: #6200ea; /* Purple background */
-    color: white; /* White text */
-    border: none; /* Remove border */
-    border-radius: 50%; /* Circular button */
-    width: 40px; /* Width */
-    height: 40px; /* Height */
-    cursor: pointer; /* Pointer cursor */
+#themeSwitch:hover {
+    background-color: #5a6268;
 }
 
     </style>
