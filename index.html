@@ -177,30 +177,6 @@
 
     <hr />
 
-    <!-- New Container for Downloading and Flashing Images -->
-    <div class="container">
-    <form class="flash-image-form">
-        <label for="flash-boot-file">Download and Flash Boot Image:</label>
-        <input type="file" name="flash-boot-file" class="flash-boot-file" />
-        <select name="flash-boot-type" class="flash-boot-type">
-            <option value="">Select Boot Images for Flashing</option>
-            <option value="twrp-nabu">Twrp Recovery Nabu</option>
-            <option value="win-uefi-nabu">Windows UEFI Boot Nabu</option>
-            <option value="twrp-mod-nabu">Twrp Modded Recovery Nabu</option>
-            <option value="orangefox-mod-nabu">OrangeFox Modded Recovery Nabu</option>
-        </select>
-        <button type="button" class="button flash-boot-button">Flash to Boot</button>
-        <button type="button" class="button flash-boot-a-button">Flash to Boot A</button>
-        <button type="button" class="button flash-boot-b-button">Flash to Boot B</button>
-        <div class="progress-container" style="display: none;">
-            <div class="progress-bar"></div>
-        </div>
-    </form>
-</div>
-
-
-    <hr />
-
     <script type="module">
         import * as fastboot from "./dist/fastboot.mjs";
         import { BlobStore } from "./download.js";
@@ -229,7 +205,7 @@ async function connectDevice() {
     try {
         await device.connect();
     } catch (error) {
-        statusField.textContent = `Failed to connect to device: ${error.message}`;
+        statusField.textContent = Failed to connect to device: ${error.message};
         return;
     }
 
@@ -244,9 +220,9 @@ async function connectDevice() {
         deviceName = "Device name - Samsung S23 Ultra";
     }
 
-    let status = `Connected to - ${product} <br /> Current slot - ${slot} <br /> (serial: ${serial})`;
+    let status = Connected to - ${product} <br /> Current slot - ${slot} <br /> (serial: ${serial});
     if (deviceName) {
-        status += `<br />${deviceName}`;
+        status += <br />${deviceName};
     }
 
     statusField.innerHTML = status;
@@ -376,7 +352,7 @@ function handleDisconnect() {
                     if (done) break;
                     chunks.push(value);
                     loaded += value.length;
-                    progressBar.style.width = `${(loaded / total) * 100}%`;
+                    progressBar.style.width = ${(loaded / total) * 100}%;
                 }
 
                 const blob = new Blob(chunks);
