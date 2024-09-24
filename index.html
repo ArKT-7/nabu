@@ -263,30 +263,49 @@
         async function flashFormFile(event) {
             event.preventDefault();
             let fileField = document.querySelector(".flash-file");
-            let partitionField = document.querySelector(".flash-partition");
-            let file = fileField.files.length > 0 ? fileField.files[0] : null;
-            let partition = partitionField.value;
+            let partField = document.querySelector(".flash-partition");
+            let file = fileField.files[0];
 
+            // Check if a file is selected
             if (!file) {
                 alert("Please select a file to flash!");
                 return;
             }
-            if (!partition) {
-                alert("Please enter a partition name!");
+
+            // Check if a partition is specified
+            if (!partField.value) {
+                alert("Please specify a partition to flash!");
                 return;
             }
 
-            try {
-                await device.flashBlob(file, partition);
-                alert(`Flashed ${file.name} to ${partition} successfully!`);
-            } catch (error) {
-                console.error("Error flashing image:", error);
-                alert("Error flashing image. Please try again.");
-            } finally {
-                fileField.value = ""; // Reset file input
-                partitionField.value = ""; // Reset partition input
-            }
+            await device.flashBlob(partField.value, file);
+            fileField.value = "";
+            partField.value = "";
         }
+
+        // Function to handle flashing Boot partitions
+        async function handleFlash(partition) {
+            const fileField = document.querySelector(".flash-file");
+            const file = fileField.files[0];
+            if (!file) {
+                alert("Please select a file to flash!");
+                return;
+            }
+            await device.flashBlob(partition, file);
+            fileField.value = ""; // Clear the file input after flashing
+        }
+
+        // Flash Boot button functionality
+        const flashBootButton = document.querySelector(".flash-boot-button");
+        flashBootButton.addEventListener("click", () => handleFlash("boot"));
+
+        // Flash Boot A button functionality
+        const flashBootAButton = document.querySelector(".flash-boot-a-button");
+        flashBootAButton.addEventListener("click", () => handleFlash("boot_a"));
+
+        // Flash Boot B button functionality
+        const flashBootBButton = document.querySelector(".flash-boot-b-button");
+        flashBootBButton.addEventListener("click", () => handleFlash("boot_b"));
 
         async function flashSelectedZip(event) {
             event.preventDefault();
