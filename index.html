@@ -256,7 +256,8 @@ async function connectDevice() {
     let product = await device.getVariable("product");
     let slot = await device.getVariable("current-slot");
     let serial = await device.getVariable("serialno");
-    
+    let bootloaderStatus = await device.getVariable("unlocked"); // Assuming this variable indicates unlock status
+
     let deviceName = "";
     if (product === "nabu") {
         deviceName = "Device name - Xiaomi Pad 5";
@@ -264,16 +265,22 @@ async function connectDevice() {
         deviceName = "Device name - Samsung S23 Ultra";
     }
 
+    // Construct the status message
     let status = `Connected to - ${product} <br /> Current slot - ${slot} <br /> (serial: ${serial})`;
     if (deviceName) {
         status += `<br />${deviceName}`;
     }
 
+    // Add bootloader status to the status message
+    status += `<br />Bootloader status: ${bootloaderStatus ? 'Unlocked' : 'Locked'}`;
+
+    // Update the status field with the consolidated message
     statusField.innerHTML = status;
 
     // Enable all elements when connected
     toggleElements(false);
 }
+
 
 // Initially disable all features
 toggleElements(true);
