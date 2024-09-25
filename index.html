@@ -625,6 +625,7 @@ async function runRebootCommand(command, successMessage) {
        async function rbootFlashFormFile(event) {
     event.preventDefault();
     rbootShowProgressOverlay();
+           showProgressOverlay();
 
     let fileField = document.querySelector(".rboot-flash-file");
     let partField = document.querySelector(".rboot-flash-partition");  // Updated to use dropdown
@@ -640,12 +641,14 @@ async function runRebootCommand(command, successMessage) {
     } else {
         alert("Please select a file to flash or choose a predefined image!");
         rbootHideProgressOverlay();
+        hideProgressOverlay();
         return;
     }
 
     if (!file || !partField.value) {
         alert("Please select a valid file and partition!");
         rbootHideProgressOverlay();
+        hideProgressOverlay();
         return;
     }
 
@@ -658,6 +661,7 @@ async function runRebootCommand(command, successMessage) {
         fileField.value = "";
         partField.value = "";
         rbootHideProgressOverlay();
+        hideProgressOverlay();
         await CheckDeviceConnection(); // Check if device is still connected
     }
 }
