@@ -423,12 +423,10 @@ async function checkDeviceConnection() {
 
     async function sendFormCommand(event) {
     event.preventDefault();
-    showProgressOverlay();
     let inputField = document.querySelector(".command-input");
     let command = inputField.value;
     if (!command.trim()) {
         alert("Please enter a command!");
-        hideProgressOverlay();
         return;
     }
 
@@ -437,7 +435,6 @@ async function checkDeviceConnection() {
     resultField.textContent = result;
     resultField.style.display = 'block'; // Show the result field
     inputField.value = "";
-    hideProgressOverlay();
 }
 
 
