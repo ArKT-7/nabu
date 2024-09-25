@@ -342,10 +342,10 @@ pre.result-field {
         <label for="rboot-flash-image">Magisk Rooted boot Images</label>
         <select name="rboot-flash-image" class="rboot-flash-image">
             <option value="">Select rooted boot to flash on Nabu directly</option>
-            <option value="hyperos-miui-27000-nabu">Miui 14 to HyperOS(Magisk-27)</option>
-            <option value="win-uefi-nabu">Windows UEFI Boot Nabu</option>
-            <option value="twrp-mod-nabu">TWRP Modded Recovery Nabu</option>
-            <option value="orangefox-mod-nabu">OrangeFox Modded Recovery Nabu</option>
+            <option value="hyperos-miui-27000-nabu">Global Miui-14.0.5 to HyperOS-1.0.8(Magisk-27)</option>
+            <option value="lol">will come soon</option>
+            <option value="lol1">will come soon</option>
+            <option value="lol2">will come soon</option>
         </select>
         
         <input type="submit" value="Flash" class="button" />
@@ -733,12 +733,12 @@ function rbootGetImagePath(selectedImage) {
     switch (selectedImage) {
         case "hyperos-miui-27000-nabu":
             return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/hyperos-miui-27000-nabu.img";
-        case "win-uefi-nabu":
-            return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/uefi-nabu.img";
-        case "twrp-mod-nabu":
-            return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/twrp-modded-nabu.img";
-        case "orangefox-mod-nabu":
-            return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/orangefox-modded-nabu.img";
+        case "lol":
+            return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/lol.img";
+        case "lol1":
+            return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/lol1.img";
+        case "lol2":
+            return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/lol2.img";
         default:
             return null;
     }
