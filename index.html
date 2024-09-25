@@ -403,6 +403,58 @@ pre.result-field {
     fastboot.setDebugLevel(2);
 
     // Utility function to show the progress overlay and disable buttons
+    let messageInterval; // Store the interval globally, so we can clear it later
+    const progressMessage = document.getElementById('progress-message');
+    const messages = [
+        'Flashing...',
+        'Booting...',
+        'Going inside device...',
+        'IDK what\'s going on lol',
+        'Processing... Please wait' // Original message
+    ];
+    const originalMessage = messages[messages.length - 1]; // Original text
+    let messageIndex = 0;
+
+    function typeMessage(message, callback) {
+        let i = 0;
+        progressMessage.textContent = '';
+        const interval = setInterval(() => {
+            if (i < message.length) {
+                progressMessage.textContent += message[i];
+                i++;
+            } else {
+                clearInterval(interval);
+                if (callback) callback(); // Trigger the callback when done typing
+            }
+        }, 100); // Adjust typing speed
+    }
+
+    function clearMessage(callback) {
+        const interval = setInterval(() => {
+            if (progressMessage.textContent.length > 0) {
+                progressMessage.textContent = progressMessage.textContent.slice(0, -1);
+            } else {
+                clearInterval(interval);
+                if (callback) callback(); // Trigger the callback when text is cleared
+            }
+        }, 50); // Adjust clearing speed
+    }
+
+    function cycleMessages() {
+        clearMessage(() => {
+            typeMessage(messages[messageIndex], () => {
+                messageIndex = (messageIndex + 1) % messages.length; // Loop through messages
+                if (messageIndex === messages.length - 1) {
+                    // Keep the original message longer
+                    messageInterval = setTimeout(cycleMessages, 5000);
+                } else {
+                    messageInterval = setTimeout(cycleMessages, 2000);
+                }
+            });
+        });
+    }
+
+    // Utility function to show the progress overlay and disable buttons
     function showProgressOverlay() {
         const progressOverlay = document.getElementById('progress-overlay');
         const buttons = document.querySelectorAll('.button');
@@ -410,6 +462,9 @@ pre.result-field {
         buttons.forEach(button => {
             button.disabled = true;
         });
+
+        // Start the message cycling animation
+        cycleMessages();
     }
 
     // Utility function to hide the progress overlay and enable buttons
@@ -420,6 +475,11 @@ pre.result-field {
         buttons.forEach(button => {
             button.disabled = false;
         });
+
+        // Stop the message cycling animation
+        clearTimeout(messageInterval);
+        messageIndex = messages.length - 1; // Reset to original message
+        progressMessage.textContent = originalMessage; // Restore original message
     }
        
 
