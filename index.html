@@ -547,7 +547,7 @@ function toggleElements(disable) {
             status += `<br />${deviceName}`;
         }
 
-        status += `<br />Bootloader status: ${bootloaderStatus ? 'Unlocked' : 'Locked'}`;
+        status += `<br />Bootloader status: ${bootloaderStatus}`;
         statusField.innerHTML = status;
 
         toggleElements(false); // Enable all elements when connected
