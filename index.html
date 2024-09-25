@@ -403,14 +403,14 @@ pre.result-field {
     fastboot.setDebugLevel(2);
 
     // Utility function to show the progress overlay and disable buttons
-    let messageInterval; // Store the interval globally, so we can clear it later
+   let messageInterval; // Store the interval globally, so we can clear it later
     const progressMessage = document.getElementById('progress-message');
     const messages = [
-        'Flashing...',
-        'Booting...',
+        'ig Flashing...',
+        'idk may Booting...',
         'Going inside device...',
         'IDK what\'s going on lol',
-        'Processing... Please wait' // Original message
+        'Processing... ig Please wait now' // Original message
     ];
     const originalMessage = messages[messages.length - 1]; // Original text
     let messageIndex = 0;
@@ -441,14 +441,21 @@ pre.result-field {
     }
 
     function cycleMessages() {
+        // If we reach the last message, stop cycling and keep the last message
+        if (messageIndex === messages.length - 1) {
+            progressMessage.textContent = originalMessage; // Show the last message
+            return;
+        }
+
         clearMessage(() => {
             typeMessage(messages[messageIndex], () => {
-                messageIndex = (messageIndex + 1) % messages.length; // Loop through messages
-                if (messageIndex === messages.length - 1) {
-                    // Keep the original message longer
-                    messageInterval = setTimeout(cycleMessages, 5000);
+                messageIndex++; // Move to the next message
+                if (messageIndex < messages.length - 1) {
+                    // Continue cycling quickly for the first 4 messages
+                    messageInterval = setTimeout(cycleMessages, 500); // 500ms for each message
                 } else {
-                    messageInterval = setTimeout(cycleMessages, 2000);
+                    // Keep the last message longer
+                    messageInterval = setTimeout(cycleMessages, 2000); // Show last message longer
                 }
             });
         });
@@ -481,26 +488,8 @@ pre.result-field {
         messageIndex = messages.length - 1; // Reset to original message
         progressMessage.textContent = originalMessage; // Restore original message
     }
-       
 
-    // Validation function to allow only .img files
-    function validateFile(inputElement) {
-        const file = inputElement.files[0];
-        const errorMessage = document.createElement('p');
-        errorMessage.style.color = 'red';
-
-        if (!file || !file.name.endsWith('.img')) {
-            errorMessage.textContent = 'Please select a valid .img file.';
-            inputElement.parentNode.appendChild(errorMessage);
-            inputElement.value = ''; // Clear invalid file input
-        } else {
-            const existingError = inputElement.parentNode.querySelector('p');
-            if (existingError) {
-                existingError.remove(); // Remove error message if file is valid
-            }
-        }
-    }
-
+    
     function toggleElements(disable) {
         const formElements = document.querySelectorAll("input, button, select");
         formElements.forEach((element) => {
