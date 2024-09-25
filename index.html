@@ -270,9 +270,18 @@ pre.result-field {
         <label for="rboot-flash-file">Flash image:</label>
         <input type="file" name="rboot-flash-file" class="rboot-flash-file" accept=".img" />
         <br />
-        <label for="rboot-flash-partition">Partition:</label>
-        <input type="text" name="rboot-flash-partition" class="rboot-flash-partition" placeholder="Enter partition like- boot, dtbo, cust, recovery, etc." />
         
+        <!-- New dropdown for partition selection -->
+        <label for="rboot-flash-partition">Select Partition:</label>
+        <select name="rboot-flash-partition" class="rboot-flash-partition" required>
+            <option value="">Select a partition</option>
+            <option value="boot">Flash to Boot</option>
+            <option value="boot_a">Flash to Boot A</option>
+            <option value="boot_b">Flash to Boot B</option>
+            <option value="boot_ab">Flash to Boot AB</option>
+        </select>
+        <br />
+
         <!-- New dropdown for selecting predefined images -->
         <label for="rboot-flash-image">Select Flash Image:</label>
         <select name="rboot-flash-image" class="rboot-flash-image">
@@ -283,15 +292,14 @@ pre.result-field {
             <option value="orangefox-mod-nabu">OrangeFox Modded Recovery Nabu</option>
         </select>
         
-        <input type="submit" value="Flash" class="rboot-button" />
+        <input type="submit" value="Flash" class="button" />
     </form>
 
-    <!-- Progress Bar -->
-    <div class="rboot-progress-container" style="display: none;">
-        <div class="rboot-progress-bar"></div>
+    <!-- Progress bar for feedback -->
+    <div class="rboot-progress-container" style="display:none;">
+        <div class="rboot-progress-bar" style="width:0%; background-color:#4caf50; height:20px;"></div>
     </div>
 </div>
-
 
 
 
@@ -619,7 +627,7 @@ async function runRebootCommand(command, successMessage) {
     rbootShowProgressOverlay();
 
     let fileField = document.querySelector(".rboot-flash-file");
-    let partField = document.querySelector(".rboot-flash-partition");
+    let partField = document.querySelector(".rboot-flash-partition");  // Updated to use dropdown
     let selectedImage = document.querySelector(".rboot-flash-image").value;
 
     let file;
@@ -636,7 +644,7 @@ async function runRebootCommand(command, successMessage) {
     }
 
     if (!file || !partField.value) {
-        alert("Please select a valid file or partition!");
+        alert("Please select a valid file and partition!");
         rbootHideProgressOverlay();
         return;
     }
@@ -650,9 +658,10 @@ async function runRebootCommand(command, successMessage) {
         fileField.value = "";
         partField.value = "";
         rbootHideProgressOverlay();
-        await rbootCheckDeviceConnection(); // Check if device is still connected
+        await CheckDeviceConnection(); // Check if device is still connected
     }
 }
+
 
 function rbootGetImagePath(selectedImage) {
     switch (selectedImage) {
