@@ -654,6 +654,21 @@ async function runRebootCommand(command, successMessage) {
     }
 }
 
+function rbootGetImagePath(selectedImage) {
+    switch (selectedImage) {
+        case "twrp-nabu":
+            return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/twrp-nabu.img";
+        case "win-uefi-nabu":
+            return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/uefi-nabu.img";
+        case "twrp-mod-nabu":
+            return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/twrp-modded-nabu.img";
+        case "orangefox-mod-nabu":
+            return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/orangefox-modded-nabu.img";
+        default:
+            return null;
+    }
+}
+
 async function rbootDownloadFlashImage(imagePath) {
     const progressBarContainer = document.querySelector('.rboot-progress-container');
     const progressBar = document.querySelector('.rboot-progress-bar');
@@ -699,6 +714,8 @@ function rbootHideProgressOverlay() {
     const progressBarContainer = document.querySelector('.rboot-progress-container');
     progressBarContainer.style.display = 'none';
 }
+
+
 
 
       
