@@ -457,7 +457,6 @@ function cycleMessages() {
                 } else {
                     // After all messages are shown, start looping the final message
                     isFinalLoop = true;
-                    messageIndex = 0;
                     messageInterval = setTimeout(cycleMessages, 1000); // Start looping the final message
                 }
             });
@@ -474,6 +473,10 @@ function showProgressOverlay() {
         button.disabled = true;
     });
 
+    // Reset the message cycle to start from the beginning
+    messageIndex = 0;
+    isFinalLoop = false;
+
     // Start the message cycling animation
     cycleMessages();
 }
@@ -487,9 +490,11 @@ function hideProgressOverlay() {
         button.disabled = false;
     });
 
-    // Stop the message cycling animation
+    // Stop the message cycling animation and reset the messages
     clearTimeout(messageInterval);
-    progressMessage.textContent = finalMessage; // Display final message
+    messageIndex = 0; // Reset to the first message
+    isFinalLoop = false; // Reset final loop flag
+    progressMessage.textContent = ''; // Clear the message text
 }
 
 function toggleElements(disable) {
