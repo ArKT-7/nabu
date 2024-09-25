@@ -183,14 +183,6 @@ pre.result-field {
     overflow: hidden;
 }
 
-.rboot-progress-bar {
-    width: 0%;
-    height: 100%;
-    background-color: #4caf50;
-    border-radius: 5px;
-    transition: width 0.4s ease;
-}
-
     </style>
 </head>
 <body>
@@ -649,7 +641,7 @@ function rbootGetImagePath(selectedImage) {
 
 async function rbootDownloadFlashImage(imagePath) {
     const progressBarContainer = document.querySelector('.rboot-progress-container');
-    const progressBar = document.querySelector('.rboot-progress-bar');
+    const progressBar = document.querySelector('.progress-bar');
     progressBarContainer.style.display = 'block';
 
     try {
@@ -680,19 +672,6 @@ async function rbootDownloadFlashImage(imagePath) {
         progressBarContainer.style.display = 'none';
     }
 }
-
-function rbootShowProgressOverlay() {
-    const progressBarContainer = document.querySelector('.rboot-progress-container');
-    const progressBar = document.querySelector('.rboot-progress-bar');
-    progressBarContainer.style.display = 'block';
-    progressBar.style.width = '0%'; // Reset progress bar
-}
-
-function rbootHideProgressOverlay() {
-    const progressBarContainer = document.querySelector('.rboot-progress-container');
-    progressBarContainer.style.display = 'none';
-}
-
     document.querySelector(".connect-button").addEventListener("click", connectDevice);
     document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
     document.querySelector(".reboot-button").addEventListener("click", rebootDevice);
