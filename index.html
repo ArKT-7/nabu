@@ -101,15 +101,13 @@ input[type="text"] {
     display: block; /* Ensure inputs are block elements */
     width: 100%; /* Allow inputs to be full width */
     text-align: center; /* Center align text inside select fields */
-    width: 100%;
-    margin: 10px 0;
     max-width: 900%; /* Set a max-width for better centering */
-    text-align: center; /* Center align text inside input fields */
     padding: 12px;
     border-radius: 10px;
     border: 1px solid #ccc;
     box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.1);
     background-color: rgba(255, 255, 255, 0.8);
+    margin: 10px 0; /* Match the button's margin */
 }
 
 
@@ -285,7 +283,7 @@ pre.result-field {
 
 <div class="container">
     <form class="command-form">
-        <label for="command">Fastboot Command:</label>
+        <label for="command">Fastboot Commands</label>
         <input type="text" name="command" class="command-input" placeholder="Enter fastboot command here without 'fastboot' " />
         <input type="submit" value="Send" class="button" />
     </form>
@@ -305,12 +303,12 @@ pre.result-field {
     <!-- New Container for Downloading and Flashing Images -->
     <div class="container">
     <form class="rboot-flash-form">
-        <label for="rboot-flash-file">Flash Magisk rooted boot image:</label>
+        <label for="rboot-flash-file">Flash Magisk rooted boot image</label>
         <input type="file" name="rboot-flash-file" class="rboot-flash-file" accept=".img" />
         <br />
         
         <!-- New dropdown for partition selection -->
-        <label for="rboot-flash-partition">Select Flash boot partition:</label>
+        <label for="rboot-flash-partition">Select Flash boot partition</label>
         <select name="rboot-flash-partition" class="rboot-flash-partition" required>
             <option value="">Select boot partition</option>
             <option value="boot_ab" selected>Flash to Boot ab (both slots)</option>
@@ -321,7 +319,7 @@ pre.result-field {
         <br />
 
         <!-- New dropdown for selecting predefined images -->
-        <label for="rboot-flash-image">Magisk Rooted boot Images:</label>
+        <label for="rboot-flash-image">Magisk Rooted boot Images</label>
         <select name="rboot-flash-image" class="rboot-flash-image">
             <option value="">Select rooted boot to flash</option>
             <option value="hyperos-miui-27000-nabu">Miui 14 to HyperOS(Magisk-27)</option>
@@ -342,7 +340,7 @@ pre.result-field {
 
 <div class="container">
     <form class="boot-form">
-        <label for="boot-file">Boot image:</label>
+        <label for="boot-file">Boot any images</label>
         <input type="file" id="boot-file" name="boot-file" accept=".img" />
         <select name="boot-type" class="boot-type">
             <option value="">Select Images to boot on Nabu directly</option>
@@ -362,10 +360,10 @@ pre.result-field {
 
 <div class="container">
     <form class="flash-form">
-        <label for="flash-file">Flash image:</label>
+        <label for="flash-file">Flash any images</label>
         <input type="file" name="flash-file" class="flash-file" accept=".img" onchange="validateFile(this)" required />
         <br />
-        <label for="flash-partition">Partition:</label>
+        <label for="flash-partition">Enter Partition</label>
         <input type="text" name="flash-partition" class="flash-partition" placeholder="Enter partition like- boot, dtbo, cust, recovery, etc." />
         <input type="submit" value="Flash" class="button" />
     </form>
