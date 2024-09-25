@@ -88,9 +88,14 @@ h1 {
     transform: none;
 }
 
-
-input[type="text"],
 input[type="file"],
+input[type="text"] {
+    margin: 10px auto; /* Center by applying margin auto */
+    display: block; /* Ensure inputs are block elements */
+    width: 80%; /* Adjust width as needed */
+    text-align: center; /* Center the text inside the input fields */
+}
+
 select {
     text-align: center; /* Center align text inside input fields */
     width: 100%;
