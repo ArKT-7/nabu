@@ -640,9 +640,9 @@ function rbootGetImagePath(selectedImage) {
 }
 
 async function rbootDownloadFlashImage(imagePath) {
-    const progressBarContainer = document.querySelector('.rboot-progress-container');
-    const progressBar = document.querySelector('.progress-bar');
-    progressBarContainer.style.display = 'block';
+    const progressBarContainer = document.querySelector('.progress-container');
+        const progressBar = document.querySelector('.progress-bar');
+        progressBarContainer.style.display = 'block'; // Show the progress bar
 
     try {
         const response = await fetch(imagePath);
