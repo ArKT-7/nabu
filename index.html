@@ -78,12 +78,15 @@ h1 {
     background: linear-gradient(135deg, #0056b3, #0094c6);
     transform: scale(1.05);
 }
-
+        
 .button:disabled {
-    background-color: #ccc;
+    background: linear-gradient(135deg, #b0b0b0, #d4d4d4);
+    color: #888; /* Dull text color to emphasize the disabled state */
     cursor: not-allowed;
+    box-shadow: none;
     transform: none;
 }
+
 
 input[type="text"],
 input[type="file"],
