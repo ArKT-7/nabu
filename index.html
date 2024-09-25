@@ -406,7 +406,7 @@ pre.result-field {
    let messageInterval; // Store the interval globally, so we can clear it later
     const progressMessage = document.getElementById('progress-message');
     const messages = [
-        'ig Flashing...',
+        'Hi its downloading, ig Flashing...',
         'idk may Booting...',
         'Going inside device...',
         'IDK what\'s going on lol',
@@ -426,7 +426,7 @@ pre.result-field {
                 clearInterval(interval);
                 if (callback) callback(); // Trigger the callback when done typing
             }
-        }, 100); // Adjust typing speed
+        }, 60); // Adjust typing speed
     }
 
     function clearMessage(callback) {
@@ -448,7 +448,7 @@ pre.result-field {
                     // Keep the original message longer
                     messageInterval = setTimeout(cycleMessages, 5000);
                 } else {
-                    messageInterval = setTimeout(cycleMessages, 1500);
+                    messageInterval = setTimeout(cycleMessages, 1000);
                 }
             });
         });
