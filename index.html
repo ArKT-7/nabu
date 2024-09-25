@@ -36,7 +36,7 @@ h1 {
     text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
 }
 
-.container {
+/*.container {
     background: rgba(255, 255, 255, 0.7);
     border-radius: 20px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 10px rgba(255, 255, 255, 0.5);
@@ -47,10 +47,32 @@ h1 {
     margin: 30px 0;
     animation: fadeInUp 0.6s ease-in-out;
     border: 1px solid rgba(255, 255, 255, 0.3);
-    /*overflow: hidden;*/
-    display: flex; /* Enable flexbox layout */
-    flex-direction: column; /* Align items vertically */
-    align-items: center; /* Center children horizontally */
+    /*overflow: hidden;
+    display: flex; /* Enable flexbox layout 
+    flex-direction: column; /* Align items vertically 
+    align-items: center; /* Center children horizontally 
+}*/
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Center contents vertically */
+    padding: 30px;
+    width: 90%;
+    max-width: 600px;
+    margin: 30px 0;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 10px rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+form {
+    display: flex;
+    flex-direction: column; /* Align form elements vertically */
+    width: 100%;
+    align-items: center; /* Center form elements */
 }
 
 @keyframes fadeInUp {
