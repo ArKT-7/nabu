@@ -138,59 +138,6 @@ pre.result-field {
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
-
-
-.rboot-flash-form {
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
-
-.rboot-flash-form label {
-    display: block;
-    margin: 10px 0 5px;
-}
-
-.rboot-flash-form input,
-.rboot-flash-form select {
-    width: 100%;
-    padding: 10px;
-    margin: 5px 0 10px;
-    border: 1px solid #ddd;
-    border-radius: 3px;
-}
-
-.rboot-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-.rboot-button:hover {
-    background-color: #0056b3;
-}
-
-/* Progress Bar */
-.rboot-progress-container {
-    width: 100%;
-    background-color: #f3f3f3;
-    border-radius: 5px;
-    margin: 20px 0;
-    height: 30px;
-    overflow: hidden;
-}
-
-.rboot-progress-bar {
-    width: 0%;
-    height: 100%;
-    background-color: #4caf50;
-    border-radius: 5px;
-    transition: width 0.4s ease;
-}
-
     </style>
 </head>
 <body>
@@ -255,40 +202,30 @@ pre.result-field {
         <input type="text" name="flash-partition" class="flash-partition" placeholder="Enter partition like- boot, dtbo, cust, recovery, etc." />
         <input type="submit" value="Flash" class="button" />
     </form>
+    <button class="button flash-boot-button">Flash to Boot (current slot)</button>
+    <button class="button flash-boot-ab-button">Flash to Boot ab (both slots)</button>
+    <button class="button flash-boot-a-button">Flash to Boot A only</button>
+    <button class="button flash-boot-b-button">Flash to Boot B only</button>
 </div>
 
 <hr />
 
 
-    <!-- New Container for Downloading and Flashing Images -->
+    <!-- New Container for Downloading and Flashing Images
     <div class="container">
-    <form class="rboot-flash-form">
-        <label for="rboot-flash-file">Flash image:</label>
-        <input type="file" name="rboot-flash-file" class="rboot-flash-file" accept=".img" />
-        <br />
-        
-        <!-- New dropdown for partition selection -->
-        <label for="rboot-flash-partition">Select Partition:</label>
-        <select name="rboot-flash-partition" class="rboot-flash-partition" required>
-            <option value="">Select a partition</option>
-            <option value="boot_ab" selected>Flash to Boot ab (both slots)</option>
-            <option value="boot">Flash to Boot (current slot)</option>
-            <option value="boot_a">Flash to Boot A only</option>
-            <option value="boot_b">Flash to Boot B only</option>
-        </select>
-        <br />
-
-        <!-- New dropdown for selecting predefined images -->
-        <label for="rboot-flash-image">Magisk Rooted boot Images:</label>
-        <select name="rboot-flash-image" class="rboot-flash-image">
-            <option value="">Select rooted boot to flash</option>
-            <option value="hyperos-miui-27000-nabu">Miui 14 to HyperOS(Magisk-27)</option>
+    <form class="flash-image-form">
+        <label for="flash-boot-file">Download and Flash Boot Image:</label>
+        <input type="file" name="flash-boot-file" class="flash-boot-file" />
+        <select name="flash-boot-type" class="flash-boot-type">
+            <option value="">Select Boot Images for Flashing</option>
+            <option value="twrp-nabu">Twrp Recovery Nabu</option>
             <option value="win-uefi-nabu">Windows UEFI Boot Nabu</option>
-            <option value="twrp-mod-nabu">TWRP Modded Recovery Nabu</option>
+            <option value="twrp-mod-nabu">Twrp Modded Recovery Nabu</option>
             <option value="orangefox-mod-nabu">OrangeFox Modded Recovery Nabu</option>
         </select>
-        
-        <input type="submit" value="Flash" class="button" />
+        <button type="button" class="button flash-boot-button">Flash to Boot</button>
+        <button type="button" class="button flash-boot-a-button">Flash to Boot A</button>
+        <button type="button" class="button flash-boot-b-button">Flash to Boot B</button>
         <div class="progress-container" style="display: none;">
             <div class="progress-bar"></div>
         </div>
@@ -296,9 +233,8 @@ pre.result-field {
 </div>
 
 
-
     <hr />
-
+ -->
    <script type="module">
     import * as fastboot from "./dist/fastboot.mjs";
     import { BlobStore } from "./download.js";
@@ -417,10 +353,12 @@ async function checkDeviceConnection() {
 
     async function sendFormCommand(event) {
     event.preventDefault();
+    showProgressOverlay();
     let inputField = document.querySelector(".command-input");
     let command = inputField.value;
     if (!command.trim()) {
         alert("Please enter a command!");
+        hideProgressOverlay();
         return;
     }
 
@@ -429,7 +367,7 @@ async function checkDeviceConnection() {
     resultField.textContent = result;
     resultField.style.display = 'block'; // Show the result field
     inputField.value = "";
-        await checkDeviceConnection(); // Check if device is still connected after reboot
+    hideProgressOverlay();
 }
 
 
@@ -590,108 +528,43 @@ async function runRebootCommand(command, successMessage) {
         }
     }
 
+    async function handleFlash(partition) {
+    showProgressOverlay();
+    const fileField = document.querySelector(".flash-file");
+    const file = fileField.files[0];
 
-       async function rbootFlashFormFile(event) {
-    event.preventDefault();
-        showProgressOverlay();
-
-    let fileField = document.querySelector(".rboot-flash-file");
-    let partField = document.querySelector(".rboot-flash-partition");  // Updated to use dropdown
-    let selectedImage = document.querySelector(".rboot-flash-image").value;
-
-    let file;
-
-    // Check if a file is uploaded or a predefined image is selected
-    if (fileField.files.length > 0) {
-        file = fileField.files[0];
-    } else if (selectedImage) {
-        file = await rbootDownloadFlashImage(rbootGetImagePath(selectedImage)); // Predefined image
-    } else {
-        alert("Please select a file to flash or choose a predefined image!");
-        hideProgressOverlay();
-        return;
-    }
-
-    if (!file || !partField.value) {
-        alert("Please select a valid file and partition!");
+    if (!file) {
+        alert("Please select a file to flash!");
         hideProgressOverlay();
         return;
     }
 
     try {
-        await device.flashBlob(partField.value, file);
-        alert(`Successfully flashed to ${partField.value}`);
+        await device.flashBlob(partition, file);
+        alert(`Successfully flashed ${partition}`);
     } catch (error) {
-        alert(`Failed to flash: ${error.message}`);
+        alert(`Failed to flash ${partition}: ${error.message}`);
     } finally {
         fileField.value = "";
-        partField.value = "";
         hideProgressOverlay();
-        await CheckDeviceConnection(); // Check if device is still connected
+        await checkDeviceConnection(); // Check if the device is still connected
     }
 }
 
 
-function rbootGetImagePath(selectedImage) {
-    switch (selectedImage) {
-        case "hyperos-miui-27000-nabu":
-            return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/hyperos-miui-27000-nabu.img";
-        case "win-uefi-nabu":
-            return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/uefi-nabu.img";
-        case "twrp-mod-nabu":
-            return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/twrp-modded-nabu.img";
-        case "orangefox-mod-nabu":
-            return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/orangefox-modded-nabu.img";
-        default:
-            return null;
-    }
-}
 
-async function rbootDownloadFlashImage(imagePath) {
-    const progressBarContainer = document.querySelector('.rboot-progress-container');
-    const progressBar = document.querySelector('.rboot-progress-bar');
-    progressBarContainer.style.display = 'block';
+      
+    const flashBootButton = document.querySelector(".flash-boot-button");
+    flashBootButton.addEventListener("click", () => handleFlash("boot"));
 
-    try {
-        const response = await fetch(imagePath);
-        if (!response.ok) throw new Error("Failed to download flash image");
+    const flashBootABButton = document.querySelector(".flash-boot-ab-button");
+    flashBootABButton.addEventListener("click", () => handleFlash("boot_ab"));
 
-        const contentLength = response.headers.get('Content-Length');
-        const total = parseInt(contentLength, 10);
-        let loaded = 0;
+    const flashBootAButton = document.querySelector(".flash-boot-a-button");
+    flashBootAButton.addEventListener("click", () => handleFlash("boot_a"));
 
-        const reader = response.body.getReader();
-        const chunks = [];
-
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            chunks.push(value);
-            loaded += value.length;
-            progressBar.style.width = `${(loaded / total) * 100}%`;
-        }
-
-        const blob = new Blob(chunks);
-        return blob;
-    } catch (error) {
-        console.error("Download error:", error);
-        alert("Error downloading flash image. Please try again.");
-    } finally {
-        progressBarContainer.style.display = 'none';
-    }
-}
-
-function rbootShowProgressOverlay() {
-    const progressBarContainer = document.querySelector('.rboot-progress-container');
-    const progressBar = document.querySelector('.rboot-progress-bar');
-    progressBarContainer.style.display = 'block';
-    progressBar.style.width = '0%'; // Reset progress bar
-}
-
-function rbootHideProgressOverlay() {
-    const progressBarContainer = document.querySelector('.rboot-progress-container');
-    progressBarContainer.style.display = 'none';
-}
+    const flashBootBButton = document.querySelector(".flash-boot-b-button");
+    flashBootBButton.addEventListener("click", () => handleFlash("boot_b"));
 
     document.querySelector(".connect-button").addEventListener("click", connectDevice);
     document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
@@ -702,7 +575,6 @@ function rbootHideProgressOverlay() {
     document.querySelector(".reboot-edl-button").addEventListener("click", rebootToEDL);
     document.querySelector(".boot-form").addEventListener("submit", bootFormFile);
     document.querySelector(".flash-form").addEventListener("submit", flashFormFile);
-    document.querySelector(".rboot-flash-form").addEventListener("submit", rbootFlashFormFile);
 </script>
 </body>
 </html>
