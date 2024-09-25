@@ -403,7 +403,9 @@ pre.result-field {
     fastboot.setDebugLevel(2);
 
     // Utility function to show the progress overlay and disable buttons
-  let messageInterval; // Store the interval globally, so we can clear it later
+ let messageInterval; // Store the timeout globally, so we can clear it later
+let typingInterval;  // Store typing interval globally, to clear it when necessary
+let clearingInterval;  // Store clearing interval globally, to clear it when necessary
 const progressMessage = document.getElementById('progress-message');
 const messages = [
     'Hi its downloading, ig Flashing...',
@@ -418,33 +420,38 @@ let isFinalLoop = false; // Flag to track if we're in the final loop
 
 function typeMessage(message, callback) {
     let i = 0;
-    progressMessage.textContent = '';
-    const interval = setInterval(() => {
+    progressMessage.textContent = ''; // Ensure text is cleared before typing starts
+    typingInterval = setInterval(() => {
         if (i < message.length) {
             progressMessage.textContent += message[i];
             i++;
         } else {
-            clearInterval(interval);
+            clearInterval(typingInterval);
             if (callback) callback(); // Trigger the callback when done typing
         }
     }, 60); // Adjust typing speed
 }
 
 function clearMessage(callback) {
-    const interval = setInterval(() => {
+    clearingInterval = setInterval(() => {
         if (progressMessage.textContent.length > 0) {
-            progressMessage.textContent = progressMessage.textContent.slice(0, -1);
+            progressMessage.textContent = progressMessage.textContent.slice(0, -1); // Remove last character
         } else {
-            clearInterval(interval);
+            clearInterval(clearingInterval);
             if (callback) callback(); // Trigger the callback when text is cleared
         }
     }, 50); // Adjust clearing speed
 }
 
 function cycleMessages() {
+    // First, clear any ongoing intervals to avoid overlapping messages
+    clearInterval(typingInterval);
+    clearInterval(clearingInterval);
+    
+    // Clear the current message before typing the next one
     clearMessage(() => {
         if (isFinalLoop) {
-            // In final loop, only repeat the "Please wait..." message
+            // In the final loop, only repeat the "Please wait..." message
             typeMessage(finalMessage, () => {
                 messageInterval = setTimeout(cycleMessages, 1000); // Loop indefinitely
             });
@@ -453,7 +460,8 @@ function cycleMessages() {
             typeMessage(messages[messageIndex], () => {
                 messageIndex++;
                 if (messageIndex < messages.length) {
-                    messageInterval = setTimeout(cycleMessages, messageIndex === messages.length - 1 ? 5000 : 1000); // Keep last message longer
+                    // Adjust the timing, keeping the last message longer
+                    messageInterval = setTimeout(cycleMessages, messageIndex === messages.length - 1 ? 5000 : 1000);
                 } else {
                     // After all messages are shown, start looping the final message
                     isFinalLoop = true;
@@ -490,10 +498,14 @@ function hideProgressOverlay() {
         button.disabled = false;
     });
 
-    // Stop the message cycling animation and reset the messages
+    // Stop any ongoing intervals (typing, clearing, cycling)
     clearTimeout(messageInterval);
+    clearInterval(typingInterval);
+    clearInterval(clearingInterval);
+    
+    // Reset the message content and clear the typing state
     messageIndex = 0; // Reset to the first message
-    isFinalLoop = false; // Reset final loop flag
+    isFinalLoop = false; // Reset the final loop flag
     progressMessage.textContent = ''; // Clear the message text
 }
 
@@ -506,7 +518,7 @@ function toggleElements(disable) {
     });
 }
 
-    async function connectDevice() {
+ async function connectDevice() {
         let statusField = document.querySelector(".status-field");
         statusField.textContent = "Connecting...";
 
