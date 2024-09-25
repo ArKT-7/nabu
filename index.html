@@ -534,6 +534,7 @@ function toggleElements(disable) {
         let slot = await device.getVariable("current-slot");
         let serial = await device.getVariable("serialno");
         let bootloaderStatus = await device.getVariable("unlocked");
+        let bootloaderStatusText = bootloaderStatus === "yes" ? "unlocked" : "locked";
 
         let deviceName = "";
         if (product === "nabu") {
@@ -547,7 +548,7 @@ function toggleElements(disable) {
             status += `<br />${deviceName}`;
         }
 
-        status += `<br />Bootloader status: ${bootloaderStatus}`;
+        status += `<br />Bootloader status: ${bootloaderStatusText}`;
         statusField.innerHTML = status;
 
         toggleElements(false); // Enable all elements when connected
