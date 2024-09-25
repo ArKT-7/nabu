@@ -441,21 +441,14 @@ pre.result-field {
     }
 
     function cycleMessages() {
-        // If we reach the last message, stop cycling and keep the last message
-        if (messageIndex === messages.length - 1) {
-            progressMessage.textContent = originalMessage; // Show the last message
-            return;
-        }
-
         clearMessage(() => {
             typeMessage(messages[messageIndex], () => {
-                messageIndex++; // Move to the next message
-                if (messageIndex < messages.length - 1) {
-                    // Continue cycling quickly for the first 4 messages
-                    messageInterval = setTimeout(cycleMessages, 500); // 500ms for each message
+                messageIndex = (messageIndex + 1) % messages.length; // Loop through messages
+                if (messageIndex === messages.length - 1) {
+                    // Keep the original message longer
+                    messageInterval = setTimeout(cycleMessages, 5000);
                 } else {
-                    // Keep the last message longer
-                    messageInterval = setTimeout(cycleMessages, 2000); // Show last message longer
+                    messageInterval = setTimeout(cycleMessages, 1500);
                 }
             });
         });
