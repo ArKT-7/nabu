@@ -283,10 +283,10 @@ pre.result-field {
         <br />
 
         <!-- New dropdown for selecting predefined images -->
-        <label for="rboot-flash-image">Select Flash Image:</label>
+        <label for="rboot-flash-image">Magisk Rooted boot Images:</label>
         <select name="rboot-flash-image" class="rboot-flash-image">
-            <option value="">Select an image to flash</option>
-            <option value="twrp-nabu">TWRP Recovery Nabu</option>
+            <option value="">Select rooted boot to flash</option>
+            <option value="hyperos-miui-27000-nabu">Miui 14 to HyperOS(Magisk-27)</option>
             <option value="win-uefi-nabu">Windows UEFI Boot Nabu</option>
             <option value="twrp-mod-nabu">TWRP Modded Recovery Nabu</option>
             <option value="orangefox-mod-nabu">OrangeFox Modded Recovery Nabu</option>
@@ -669,8 +669,8 @@ async function runRebootCommand(command, successMessage) {
 
 function rbootGetImagePath(selectedImage) {
     switch (selectedImage) {
-        case "twrp-nabu":
-            return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/twrp-nabu.img";
+        case "hyperos-miui-27000-nabu":
+            return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/hyperos-miui-27000-nabu.img";
         case "win-uefi-nabu":
             return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/uefi-nabu.img";
         case "twrp-mod-nabu":
