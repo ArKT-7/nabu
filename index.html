@@ -435,6 +435,7 @@ async function checkDeviceConnection() {
     resultField.textContent = result;
     resultField.style.display = 'block'; // Show the result field
     inputField.value = "";
+        await checkDeviceConnection(); // Check if device is still connected after reboot
 }
 
 
