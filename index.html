@@ -347,7 +347,7 @@ pre.result-field {
 <div class="container">
     <form class="boot-form">
         <label for="boot-file">Boot any images</label>
-        <input type="file" id="boot-file" name="boot-file" accept=".img" />
+        <input type="file" name="boot-file" id="boot-file" accept=".img" />
         <select name="boot-type" class="boot-type">
             <option value="">Select Images to boot on Nabu directly</option>
             <option value="twrp-nabu">Twrp Recovery Nabu</option>
@@ -367,7 +367,7 @@ pre.result-field {
 <div class="container">
     <form class="flash-form">
         <label for="flash-file">Flash any images</label>
-        <input type="file" name="flash-file" class="flash-file" accept=".img" />
+        <input type="file" name="flash-file" id="flash-file" accept=".img" />
         <br />
         <label for="flash-partition">Enter Partition</label>
         <input type="text" name="flash-partition" class="flash-partition" placeholder="Enter partition like- boot, dtbo, cust, recovery, etc." />
@@ -641,7 +641,7 @@ async function runRebootCommand(command, successMessage) {
     async function flashFormFile(event) {
         event.preventDefault();
         showProgressOverlay();
-        let fileField = document.querySelector(".flash-file");
+        let fileField = document.querySelector("#flash-file");
         let partField = document.querySelector(".flash-partition");
         let file = fileField.files[0];
 
