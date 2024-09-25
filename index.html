@@ -403,94 +403,103 @@ pre.result-field {
     fastboot.setDebugLevel(2);
 
     // Utility function to show the progress overlay and disable buttons
-   let messageInterval; // Store the interval globally, so we can clear it later
-    const progressMessage = document.getElementById('progress-message');
-    const messages = [
-        'Hi its downloading, ig Flashing...',
-        'idk may Booting...',
-        'Going inside device...',
-        'IDK what\'s going on lol',
-        'Processing... ig Please wait now' // Original message
-    ];
-    const originalMessage = messages[messages.length - 1]; // Original text
-    let messageIndex = 0;
+  let messageInterval; // Store the interval globally, so we can clear it later
+const progressMessage = document.getElementById('progress-message');
+const messages = [
+    'Hi its downloading, ig Flashing...',
+    'idk may be Booting...',
+    'Going inside device...xd',
+    'IDK what\'s going on lol',
+    'Processing... ig Please wait now'
+];
+const finalMessage = 'Please wait...'; // Final message to keep looping
+let messageIndex = 0;
+let isFinalLoop = false; // Flag to track if we're in the final loop
 
-    function typeMessage(message, callback) {
-        let i = 0;
-        progressMessage.textContent = '';
-        const interval = setInterval(() => {
-            if (i < message.length) {
-                progressMessage.textContent += message[i];
-                i++;
-            } else {
-                clearInterval(interval);
-                if (callback) callback(); // Trigger the callback when done typing
-            }
-        }, 60); // Adjust typing speed
-    }
+function typeMessage(message, callback) {
+    let i = 0;
+    progressMessage.textContent = '';
+    const interval = setInterval(() => {
+        if (i < message.length) {
+            progressMessage.textContent += message[i];
+            i++;
+        } else {
+            clearInterval(interval);
+            if (callback) callback(); // Trigger the callback when done typing
+        }
+    }, 60); // Adjust typing speed
+}
 
-    function clearMessage(callback) {
-        const interval = setInterval(() => {
-            if (progressMessage.textContent.length > 0) {
-                progressMessage.textContent = progressMessage.textContent.slice(0, -1);
-            } else {
-                clearInterval(interval);
-                if (callback) callback(); // Trigger the callback when text is cleared
-            }
-        }, 50); // Adjust clearing speed
-    }
+function clearMessage(callback) {
+    const interval = setInterval(() => {
+        if (progressMessage.textContent.length > 0) {
+            progressMessage.textContent = progressMessage.textContent.slice(0, -1);
+        } else {
+            clearInterval(interval);
+            if (callback) callback(); // Trigger the callback when text is cleared
+        }
+    }, 50); // Adjust clearing speed
+}
 
-    function cycleMessages() {
-        clearMessage(() => {
+function cycleMessages() {
+    clearMessage(() => {
+        if (isFinalLoop) {
+            // In final loop, only repeat the "Please wait..." message
+            typeMessage(finalMessage, () => {
+                messageInterval = setTimeout(cycleMessages, 1000); // Loop indefinitely
+            });
+        } else {
+            // Cycle through initial messages
             typeMessage(messages[messageIndex], () => {
-                messageIndex = (messageIndex + 1) % messages.length; // Loop through messages
-                if (messageIndex === messages.length - 1) {
-                    // Keep the original message longer
-                    messageInterval = setTimeout(cycleMessages, 5000);
+                messageIndex++;
+                if (messageIndex < messages.length) {
+                    messageInterval = setTimeout(cycleMessages, messageIndex === messages.length - 1 ? 5000 : 1000); // Keep last message longer
                 } else {
-                    messageInterval = setTimeout(cycleMessages, 1000);
+                    // After all messages are shown, start looping the final message
+                    isFinalLoop = true;
+                    messageIndex = 0;
+                    messageInterval = setTimeout(cycleMessages, 1000); // Start looping the final message
                 }
             });
-        });
-    }
+        }
+    });
+}
 
-    // Utility function to show the progress overlay and disable buttons
-    function showProgressOverlay() {
-        const progressOverlay = document.getElementById('progress-overlay');
-        const buttons = document.querySelectorAll('.button');
-        progressOverlay.classList.add('active');
-        buttons.forEach(button => {
-            button.disabled = true;
-        });
+// Utility function to show the progress overlay and disable buttons
+function showProgressOverlay() {
+    const progressOverlay = document.getElementById('progress-overlay');
+    const buttons = document.querySelectorAll('.button');
+    progressOverlay.classList.add('active');
+    buttons.forEach(button => {
+        button.disabled = true;
+    });
 
-        // Start the message cycling animation
-        cycleMessages();
-    }
+    // Start the message cycling animation
+    cycleMessages();
+}
 
-    // Utility function to hide the progress overlay and enable buttons
-    function hideProgressOverlay() {
-        const progressOverlay = document.getElementById('progress-overlay');
-        const buttons = document.querySelectorAll('.button');
-        progressOverlay.classList.remove('active');
-        buttons.forEach(button => {
-            button.disabled = false;
-        });
+// Utility function to hide the progress overlay and enable buttons
+function hideProgressOverlay() {
+    const progressOverlay = document.getElementById('progress-overlay');
+    const buttons = document.querySelectorAll('.button');
+    progressOverlay.classList.remove('active');
+    buttons.forEach(button => {
+        button.disabled = false;
+    });
 
-        // Stop the message cycling animation
-        clearTimeout(messageInterval);
-        messageIndex = messages.length - 1; // Reset to original message
-        progressMessage.textContent = originalMessage; // Restore original message
-    }
+    // Stop the message cycling animation
+    clearTimeout(messageInterval);
+    progressMessage.textContent = finalMessage; // Display final message
+}
 
-    
-    function toggleElements(disable) {
-        const formElements = document.querySelectorAll("input, button, select");
-        formElements.forEach((element) => {
-            if (!element.classList.contains('connect-button')) {
-                element.disabled = disable;
-            }
-        });
-    }
+function toggleElements(disable) {
+    const formElements = document.querySelectorAll("input, button, select");
+    formElements.forEach((element) => {
+        if (!element.classList.contains('connect-button')) {
+            element.disabled = disable;
+        }
+    });
+}
 
     async function connectDevice() {
         let statusField = document.querySelector(".status-field");
