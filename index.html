@@ -453,7 +453,7 @@ function cycleMessages() {
         if (isFinalLoop) {
             // In the final loop, only repeat the "Please wait..." message
             typeMessage(finalMessage, () => {
-                messageInterval = setTimeout(cycleMessages, 1000); // Loop indefinitely
+                messageInterval = setTimeout(cycleMessages, 5000); // Loop indefinitely
             });
         } else {
             // Cycle through initial messages
