@@ -88,7 +88,7 @@ h1 {
     transform: none;
 }
 
-.flash-form {
+.flash-form, .boot-form, .rboot-flash-form, .command-form {
     display: flex;
     flex-direction: column;
     align-items: center; /* Center the form horizontally */
@@ -100,7 +100,7 @@ input[type="text"] {
     margin: 10px 0; /* Remove auto margin for horizontal centering */
     display: block; /* Ensure inputs are block elements */
     width: 100%; /* Allow inputs to be full width */
-    max-width: 400px; /* Set a max-width for better centering */
+    max-width: 100%; /* Set a max-width for better centering */
     text-align: center; /* Center align text inside input fields */
     padding: 12px;
     border-radius: 10px;
