@@ -753,10 +753,44 @@ async function runRebootCommand(command, successMessage) {
     }
 
 
-       async function rbootFlashFormFile(event) {
+
+       // server.js
+
+const express = require('express');
+const fetch = require('node-fetch');
+const path = require('path');
+const app = express();
+
+// Serve static files (HTML, CSS, JS) from the 'public' directory
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Endpoint to download images from GitHub Releases
+app.get('/download/:filename', async (req, res) => {
+    const filename = req.params.filename;
+    const url = `https://github.com/ArKT-7/nabu/releases/download/Nabu-boot/${filename}`;
+    
+    try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`Error fetching the file: ${response.statusText}`);
+        
+        response.body.pipe(res); // Stream the file to the client
+    } catch (error) {
+        res.status(500).send(`Download failed: ${error.message}`);
+    }
+});
+
+// Start the Express server
+app.listen(3000, () => {
+    console.log('Server running on port 3000');
+});
+
+
+       // public/app.js (or wherever your JS is located)
+
+const rbootFlashFormFile = async (event) => {
     event.preventDefault();
     rbootShowProgressOverlay();
-           showProgressOverlay();
+    showProgressOverlay();
 
     let fileField = document.querySelector(".rboot-flash-file");
     let partField = document.querySelector(".rboot-flash-partition");  // Updated to use dropdown
@@ -797,17 +831,16 @@ async function runRebootCommand(command, successMessage) {
     }
 }
 
-
 function rbootGetImagePath(selectedImage) {
     switch (selectedImage) {
         case "hyperos-miui-27000-nabu":
-            return "https://github.com/ArKT-7/nabu/releases/download/Nabu-boot/hyperos-miui-27000-nabu.img"; // New release link
+            return "http://localhost:3000/download/Magisk.27.NABU.OS1.0.5.0.TKXMIXM.GLOBAL.boot.img"; // Update link for Express route
         case "lol":
-            return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/lol.img";
+            return "http://localhost:3000/download/lol.img"; // Update link for Express route
         case "lol1":
-            return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/lol1.img";
+            return "http://localhost:3000/download/lol1.img"; // Update link for Express route
         case "lol2":
-            return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/lol2.img";
+            return "http://localhost:3000/download/lol2.img"; // Update link for Express route
         default:
             return null;
     }
@@ -819,13 +852,11 @@ async function rbootDownloadFlashImage(imagePath) {
     progressBarContainer.style.display = 'block';
 
     try {
-        // First attempt to fetch the URL
-        const response = await fetch(imagePath, { redirect: "follow" }); // Ensure redirects are followed
+        const response = await fetch(imagePath);
         if (!response.ok) throw new Error("Failed to download flash image");
 
-        // Get the content length for the progress bar
         const contentLength = response.headers.get('Content-Length');
-        const total = contentLength ? parseInt(contentLength, 10) : 0;
+        const total = parseInt(contentLength, 10);
         let loaded = 0;
 
         const reader = response.body.getReader();
@@ -836,22 +867,10 @@ async function rbootDownloadFlashImage(imagePath) {
             if (done) break;
             chunks.push(value);
             loaded += value.length;
-
-            // Update the progress bar if the total size is known
-            if (total) {
-                progressBar.style.width = `${(loaded / total) * 100}%`;
-            }
+            progressBar.style.width = `${(loaded / total) * 100}%`;
         }
 
-        // Create a blob from the downloaded chunks
         const blob = new Blob(chunks);
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = imagePath.split('/').pop(); // Extract file name from URL
-        document.body.appendChild(link);
-        link.click(); // Automatically trigger the download
-        document.body.removeChild(link); // Clean up the DOM
-
         return blob;
     } catch (error) {
         console.error("Download error:", error);
