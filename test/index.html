@@ -325,11 +325,11 @@ pre.result-field {
 
 
     <!-- New Container for Downloading and Flashing Images -->
-    <div class="container">
+   <div class="container">
     <form class="rboot-flash-form">
         <label for="rboot-flash-file">Flash any rooted or normal boot image</label>
         <input type="file" name="rboot-flash-file" class="rboot-flash-file" accept=".img" />
-        <!-- New dropdown for partition selection -->
+        
         <label for="rboot-flash-partition">Select Flash boot partition</label>
         <select name="rboot-flash-partition" class="rboot-flash-partition" required>
             <option value="">Select boot partition</option>
@@ -338,23 +338,31 @@ pre.result-field {
             <option value="boot_a">Flash to Boot A only</option>
             <option value="boot_b">Flash to Boot B only</option>
         </select>
-        <!-- New dropdown for selecting predefined images -->
-        <label for="rboot-flash-image">Magisk Rooted boot Images</label>
-        <select name="rboot-flash-image" class="rboot-flash-image">
-            <option value="">Select rooted boot to flash on Nabu directly</option>
-            <option value="hyperos-miui-27000-nabu">Global Miui-14.0.5 to HyperOS-1.0.8(Magisk-27)</option>
-            <option value="lol">will come soon</option>
-            <option value="lol1">will come soon</option>
-            <option value="lol2">will come soon</option>
+
+        <label for="rboot-flash-country">Select ROM Country</label>
+        <select name="rboot-flash-country" class="rboot-flash-country" required onchange="updateRomVersions()">
+            <option value="">Select Country</option>
+            <option value="global">🇬🇧 Global</option>
+            <option value="india">🇮🇳 India</option>
+            <option value="eea">🇪🇺 EEA</option>
+            <option value="russia">🇷🇺 Russia</option>
+            <option value="china">🇨🇳 China</option>
+            <option value="turkey">🇹🇷 Turkey</option>
+            <option value="taiwan">🇹🇼 Taiwan</option>
+        </select>
+
+        <label for="rboot-flash-version">Select ROM Version</label>
+        <select name="rboot-flash-version" class="rboot-flash-version" required>
+            <option value="">Select Version</option>
         </select>
         
         <input type="submit" value="Flash" class="button" />
-           <!-- Progress bar for feedback -->
-    <div class="rboot-progress-container" style="display:none;">
-        <div class="rboot-progress-bar" style="width:0%; background-color:#4caf50; height:20px;"></div>
-    </div>
+        <div class="rboot-progress-container" style="display:none;">
+            <div class="rboot-progress-bar" style="width:0%; background-color:#4caf50; height:20px;"></div>
+        </div>
     </form>
 </div>
+
 
 <hr />
 
@@ -753,99 +761,105 @@ async function runRebootCommand(command, successMessage) {
     }
 
 
+const romVersions = {
+            global: {
+                "1.0.5": "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/nabu-boot-magisk/Magisk.27.NABU.OS1.0.5.0.TKXMIXM.GLOBAL.boot.img",
+                "1.0.4": "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/nabu-boot-magisk/Magisk.27.NABU.OS1.0.4.0.TKXMIXM.GLOBAL.boot.img",
+                "1.0.1": "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/nabu-boot-magisk/Magisk.27.NABU.OS1.0.1.0.TKXMIXM.GLOBAL.boot.img",
+            },
+            india: {
+                "1.0.8": "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/nabu-boot-magisk/Magisk.27.NABU.OS1.0.8.0.TKXINXM.INDIA.boot.img",
+                "1.0.7": "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/nabu-boot-magisk/Magisk.27.NABU.OS1.0.7.0.TKXINXM.INDIA.boot.img",
+                "1.0.4": "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/nabu-boot-magisk/Magisk.27.NABU.OS1.0.4.0.TKXINXM.INDIA.boot.img",
+            },
+            eea: {
+                "1.0.5": "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/nabu-boot-magisk/Magisk.27.NABU.OS1.0.5.0.TKXEUXM.EEA.boot.img",
+                "1.0.2": "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/nabu-boot-magisk/Magisk.27.NABU.OS1.0.2.0.TKXEUXM.EEA.boot.img",
+                "1.0.1": "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/nabu-boot-magisk/Magisk.27.NABU.OS1.0.1.0.TKXEUXM.EEA.boot.img",
+            },
+            russia: {
+                "1.0.4": "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/nabu-boot-magisk/Magisk.27.NABU.OS1.0.4.0.TKXRUXM.RUSSIA.boot.img",
+                "1.0.3": "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/nabu-boot-magisk/Magisk.27.NABU.OS1.0.3.0.TKXRUXM.RUSSIA.boot.img",
+                "1.0.1": "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/nabu-boot-magisk/Magisk.27.NABU.OS1.0.1.0.TKXRUXM.RUSSIA.boot.img",
+            },
+            china: {
+                "1.0.3": "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/nabu-boot-magisk/Magisk.27.NABU.OS1.0.3.0.TKXCNXM.CHINA.boot.img",
+                "1.0.2": "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/nabu-boot-magisk/Magisk.27.NABU.OS1.0.2.0.TKXCNXM.CHINA.boot.img",
+            },
+            turkey: {
+                "1.0.5": "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/nabu-boot-magisk/Magisk.27.NABU.OS1.0.5.0.TKXTRXM.TURKEY.boot.img",
+                "1.0.4": "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/nabu-boot-magisk/Magisk.27.NABU.OS1.0.4.0.TKXTRXM.TURKEY.boot.img",
+                "1.0.2": "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/nabu-boot-magisk/Magisk.27.NABU.OS1.0.2.0.TKXTRXM.TURKEY.boot.img",
+            },
+            taiwan: {
+                "1.0.5": "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/nabu-boot-magisk/Magisk.27.NABU.OS1.0.5.0.TKXTWXM.TAIWAN.boot.img",
+                "1.0.4": "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/nabu-boot-magisk/Magisk.27.NABU.OS1.0.4.0.TKXTWXM.TAIWAN.boot.img",
+                "1.0.2": "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/nabu-boot-magisk/Magisk.27.NABU.OS1.0.2.0.TKXTWXM.TAIWAN.boot.img",
+            },
+        };
 
-       // server.js
+        function updateRomVersions() {
+            const countrySelect = document.querySelector('.rboot-flash-country');
+            const versionSelect = document.querySelector('.rboot-flash-version');
+            const selectedCountry = countrySelect.value;
 
-const express = require('express');
-const fetch = require('node-fetch');
-const path = require('path');
-const app = express();
+            // Clear existing options
+            versionSelect.innerHTML = '<option value="">Select Version</option>';
 
-// Serve static files (HTML, CSS, JS) from the 'public' directory
-app.use(express.static(path.join(__dirname, 'public')));
+            if (romVersions[selectedCountry]) {
+                for (const [version, link] of Object.entries(romVersions[selectedCountry])) {
+                    const option = document.createElement('option');
+                    option.value = link; // Use the link as value
+                    option.textContent = `HyperOS Version ${version}`;
+                    versionSelect.appendChild(option);
+                }
+            }
+        }
 
-// Endpoint to download images from GitHub Releases
-app.get('/download/:filename', async (req, res) => {
-    const filename = req.params.filename;
-    const url = `https://github.com/ArKT-7/nabu/releases/download/Nabu-boot/${filename}`;
-    
-    try {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error(`Error fetching the file: ${response.statusText}`);
-        
-        response.body.pipe(res); // Stream the file to the client
-    } catch (error) {
-        res.status(500).send(`Download failed: ${error.message}`);
-    }
-});
+        async function rbootFlashFormFile(event) {
+            event.preventDefault();
+            rbootShowProgressOverlay();
+            showProgressOverlay();
 
-// Start the Express server
-app.listen(3000, () => {
-    console.log('Server running on port 3000');
-});
+            let fileField = document.querySelector(".rboot-flash-file");
+            let partField = document.querySelector(".rboot-flash-partition");
+            let selectedVersion = document.querySelector(".rboot-flash-version").value;
 
+            let file;
 
-       // public/app.js (or wherever your JS is located)
+            // Check if a file is uploaded or a version is selected
+            if (fileField.files.length > 0) {
+                file = fileField.files[0];
+            } else if (selectedVersion) {
+                file = await rbootDownloadFlashImage(selectedVersion); // Use selected version link
+            } else {
+                alert("Please select a file to flash or choose a ROM version!");
+                rbootHideProgressOverlay();
+                hideProgressOverlay();
+                return;
+            }
 
-const rbootFlashFormFile = async (event) => {
-    event.preventDefault();
-    rbootShowProgressOverlay();
-    showProgressOverlay();
+            if (!file || !partField.value) {
+                alert("Please select a valid file and partition!");
+                rbootHideProgressOverlay();
+                hideProgressOverlay();
+                return;
+            }
 
-    let fileField = document.querySelector(".rboot-flash-file");
-    let partField = document.querySelector(".rboot-flash-partition");  // Updated to use dropdown
-    let selectedImage = document.querySelector(".rboot-flash-image").value;
-
-    let file;
-
-    // Check if a file is uploaded or a predefined image is selected
-    if (fileField.files.length > 0) {
-        file = fileField.files[0];
-    } else if (selectedImage) {
-        file = await rbootDownloadFlashImage(rbootGetImagePath(selectedImage)); // Predefined image
-    } else {
-        alert("Please select a file to flash or choose a predefined image!");
-        rbootHideProgressOverlay();
-        hideProgressOverlay();
-        return;
-    }
-
-    if (!file || !partField.value) {
-        alert("Please select a valid file and partition!");
-        rbootHideProgressOverlay();
-        hideProgressOverlay();
-        return;
-    }
-
-    try {
-        await device.flashBlob(partField.value, file);
-        alert(`Successfully flashed to ${partField.value}`);
-    } catch (error) {
-        alert(`Failed to flash: ${error.message}`);
-    } finally {
-        fileField.value = "";
-        partField.value = "";
-        rbootHideProgressOverlay();
-        hideProgressOverlay();
-        await CheckDeviceConnection(); // Check if device is still connected
-    }
-}
-
-function rbootGetImagePath(selectedImage) {
-    switch (selectedImage) {
-        case "hyperos-miui-27000-nabu":
-            return "http://localhost:3000/download/Magisk.27.NABU.OS1.0.5.0.TKXMIXM.GLOBAL.boot.img"; // Update link for Express route
-        case "lol":
-            return "http://localhost:3000/download/lol.img"; // Update link for Express route
-        case "lol1":
-            return "http://localhost:3000/download/lol1.img"; // Update link for Express route
-        case "lol2":
-            return "http://localhost:3000/download/lol2.img"; // Update link for Express route
-        default:
-            return null;
-    }
-}
-
+            try {
+                await device.flashBlob(partField.value, file);
+                alert(`Successfully flashed to ${partField.value}`);
+            } catch (error) {
+                alert(`Failed to flash: ${error.message}`);
+            } finally {
+                fileField.value = "";
+                partField.value = "";
+                rbootHideProgressOverlay();
+                hideProgressOverlay();
+                await CheckDeviceConnection(); // Check if device is still connected
+            }
+        }
+       
 async function rbootDownloadFlashImage(imagePath) {
     const progressBarContainer = document.querySelector('.rboot-progress-container');
     const progressBar = document.querySelector('.rboot-progress-bar');
