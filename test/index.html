@@ -801,7 +801,7 @@ async function runRebootCommand(command, successMessage) {
 function rbootGetImagePath(selectedImage) {
     switch (selectedImage) {
         case "hyperos-miui-27000-nabu":
-            return "https://github.com/topjohnwu/Magisk/releases/download/v27.0/Magisk-v27.0.apk";
+            return "https://github.com/ArKT-7/nabu/releases/download/Nabu-boot/hyperos-miui-27000-nabu.img"; // New release link
         case "lol":
             return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/lol.img";
         case "lol1":
@@ -819,11 +819,13 @@ async function rbootDownloadFlashImage(imagePath) {
     progressBarContainer.style.display = 'block';
 
     try {
-        const response = await fetch(imagePath);
+        // First attempt to fetch the URL
+        const response = await fetch(imagePath, { redirect: "follow" }); // Ensure redirects are followed
         if (!response.ok) throw new Error("Failed to download flash image");
 
+        // Get the content length for the progress bar
         const contentLength = response.headers.get('Content-Length');
-        const total = parseInt(contentLength, 10);
+        const total = contentLength ? parseInt(contentLength, 10) : 0;
         let loaded = 0;
 
         const reader = response.body.getReader();
@@ -834,10 +836,22 @@ async function rbootDownloadFlashImage(imagePath) {
             if (done) break;
             chunks.push(value);
             loaded += value.length;
-            progressBar.style.width = `${(loaded / total) * 100}%`;
+
+            // Update the progress bar if the total size is known
+            if (total) {
+                progressBar.style.width = `${(loaded / total) * 100}%`;
+            }
         }
 
+        // Create a blob from the downloaded chunks
         const blob = new Blob(chunks);
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = imagePath.split('/').pop(); // Extract file name from URL
+        document.body.appendChild(link);
+        link.click(); // Automatically trigger the download
+        document.body.removeChild(link); // Clean up the DOM
+
         return blob;
     } catch (error) {
         console.error("Download error:", error);
@@ -846,6 +860,7 @@ async function rbootDownloadFlashImage(imagePath) {
         progressBarContainer.style.display = 'none';
     }
 }
+
 
 function rbootShowProgressOverlay() {
     const progressBarContainer = document.querySelector('.rboot-progress-container');
