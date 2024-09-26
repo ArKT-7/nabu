@@ -5,500 +5,871 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
     <script src="../dist/fastboot.mjs" type="module"></script>
-    <script src="./download.js" type="module"></script>
-    <meta property="og:title" content="Fastboot Tool by ArKt" />
+    <script src="../download.js" type="module"></script>
+    <meta property="og:title" content="Fastboot Tool by ArKT" />
     <meta property="og:description" content="It can boot Images like recovery and can flash images in any partition" />
     <meta property="og:url" content="https://arkt-7.github.io/nabu/" />
     <meta property="og:type" content="website" />
     <meta name="description" content="It can boot Images like recovery and can flash images in any partition" />
     <meta name="title" content="Fastboot Tool for flashing/booting/rooting" />
-    <title>Fastboot Tool by ArKt</title>
+    <title>Fastboot Tool by ArKT</title>
     <link rel="icon" href="https://img.icons8.com/fluency/48/android.png" type="image/png">
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f0f0;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f0f0f0, #d4e0e5);
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    min-height: 100vh;
+}
 
-        h1 {
-            color: #4a4a4a;
-        }
+h1 {
+    color: #4a4a4a;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 32px;
+    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+}
 
-        .container {
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            width: 100%;
-            max-width: 600px;
-            margin: 10px;
-        }
+/*.container {
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 10px rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    padding: 30px;
+    width: 90%;
+    max-width: 600px;
+    margin: 30px 0;
+    animation: fadeInUp 0.6s ease-in-out;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    /*overflow: hidden;
+    display: flex; /* Enable flexbox layout 
+    flex-direction: column; /* Align items vertically 
+    align-items: center; /* Center children horizontally 
+}*/
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Center contents vertically */
+    padding: 30px;
+    width: 90%;
+    max-width: 600px;
+    margin: 30px 0;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 10px rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
 
-        .button {
-            background-color: #007bff;
-            border: none;
-            border-radius: 5px;
-            color: white;
-            padding: 10px 15px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-            margin: 5px 0;
-            width: 100%;
-        }
-
-        .button:hover {
-            background-color: #0056b3;
-            transform: scale(1.02);
-        }
-
-        .button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-
-        input[type="text"],
-        input[type="file"],
-        select {
-            width: calc(100% - 22px);
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-        }
-
-        label {
-            font-weight: bold;
-        }
-
-        .progress-container {
+form {
+    display: flex;
+    flex-direction: column; /* Align form elements vertically */
     width: 100%;
-    height: 20px;
+    align-items: center; /* Center form elements */
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.button {
+    background: linear-gradient(135deg, #007bff, #00d4ff);
+    border: none;
+    border-radius: 20px;
+    color: white;
+    padding: 15px 20px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+    margin: 10px 0;
+    width: 100%;
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+}
+
+.button:hover {
+    background: linear-gradient(135deg, #0056b3, #0094c6);
+    transform: scale(1.05);
+}
+        
+.button:disabled {
+    background: linear-gradient(135deg, #b0b0b0, #d4d4d4);
+    color: #888; /* Dull text color to emphasize the disabled state */
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+/*.flash-form, .boot-form, .rboot-flash-form, .command-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center the form horizontally 
+    width: 100%; /* Full width for the form 
+} */
+
+
+input[type="file"],
+input[type="text"] {
+    text-align: center; /* Center align text inside input fields */
+    width: 100%; /* Use full width of the container */
+    max-width: 600px; /* Set a max width for better appearance */
+    padding: 15px 20px;
+    margin: 10px 0; /* Vertical spacing between inputs */
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.8);
+    box-sizing: border-box; /* Ensure padding and borders are included in the width */
+}
+
+
+select {
+    text-align: center; /* Center align text inside select fields */
+    width: 100%;
+    padding: 15px 20px;
+    margin: 10px 0;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 8px;
+    margin-top: 8px;
+}
+
+.progress-container {
+    width: 100%;
+    height: 30px;
     background-color: #f3f3f3;
-    border-radius: 5px;
+    border-radius: 15px;
     overflow: hidden;
     margin-top: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
     display: none; /* Initially hidden */
 }
 
 .progress-bar {
     height: 100%;
-    width: 0%; /* Change dynamically */
+    width: 0%;
     background-color: #4caf50;
-    transition: width 0.5s;
+    transition: width 0.5s ease;
+    border-radius: 15px;
+}
+
+.status-field {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+    font-size: 16px;
+}
+
+pre.result-field {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 15px;
+    border-radius: 15px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    max-height: 250px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+#progress-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none; /* Hidden initially */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Bring it above everything */
+}
+
+#progress-overlay.active {
+    display: flex;
+}
+
+#progress-message {
+    color: white;
+    font-size: 24px;
+    text-align: center;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Neumorphic Buttons */
+.rboot-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 15px 25px;
+    cursor: pointer;
+    border-radius: 20px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.15), -4px -4px 10px rgba(255, 255, 255, 0.7);
+    transition: box-shadow 0.3s, transform 0.2s;
+}
+
+.rboot-button:hover {
+    background-color: #0056b3;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15), -2px -2px 6px rgba(255, 255, 255, 0.7);
+    transform: translateY(-3px);
+}
+
+/* Progress Bar
+.rboot-progress-container {
+    width: 100%;
+    background-color: #f3f3f3;
+    border-radius: 20px;
+    margin: 20px 0;
+    height: 30px;
+    overflow: hidden;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.rboot-progress-bar {
+    width: 0%;
+    height: 100%;
+    background-color: #4caf50;
+    border-radius: 20px;
+    transition: width 0.4s ease;
+} */
+
+        .rboot-progress-container {
+    width: 100%;
+    height: 30px;
+    background-color: #f3f3f3;
+    border-radius: 15px;
+    overflow: hidden;
+    margin-top: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    display: none; /* Initially hidden */
+}
+
+.rboot-progress-bar  {
+    height: 100%;
+    width: 0%;
+    background-color: #4caf50;
+    transition: width 0.5s ease;
+    border-radius: 15px;
 }
 
 
-        .status-field {
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        pre.result-field {
-            background-color: #f3f3f3;
-            padding: 10px;
-            border-radius: 5px;
-            overflow-x: auto;
-            white-space: pre-wrap;
-            max-height: 200px;
-            border: 1px solid #ccc;
-        }
     </style>
 </head>
 <body>
-    <h1>Fastboot Tool by ArKt</h1>
-    <div class="container">
-        <p class="status-field">Not connected in Fastboot</p>
-        <button class="button connect-button">Connect device Fastboot</button>
-    </div>
-    
+    <h1>Fastboot Tool by ArKT</h1>
+
+<!-- Add a progress overlay for the "Processing... Please wait" message -->
+<div id="progress-overlay">
+    <div id="progress-message">Processing... Please wait</div>
+</div>
+
+<div class="container">
+    <p class="status-field">Not connected in Fastboot</p>
+    <button class="button connect-button">Connect device Fastboot</button>
+</div>
+
+<hr />
+
+<div class="container">
+    <form class="command-form">
+        <label for="command">Fastboot Commands</label>
+        <input type="text" name="command" class="command-input" placeholder="Enter fastboot command here without 'fastboot' " />
+        <input type="submit" value="Send" class="button" />
+    </form>
+    <button class="button reboot-button">Reboot Device</button>
+    <button class="button reboot-bootloader-button">Reboot to Bootloader</button>
+    <button class="button reboot-recovery-button">Reboot to Recovery</button>
+    <button class="button reboot-fastbootd-button">Reboot to FastbootD</button>
+    <button class="button reboot-edl-button">Reboot to EDL</button>
+    <!-- Result field to display command outputs -->
+<pre class="result-field" style="display: none;"></pre>
+
+</div>
+
     <hr />
 
-    <div class="container">
-        <form class="command-form">
-    <label for="command">Fastboot Command:</label>
-    <input type="text" name="command" class="command-input" placeholder="Enter fastboot command here without 'fastboot' " />
-    <input type="submit" value="Send" class="button" />
-</form>
-        <button class="button reboot-button">Reboot Device</button>
-        <button class="button reboot-bootloader-button">Reboot to Bootloader</button>
-        <button class="button reboot-recovery-button">Reboot to Recovery</button>
-        <button class="button reboot-fastbootd-button">Reboot to FastbootD</button>
-        <button class="button reboot-edl-button">Reboot to EDL</button>
-        <p>Result:</p>
-        <pre class="result-field"></pre>
-    </div>
 
-    <hr />
+    <!-- New Container for Downloading and Flashing Images -->
+    <div class="container">
+    <form class="rboot-flash-form">
+        <label for="rboot-flash-file">Flash any rooted or normal boot image</label>
+        <input type="file" name="rboot-flash-file" class="rboot-flash-file" accept=".img" />
+        <!-- New dropdown for partition selection -->
+        <label for="rboot-flash-partition">Select Flash boot partition</label>
+        <select name="rboot-flash-partition" class="rboot-flash-partition" required>
+            <option value="">Select boot partition</option>
+            <option value="boot_ab" selected>Flash to Boot ab (both slots)</option>
+            <option value="boot">Flash to Boot (current slot)</option>
+            <option value="boot_a">Flash to Boot A only</option>
+            <option value="boot_b">Flash to Boot B only</option>
+        </select>
+        <!-- New dropdown for selecting predefined images -->
+        <label for="rboot-flash-image">Magisk Rooted boot Images</label>
+        <select name="rboot-flash-image" class="rboot-flash-image">
+            <option value="">Select rooted boot to flash on Nabu directly</option>
+            <option value="hyperos-miui-27000-nabu">Global Miui-14.0.5 to HyperOS-1.0.8(Magisk-27)</option>
+            <option value="lol">will come soon</option>
+            <option value="lol1">will come soon</option>
+            <option value="lol2">will come soon</option>
+        </select>
+        
+        <input type="submit" value="Flash" class="button" />
+           <!-- Progress bar for feedback -->
+    <div class="rboot-progress-container" style="display:none;">
+        <div class="rboot-progress-bar" style="width:0%; background-color:#4caf50; height:20px;"></div>
+    </div>
+    </form>
+</div>
+
+<hr />
 
 <div class="container">
     <form class="boot-form">
-        <label for="boot-file">Boot image:</label>
-        <input type="file" id="boot-file" name="boot-file" />
+        <label for="boot-file">Boot any images</label>
+        <input type="file" name="boot-file" id="boot-file" accept=".img" />
         <select name="boot-type" class="boot-type">
-            <option value="">Select Boot Images for Nabu</option>
+            <option value="">Select Images to boot on Nabu directly</option>
             <option value="twrp-nabu">Twrp Recovery Nabu</option>
             <option value="win-uefi-nabu">Windows UEFI Boot Nabu</option>
             <option value="twrp-mod-nabu">Twrp Modded Recovery Nabu</option>
             <option value="orangefox-mod-nabu">OrangeFox Modded Recovery Nabu</option>
         </select>
         <input type="submit" value="Boot" class="button" />
-        
-        <!-- Progress Bar Inside the Form -->
-        <div class="progress-container" style="display: none;"> <!-- Keep it hidden initially -->
-            <div class="progress-bar"></div>
-        
-        </div>
-    </form>
-</div>
-
-
-    <hr />
-
-    <div class="container">
-        <form class="flash-form">
-            <label for="flash-file">Flash image:</label>
-            <input type="file" name="flash-file" class="flash-file" accept=".img" onchange="validateFile(this)" required />
-            <br />
-            <label for="flash-partition">Partition:</label>
-            <input type="text" name="flash-partition" class="flash-partition" placeholder="Enter partition like- boot, dtbo, cust, recovery, etc. "/>
-            <input type="submit" value="Flash" class="button" />
-        </form>
-        <button class="button flash-boot-button">Flash to Boot (current slot)</button>
-      <button class="button flash-boot-ab-button">Flash to Boot ab (both slots)</button>
-        <button class="button flash-boot-a-button">Flash to Boot A only</button>
-        <button class="button flash-boot-b-button">Flash to Boot B only</button>
-    </div>
-
-    <hr />
-
-    <!-- New Container for Downloading and Flashing Images
-    <div class="container">
-    <form class="flash-image-form">
-        <label for="flash-boot-file">Download and Flash Boot Image:</label>
-        <input type="file" name="flash-boot-file" class="flash-boot-file" />
-        <select name="flash-boot-type" class="flash-boot-type">
-            <option value="">Select Boot Images for Flashing</option>
-            <option value="twrp-nabu">Twrp Recovery Nabu</option>
-            <option value="win-uefi-nabu">Windows UEFI Boot Nabu</option>
-            <option value="twrp-mod-nabu">Twrp Modded Recovery Nabu</option>
-            <option value="orangefox-mod-nabu">OrangeFox Modded Recovery Nabu</option>
-        </select>
-        <button type="button" class="button flash-boot-button">Flash to Boot</button>
-        <button type="button" class="button flash-boot-a-button">Flash to Boot A</button>
-        <button type="button" class="button flash-boot-b-button">Flash to Boot B</button>
         <div class="progress-container" style="display: none;">
             <div class="progress-bar"></div>
         </div>
     </form>
 </div>
 
+<hr />
+
+<div class="container">
+    <form class="flash-form">
+        <label for="flash-file">Flash any images</label>
+        <input type="file" name="flash-file" id="flash-file" accept=".img" />
+        <label for="flash-partition">Enter Partition</label>
+        <input type="text" name="flash-partition" class="flash-partition" placeholder="Enter partition like- boot, dtbo, cust, recovery, etc." />
+        <input type="submit" value="Flash" class="button" />
+    </form>
+</div>
+
+
 
     <hr />
- -->
-    <script type="module">
-        import * as fastboot from "../dist/fastboot.mjs";
-        import { BlobStore } from "./download.js";
 
-        let device = new fastboot.FastbootDevice();
-        window.device = device;
-        let blobStore = new BlobStore();
+   <script type="module">
+    import * as fastboot from "../dist/fastboot.mjs";
+    import { BlobStore } from "../download.js";
 
-        fastboot.setDebugLevel(2);
+    let device = new fastboot.FastbootDevice();
+    window.device = device;
+    let blobStore = new BlobStore();
 
-         // Validation function to allow only .img files
-        function validateFile(inputElement) {
-    const file = inputElement.files[0];
-    const errorMessage = document.createElement('p');
-    errorMessage.style.color = 'red';
-    
-    if (!file || !file.name.endsWith('.img')) {
-        errorMessage.textContent = 'Please select a valid .img file.';
-        inputElement.parentNode.appendChild(errorMessage); // Add error message to the form
-        inputElement.value = ''; // Clear invalid file input
-    } else {
-        const existingError = inputElement.parentNode.querySelector('p');
-        if (existingError) {
-            existingError.remove(); // Remove error message if file is valid
+    fastboot.setDebugLevel(2);
+
+    // Utility function to show the progress overlay and disable buttons
+ let messageInterval; // Store the timeout globally, so we can clear it later
+let typingInterval;  // Store typing interval globally, to clear it when necessary
+let clearingInterval;  // Store clearing interval globally, to clear it when necessary
+const progressMessage = document.getElementById('progress-message');
+const messages = [
+    'Hi its downloading, ig Flashing...',
+    'idk may be Booting...',
+    'Going inside device...xd',
+    'IDK what\'s going on lol',
+    'Processing... ig Please wait now'
+];
+const finalMessage = 'Please wait...'; // Final message to keep looping
+let messageIndex = 0;
+let isFinalLoop = false; // Flag to track if we're in the final loop
+
+function typeMessage(message, callback) {
+    let i = 0;
+    progressMessage.textContent = ''; // Ensure text is cleared before typing starts
+    typingInterval = setInterval(() => {
+        if (i < message.length) {
+            progressMessage.textContent += message[i];
+            i++;
+        } else {
+            clearInterval(typingInterval);
+            if (callback) callback(); // Trigger the callback when done typing
         }
-    }
+    }, 60); // Adjust typing speed
 }
 
+function clearMessage(callback) {
+    clearingInterval = setInterval(() => {
+        if (progressMessage.textContent.length > 0) {
+            progressMessage.textContent = progressMessage.textContent.slice(0, -1); // Remove last character
+        } else {
+            clearInterval(clearingInterval);
+            if (callback) callback(); // Trigger the callback when text is cleared
+        }
+    }, 50); // Adjust clearing speed
+}
 
+function cycleMessages() {
+    // First, clear any ongoing intervals to avoid overlapping messages
+    clearInterval(typingInterval);
+    clearInterval(clearingInterval);
+    
+    // Clear the current message before typing the next one
+    clearMessage(() => {
+        if (isFinalLoop) {
+            // In the final loop, only repeat the "Please wait..." message
+            typeMessage(finalMessage, () => {
+                messageInterval = setTimeout(cycleMessages, 5000); // Loop indefinitely
+            });
+        } else {
+            // Cycle through initial messages
+            typeMessage(messages[messageIndex], () => {
+                messageIndex++;
+                if (messageIndex < messages.length) {
+                    // Adjust the timing, keeping the last message longer
+                    messageInterval = setTimeout(cycleMessages, messageIndex === messages.length - 1 ? 5000 : 1000);
+                } else {
+                    // After all messages are shown, start looping the final message
+                    isFinalLoop = true;
+                    messageInterval = setTimeout(cycleMessages, 1000); // Start looping the final message
+                }
+            });
+        }
+    });
+}
 
-       function toggleElements(disable) {
+// Utility function to show the progress overlay and disable buttons
+function showProgressOverlay() {
+    const progressOverlay = document.getElementById('progress-overlay');
+    const buttons = document.querySelectorAll('.button');
+    progressOverlay.classList.add('active');
+    buttons.forEach(button => {
+        button.disabled = true;
+    });
+
+    // Reset the message cycle to start from the beginning
+    messageIndex = 0;
+    isFinalLoop = false;
+
+    // Start the message cycling animation
+    cycleMessages();
+}
+
+// Utility function to hide the progress overlay and enable buttons
+function hideProgressOverlay() {
+    const progressOverlay = document.getElementById('progress-overlay');
+    const buttons = document.querySelectorAll('.button');
+    progressOverlay.classList.remove('active');
+    buttons.forEach(button => {
+        button.disabled = false;
+    });
+
+    // Stop any ongoing intervals (typing, clearing, cycling)
+    clearTimeout(messageInterval);
+    clearInterval(typingInterval);
+    clearInterval(clearingInterval);
+    
+    // Reset the message content and clear the typing state
+    messageIndex = 0; // Reset to the first message
+    isFinalLoop = false; // Reset the final loop flag
+    progressMessage.textContent = ''; // Clear the message text
+}
+
+function toggleElements(disable) {
     const formElements = document.querySelectorAll("input, button, select");
     formElements.forEach((element) => {
-        // Exclude the "Connect" button from being disabled
         if (!element.classList.contains('connect-button')) {
             element.disabled = disable;
         }
     });
 }
 
+ async function connectDevice() {
+        let statusField = document.querySelector(".status-field");
+        statusField.textContent = "Connecting...";
 
-async function connectDevice() {
+        try {
+            await device.connect();
+        } catch (error) {
+            statusField.textContent = `Failed to connect to device: ${error.message}`;
+            toggleElements(true); // Enable all elements when connected
+            return;
+        }
+
+        let product = await device.getVariable("product");
+        let slot = await device.getVariable("current-slot");
+        let serial = await device.getVariable("serialno");
+        let bootloaderStatus = await device.getVariable("unlocked");
+        let bootloaderStatusText = bootloaderStatus === "yes" ? "unlocked" : "locked";
+
+        let deviceName = "";
+        if (product === "nabu") {
+            deviceName = "Device name - Xiaomi Pad 5";
+        } else if (product === "dm3q") {
+            deviceName = "Device name - Samsung S23 Ultra";
+        }
+
+        let status = `Connected to - ${product} <br /> Current slot - ${slot} <br /> (serial: ${serial})`;
+        if (deviceName) {
+            status += `<br />${deviceName}`;
+        }
+
+        status += `<br />Bootloader status: ${bootloaderStatusText}`;
+        statusField.innerHTML = status;
+
+        toggleElements(false); // Enable all elements when connected
+    }
+
+    toggleElements(true); // Initially disable all features
+
+    function handleDisconnect() {
+        let statusField = document.querySelector(".status-field");
+        statusField.textContent = "Not connected in Fastboot";
+        toggleElements(true); // Disable all elements on disconnect
+    }
+
+       // Function to check if the device is still connected after operations
+async function checkDeviceConnection() {
     let statusField = document.querySelector(".status-field");
-    statusField.textContent = "Connecting...";
 
     try {
-        await device.connect();
+        let product = await device.getVariable("product");
+        if (product) {
+            //statusField.textContent = "Device is still connected in Fastboot mode.";
+        }
     } catch (error) {
-        statusField.textContent = `Failed to connect to device: ${error.message}`;
-        return;
+        statusField.textContent = "Device disconnected!";
+        toggleElements(true); // Disable all elements on disconnect
     }
-
-    let product = await device.getVariable("product");
-    let slot = await device.getVariable("current-slot");
-    let serial = await device.getVariable("serialno");
-    let bootloaderStatus = await device.getVariable("unlocked"); // Assuming this variable indicates unlock status
-
-    let deviceName = "";
-    if (product === "nabu") {
-        deviceName = "Device name - Xiaomi Pad 5";
-    } else if (product === "dm3q") {
-        deviceName = "Device name - Samsung S23 Ultra";
-    }
-
-    // Construct the status message
-    let status = `Connected to - ${product} <br /> Current slot - ${slot} <br /> (serial: ${serial})`;
-    if (deviceName) {
-        status += `<br />${deviceName}`;
-    }
-
-    // Add bootloader status to the status message
-    status += `<br />Bootloader status: ${bootloaderStatus ? 'Unlocked' : 'Locked'}`;
-
-    // Update the status field with the consolidated message
-    statusField.innerHTML = status;
-
-    // Enable all elements when connected
-    toggleElements(false);
 }
 
-
-// Initially disable all features
-toggleElements(true);
-
-// Call this when the device disconnects or connection fails
-function handleDisconnect() {
-    let statusField = document.querySelector(".status-field");
-    statusField.textContent = "Not connected in Fastboot";
-    toggleElements(true); // Disable all elements on disconnect
-}
-
-
-        async function sendFormCommand(event) {
-            event.preventDefault();
-            let inputField = document.querySelector(".command-input");
-            let command = inputField.value;
-            if (!command.trim()) {
-                alert("Please enter a command!");
-                return;
-            }
-
-            let result = (await device.runCommand(command)).text;
-            document.querySelector(".result-field").textContent = result;
-            inputField.value = "";
-        }
-
-        async function rebootDevice() {
-            await runRebootCommand("reboot", "Device rebooted successfully!");
-        }
-
-        async function rebootToBootloader() {
-            await runRebootCommand("reboot-bootloader", "Rebooted to Bootloader successfully!");
-        }
-
-        async function rebootToRecovery() {
-            await runRebootCommand("reboot-recovery", "Rebooted to Recovery successfully!");
-        }
-
-        async function rebootToFastbootD() {
-            await runRebootCommand("reboot-fastboot", "Rebooted to FastbootD successfully!");
-        }
-
-        async function rebootToEDL() {
-            await runRebootCommand("oem edl", "Rebooted to EDL successfully!");
-        }
-
-        async function runRebootCommand(command, successMessage) {
-            try {
-                let result = (await device.runCommand(command)).text;
-                document.querySelector(".result-field").textContent = result;
-                alert(successMessage);
-            } catch (error) {
-                console.error("Error during reboot:", error);
-                alert("Error during reboot. Please try again.");
-            }
-        }
-
-       
-        async function bootFormFile(event) {
+    async function sendFormCommand(event) {
     event.preventDefault();
-    let fileField = document.querySelector("#boot-file"); // Change to correct selector
-    let bootTypeSelect = document.querySelector(".boot-type");
-    let selectedBootType = bootTypeSelect.value;
-
-    let file;
-    // Check if a file is selected first
-    if (fileField.files.length > 0) {
-        file = fileField.files[0];
-    } 
-    // Check if a boot type is selected
-    else if (selectedBootType) {
-        file = await downloadBootImage(getImagePath(selectedBootType));
-    } else {
-        alert("Please select a boot image file or choose a boot type!");
+    let inputField = document.querySelector(".command-input");
+    let command = inputField.value;
+    if (!command.trim()) {
+        alert("Please enter a command!");
         return;
     }
 
-    if (!file) {
-        alert("Failed to obtain a valid boot image.");
-        return;
-    }
-
-    try {
-        await device.bootBlob(file);
-        alert("Boot image booted successfully!");
-    } catch (error) {
-        console.error("Error booting image:", error);
-        alert("Error booting image. Please try again.");
-    } finally {
-        fileField.value = ""; // Reset file input after use
-        bootTypeSelect.selectedIndex = 0; // Reset selection
-    }
+    let result = (await device.runCommand(command)).text;
+    let resultField = document.querySelector(".result-field");
+    resultField.textContent = result;
+    resultField.style.display = 'block'; // Show the result field
+    inputField.value = "";
+        await checkDeviceConnection(); // Check if device is still connected after reboot
 }
 
 
-        function getImagePath(selectedBootType) {
-            switch (selectedBootType) {
-                case "twrp-nabu":
-                    return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/twrp-nabu.img";
-                case "win-uefi-nabu":
-                    return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/uefi-nabu.img";
-                case "twrp-mod-nabu":
-                    return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/twrp-modded-nabu.img";
-                case "orangefox-mod-nabu":
-                    return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/orangefox-modded-nabu.img";
-                default:
-                    return null;
-            }
+    async function rebootDevice() {
+        await runRebootCommand("reboot", "Device rebooted successfully!");
+    }
+
+    async function rebootToBootloader() {
+        await runRebootCommand("reboot-bootloader", "Rebooted to Bootloader successfully!");
+    }
+
+    async function rebootToRecovery() {
+        await runRebootCommand("reboot-recovery", "Rebooted to Recovery successfully!");
+    }
+
+    async function rebootToFastbootD() {
+        await runRebootCommand("reboot-fastboot", "Rebooted to FastbootD successfully!");
+    }
+
+    async function rebootToEDL() {
+        await runRebootCommand("oem edl", "Rebooted to EDL successfully!");
+    }
+
+   //async function runRebootCommand(command, successMessage) {
+       // let result = (await device.runCommand(command)).text;
+       // document.querySelector(".result-field").textContent = result;
+   // } 
+
+       // After rebooting
+async function runRebootCommand(command, successMessage) {
+    try {
+        let result = (await device.runCommand(command)).text;
+        document.querySelector(".result-field").textContent = result;
+        alert(successMessage);
+    } catch (error) {
+        alert(`Error during reboot: ${error.message}`);
+    } finally {
+        await checkDeviceConnection(); // Check if device is still connected after reboot
+    }
+}
+
+    async function bootFormFile(event) {
+        event.preventDefault();
+        showProgressOverlay();
+        let fileField = document.querySelector("#boot-file");
+        let bootTypeSelect = document.querySelector(".boot-type");
+        let selectedBootType = bootTypeSelect.value;
+
+        let file;
+        if (fileField.files.length > 0) {
+            file = fileField.files[0];
+        } else if (selectedBootType) {
+            file = await downloadBootImage(getImagePath(selectedBootType));
+        } else {
+            alert("Please select a boot image file or choose a boot type!");
+            hideProgressOverlay();
+            return;
         }
 
-        async function downloadBootImage(imagePath) {
-            const progressBarContainer = document.querySelector('.progress-container');
-            const progressBar = document.querySelector('.progress-bar');
-            progressBarContainer.style.display = 'block'; // Show the progress bar
-
-            try {
-                const response = await fetch(imagePath);
-                if (!response.ok) throw new Error("Failed to download boot image");
-
-                const contentLength = response.headers.get('Content-Length');
-                const total = parseInt(contentLength, 10);
-                let loaded = 0;
-
-                const reader = response.body.getReader();
-                const chunks = [];
-
-                while (true) {
-                    const { done, value } = await reader.read();
-                    if (done) break;
-                    chunks.push(value);
-                    loaded += value.length;
-                    progressBar.style.width = `${(loaded / total) * 100}%`;
-                }
-
-                const blob = new Blob(chunks);
-                return blob;
-            } catch (error) {
-                console.error("Download error:", error);
-                alert("Error downloading boot image. Please try again.");
-            } finally {
-                progressBarContainer.style.display = 'none'; // Hide the progress bar
-            }
+        if (!file) {
+            alert("Failed to obtain a valid boot image.");
+            hideProgressOverlay();
+            return;
         }
 
-        async function flashFormFile(event) {
-            event.preventDefault();
-            let fileField = document.querySelector(".flash-file");
-            let partField = document.querySelector(".flash-partition");
-            let file = fileField.files[0];
+        try {
+            await device.bootBlob(file);
+            alert("Boot image booted successfully!");
+        } catch (error) {
+            console.error("Error booting image:", error);
+            alert("Error booting image. Please try again.");
+        } finally {
+            fileField.value = ""; // Reset file input after use
+            bootTypeSelect.selectedIndex = 0; // Reset selection
+            hideProgressOverlay();
+            await checkDeviceConnection(); // Check if device is still connected
+        }
+    }
 
-            // Check if a file is selected
-            if (!file) {
-                alert("Please select a file to flash!");
-                return;
+    function getImagePath(selectedBootType) {
+        switch (selectedBootType) {
+            case "twrp-nabu":
+                return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/twrp-nabu.img";
+            case "win-uefi-nabu":
+                return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/uefi-nabu.img";
+            case "twrp-mod-nabu":
+                return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/twrp-modded-nabu.img";
+            case "orangefox-mod-nabu":
+                return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/orangefox-modded-nabu.img";
+            default:
+                return null;
+        }
+    }
+
+    async function downloadBootImage(imagePath) {
+        const progressBarContainer = document.querySelector('.progress-container');
+        const progressBar = document.querySelector('.progress-bar');
+        progressBarContainer.style.display = 'block'; // Show the progress bar
+
+        try {
+            const response = await fetch(imagePath);
+            if (!response.ok) throw new Error("Failed to download boot image");
+
+            const contentLength = response.headers.get('Content-Length');
+            const total = parseInt(contentLength, 10);
+            let loaded = 0;
+
+            const reader = response.body.getReader();
+            const chunks = [];
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                chunks.push(value);
+                loaded += value.length;
+                progressBar.style.width = `${(loaded / total) * 100}%`;
             }
 
-            // Check if a partition is specified
-            if (!partField.value) {
-                alert("Please specify a partition to flash!");
-                return;
-            }
+            const blob = new Blob(chunks);
+            return blob;
+        } catch (error) {
+            console.error("Download error:", error);
+            alert("Error downloading boot image. Please try again.");
+        } finally {
+            progressBarContainer.style.display = 'none'; // Hide the progress bar
+        }
+    }
 
+    async function flashFormFile(event) {
+        event.preventDefault();
+        showProgressOverlay();
+        let fileField = document.querySelector("#flash-file");
+        let partField = document.querySelector(".flash-partition");
+        let file = fileField.files[0];
+
+        if (!file) {
+            alert("Please select a file to flash!");
+            hideProgressOverlay();
+            return;
+        }
+
+        if (!partField.value) {
+            alert("Please specify a partition to flash!");
+            hideProgressOverlay();
+            return;
+        }
+
+        try {
             await device.flashBlob(partField.value, file);
+            alert(`Successfully flashed ${partField.value}`);
+        } catch (error) {
+            alert(`Failed to flash: ${error.message}`);
+        } finally {
             fileField.value = "";
             partField.value = "";
+            hideProgressOverlay();
+            await checkDeviceConnection(); // Check if device is still connected
         }
+    }
 
-        // Function to handle flashing Boot partitions
-        // Function to handle flashing Boot partitions
-async function handleFlash(partition) {
-    const fileField = document.querySelector(".flash-file");
-    const file = fileField.files[0];
 
-    if (!file) {
-        alert("Please select a file to flash!");
+       async function rbootFlashFormFile(event) {
+    event.preventDefault();
+    rbootShowProgressOverlay();
+           showProgressOverlay();
+
+    let fileField = document.querySelector(".rboot-flash-file");
+    let partField = document.querySelector(".rboot-flash-partition");  // Updated to use dropdown
+    let selectedImage = document.querySelector(".rboot-flash-image").value;
+
+    let file;
+
+    // Check if a file is uploaded or a predefined image is selected
+    if (fileField.files.length > 0) {
+        file = fileField.files[0];
+    } else if (selectedImage) {
+        file = await rbootDownloadFlashImage(rbootGetImagePath(selectedImage)); // Predefined image
+    } else {
+        alert("Please select a file to flash or choose a predefined image!");
+        rbootHideProgressOverlay();
+        hideProgressOverlay();
+        return;
+    }
+
+    if (!file || !partField.value) {
+        alert("Please select a valid file and partition!");
+        rbootHideProgressOverlay();
+        hideProgressOverlay();
         return;
     }
 
     try {
-        // Attempt to flash the partition
-        await device.flashBlob(partition, file);
-        alert(`Successfully flashed ${partition}`);
+        await device.flashBlob(partField.value, file);
+        alert(`Successfully flashed to ${partField.value}`);
     } catch (error) {
-        // If there's an error, display a failure message
-        alert(`Failed to flash ${partition}: ${error.message}`);
+        alert(`Failed to flash: ${error.message}`);
     } finally {
-        fileField.value = ""; // Clear the file input after flashing
+        fileField.value = "";
+        partField.value = "";
+        rbootHideProgressOverlay();
+        hideProgressOverlay();
+        await CheckDeviceConnection(); // Check if device is still connected
     }
 }
 
-// Flash Boot button functionality
-const flashBootButton = document.querySelector(".flash-boot-button");
-flashBootButton.addEventListener("click", () => handleFlash("boot"));
 
-// Flash Boot AB button functionality
-const flashBootAButton = document.querySelector(".flash-boot-ab-button");
-flashBootAButton.addEventListener("click", () => handleFlash("boot_ab"));
-      
-// Flash Boot A button functionality
-const flashBootAButton = document.querySelector(".flash-boot-a-button");
-flashBootAButton.addEventListener("click", () => handleFlash("boot_a"));
+function rbootGetImagePath(selectedImage) {
+    switch (selectedImage) {
+        case "hyperos-miui-27000-nabu":
+            return "https://github.com/topjohnwu/Magisk/releases/download/v27.0/Magisk-v27.0.apk";
+        case "lol":
+            return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/lol.img";
+        case "lol1":
+            return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/lol1.img";
+        case "lol2":
+            return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/lol2.img";
+        default:
+            return null;
+    }
+}
 
-// Flash Boot B button functionality
-const flashBootBButton = document.querySelector(".flash-boot-b-button");
-flashBootBButton.addEventListener("click", () => handleFlash("boot_b"));
+async function rbootDownloadFlashImage(imagePath) {
+    const progressBarContainer = document.querySelector('.rboot-progress-container');
+    const progressBar = document.querySelector('.rboot-progress-bar');
+    progressBarContainer.style.display = 'block';
+
+    try {
+        const response = await fetch(imagePath);
+        if (!response.ok) throw new Error("Failed to download flash image");
+
+        const contentLength = response.headers.get('Content-Length');
+        const total = parseInt(contentLength, 10);
+        let loaded = 0;
+
+        const reader = response.body.getReader();
+        const chunks = [];
+
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            chunks.push(value);
+            loaded += value.length;
+            progressBar.style.width = `${(loaded / total) * 100}%`;
+        }
+
+        const blob = new Blob(chunks);
+        return blob;
+    } catch (error) {
+        console.error("Download error:", error);
+        alert("Error downloading flash image. Please try again.");
+    } finally {
+        progressBarContainer.style.display = 'none';
+    }
+}
+
+function rbootShowProgressOverlay() {
+    const progressBarContainer = document.querySelector('.rboot-progress-container');
+    const progressBar = document.querySelector('.rboot-progress-bar');
+    progressBarContainer.style.display = 'block';
+    progressBar.style.width = '0%'; // Reset progress bar
+}
+
+function rbootHideProgressOverlay() {
+    const progressBarContainer = document.querySelector('.rboot-progress-container');
+    progressBarContainer.style.display = 'none';
+}
 
 
-        document.querySelector(".connect-button").addEventListener("click", connectDevice);
-        document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
-        document.querySelector(".reboot-button").addEventListener("click", rebootDevice);
-        document.querySelector(".reboot-bootloader-button").addEventListener("click", rebootToBootloader);
-        document.querySelector(".reboot-recovery-button").addEventListener("click", rebootToRecovery);
-        document.querySelector(".reboot-fastbootd-button").addEventListener("click", rebootToFastbootD);
-        document.querySelector(".reboot-edl-button").addEventListener("click", rebootToEDL);
-        document.querySelector(".boot-form").addEventListener("submit", bootFormFile);
-        document.querySelector(".flash-form").addEventListener("submit", flashFormFile);
-    </script>
+    document.querySelector(".connect-button").addEventListener("click", connectDevice);
+    document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
+    document.querySelector(".reboot-button").addEventListener("click", rebootDevice);
+    document.querySelector(".reboot-bootloader-button").addEventListener("click", rebootToBootloader);
+    document.querySelector(".reboot-recovery-button").addEventListener("click", rebootToRecovery);
+    document.querySelector(".reboot-fastbootd-button").addEventListener("click", rebootToFastbootD);
+    document.querySelector(".reboot-edl-button").addEventListener("click", rebootToEDL);
+    document.querySelector(".boot-form").addEventListener("submit", bootFormFile);
+    document.querySelector(".flash-form").addEventListener("submit", flashFormFile);
+    document.querySelector(".rboot-flash-form").addEventListener("submit", rbootFlashFormFile);
+</script>
 </body>
 </html>
