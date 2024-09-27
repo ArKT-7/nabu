@@ -619,21 +619,23 @@ function hideProgressOverlay() {
 function toggleElements(disable) {
     const formElements = document.querySelectorAll("input, button, select");
     formElements.forEach((element) => {
-      if (!element.classList.contains('connect-button')) {
-        element.disabled = disable; // Enable/disable based on the parameter
-      }
-      // Clear input and select values when enabling elements, except for the specific partition selector
-      if (!disable) {
-        if (element.tagName === 'SELECT') {
-          if (element.name !== 'rboot-flash-partition') {
-            element.selectedIndex = 0;  // Clear other dropdown selections
-          }
-        } else if (element.type === 'file') {
-          element.value = "";  // Clear the file input
+        if (!element.classList.contains('connect-button')) {
+            element.disabled = disable; // Enable/disable based on the parameter
         }
-      }
+        // Clear input and select values when enabling elements, except for the specific partition selector
+        if (!disable) {
+            if (element.tagName === 'SELECT') {
+                // Check if it's not the rboot-flash-partition select
+                if (element.name !== 'rboot-flash-partition') {
+                    element.selectedIndex = 0;  // Clear other dropdown selections
+                }
+            } else if (element.type === 'file') {
+                element.value = "";  // Clear the file input
+            }
+        }
     });
-  }
+}
+
 
 
 
