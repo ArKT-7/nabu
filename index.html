@@ -694,65 +694,62 @@ async function runRebootCommand(command, successMessage) {
     }
 }
 
+    async function bootFormFile(event) {
+    event.preventDefault();
+    showProgressOverlay();
 
-       const bootFileInput = document.getElementById('boot-file');
-    const bootTypeSelect = document.getElementById('boot-type');
+    let fileField = document.querySelector("#boot-file");
+    let bootTypeSelect = document.querySelector(".boot-type");
 
-    // Disable the file input if a select option is chosen
+    // Disable "Choose File" when a boot type is selected
     bootTypeSelect.addEventListener('change', function() {
         if (bootTypeSelect.value !== "") {
-            bootFileInput.disabled = true; // Disable file input
+            fileField.disabled = true; // Disable file input if an option is selected
         } else {
-            bootFileInput.disabled = false; // Re-enable file input
+            fileField.disabled = false; // Re-enable file input if no option is selected
         }
     });
 
-    // Disable the select dropdown if a file is chosen
-    bootFileInput.addEventListener('change', function() {
-        if (bootFileInput.files.length > 0) {
-            bootTypeSelect.disabled = true; // Disable the select dropdown
-        } else {
-            bootTypeSelect.disabled = false; // Re-enable the select dropdown
-        }
-    });
-
-    async function bootFormFile(event) {
-        event.preventDefault();
-        showProgressOverlay();
-        let fileField = document.querySelector("#boot-file");
-        let bootTypeSelect = document.querySelector(".boot-type");
-        let selectedBootType = bootTypeSelect.value;
-
-        let file;
+    // Disable "Boot Type" select when a file is chosen
+    fileField.addEventListener('change', function() {
         if (fileField.files.length > 0) {
-            file = fileField.files[0];
-        } else if (selectedBootType) {
-            file = await downloadBootImage(getImagePath(selectedBootType));
+            bootTypeSelect.disabled = true; // Disable the select dropdown if a file is chosen
         } else {
-            alert("Please select a boot image file or choose a boot type!");
-            hideProgressOverlay();
-            return;
+            bootTypeSelect.disabled = false; // Re-enable the select dropdown if no file is chosen
         }
+    });
 
-        if (!file) {
-            alert("Failed to obtain a valid boot image.");
-            hideProgressOverlay();
-            return;
-        }
-
-        try {
-            await device.bootBlob(file);
-            alert("Boot image booted successfully!");
-        } catch (error) {
-            console.error("Error booting image:", error);
-            alert("Error booting image. Please try again.");
-        } finally {
-            fileField.value = ""; // Reset file input after use
-            bootTypeSelect.selectedIndex = 0; // Reset selection
-            hideProgressOverlay();
-            await checkDeviceConnection(); // Check if device is still connected
-        }
+    let file;
+    if (fileField.files.length > 0) {
+        file = fileField.files[0];
+    } else if (bootTypeSelect.value) {
+        file = await downloadBootImage(getImagePath(bootTypeSelect.value));
+    } else {
+        alert("Please select a boot image file or choose a boot type!");
+        hideProgressOverlay();
+        return;
     }
+
+    if (!file) {
+        alert("Failed to obtain a valid boot image.");
+        hideProgressOverlay();
+        return;
+    }
+
+    try {
+        await device.bootBlob(file);
+        alert("Boot image booted successfully!");
+    } catch (error) {
+        console.error("Error booting image:", error);
+        alert("Error booting image. Please try again.");
+    } finally {
+        fileField.value = ""; // Reset file input after use
+        bootTypeSelect.selectedIndex = 0; // Reset select input
+        hideProgressOverlay();
+        await checkDeviceConnection(); // Check if the device is still connected
+    }
+}
+
 
     function getImagePath(selectedBootType) {
         switch (selectedBootType) {
@@ -805,51 +802,89 @@ async function runRebootCommand(command, successMessage) {
         }
     }
 
-    async function flashFormFile(event) {
-        event.preventDefault();
-        showProgressOverlay();
-        let fileField = document.querySelector("#flash-file");
-        let partField = document.querySelector(".flash-partition");
-        let file = fileField.files[0];
+   async function flashFormFile(event) {
+    event.preventDefault();
+    showProgressOverlay();
 
-        if (!file) {
-            alert("Please select a file to flash!");
-            hideProgressOverlay();
-            return;
-        }
+    let fileField = document.querySelector("#flash-file");
+    let partField = document.querySelector(".flash-partition");
 
-        if (!partField.value) {
-            alert("Please specify a partition to flash!");
-            hideProgressOverlay();
-            return;
+    // Disable "Choose File" when a partition is selected
+    partField.addEventListener('change', function() {
+        if (partField.value !== "") {
+            fileField.disabled = true;
+        } else {
+            fileField.disabled = false;
         }
+    });
 
-        try {
-            await device.flashBlob(partField.value, file);
-            alert(`Successfully flashed ${partField.value}`);
-        } catch (error) {
-            alert(`Failed to flash: ${error.message}`);
-        } finally {
-            fileField.value = "";
-            partField.value = "";
-            hideProgressOverlay();
-            await checkDeviceConnection(); // Check if device is still connected
+    // Disable "Partition" select when a file is chosen
+    fileField.addEventListener('change', function() {
+        if (fileField.files.length > 0) {
+            partField.disabled = true;
+        } else {
+            partField.disabled = false;
         }
+    });
+
+    let file = fileField.files[0];
+
+    if (!file) {
+        alert("Please select a file to flash!");
+        hideProgressOverlay();
+        return;
     }
+
+    if (!partField.value) {
+        alert("Please specify a partition to flash!");
+        hideProgressOverlay();
+        return;
+    }
+
+    try {
+        await device.flashBlob(partField.value, file);
+        alert(`Successfully flashed ${partField.value}`);
+    } catch (error) {
+        alert(`Failed to flash: ${error.message}`);
+    } finally {
+        fileField.value = ""; // Reset file input after use
+        partField.value = ""; // Reset select input
+        hideProgressOverlay();
+        await checkDeviceConnection(); // Check if the device is still connected
+    }
+}
+
 
 
        async function rbootFlashFormFile(event) {
     event.preventDefault();
     rbootShowProgressOverlay();
-           showProgressOverlay();
+    showProgressOverlay();
 
     let fileField = document.querySelector(".rboot-flash-file");
-    let partField = document.querySelector(".rboot-flash-partition");  // Updated to use dropdown
+    let partField = document.querySelector(".rboot-flash-partition");  
     let selectedImage = document.querySelector(".rboot-flash-image").value;
+
+    // Disable "Choose File" when a predefined image is selected
+    partField.addEventListener('change', function() {
+        if (partField.value !== "") {
+            fileField.disabled = true;
+        } else {
+            fileField.disabled = false;
+        }
+    });
+
+    // Disable "Partition" select when a file is chosen
+    fileField.addEventListener('change', function() {
+        if (fileField.files.length > 0) {
+            partField.disabled = true;
+        } else {
+            partField.disabled = false;
+        }
+    });
 
     let file;
 
-    // Check if a file is uploaded or a predefined image is selected
     if (fileField.files.length > 0) {
         file = fileField.files[0];
     } else if (selectedImage) {
@@ -878,9 +913,10 @@ async function runRebootCommand(command, successMessage) {
         partField.value = "";
         rbootHideProgressOverlay();
         hideProgressOverlay();
-        await CheckDeviceConnection(); // Check if device is still connected
+        await checkDeviceConnection(); // Check if the device is still connected
     }
 }
+
 
 
 function rbootGetImagePath(selectedImage) {
