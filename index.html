@@ -694,6 +694,28 @@ async function runRebootCommand(command, successMessage) {
     }
 }
 
+
+       const bootFileInput = document.getElementById('boot-file');
+    const bootTypeSelect = document.getElementById('boot-type');
+
+    // Disable the file input if a select option is chosen
+    bootTypeSelect.addEventListener('change', function() {
+        if (bootTypeSelect.value !== "") {
+            bootFileInput.disabled = true; // Disable file input
+        } else {
+            bootFileInput.disabled = false; // Re-enable file input
+        }
+    });
+
+    // Disable the select dropdown if a file is chosen
+    bootFileInput.addEventListener('change', function() {
+        if (bootFileInput.files.length > 0) {
+            bootTypeSelect.disabled = true; // Disable the select dropdown
+        } else {
+            bootTypeSelect.disabled = false; // Re-enable the select dropdown
+        }
+    });
+
     async function bootFormFile(event) {
         event.preventDefault();
         showProgressOverlay();
