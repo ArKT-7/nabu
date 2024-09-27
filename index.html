@@ -613,21 +613,29 @@ function hideProgressOverlay() {
     progressMessage.textContent = ''; // Clear the message text
 }
 
-function toggleElements(disable) {
+       function toggleElements(disable) {
     const formElements = document.querySelectorAll("input, button, select");
+    const flashPartitionDropdown = document.querySelector('.rboot-flash-partition');
+    const savedFlashPartitionValue = flashPartitionDropdown.value; // Save the current value
+
     formElements.forEach((element) => {
       if (!element.classList.contains('connect-button')) {
         element.disabled = disable;
       }
-      // Clear input and select values when enabling elements
+      // Clear input and select values when enabling elements, except the flash partition dropdown
       if (!disable) {
         if (element.tagName === 'SELECT') {
-          element.selectedIndex = 0;  // Clear the dropdown selection
+          if (element !== flashPartitionDropdown) { // Skip clearing this dropdown
+            element.selectedIndex = 0;  // Clear the dropdown selection
+          }
         } else if (element.type === 'file') {
           element.value = "";  // Clear the file input
         }
       }
     });
+
+    // Restore the saved value of the flash partition dropdown
+    flashPartitionDropdown.value = savedFlashPartitionValue; // Restore the saved value
   }
 
  async function connectDevice() {
