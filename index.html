@@ -617,11 +617,19 @@ function hideProgressOverlay() {
 function toggleElements(disable) {
     const formElements = document.querySelectorAll("input, button, select");
     formElements.forEach((element) => {
-        if (!element.classList.contains('connect-button')) {
-            element.disabled = disable;
+      if (!element.classList.contains('connect-button')) {
+        element.disabled = disable;
+      }
+      // Clear input and select values when enabling elements
+      if (!disable) {
+        if (element.tagName === 'SELECT') {
+          element.selectedIndex = 0;  // Clear the dropdown selection
+        } else if (element.type === 'file') {
+          element.value = "";  // Clear the file input
         }
+      }
     });
-}
+  }
 
  async function connectDevice() {
         let statusField = document.querySelector(".status-field");
