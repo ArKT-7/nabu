@@ -684,13 +684,13 @@ async function runRebootCommand(command, successMessage) {
     function getImagePath(selectedBootType) {
         switch (selectedBootType) {
             case "twrp-nabu":
-                return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/twrp-nabu.img";
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/twrp-nabu.img";
             case "win-uefi-nabu":
-                return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/uefi-nabu.img";
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/uefi-windows.img";
             case "twrp-mod-nabu":
-                return "https://raw.githubusercontent.com/arkt-7/won-deployer/main/files/twrp.img";
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/twrp-modded.img";
             case "orangefox-mod-nabu":
-                return "https://media.githubusercontent.com/media/ArKT-7/nabu/main/bin/orangefox-modded-nabu.img";
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/orangefox-modded.img";
             default:
                 return null;
         }
@@ -811,45 +811,45 @@ async function runRebootCommand(command, successMessage) {
 function rbootGetImagePath(selectedImage) {
     switch (selectedImage) {
         case "magisk-1-0-5-global":
-            return "https://objects.githubusercontent.com/github-production-release-asset-2e65be/855448826/8e47ba35-999b-4495-bb10-ee427e601bce?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=releaseassetproduction%2F20240927%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240927T003600Z&X-Amz-Expires=300&X-Amz-Signature=0c8e16ad676aeca5b101a4b6907ce4d74e640dc87886ca648b34d6f85b840e70&X-Amz-SignedHeaders=host&response-content-disposition=attachment%3B%20filename%3DMagisk.27.NABU.OS1.0.5.0.TKXMIXM.GLOBAL.boot.img&response-content-type=application%2Foctet-stream";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.5.0.TKXMIXM.GLOBAL.boot.img";
         case "magisk-1-0-4-global":
-            return "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/hyperos-nabu-boot-magisk/Magisk.27.NABU.OS1.0.4.0.TKXMIXM.GLOBAL.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.4.0.TKXMIXM.GLOBAL.boot.img";
         case "magisk-1-0-1-global":
-            return "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/hyperos-nabu-boot-magisk/Magisk.27.NABU.OS1.0.1.0.TKXMIXM.GLOBAL.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.1.0.TKXMIXM.GLOBAL.boot.img";
         case "magisk-1-0-8-india":
-            return "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/hyperos-nabu-boot-magisk/Magisk.27.NABU.OS1.0.8.0.TKXINXM.INDIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.8.0.TKXINXM.INDIA.boot.img";
         case "magisk-1-0-7-india":
-            return "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/hyperos-nabu-boot-magisk/Magisk.27.NABU.OS1.0.7.0.TKXINXM.INDIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.7.0.TKXINXM.INDIA.boot.img";
         case "magisk-1-0-4-india":
-            return "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/hyperos-nabu-boot-magisk/Magisk.27.NABU.OS1.0.4.0.TKXINXM.INDIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.4.0.TKXINXM.INDIA.boot.img";
         case "magisk-1-0-5-eea":
-            return "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/hyperos-nabu-boot-magisk/Magisk.27.NABU.OS1.0.5.0.TKXEUXM.EEA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.5.0.TKXEUXM.EEA.boot.img";
         case "magisk-1-0-2-eea":
-            return "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/hyperos-nabu-boot-magisk/Magisk.27.NABU.OS1.0.2.0.TKXEUXM.EEA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.2.0.TKXEUXM.EEA.boot.img";
         case "magisk-1-0-1-eea":
-            return "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/hyperos-nabu-boot-magisk/Magisk.27.NABU.OS1.0.1.0.TKXEUXM.EEA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.1.0.TKXEUXM.EEA.boot.img";
         case "magisk-1-0-4-russia":
-            return "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/hyperos-nabu-boot-magisk/Magisk.27.NABU.OS1.0.4.0.TKXRUXM.RUSSIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.4.0.TKXRUXM.RUSSIA.boot.img";
         case "magisk-1-0-3-russia":
-            return "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/hyperos-nabu-boot-magisk/Magisk.27.NABU.OS1.0.3.0.TKXRUXM.RUSSIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.3.0.TKXRUXM.RUSSIA.boot.img";
         case "magisk-1-0-1-russia":
-            return "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/hyperos-nabu-boot-magisk/Magisk.27.NABU.OS1.0.1.0.TKXRUXM.RUSSIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.1.0.TKXRUXM.RUSSIA.boot.img";
         case "magisk-1-0-3-china":
-            return "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/hyperos-nabu-boot-magisk/Magisk.27.NABU.OS1.0.3.0.TKXCNXM.CHINA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.3.0.TKXCNXM.CHINA.boot.img";
         case "magisk-1-0-2-china":
-            return "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/hyperos-nabu-boot-magisk/Magisk.27.NABU.OS1.0.2.0.TKXCNXM.CHINA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.2.0.TKXCNXM.CHINA.boot.img";
         case "magisk-1-0-5-turkey":
-            return "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/hyperos-nabu-boot-magisk/Magisk.27.NABU.OS1.0.5.0.TKXTRXM.TURKEY.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.5.0.TKXTRXM.TURKEY.boot.img";
         case "magisk-1-0-4-turkey":
-            return "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/hyperos-nabu-boot-magisk/Magisk.27.NABU.OS1.0.4.0.TKXTRXM.TURKEY.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.4.0.TKXTRXM.TURKEY.boot.img";
         case "magisk-1-0-2-turkey":
-            return "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/hyperos-nabu-boot-magisk/Magisk.27.NABU.OS1.0.2.0.TKXTRXM.TURKEY.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.2.0.TKXTRXM.TURKEY.boot.img";
         case "magisk-1-0-5-taiwan":
-            return "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/hyperos-nabu-boot-magisk/Magisk.27.NABU.OS1.0.5.0.TKXTWXM.TAIWAN.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.5.0.TKXTWXM.TAIWAN.boot.img";
         case "magisk-1-0-4-taiwan":
-            return "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/hyperos-nabu-boot-magisk/Magisk.27.NABU.OS1.0.4.0.TKXTWXM.TAIWAN.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.4.0.TKXTWXM.TAIWAN.boot.img";
         case "magisk-1-0-2-taiwan":
-            return "https://media.githubusercontent.com/media/ArKT-7/nabu-files/main/hyperos-nabu-boot-magisk/Magisk.27.NABU.OS1.0.2.0.TKXTWXM.TAIWAN.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.2.0.TKXTWXM.TAIWAN.boot.img";
         default:
             return null;
     }
