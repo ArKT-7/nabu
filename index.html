@@ -462,7 +462,9 @@ pre.result-field {
     let blobStore = new BlobStore();
 
     fastboot.setDebugLevel(2);
- // Disable flash image dropdown if file is selected
+
+
+        // Disable flash image dropdown if file is selected
   const flashFileInput = document.querySelector('.rboot-flash-file');
   const flashImageDropdown = document.querySelector('.rboot-flash-image');
 
@@ -471,6 +473,15 @@ pre.result-field {
       flashImageDropdown.disabled = true;
     } else {
       flashImageDropdown.disabled = false;
+    }
+  });
+
+  // Disable flash file input if an image is selected in the dropdown
+  flashImageDropdown.addEventListener('change', function() {
+    if (this.value !== "") {
+      flashFileInput.disabled = true;
+    } else {
+      flashFileInput.disabled = false;
     }
   });
 
@@ -485,6 +496,17 @@ pre.result-field {
       bootTypeDropdown.disabled = false;
     }
   });
+
+  // Disable boot file input if an image is selected in the dropdown
+  bootTypeDropdown.addEventListener('change', function() {
+    if (this.value !== "") {
+      bootFileInput.disabled = true;
+    } else {
+      bootFileInput.disabled = false;
+    }
+  });
+
+       
     // Utility function to show the progress overlay and disable buttons
  let messageInterval; // Store the timeout globally, so we can clear it later
 let typingInterval;  // Store typing interval globally, to clear it when necessary
@@ -652,6 +674,7 @@ async function checkDeviceConnection() {
     try {
         let product = await device.getVariable("product");
         if (product) {
+            toggleElements(false); // Enable all elements when connected
             //statusField.textContent = "Device is still connected in Fastboot mode.";
         }
     } catch (error) {
