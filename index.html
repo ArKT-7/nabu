@@ -329,6 +329,7 @@ pre.result-field {
         <!-- New dropdown for partition selection -->
         <label for="rboot-flash-partition">Select Flash boot partition</label>
         <select name="rboot-flash-partition" class="rboot-flash-partition" required>
+            <option value="">Select boot partition</option>
             <option value="boot_ab" selected>Flash to Boot ab (both slots)</option>
             <option value="boot">Flash to Boot (current slot)</option>
             <option value="boot_a">Flash to Boot A only</option>
@@ -462,50 +463,6 @@ pre.result-field {
 
     fastboot.setDebugLevel(2);
 
-
-        // Disable flash image dropdown if file is selected
-  const flashFileInput = document.querySelector('.rboot-flash-file');
-  const flashImageDropdown = document.querySelector('.rboot-flash-image');
-
-  flashFileInput.addEventListener('change', function() {
-    if (this.files.length > 0) {
-      flashImageDropdown.disabled = true;
-    } else {
-      flashImageDropdown.disabled = false;
-    }
-  });
-
-  // Disable flash file input if an image is selected in the dropdown
-  flashImageDropdown.addEventListener('change', function() {
-    if (this.value !== "") {
-      flashFileInput.disabled = true;
-    } else {
-      flashFileInput.disabled = false;
-    }
-  });
-
-  // Disable boot image dropdown if file is selected
-  const bootFileInput = document.querySelector('#boot-file');
-  const bootTypeDropdown = document.querySelector('.boot-type');
-
-  bootFileInput.addEventListener('change', function() {
-    if (this.files.length > 0) {
-      bootTypeDropdown.disabled = true;
-    } else {
-      bootTypeDropdown.disabled = false;
-    }
-  });
-
-  // Disable boot file input if an image is selected in the dropdown
-  bootTypeDropdown.addEventListener('change', function() {
-    if (this.value !== "") {
-      bootFileInput.disabled = true;
-    } else {
-      bootFileInput.disabled = false;
-    }
-  });
-
-       
     // Utility function to show the progress overlay and disable buttons
  let messageInterval; // Store the timeout globally, so we can clear it later
 let typingInterval;  // Store typing interval globally, to clear it when necessary
@@ -613,31 +570,14 @@ function hideProgressOverlay() {
     progressMessage.textContent = ''; // Clear the message text
 }
 
-     // Function to enable or disable all form elements, and clear the selector values if needed
-
-
 function toggleElements(disable) {
     const formElements = document.querySelectorAll("input, button, select");
     formElements.forEach((element) => {
         if (!element.classList.contains('connect-button')) {
-            element.disabled = disable; // Enable/disable based on the parameter
-        }
-        // Clear input and select values when enabling elements, except for the specific partition selector
-        if (!disable) {
-            if (element.tagName === 'SELECT') {
-                // Check if it's not the rboot-flash-partition select
-                if (element.name !== 'rboot-flash-partition') {
-                    element.selectedIndex = 0;  // Clear other dropdown selections
-                }
-            } else if (element.type === 'file') {
-                element.value = "";  // Clear the file input
-            }
+            element.disabled = disable;
         }
     });
 }
-
-
-
 
  async function connectDevice() {
         let statusField = document.querySelector(".status-field");
@@ -690,7 +630,6 @@ async function checkDeviceConnection() {
     try {
         let product = await device.getVariable("product");
         if (product) {
-            toggleElements(false); // Enable all elements when connected
             //statusField.textContent = "Device is still connected in Fastboot mode.";
         }
     } catch (error) {
