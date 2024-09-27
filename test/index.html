@@ -321,37 +321,13 @@ pre.result-field {
 
 </div>
 
+   
    <!-- New Container for Downloading and Flashing Images -->
-   <div class="container">
+    <div class="container">
     <form class="rboot-flash-form">
-        <!-- OS Selector Dropdown -->
-        <label for="os-selector">Select OS</label>
-        <select name="os-selector" class="os-selector" required>
-            <option value="">Select OS</option>
-            <option value="hyperos">HyperOS</option>
-            <option value="miui14">MIUI 14</option>
-        </select>
-
-        <!-- HyperOS Boot Image Dropdown (Initially visible) -->
-        <label for="rboot-flash-image-hyperos" class="rboot-flash-image-label">HyperOS Rooted Boot Images</label>
-        <select name="rboot-flash-image-hyperos" class="rboot-flash-image-hyperos">
-            <option value="">Select rooted boot to flash on Nabu directly</option>
-            <!-- Add all your HyperOS versions here -->
-            <option value="magisk-1-0-5-global">HyperOS 1.0.5 (Global)</option>
-            <option value="magisk-1-0-4-global">HyperOS 1.0.4 (Global)</option>
-            <!-- More HyperOS versions -->
-        </select>
-
-        <!-- MIUI 14 Boot Image Dropdown (Initially hidden) -->
-        <label for="rboot-flash-image-miui14" class="rboot-flash-image-label" style="display:none;">MIUI 14 Rooted Boot Images</label>
-        <select name="rboot-flash-image-miui14" class="rboot-flash-image-miui14" style="display:none;">
-            <option value="">Select rooted boot to flash on Nabu directly</option>
-            <option value="miui14-14-0-8-global">MIUI 14 Version 14.0.8 (Global)</option>
-            <option value="miui14-14-0-7-global">MIUI 14 Version 14.0.7 (Global)</option>
-            <!-- Add all MIUI 14 versions here -->
-        </select>
-
-        <!-- Flash Partition Dropdown and Other Fields -->
+        <label for="rboot-flash-file">Flash any rooted or normal boot image</label>
+        <input type="file" name="rboot-flash-file" class="rboot-flash-file" accept=".img" />
+        <!-- New dropdown for partition selection -->
         <label for="rboot-flash-partition">Select Flash boot partition</label>
         <select name="rboot-flash-partition" class="rboot-flash-partition" required>
             <option value="">Select boot partition</option>
@@ -360,14 +336,39 @@ pre.result-field {
             <option value="boot_a">Flash to Boot A only</option>
             <option value="boot_b">Flash to Boot B only</option>
         </select>
-
+        <!-- New dropdown for selecting predefined images -->
+       <label for="rboot-flash-image">Magisk 27(stable) Rooted Boot Images</label>
+<select name="rboot-flash-image" class="rboot-flash-image">
+    <option value="">Select rooted boot to flash on Nabu directly</option>
+    <option value="magisk-1-0-5-global">HyperOS 1.0.5 (Global)</option>
+    <option value="magisk-1-0-4-global">HyperOS 1.0.4 (Global)</option>
+    <option value="magisk-1-0-1-global">HyperOS 1.0.1 (Global)</option>
+    <option value="magisk-1-0-8-india">HyperOS 1.0.8 (India)</option>
+    <option value="magisk-1-0-7-india">HyperOS 1.0.7 (India)</option>
+    <option value="magisk-1-0-4-india">HyperOS 1.0.4 (India)</option>
+    <option value="magisk-1-0-5-eea">HyperOS 1.0.5 (EEA)</option>
+    <option value="magisk-1-0-2-eea">HyperOS 1.0.2 (EEA)</option>
+    <option value="magisk-1-0-1-eea">HyperOS 1.0.1 (EEA)</option>
+    <option value="magisk-1-0-4-russia">HyperOS 1.0.4 (Russia)</option>
+    <option value="magisk-1-0-3-russia">HyperOS 1.0.3 (Russia)</option>
+    <option value="magisk-1-0-1-russia">HyperOS 1.0.1 (Russia)</option>
+    <option value="magisk-1-0-3-china">HyperOS 1.0.3 (China)</option>
+    <option value="magisk-1-0-2-china">HyperOS 1.0.2 (China)</option>
+    <option value="magisk-1-0-5-turkey">HyperOS 1.0.5 (Turkey)</option>
+    <option value="magisk-1-0-4-turkey">HyperOS 1.0.4 (Turkey)</option>
+    <option value="magisk-1-0-2-turkey">HyperOS 1.0.2 (Turkey)</option>
+    <option value="magisk-1-0-5-taiwan">HyperOS 1.0.5 (Taiwan)</option>
+    <option value="magisk-1-0-4-taiwan">HyperOS 1.0.4 (Taiwan)</option>
+    <option value="magisk-1-0-2-taiwan">HyperOS 1.0.2 (Taiwan)</option>
+</select>        
         <input type="submit" value="Flash" class="button" />
-
-        <div class="rboot-progress-container" style="display:none;">
-            <div class="rboot-progress-bar" style="width:0%; background-color:#4caf50; height:20px;"></div>
-        </div>
+           <!-- Progress bar for feedback -->
+    <div class="rboot-progress-container" style="display:none;">
+        <div class="rboot-progress-bar" style="width:0%; background-color:#4caf50; height:20px;"></div>
+    </div>
     </form>
 </div>
+
 
 
 
@@ -768,79 +769,53 @@ async function runRebootCommand(command, successMessage) {
     }
 
 
-
-
-       document.querySelector(".os-selector").addEventListener("change", function(event) {
-    const osSelection = event.target.value;
-    const hyperOSDropdown = document.querySelector(".rboot-flash-image-hyperos");
-    const hyperOSLabel = document.querySelector("label[for='rboot-flash-image-hyperos']");
-    const miuiDropdown = document.querySelector(".rboot-flash-image-miui14");
-    const miuiLabel = document.querySelector("label[for='rboot-flash-image-miui14']");
-
-    if (osSelection === "hyperos") {
-        hyperOSDropdown.style.display = "block";
-        hyperOSLabel.style.display = "block";
-        miuiDropdown.style.display = "none";
-        miuiLabel.style.display = "none";
-    } else if (osSelection === "miui14") {
-        hyperOSDropdown.style.display = "none";
-        hyperOSLabel.style.display = "none";
-        miuiDropdown.style.display = "block";
-        miuiLabel.style.display = "block";
-    } else {
-        hyperOSDropdown.style.display = "none";
-        hyperOSLabel.style.display = "none";
-        miuiDropdown.style.display = "none";
-        miuiLabel.style.display = "none";
-    }
-});
-
-
-
-
-       
-
-       // Modify the form submission to check which OS is selected and flash the appropriate image
-async function rbootFlashFormFile(event) {
+    async function rbootFlashFormFile(event) {
     event.preventDefault();
     rbootShowProgressOverlay();
+           showProgressOverlay();
 
-    const osSelection = document.querySelector(".os-selector").value;
-    const partField = document.querySelector(".rboot-flash-partition").value;
-    let selectedImage;
+    let fileField = document.querySelector(".rboot-flash-file");
+    let partField = document.querySelector(".rboot-flash-partition");  // Updated to use dropdown
+    let selectedImage = document.querySelector(".rboot-flash-image").value;
 
-    if (osSelection === "hyperos") {
-        selectedImage = document.querySelector(".rboot-flash-image-hyperos").value;
-    } else if (osSelection === "miui14") {
-        selectedImage = document.querySelector(".rboot-flash-image-miui14").value;
-    }
+    let file;
 
-    if (!selectedImage || !partField) {
-        alert("Please select an OS, boot image, and partition!");
+    // Check if a file is uploaded or a predefined image is selected
+    if (fileField.files.length > 0) {
+        file = fileField.files[0];
+    } else if (selectedImage) {
+        file = await rbootDownloadFlashImage(rbootGetImagePath(selectedImage)); // Predefined image
+    } else {
+        alert("Please select a file to flash or choose a predefined image!");
         rbootHideProgressOverlay();
+        hideProgressOverlay();
         return;
     }
 
-    // Flash logic remains the same, using the selectedImage value
-    const file = await rbootDownloadFlashImage(rbootGetImagePath(selectedImage));
+    if (!file || !partField.value) {
+        alert("Please select a valid file and partition!");
+        rbootHideProgressOverlay();
+        hideProgressOverlay();
+        return;
+    }
+
     try {
-        await device.flashBlob(partField, file);
-        alert(`Successfully flashed to ${partField}`);
+        await device.flashBlob(partField.value, file);
+        alert(`Successfully flashed to ${partField.value}`);
     } catch (error) {
         alert(`Failed to flash: ${error.message}`);
     } finally {
+        fileField.value = "";
+        partField.value = "";
         rbootHideProgressOverlay();
-        await CheckDeviceConnection();
+        hideProgressOverlay();
+        await CheckDeviceConnection(); // Check if device is still connected
     }
 }
 
 
 function rbootGetImagePath(selectedImage) {
     switch (selectedImage) {
-          case "magisk-1-0-5-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.5.0.TKXMIXM.GLOBAL.boot.img";
-        case "miui14-14-0-8-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.8.0.TKXMIXM.GLOBAL.boot.img";
         case "magisk-1-0-5-global":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.5.0.TKXMIXM.GLOBAL.boot.img";
         case "magisk-1-0-4-global":
