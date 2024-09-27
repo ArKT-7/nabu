@@ -338,7 +338,7 @@ pre.result-field {
         <!-- New dropdown for selecting predefined images -->
        <label for="rboot-flash-image">Magisk 27(stable) Rooted Boot Images</label>
 <select name="rboot-flash-image" class="rboot-flash-image">
-    <option value="">Select rooted HYPEROS/MIUI14 boot</option>
+    <option value="">Select rooted HYPEROS boot</option>
     <option value="magisk-1-0-5-global">HyperOS 1.0.5 (Global)</option>
     <option value="magisk-1-0-4-global">HyperOS 1.0.4 (Global)</option>
     <option value="magisk-1-0-1-global">HyperOS 1.0.1 (Global)</option>
@@ -462,7 +462,29 @@ pre.result-field {
     let blobStore = new BlobStore();
 
     fastboot.setDebugLevel(2);
+ // Disable flash image dropdown if file is selected
+  const flashFileInput = document.querySelector('.rboot-flash-file');
+  const flashImageDropdown = document.querySelector('.rboot-flash-image');
 
+  flashFileInput.addEventListener('change', function() {
+    if (this.files.length > 0) {
+      flashImageDropdown.disabled = true;
+    } else {
+      flashImageDropdown.disabled = false;
+    }
+  });
+
+  // Disable boot image dropdown if file is selected
+  const bootFileInput = document.querySelector('#boot-file');
+  const bootTypeDropdown = document.querySelector('.boot-type');
+
+  bootFileInput.addEventListener('change', function() {
+    if (this.files.length > 0) {
+      bootTypeDropdown.disabled = true;
+    } else {
+      bootTypeDropdown.disabled = false;
+    }
+  });
     // Utility function to show the progress overlay and disable buttons
  let messageInterval; // Store the timeout globally, so we can clear it later
 let typingInterval;  // Store typing interval globally, to clear it when necessary
@@ -695,61 +717,42 @@ async function runRebootCommand(command, successMessage) {
 }
 
     async function bootFormFile(event) {
-    event.preventDefault();
-    showProgressOverlay();
+        event.preventDefault();
+        showProgressOverlay();
+        let fileField = document.querySelector("#boot-file");
+        let bootTypeSelect = document.querySelector(".boot-type");
+        let selectedBootType = bootTypeSelect.value;
 
-    let fileField = document.querySelector("#boot-file");
-    let bootTypeSelect = document.querySelector(".boot-type");
-
-    // Disable "Choose File" when a boot type is selected
-    bootTypeSelect.addEventListener('change', function() {
-        if (bootTypeSelect.value !== "") {
-            fileField.disabled = true; // Disable file input if an option is selected
-        } else {
-            fileField.disabled = false; // Re-enable file input if no option is selected
-        }
-    });
-
-    // Disable "Boot Type" select when a file is chosen
-    fileField.addEventListener('change', function() {
+        let file;
         if (fileField.files.length > 0) {
-            bootTypeSelect.disabled = true; // Disable the select dropdown if a file is chosen
+            file = fileField.files[0];
+        } else if (selectedBootType) {
+            file = await downloadBootImage(getImagePath(selectedBootType));
         } else {
-            bootTypeSelect.disabled = false; // Re-enable the select dropdown if no file is chosen
+            alert("Please select a boot image file or choose a boot type!");
+            hideProgressOverlay();
+            return;
         }
-    });
 
-    let file;
-    if (fileField.files.length > 0) {
-        file = fileField.files[0];
-    } else if (bootTypeSelect.value) {
-        file = await downloadBootImage(getImagePath(bootTypeSelect.value));
-    } else {
-        alert("Please select a boot image file or choose a boot type!");
-        hideProgressOverlay();
-        return;
+        if (!file) {
+            alert("Failed to obtain a valid boot image.");
+            hideProgressOverlay();
+            return;
+        }
+
+        try {
+            await device.bootBlob(file);
+            alert("Boot image booted successfully!");
+        } catch (error) {
+            console.error("Error booting image:", error);
+            alert("Error booting image. Please try again.");
+        } finally {
+            fileField.value = ""; // Reset file input after use
+            bootTypeSelect.selectedIndex = 0; // Reset selection
+            hideProgressOverlay();
+            await checkDeviceConnection(); // Check if device is still connected
+        }
     }
-
-    if (!file) {
-        alert("Failed to obtain a valid boot image.");
-        hideProgressOverlay();
-        return;
-    }
-
-    try {
-        await device.bootBlob(file);
-        alert("Boot image booted successfully!");
-    } catch (error) {
-        console.error("Error booting image:", error);
-        alert("Error booting image. Please try again.");
-    } finally {
-        fileField.value = ""; // Reset file input after use
-        bootTypeSelect.selectedIndex = 0; // Reset select input
-        hideProgressOverlay();
-        await checkDeviceConnection(); // Check if the device is still connected
-    }
-}
-
 
     function getImagePath(selectedBootType) {
         switch (selectedBootType) {
@@ -802,89 +805,51 @@ async function runRebootCommand(command, successMessage) {
         }
     }
 
-   async function flashFormFile(event) {
-    event.preventDefault();
-    showProgressOverlay();
+    async function flashFormFile(event) {
+        event.preventDefault();
+        showProgressOverlay();
+        let fileField = document.querySelector("#flash-file");
+        let partField = document.querySelector(".flash-partition");
+        let file = fileField.files[0];
 
-    let fileField = document.querySelector("#flash-file");
-    let partField = document.querySelector(".flash-partition");
-
-    // Disable "Choose File" when a partition is selected
-    partField.addEventListener('change', function() {
-        if (partField.value !== "") {
-            fileField.disabled = true;
-        } else {
-            fileField.disabled = false;
+        if (!file) {
+            alert("Please select a file to flash!");
+            hideProgressOverlay();
+            return;
         }
-    });
 
-    // Disable "Partition" select when a file is chosen
-    fileField.addEventListener('change', function() {
-        if (fileField.files.length > 0) {
-            partField.disabled = true;
-        } else {
-            partField.disabled = false;
+        if (!partField.value) {
+            alert("Please specify a partition to flash!");
+            hideProgressOverlay();
+            return;
         }
-    });
 
-    let file = fileField.files[0];
-
-    if (!file) {
-        alert("Please select a file to flash!");
-        hideProgressOverlay();
-        return;
+        try {
+            await device.flashBlob(partField.value, file);
+            alert(`Successfully flashed ${partField.value}`);
+        } catch (error) {
+            alert(`Failed to flash: ${error.message}`);
+        } finally {
+            fileField.value = "";
+            partField.value = "";
+            hideProgressOverlay();
+            await checkDeviceConnection(); // Check if device is still connected
+        }
     }
-
-    if (!partField.value) {
-        alert("Please specify a partition to flash!");
-        hideProgressOverlay();
-        return;
-    }
-
-    try {
-        await device.flashBlob(partField.value, file);
-        alert(`Successfully flashed ${partField.value}`);
-    } catch (error) {
-        alert(`Failed to flash: ${error.message}`);
-    } finally {
-        fileField.value = ""; // Reset file input after use
-        partField.value = ""; // Reset select input
-        hideProgressOverlay();
-        await checkDeviceConnection(); // Check if the device is still connected
-    }
-}
-
 
 
        async function rbootFlashFormFile(event) {
     event.preventDefault();
     rbootShowProgressOverlay();
-    showProgressOverlay();
+           showProgressOverlay();
 
     let fileField = document.querySelector(".rboot-flash-file");
-    let partField = document.querySelector(".rboot-flash-partition");  
+    let partField = document.querySelector(".rboot-flash-partition");  // Updated to use dropdown
     let selectedImage = document.querySelector(".rboot-flash-image").value;
-
-    // Disable "Choose File" when a predefined image is selected
-    partField.addEventListener('change', function() {
-        if (partField.value !== "") {
-            fileField.disabled = true;
-        } else {
-            fileField.disabled = false;
-        }
-    });
-
-    // Disable "Partition" select when a file is chosen
-    fileField.addEventListener('change', function() {
-        if (fileField.files.length > 0) {
-            partField.disabled = true;
-        } else {
-            partField.disabled = false;
-        }
-    });
 
     let file;
 
+    // Check if a file is uploaded or a predefined image is selected
     if (fileField.files.length > 0) {
         file = fileField.files[0];
     } else if (selectedImage) {
@@ -913,10 +878,9 @@ async function runRebootCommand(command, successMessage) {
         partField.value = "";
         rbootHideProgressOverlay();
         hideProgressOverlay();
-        await checkDeviceConnection(); // Check if the device is still connected
+        await CheckDeviceConnection(); // Check if device is still connected
     }
 }
-
 
 
 function rbootGetImagePath(selectedImage) {
@@ -963,79 +927,85 @@ function rbootGetImagePath(selectedImage) {
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.2.0.TKXTWXM.TAIWAN.boot.img";
         // Global Versions
         case "magisk-14-0-8-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.8.0.TKXMIXM.GLOBAL.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.8.GLOBAL.boot.img";
         case "magisk-14-0-7-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.7.0.TKXMIXM.GLOBAL.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.7.GLOBAL.boot.img";
         case "magisk-14-0-6-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.6.0.TKXMIXM.GLOBAL.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.6.GLOBAL.boot.img";
         case "magisk-14-0-5-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.5.0.TKXMIXM.GLOBAL.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.5.GLOBAL.boot.img";
         case "magisk-14-0-4-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.4.0.TKXMIXM.GLOBAL.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.4.GLOBAL.boot.img";
         case "magisk-14-0-3-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.3.0.TKXMIXM.GLOBAL.boot.img";
-            
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.3.GLOBAL.boot.img";
+        
+        // India Versions
         case "magisk-14-0-7-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.7.0.TKXINXM.INDIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.7.INDIA.boot.img";
         case "magisk-14-0-4-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.4.0.TKXINXM.INDIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.4.INDIA.boot.img";
         case "magisk-14-0-3-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.3.0.TKXINXM.INDIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.3.INDIA.boot.img";
         case "magisk-14-0-1-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.1.0.TKXINXM.INDIA.boot.img";
-            
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.1.INDIA.boot.img";
+
+        // EEA Versions
         case "magisk-14-0-9-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.9.0.TKXEUXM.EEA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.9.EEA.boot.img";
         case "magisk-14-0-8-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.8.0.TKXEUXM.EEA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.8.EEA.boot.img";
         case "magisk-14-0-7-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.7.0.TKXEUXM.EEA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.7.EEA.boot.img";
         case "magisk-14-0-6-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.6.0.TKXEUXM.EEA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.6.EEA.boot.img";
         case "magisk-14-0-5-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.5.0.TKXEUXM.EEA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.5.EEA.boot.img";
         case "magisk-14-0-4-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.4.0.TKXEUXM.EEA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.4.EEA.boot.img";
         case "magisk-14-0-2-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.2.0.TKXEUXM.EEA.boot.img";
-            
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.2.EEA.boot.img";
+
+        // Russia Versions
         case "magisk-14-0-7-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.7.0.TKXRUXM.RUSSIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.7.RUSSIA.boot.img";
         case "magisk-14-0-6-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.6.0.TKXRUXM.RUSSIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.6.RUSSIA.boot.img";
         case "magisk-14-0-5-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.5.0.TKXRUXM.RUSSIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.5.RUSSIA.boot.img";
         case "magisk-14-0-4-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.4.0.TKXRUXM.RUSSIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.4.RUSSIA.boot.img";
         case "magisk-14-0-3-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.3.0.TKXRUXM.RUSSIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.3.RUSSIA.boot.img";
         case "magisk-14-0-2-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.2.0.TKXRUXM.RUSSIA.boot.img";
-            
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.2.RUSSIA.boot.img";
+
+        // China Versions
         case "magisk-14-0-7-china":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.7.0.TKXCNXM.CHINA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.7.CHINA.boot.img";
         case "magisk-14-0-6-china":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.6.0.TKXCNXM.CHINA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.6.CHINA.boot.img";
         case "magisk-14-0-5-china":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.5.0.TKXCNXM.CHINA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.5.CHINA.boot.img";
         case "magisk-14-0-4-china":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.4.0.TKXCNXM.CHINA.boot.img";
-            
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.4.CHINA.boot.img";
+
+        // Turkey Versions
         case "magisk-14-0-5-turkey":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.5.0.TKXTRXM.TURKEY.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.5.TURKEY.boot.img";
         case "magisk-14-0-4-turkey":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.4.0.TKXTRXM.TURKEY.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.4.TURKEY.boot.img";
         case "magisk-14-0-2-turkey":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.2.0.TKXTRXM.TURKEY.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.2.TURKEY.boot.img";
         case "magisk-14-0-1-turkey":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.1.0.TKXTRXM.TURKEY.boot.img";
-            
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.1.TURKEY.boot.img";
+
+        // Taiwan Versions
         case "magisk-14-0-3-taiwan":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.3.0.TKXTWXM.TAIWAN.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.3.TAIWAN.boot.img";
         case "magisk-14-0-2-taiwan":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.2.0.TKXTWXM.TAIWAN.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.2.TAIWAN.boot.img";
         case "magisk-14-0-1-taiwan":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.1.0.TKXTWXM.TAIWAN.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.1.TAIWAN.boot.img";
         
         default:
             return null;
