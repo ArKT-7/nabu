@@ -613,26 +613,24 @@ function hideProgressOverlay() {
     progressMessage.textContent = ''; // Clear the message text
 }
 
-       function toggleElements(disable) {
+     // Function to enable or disable all form elements, and clear the selector values if needed
+ function toggleElements(disable) {
     const formElements = document.querySelectorAll("input, button, select");
-    const flashPartitionDropdown = document.querySelector('.rboot-flash-partition');
-    const savedFlashPartitionValue = flashPartitionDropdown.value; // Save the current value
-
     formElements.forEach((element) => {
-      if (!element.classList.contains('connect-button')) {
-        element.disabled = disable;
-      }
-      // Clear input and select values when enabling elements, except the flash partition dropdown
-      if (!disable) {
-        if (element.tagName === 'SELECT') {
-          if (element !== flashPartitionDropdown) { // Skip clearing this dropdown
-            element.selectedIndex = 0;  // Clear the dropdown selection
-          }
-        } else if (element.type === 'file') {
-          element.value = "";  // Clear the file input
+        if (!element.classList.contains('connect-button')) {
+            element.disabled = disable;
         }
-      }
+        // Clear input values when enabling elements, except for the specific dropdown
+        if (!disable) {
+            if (element.type === 'file') {
+                element.value = "";  // Clear the file input
+            } else if (element.tagName === 'SELECT' && !element.classList.contains('rboot-flash-partition')) {
+                element.selectedIndex = 0;  // Clear other dropdown selections
+            }
+        }
     });
+}
+
 
     // Restore the saved value of the flash partition dropdown
     flashPartitionDropdown.value = savedFlashPartitionValue; // Restore the saved value
