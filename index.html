@@ -376,6 +376,7 @@ pre.result-field {
         <select name="boot-type" class="boot-type">
             <option value="">Select Images to boot on Nabu directly</option>
             <option value="twrp-nabu">Twrp Recovery Nabu</option>
+            <option value="pbrp-nabu">Pitch Black Recovery Nabu</option>
             <option value="win-uefi-nabu">Windows UEFI Boot Nabu</option>
             <option value="twrp-mod-nabu">Twrp Modded Recovery Nabu</option>
             <option value="orangefox-mod-nabu">OrangeFox Modded Recovery Nabu</option>
@@ -691,6 +692,8 @@ async function runRebootCommand(command, successMessage) {
                 return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/twrp-modded.img";
             case "orangefox-mod-nabu":
                 return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/orangefox-modded.img";
+            case "pbrp-nabu":
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/pitchblack-pbrp.img";
             default:
                 return null;
         }
