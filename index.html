@@ -614,22 +614,26 @@ function hideProgressOverlay() {
 }
 
      // Function to enable or disable all form elements, and clear the selector values if needed
- function toggleElements(disable) {
+
+
+function toggleElements(disable) {
     const formElements = document.querySelectorAll("input, button, select");
     formElements.forEach((element) => {
-        if (!element.classList.contains('connect-button')) {
-            element.disabled = disable;
+      if (!element.classList.contains('connect-button')) {
+        element.disabled = disable; // Enable/disable based on the parameter
+      }
+      // Clear input and select values when enabling elements, except for the specific partition selector
+      if (!disable) {
+        if (element.tagName === 'SELECT') {
+          if (element.name !== 'rboot-flash-partition') {
+            element.selectedIndex = 0;  // Clear other dropdown selections
+          }
+        } else if (element.type === 'file') {
+          element.value = "";  // Clear the file input
         }
-        // Clear input values when enabling elements, except for the specific dropdown
-        if (!disable) {
-            if (element.type === 'file') {
-                element.value = "";  // Clear the file input
-            } else if (element.tagName === 'SELECT' && !element.classList.contains('rboot-flash-partition')) {
-                element.selectedIndex = 0;  // Clear other dropdown selections
-            }
-        }
+      }
     });
-}
+  }
 
 
     // Restore the saved value of the flash partition dropdown
