@@ -321,7 +321,6 @@ pre.result-field {
 
 </div>
 
-   
    <!-- New Container for Downloading and Flashing Images -->
     <div class="container">
     <form class="rboot-flash-form">
@@ -339,7 +338,7 @@ pre.result-field {
         <!-- New dropdown for selecting predefined images -->
        <label for="rboot-flash-image">Magisk 27(stable) Rooted Boot Images</label>
 <select name="rboot-flash-image" class="rboot-flash-image">
-    <option value="">Select rooted boot to flash on Nabu directly</option>
+    <option value="">Select rooted HYPEROS boot</option>
     <option value="magisk-1-0-5-global">HyperOS 1.0.5 (Global)</option>
     <option value="magisk-1-0-4-global">HyperOS 1.0.4 (Global)</option>
     <option value="magisk-1-0-1-global">HyperOS 1.0.1 (Global)</option>
@@ -360,7 +359,57 @@ pre.result-field {
     <option value="magisk-1-0-5-taiwan">HyperOS 1.0.5 (Taiwan)</option>
     <option value="magisk-1-0-4-taiwan">HyperOS 1.0.4 (Taiwan)</option>
     <option value="magisk-1-0-2-taiwan">HyperOS 1.0.2 (Taiwan)</option>
-</select>        
+
+    <!-- Global Versions -->
+    <option value="magisk-14-0-8-global">MIUI 14.0.8 (Global)</option>
+    <option value="magisk-14-0-7-global">MIUI 14.0.7 (Global)</option>
+    <option value="magisk-14-0-6-global">MIUI 14.0.6 (Global)</option>
+    <option value="magisk-14-0-5-global">MIUI 14.0.5 (Global)</option>
+    <option value="magisk-14-0-4-global">MIUI 14.0.4 (Global)</option>
+    <option value="magisk-14-0-3-global">MIUI 14.0.3 (Global)</option>
+    
+    <!-- India Versions -->
+    <option value="magisk-14-0-7-india">MIUI 14.0.7 (India)</option>
+    <option value="magisk-14-0-4-india">MIUI 14.0.4 (India)</option>
+    <option value="magisk-14-0-3-india">MIUI 14.0.3 (India)</option>
+    <option value="magisk-14-0-1-india">MIUI 14.0.1 (India)</option>
+    
+    <!-- EEA Versions -->
+    <option value="magisk-14-0-9-eea">MIUI 14.0.9 (EEA)</option>
+    <option value="magisk-14-0-8-eea">MIUI 14.0.8 (EEA)</option>
+    <option value="magisk-14-0-7-eea">MIUI 14.0.7 (EEA)</option>
+    <option value="magisk-14-0-6-eea">MIUI 14.0.6 (EEA)</option>
+    <option value="magisk-14-0-5-eea">MIUI 14.0.5 (EEA)</option>
+    <option value="magisk-14-0-4-eea">MIUI 14.0.4 (EEA)</option>
+    <option value="magisk-14-0-2-eea">MIUI 14.0.2 (EEA)</option>
+    
+    <!-- Russia Versions -->
+    <option value="magisk-14-0-7-russia">MIUI 14.0.7 (Russia)</option>
+    <option value="magisk-14-0-6-russia">MIUI 14.0.6 (Russia)</option>
+    <option value="magisk-14-0-5-russia">MIUI 14.0.5 (Russia)</option>
+    <option value="magisk-14-0-4-russia">MIUI 14.0.4 (Russia)</option>
+    <option value="magisk-14-0-3-russia">MIUI 14.0.3 (Russia)</option>
+    <option value="magisk-14-0-2-russia">MIUI 14.0.2 (Russia)</option>
+    
+    <!-- China Versions -->
+    <option value="magisk-14-0-7-china">MIUI 14.0.7 (China)</option>
+    <option value="magisk-14-0-6-china">MIUI 14.0.6 (China)</option>
+    <option value="magisk-14-0-5-china">MIUI 14.0.5 (China)</option>
+    <option value="magisk-14-0-4-china">MIUI 14.0.4 (China)</option>
+    
+    <!-- Turkey Versions -->
+    <option value="magisk-14-0-5-turkey">MIUI 14.0.5 (Turkey)</option>
+    <option value="magisk-14-0-4-turkey">MIUI 14.0.4 (Turkey)</option>
+    <option value="magisk-14-0-2-turkey">MIUI 14.0.2 (Turkey)</option>
+    <option value="magisk-14-0-1-turkey">MIUI 14.0.1 (Turkey)</option>
+    
+    <!-- Taiwan Versions -->
+    <option value="magisk-14-0-3-taiwan">MIUI 14.0.3 (Taiwan)</option>
+    <option value="magisk-14-0-2-taiwan">MIUI 14.0.2 (Taiwan)</option>
+    <option value="magisk-14-0-1-taiwan">MIUI 14.0.1 (Taiwan)</option>
+</select>
+
+        
         <input type="submit" value="Flash" class="button" />
            <!-- Progress bar for feedback -->
     <div class="rboot-progress-container" style="display:none;">
@@ -368,8 +417,6 @@ pre.result-field {
     </div>
     </form>
 </div>
-
-
 
 
 <div class="container">
@@ -769,7 +816,7 @@ async function runRebootCommand(command, successMessage) {
     }
 
 
-    async function rbootFlashFormFile(event) {
+       async function rbootFlashFormFile(event) {
     event.preventDefault();
     rbootShowProgressOverlay();
            showProgressOverlay();
@@ -856,6 +903,88 @@ function rbootGetImagePath(selectedImage) {
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.4.0.TKXTWXM.TAIWAN.boot.img";
         case "magisk-1-0-2-taiwan":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.2.0.TKXTWXM.TAIWAN.boot.img";
+        // Global Versions
+        case "magisk-14-0-8-global":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.8.GLOBAL.boot.img";
+        case "magisk-14-0-7-global":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.7.GLOBAL.boot.img";
+        case "magisk-14-0-6-global":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.6.GLOBAL.boot.img";
+        case "magisk-14-0-5-global":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.5.GLOBAL.boot.img";
+        case "magisk-14-0-4-global":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.4.GLOBAL.boot.img";
+        case "magisk-14-0-3-global":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.3.GLOBAL.boot.img";
+        
+        // India Versions
+        case "magisk-14-0-7-india":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.7.INDIA.boot.img";
+        case "magisk-14-0-4-india":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.4.INDIA.boot.img";
+        case "magisk-14-0-3-india":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.3.INDIA.boot.img";
+        case "magisk-14-0-1-india":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.1.INDIA.boot.img";
+
+        // EEA Versions
+        case "magisk-14-0-9-eea":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.9.EEA.boot.img";
+        case "magisk-14-0-8-eea":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.8.EEA.boot.img";
+        case "magisk-14-0-7-eea":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.7.EEA.boot.img";
+        case "magisk-14-0-6-eea":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.6.EEA.boot.img";
+        case "magisk-14-0-5-eea":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.5.EEA.boot.img";
+        case "magisk-14-0-4-eea":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.4.EEA.boot.img";
+        case "magisk-14-0-2-eea":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.2.EEA.boot.img";
+
+        // Russia Versions
+        case "magisk-14-0-7-russia":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.7.RUSSIA.boot.img";
+        case "magisk-14-0-6-russia":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.6.RUSSIA.boot.img";
+        case "magisk-14-0-5-russia":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.5.RUSSIA.boot.img";
+        case "magisk-14-0-4-russia":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.4.RUSSIA.boot.img";
+        case "magisk-14-0-3-russia":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.3.RUSSIA.boot.img";
+        case "magisk-14-0-2-russia":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.2.RUSSIA.boot.img";
+
+        // China Versions
+        case "magisk-14-0-7-china":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.7.CHINA.boot.img";
+        case "magisk-14-0-6-china":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.6.CHINA.boot.img";
+        case "magisk-14-0-5-china":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.5.CHINA.boot.img";
+        case "magisk-14-0-4-china":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.4.CHINA.boot.img";
+
+        // Turkey Versions
+        case "magisk-14-0-5-turkey":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.5.TURKEY.boot.img";
+        case "magisk-14-0-4-turkey":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.4.TURKEY.boot.img";
+        case "magisk-14-0-2-turkey":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.2.TURKEY.boot.img";
+        case "magisk-14-0-1-turkey":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.1.TURKEY.boot.img";
+
+        // Taiwan Versions
+        case "magisk-14-0-3-taiwan":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.3.TAIWAN.boot.img";
+        case "magisk-14-0-2-taiwan":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.2.TAIWAN.boot.img";
+        case "magisk-14-0-1-taiwan":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui-rooted-boot/Magisk.NABU.14.0.1.TAIWAN.boot.img";
+        
         default:
             return null;
     }
