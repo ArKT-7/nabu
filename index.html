@@ -270,7 +270,7 @@ pre.result-field {
 
         .rboot-progress-container {
     width: 100%;
-    height: 30px;
+    height: 100%;
     background-color: #f3f3f3;
     border-radius: 15px;
     overflow: hidden;
@@ -278,6 +278,7 @@ pre.result-field {
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
     display: none; /* Initially hidden */
 }
+
 
 .rboot-progress-bar  {
     height: 100%;
@@ -338,7 +339,7 @@ pre.result-field {
         <!-- New dropdown for selecting predefined images -->
        <label for="rboot-flash-image">Magisk 27(stable) Rooted Boot Images</label>
 <select name="rboot-flash-image" class="rboot-flash-image">
-    <option value="">Select rooted HYPEROS boot</option>
+    <option value="">Select rooted HYPEROS/MIUI14 boot</option>
     <option value="magisk-1-0-5-global">HyperOS 1.0.5 (Global)</option>
     <option value="magisk-1-0-4-global">HyperOS 1.0.4 (Global)</option>
     <option value="magisk-1-0-1-global">HyperOS 1.0.1 (Global)</option>
@@ -410,7 +411,7 @@ pre.result-field {
 </select>
 
         
-        <input type="submit" value="Flash" class="button" />
+        <input type="submit" value="Flash Boot" class="button" />
            <!-- Progress bar for feedback -->
     <div class="rboot-progress-container" style="display:none;">
         <div class="rboot-progress-bar" style="width:0%; background-color:#4caf50; height:20px;"></div>
@@ -463,50 +464,6 @@ pre.result-field {
 
     fastboot.setDebugLevel(2);
 
-
-        // Disable flash image dropdown if file is selected
-  const flashFileInput = document.querySelector('.rboot-flash-file');
-  const flashImageDropdown = document.querySelector('.rboot-flash-image');
-
-  flashFileInput.addEventListener('change', function() {
-    if (this.files.length > 0) {
-      flashImageDropdown.disabled = true;
-    } else {
-      flashImageDropdown.disabled = false;
-    }
-  });
-
-  // Disable flash file input if an image is selected in the dropdown
-  flashImageDropdown.addEventListener('change', function() {
-    if (this.value !== "") {
-      flashFileInput.disabled = true;
-    } else {
-      flashFileInput.disabled = false;
-    }
-  });
-
-  // Disable boot image dropdown if file is selected
-  const bootFileInput = document.querySelector('#boot-file');
-  const bootTypeDropdown = document.querySelector('.boot-type');
-
-  bootFileInput.addEventListener('change', function() {
-    if (this.files.length > 0) {
-      bootTypeDropdown.disabled = true;
-    } else {
-      bootTypeDropdown.disabled = false;
-    }
-  });
-
-  // Disable boot file input if an image is selected in the dropdown
-  bootTypeDropdown.addEventListener('change', function() {
-    if (this.value !== "") {
-      bootFileInput.disabled = true;
-    } else {
-      bootFileInput.disabled = false;
-    }
-  });
-
-       
     // Utility function to show the progress overlay and disable buttons
  let messageInterval; // Store the timeout globally, so we can clear it later
 let typingInterval;  // Store typing interval globally, to clear it when necessary
@@ -617,19 +574,11 @@ function hideProgressOverlay() {
 function toggleElements(disable) {
     const formElements = document.querySelectorAll("input, button, select");
     formElements.forEach((element) => {
-      if (!element.classList.contains('connect-button')) {
-        element.disabled = disable;
-      }
-      // Clear input and select values when enabling elements
-      if (!disable) {
-        if (element.tagName === 'SELECT') {
-          element.selectedIndex = 0;  // Clear the dropdown selection
-        } else if (element.type === 'file') {
-          element.value = "";  // Clear the file input
+        if (!element.classList.contains('connect-button')) {
+            element.disabled = disable;
         }
-      }
     });
-  }
+}
 
  async function connectDevice() {
         let statusField = document.querySelector(".status-field");
@@ -682,7 +631,6 @@ async function checkDeviceConnection() {
     try {
         let product = await device.getVariable("product");
         if (product) {
-            toggleElements(false); // Enable all elements when connected
             //statusField.textContent = "Device is still connected in Fastboot mode.";
         }
     } catch (error) {
