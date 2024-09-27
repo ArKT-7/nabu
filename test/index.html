@@ -768,53 +768,79 @@ async function runRebootCommand(command, successMessage) {
     }
 
 
-       async function rbootFlashFormFile(event) {
+
+
+       document.querySelector(".os-selector").addEventListener("change", function(event) {
+    const osSelection = event.target.value;
+    const hyperOSDropdown = document.querySelector(".rboot-flash-image-hyperos");
+    const hyperOSLabel = document.querySelector("label[for='rboot-flash-image-hyperos']");
+    const miuiDropdown = document.querySelector(".rboot-flash-image-miui14");
+    const miuiLabel = document.querySelector("label[for='rboot-flash-image-miui14']");
+
+    if (osSelection === "hyperos") {
+        hyperOSDropdown.style.display = "block";
+        hyperOSLabel.style.display = "block";
+        miuiDropdown.style.display = "none";
+        miuiLabel.style.display = "none";
+    } else if (osSelection === "miui14") {
+        hyperOSDropdown.style.display = "none";
+        hyperOSLabel.style.display = "none";
+        miuiDropdown.style.display = "block";
+        miuiLabel.style.display = "block";
+    } else {
+        hyperOSDropdown.style.display = "none";
+        hyperOSLabel.style.display = "none";
+        miuiDropdown.style.display = "none";
+        miuiLabel.style.display = "none";
+    }
+});
+
+
+
+
+       
+
+       // Modify the form submission to check which OS is selected and flash the appropriate image
+async function rbootFlashFormFile(event) {
     event.preventDefault();
     rbootShowProgressOverlay();
-           showProgressOverlay();
 
-    let fileField = document.querySelector(".rboot-flash-file");
-    let partField = document.querySelector(".rboot-flash-partition");  // Updated to use dropdown
-    let selectedImage = document.querySelector(".rboot-flash-image").value;
+    const osSelection = document.querySelector(".os-selector").value;
+    const partField = document.querySelector(".rboot-flash-partition").value;
+    let selectedImage;
 
-    let file;
+    if (osSelection === "hyperos") {
+        selectedImage = document.querySelector(".rboot-flash-image-hyperos").value;
+    } else if (osSelection === "miui14") {
+        selectedImage = document.querySelector(".rboot-flash-image-miui14").value;
+    }
 
-    // Check if a file is uploaded or a predefined image is selected
-    if (fileField.files.length > 0) {
-        file = fileField.files[0];
-    } else if (selectedImage) {
-        file = await rbootDownloadFlashImage(rbootGetImagePath(selectedImage)); // Predefined image
-    } else {
-        alert("Please select a file to flash or choose a predefined image!");
+    if (!selectedImage || !partField) {
+        alert("Please select an OS, boot image, and partition!");
         rbootHideProgressOverlay();
-        hideProgressOverlay();
         return;
     }
 
-    if (!file || !partField.value) {
-        alert("Please select a valid file and partition!");
-        rbootHideProgressOverlay();
-        hideProgressOverlay();
-        return;
-    }
-
+    // Flash logic remains the same, using the selectedImage value
+    const file = await rbootDownloadFlashImage(rbootGetImagePath(selectedImage));
     try {
-        await device.flashBlob(partField.value, file);
-        alert(`Successfully flashed to ${partField.value}`);
+        await device.flashBlob(partField, file);
+        alert(`Successfully flashed to ${partField}`);
     } catch (error) {
         alert(`Failed to flash: ${error.message}`);
     } finally {
-        fileField.value = "";
-        partField.value = "";
         rbootHideProgressOverlay();
-        hideProgressOverlay();
-        await CheckDeviceConnection(); // Check if device is still connected
+        await CheckDeviceConnection();
     }
 }
 
 
 function rbootGetImagePath(selectedImage) {
     switch (selectedImage) {
+          case "magisk-1-0-5-global":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.5.0.TKXMIXM.GLOBAL.boot.img";
+        case "miui14-14-0-8-global":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.8.0.TKXMIXM.GLOBAL.boot.img";
         case "magisk-1-0-5-global":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.5.0.TKXMIXM.GLOBAL.boot.img";
         case "magisk-1-0-4-global":
