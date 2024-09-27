@@ -479,6 +479,31 @@ const finalMessage = 'Please wait...'; // Final message to keep looping
 let messageIndex = 0;
 let isFinalLoop = false; // Flag to track if we're in the final loop
 
+
+
+
+
+       // Clear all inputs, selects, and other elements
+    function clearAllInputs() {
+    const inputFields = document.querySelectorAll("input[type='text'], input[type='file'], select");
+    inputFields.forEach((input) => {
+        if (input.type === 'text') {
+            input.value = ''; // Clear text inputs
+        } else if (input.type === 'file') {
+            input.value = ''; // Reset file inputs
+        } else if (input.tagName === 'SELECT') {
+            input.selectedIndex = 0; // Reset select dropdowns to first option
+        }
+    });
+}
+
+
+
+
+
+
+       
+
 function typeMessage(message, callback) {
     let i = 0;
     progressMessage.textContent = ''; // Ensure text is cleared before typing starts
@@ -730,6 +755,7 @@ async function runRebootCommand(command, successMessage) {
             hideProgressOverlay();
             await checkDeviceConnection(); // Check if device is still connected
         }
+        clearAllInputs(); // Clear inputs after successful boot
     }
 
     function getImagePath(selectedBootType) {
@@ -813,6 +839,7 @@ async function runRebootCommand(command, successMessage) {
             hideProgressOverlay();
             await checkDeviceConnection(); // Check if device is still connected
         }
+        clearAllInputs(); // Clear inputs after successful boot
     }
 
 
@@ -858,6 +885,7 @@ async function runRebootCommand(command, successMessage) {
         hideProgressOverlay();
         await CheckDeviceConnection(); // Check if device is still connected
     }
+           clearAllInputs(); // Clear inputs after successful boot
 }
 
 
