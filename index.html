@@ -433,7 +433,7 @@ pre.result-field {
         </select>
         <input type="submit" value="Boot" class="button" />
         <div class="progress-container" style="display: none;">
-            <div class="progress-bar" style="width:0%;"></div>
+            <div class="progress-bar"></div>
         </div>
     </form>
 </div>
@@ -730,6 +730,7 @@ async function runRebootCommand(command, successMessage) {
             hideProgressOverlay();
             await checkDeviceConnection(); // Check if device is still connected
         }
+    }
     }
 
     function getImagePath(selectedBootType) {
