@@ -579,7 +579,7 @@ function toggleElements(disable) {
     });
 }
 
-       function clearFormElements() {
+function clearFormElements() {
     const formElements = document.querySelectorAll("input, button, select, textarea");
 
     // Store the current selected value of the rboot-flash-partition select
@@ -661,7 +661,7 @@ async function checkDeviceConnection() {
         statusField.textContent = "Device disconnected!";
         toggleElements(true); // Disable all elements on disconnect
     }
-
+  clearFormElements();
 }
 
     async function sendFormCommand(event) {
