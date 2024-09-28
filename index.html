@@ -535,6 +535,12 @@ function hideProgressOverlay() {
 function toggleElements(disable) {
     const formElements = document.querySelectorAll("input, button, select, textarea");
     formElements.forEach((element) => {
+        // Skip the rboot-flash-partition select element
+        if (element.classList.contains('rboot-flash-partition')) {
+            return; // Skip this element and continue the loop
+        }
+
+        // Disable/enable elements except the connect-button
         if (!element.classList.contains('connect-button')) {
             element.disabled = disable;
 
@@ -551,6 +557,7 @@ function toggleElements(disable) {
         }
     });
 }
+
 
        
  async function connectDevice() {
