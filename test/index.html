@@ -31,14 +31,12 @@
 
 
 
-         /* Apply common styling to the entire h1 */
   .title {
     text-align: center;
     font-size: 32px;
     letter-spacing: 0.5px;
   }
 
-  /* Gradient only for the text */
   .text-gradient {
     background: linear-gradient(135deg, #00d1ff, #0052cc);
     -webkit-background-clip: text;
@@ -47,7 +45,17 @@
     animation: textGlow 2s ease-in-out infinite;
   }
 
-  /* Subtitle styles */
+  /* Neon Border Effect */
+  .neon-border {
+    padding: 10px; /* Space around text to show the border */
+    border: 2px solid transparent; /* Default border */
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 209, 255, 0.7), 0 0 25px rgba(0, 209, 255, 0.5), 
+                0 0 35px rgba(0, 209, 255, 0.3), 0 0 45px rgba(0, 209, 255, 0.2);
+    transition: all 0.3s ease-in-out;
+  }
+
+  /* Subtitle */
   .subtitle {
     color: #f8f9fa;
     text-align: center;
@@ -332,8 +340,8 @@ label {
     </style>
 </head>
 <body>
-     <h1 class="title">
-  🔥<span class="text-gradient">Nabu Fastboot Tool</span>⚡
+    <h1 class="title">
+  🔥<span class="text-gradient neon-border">Nabu Fastboot Tool</span>⚡
 </h1>
 <h1 class="subtitle">By ArKT 😎</h1>
 <!-- Add a progress overlay for the "Processing... Please wait" message -->
