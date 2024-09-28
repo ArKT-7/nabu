@@ -656,12 +656,13 @@ async function checkDeviceConnection() {
         let product = await device.getVariable("product");
         if (product) {
             //statusField.textContent = "Device is still connected in Fastboot mode.";
+            clearFormElements();
         }
     } catch (error) {
         statusField.textContent = "Device disconnected!";
+        clearFormElements();
         toggleElements(true); // Disable all elements on disconnect
     }
-  clearFormElements();
 }
 
     async function sendFormCommand(event) {
