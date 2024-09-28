@@ -534,12 +534,12 @@ function hideProgressOverlay() {
 
 function toggleElements(disable) {
     const formElements = document.querySelectorAll("input, button, select, textarea");
+    
+    // Store the current selected value of the rboot-flash-partition select
+    let rbootPartitionSelect = document.querySelector('.rboot-flash-partition');
+    let previousSelectedValue = rbootPartitionSelect ? rbootPartitionSelect.value : null;
+    
     formElements.forEach((element) => {
-        // Skip the rboot-flash-partition select element
-        if (element.classList.contains('rboot-flash-partition')) {
-            return; // Skip this element and continue the loop
-        }
-
         // Disable/enable elements except the connect-button
         if (!element.classList.contains('connect-button')) {
             element.disabled = disable;
@@ -556,6 +556,11 @@ function toggleElements(disable) {
             }
         }
     });
+
+    // After clearing, restore the previously selected value of the rboot-flash-partition select
+    if (rbootPartitionSelect && previousSelectedValue !== null) {
+        rbootPartitionSelect.value = previousSelectedValue;
+    }
 }
 
 
