@@ -537,7 +537,24 @@ function toggleElements(disable) {
         if (!element.classList.contains('connect-button')) {
             element.disabled = disable;
         }
+        if (disable) {
+            // Clear all input values (text, file inputs, selects)
+            if (element.tagName === 'INPUT') {
+                if (element.type === 'text' || element.type === 'file') {
+                    element.value = ''; // Clear text and file inputs
+                }
+            } else if (element.tagName === 'SELECT') {
+                element.selectedIndex = 0; // Reset select dropdown
+            }
+        }
     });
+
+    if (disable) {
+        // Refresh the page to reset everything
+        setTimeout(() => {
+            window.location.reload();
+        }, 500); // Optional delay for smoother experience
+    }
 }
 
  async function connectDevice() {
