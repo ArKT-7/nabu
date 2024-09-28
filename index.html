@@ -830,7 +830,6 @@ async function runRebootCommand(command, successMessage) {
         alert(`Failed to flash: ${error.message}`);
     } finally {
         fileField.value = "";
-        partField.value = "";
         rbootHideProgressOverlay();
         hideProgressOverlay();
         await checkDeviceConnection(); // Check if device is still connected
