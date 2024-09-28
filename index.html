@@ -818,7 +818,7 @@ async function runRebootCommand(command, successMessage) {
         partField.value = "";
         rbootHideProgressOverlay();
         hideProgressOverlay();
-        await CheckDeviceConnection(); // Check if device is still connected
+        await checkDeviceConnection(); // Check if device is still connected
     }
 }
 
