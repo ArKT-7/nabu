@@ -45,17 +45,15 @@
     animation: textGlow 2s ease-in-out infinite;
   }
 
-  /* Neon Border Effect */
+  /* Neon Text Border Effect */
   .neon-border {
-    padding: 10px; /* Space around text to show the border */
-    border: 2px solid transparent; /* Default border */
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 209, 255, 0.7), 0 0 25px rgba(0, 209, 255, 0.5), 
-                0 0 35px rgba(0, 209, 255, 0.3), 0 0 45px rgba(0, 209, 255, 0.2);
-    transition: all 0.3s ease-in-out;
+    text-shadow: 
+      0 0 5px rgba(0, 209, 255, 0.7), 
+      0 0 10px rgba(0, 209, 255, 0.5), 
+      0 0 15px rgba(0, 209, 255, 0.3), 
+      0 0 20px rgba(0, 209, 255, 0.2);
   }
 
-  /* Subtitle */
   .subtitle {
     color: #f8f9fa;
     text-align: center;
@@ -344,6 +342,7 @@ label {
   🔥<span class="text-gradient neon-border">Nabu Fastboot Tool</span>⚡
 </h1>
 <h1 class="subtitle">By ArKT 😎</h1>
+
 <!-- Add a progress overlay for the "Processing... Please wait" message -->
 <div id="progress-overlay">
     <div id="progress-message">Processing... Please wait</div>
