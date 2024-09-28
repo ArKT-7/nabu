@@ -536,8 +536,8 @@ function toggleElements(disable) {
     const formElements = document.querySelectorAll("input, button, select, textarea");
 
     formElements.forEach((element) => {
-        // Disable/enable elements except the connect-button
-        if (!element.classList.contains('connect-button')) {
+        // Disable/enable elements except the connect-button and rboot-flash-partition
+        if (!element.classList.contains('connect-button') && !element.classList.contains('rboot-flash-partition')) {
             element.disabled = disable;
 
             // Clear inputs and selects when disabling
@@ -545,12 +545,7 @@ function toggleElements(disable) {
                 if (element.tagName === "INPUT" && (element.type === "text" || element.type === "file")) {
                     element.value = ""; // Clear text and file inputs
                 } else if (element.tagName === "SELECT") {
-                    // Check if this is the rboot-flash-partition select element
-                    if (element.classList.contains('rboot-flash-partition')) {
-                        element.value = "boot_ab"; // Always set to 'boot_ab' option
-                    } else {
-                        element.selectedIndex = 0; // Reset other selects to the first option
-                    }
+                    element.selectedIndex = 0; // Reset other selects to the first option
                 } else if (element.tagName === "TEXTAREA") {
                     element.value = ""; // Clear text areas
                 }
