@@ -41,6 +41,35 @@ h1 {
             animation: textGlow 2s ease-in-out infinite;
 }
 
+        .title {
+    color: #f8f9fa;
+    text-align: center;
+    font-size: 32px;
+    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+    letter-spacing: 0.5px;
+    background: linear-gradient(135deg, #00d1ff, #0052cc);
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: textGlow 2s ease-in-out infinite;
+  }
+
+  .subtitle {
+    color: #f8f9fa;
+    text-align: center;
+    font-size: 24px;
+    margin-top: -5px; /* Reduces space between the two lines */
+  }
+
+  @keyframes textGlow {
+    0%, 100% {
+      text-shadow: 0 0 8px rgba(0, 82, 204, 0.8), 0 0 20px rgba(0, 209, 255, 0.5);
+    }
+    50% {
+      text-shadow: 0 0 16px rgba(0, 82, 204, 0.8), 0 0 30px rgba(0, 209, 255, 0.5);
+    }
+  }
+        
+
 /*.container {
     background: rgba(255, 255, 255, 0.7);
     border-radius: 20px;
@@ -307,9 +336,8 @@ label {
     </style>
 </head>
 <body>
-    <h1>🔥Nabu Fastboot Tool⚡</h1>
-  <h1 style="margin-bottom: 20px;">By ArKT 😎</h1>
-
+    <h1 class="title">🔥Nabu Fastboot Tool⚡</h1>
+<h1 class="subtitle">By ArKT 😎</h1>
 <!-- Add a progress overlay for the "Processing... Please wait" message -->
 <div id="progress-overlay">
     <div id="progress-message">Processing... Please wait</div>
