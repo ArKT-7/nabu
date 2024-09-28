@@ -180,7 +180,7 @@ label {
     font-size: 16px;
 }
 
-pre.result-field {
+/*pre.result-field {
     background-color: rgba(255, 255, 255, 0.9);
     padding: 15px;
     border-radius: 15px;
@@ -189,7 +189,7 @@ pre.result-field {
     max-height: 250px;
     border: 1px solid #ccc;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
+}*/
 
 #progress-overlay {
     position: fixed;
@@ -316,8 +316,9 @@ pre.result-field {
     <button class="button reboot-recovery-button">Reboot to Recovery</button>
     <button class="button reboot-fastbootd-button">Reboot to FastbootD</button>
     <button class="button reboot-edl-button">Reboot to EDL</button>
-    <!-- Result field to display command outputs -->
+    <!-- Result field to display command outputs 
 <pre class="result-field" style="display: none;"></pre>
+    -->
 
 </div>
 
@@ -648,9 +649,9 @@ async function checkDeviceConnection() {
     }
 
     let result = (await device.runCommand(command)).text;
-    let resultField = document.querySelector(".result-field");
-    resultField.textContent = result;
-    resultField.style.display = 'block'; // Show the result field
+    //let resultField = document.querySelector(".result-field");
+    //resultField.textContent = result;
+    //resultField.style.display = 'block'; // Show the result field
     inputField.value = "";
         await checkDeviceConnection(); // Check if device is still connected after reboot
 }
@@ -685,7 +686,7 @@ async function checkDeviceConnection() {
 async function runRebootCommand(command, successMessage) {
     try {
         let result = (await device.runCommand(command)).text;
-        document.querySelector(".result-field").textContent = result;
+        //document.querySelector(".result-field").textContent = result;
         alert(successMessage);
     } catch (error) {
         alert(`Error during reboot: ${error.message}`);
