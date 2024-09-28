@@ -559,14 +559,6 @@ function toggleElements(disable) {
     });
 }
 
-
-    // After clearing, restore the previously selected value of the rboot-flash-partition select
-    if (rbootPartitionSelect && previousSelectedValue !== null) {
-        rbootPartitionSelect.value = previousSelectedValue;
-    }
-}
-
-
        
  async function connectDevice() {
         let statusField = document.querySelector(".status-field");
