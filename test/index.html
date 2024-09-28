@@ -30,6 +30,19 @@
 }
 
 
+        h1 {
+    color: #f8f9fa;
+    text-align: center;
+    
+    font-size: 32px;
+    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+                letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #00d1ff, #0052cc);
+            -webkit-background-clip: text;
+            color: transparent;
+            animation: textGlow 2s ease-in-out infinite;
+}
+
 
   .title {
     text-align: center;
@@ -41,17 +54,12 @@
     background: linear-gradient(135deg, #00d1ff, #0052cc);
     -webkit-background-clip: text;
     color: transparent;
-    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
-    animation: textGlow 2s ease-in-out infinite;
-  }
-
-  /* Neon Text Border Effect */
-  .neon-border {
     text-shadow: 
       0 0 5px rgba(0, 209, 255, 0.7), 
       0 0 10px rgba(0, 209, 255, 0.5), 
       0 0 15px rgba(0, 209, 255, 0.3), 
       0 0 20px rgba(0, 209, 255, 0.2);
+    animation: textGlow 2s ease-in-out infinite;
   }
 
   .subtitle {
@@ -63,10 +71,14 @@
 
   @keyframes textGlow {
     0%, 100% {
-      text-shadow: 0 0 8px rgba(0, 82, 204, 0.8), 0 0 20px rgba(0, 209, 255, 0.5);
+      text-shadow: 
+        0 0 8px rgba(0, 82, 204, 0.8), 
+        0 0 20px rgba(0, 209, 255, 0.5);
     }
     50% {
-      text-shadow: 0 0 16px rgba(0, 82, 204, 0.8), 0 0 30px rgba(0, 209, 255, 0.5);
+      text-shadow: 
+        0 0 16px rgba(0, 82, 204, 0.8), 
+        0 0 30px rgba(0, 209, 255, 0.5);
     }
   }
 
