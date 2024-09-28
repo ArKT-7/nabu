@@ -579,6 +579,31 @@ function toggleElements(disable) {
     });
 }
 
+       function clearFormElements() {
+    const formElements = document.querySelectorAll("input, button, select, textarea");
+
+    // Store the current selected value of the rboot-flash-partition select
+    let rbootPartitionSelect = document.querySelector('.rboot-flash-partition');
+    let previousSelectedValue = rbootPartitionSelect ? rbootPartitionSelect.value : null;
+
+    formElements.forEach((element) => {
+        // Clear relevant form fields
+        if (element.tagName === "INPUT" && (element.type === "text" || element.type === "file")) {
+            element.value = ""; // Clear text and file inputs
+        } else if (element.tagName === "SELECT") {
+            element.selectedIndex = 0; // Reset selects to the first option
+        } else if (element.tagName === "TEXTAREA") {
+            element.value = ""; // Clear text areas
+        }
+    });
+
+    // After clearing, restore the previously selected value of the rboot-flash-partition select
+    if (rbootPartitionSelect && previousSelectedValue !== null) {
+        rbootPartitionSelect.value = previousSelectedValue;
+    }
+}
+       
+
  async function connectDevice() {
         let statusField = document.querySelector(".status-field");
         statusField.textContent = "Connecting...";
@@ -636,6 +661,7 @@ async function checkDeviceConnection() {
         statusField.textContent = "Device disconnected!";
         toggleElements(true); // Disable all elements on disconnect
     }
+    clearFormElements();
 }
 
     async function sendFormCommand(event) {
