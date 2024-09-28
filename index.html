@@ -36,11 +36,27 @@ h1 {
     text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
 }
 
+/*.container {
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 10px rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    padding: 30px;
+    width: 90%;
+    max-width: 600px;
+    margin: 30px 0;
+    animation: fadeInUp 0.6s ease-in-out;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    /*overflow: hidden;
+    display: flex; /* Enable flexbox layout 
+    flex-direction: column; /* Align items vertically 
+    align-items: center; /* Center children horizontally 
+}*/
 .container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center; 
+    justify-content: center; /* Center contents vertically */
     padding: 30px;
     width: 90%;
     max-width: 600px;
@@ -54,9 +70,9 @@ h1 {
 
 form {
     display: flex;
-    flex-direction: column; 
+    flex-direction: column; /* Align form elements vertically */
     width: 100%;
-    align-items: center;
+    align-items: center; /* Center form elements */
 }
 
 @keyframes fadeInUp {
@@ -97,23 +113,31 @@ form {
     transform: none;
 }
 
+/*.flash-form, .boot-form, .rboot-flash-form, .command-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center the form horizontally 
+    width: 100%; /* Full width for the form 
+} */
+
+
 input[type="file"],
 input[type="text"] {
-    text-align: center; 
-    width: 100%; 
-    max-width: 600px; 
+    text-align: center; /* Center align text inside input fields */
+    width: 100%; /* Use full width of the container */
+    max-width: 600px; /* Set a max width for better appearance */
     padding: 15px 20px;
-    margin: 10px 0;
+    margin: 10px 0; /* Vertical spacing between inputs */
     border-radius: 20px;
     border: 1px solid #ccc;
     box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.1);
     background-color: rgba(255, 255, 255, 0.8);
-    box-sizing: border-box; 
+    box-sizing: border-box; /* Ensure padding and borders are included in the width */
 }
 
 
 select {
-    text-align: center; 
+    text-align: center; /* Center align text inside select fields */
     width: 100%;
     padding: 15px 20px;
     margin: 10px 0;
@@ -174,10 +198,10 @@ pre.result-field {
     right: 0;
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.7);
-    display: none; 
+    display: none; /* Hidden initially */
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 1000; /* Bring it above everything */
 }
 
 #progress-overlay.active {
@@ -207,7 +231,7 @@ pre.result-field {
     }
 }
 
-
+/* Neumorphic Buttons */
 .rboot-button {
     background-color: #007bff;
     color: white;
@@ -225,26 +249,26 @@ pre.result-field {
     transform: translateY(-3px);
 }
 
+/* Progress Bar
 .rboot-progress-container {
     width: 100%;
-    height: 100%;
     background-color: #f3f3f3;
-    border-radius: 15px;
+    border-radius: 20px;
+    margin: 20px 0;
+    height: 30px;
     overflow: hidden;
-    margin-top: 10px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-    display: none; 
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .rboot-progress-bar {
-    height: 100%;
     width: 0%;
+    height: 100%;
     background-color: #4caf50;
-    transition: width 0.5s ease;
-    border-radius: 15px;
-}
+    border-radius: 20px;
+    transition: width 0.4s ease;
+} */
 
-.rboot-progress-container {
+        .rboot-progress-container {
     width: 100%;
     height: 30px;
     background-color: #f3f3f3;
@@ -263,11 +287,11 @@ pre.result-field {
     border-radius: 15px;
 }
 
-        
-</style>
+
+    </style>
 </head>
 <body>
-<h1>Fastboot Tool by ArKT</h1>
+    <h1>Fastboot Tool by ArKT</h1>
 
 <!-- Add a progress overlay for the "Processing... Please wait" message -->
 <div id="progress-overlay">
@@ -300,21 +324,21 @@ pre.result-field {
    <!-- New Container for Downloading and Flashing Images -->
     <div class="container">
     <form class="rboot-flash-form">
-    <label for="rboot-flash-file">Flash any rooted or normal boot image</label>
-    <input type="file" name="rboot-flash-file" class="rboot-flash-file" accept=".img" />
+        <label for="rboot-flash-file">Flash any rooted or normal boot image</label>
+        <input type="file" name="rboot-flash-file" class="rboot-flash-file" accept=".img" />
         <!-- New dropdown for partition selection -->
-    <label for="rboot-flash-partition">Select Flash boot partition</label>
-    <select name="rboot-flash-partition" class="rboot-flash-partition">
-        <option value="">Select boot partition</option>
-        <option value="boot_ab" selected>Flash to Boot ab (both slots)</option>
-        <option value="boot">Flash to Boot (current slot)</option>
-        <option value="boot_a">Flash to Boot A only</option>
-        <option value="boot_b">Flash to Boot B only</option>
-    </select>
-        <!-- HyperOS images -->
-    <label for="rboot-flash-image">Magisk 27(stable) Rooted Boot Images</label>
-    <select name="rboot-flash-image" class="rboot-flash-image">
-    <option value="">Select rooted HYPEROS/MIUI14 boot</option>
+        <label for="rboot-flash-partition">Select Flash boot partition</label>
+        <select name="rboot-flash-partition" class="rboot-flash-partition" required>
+            <option value="">Select boot partition</option>
+            <option value="boot_ab" selected>Flash to Boot ab (both slots)</option>
+            <option value="boot">Flash to Boot (current slot)</option>
+            <option value="boot_a">Flash to Boot A only</option>
+            <option value="boot_b">Flash to Boot B only</option>
+        </select>
+        <!-- New dropdown for selecting predefined images -->
+       <label for="rboot-flash-image">Magisk 27(stable) Rooted Boot Images</label>
+<select name="rboot-flash-image" class="rboot-flash-image">
+    <option value="">Select rooted HYPEROS boot</option>
     <option value="magisk-1-0-5-global">HyperOS 1.0.5 (Global)</option>
     <option value="magisk-1-0-4-global">HyperOS 1.0.4 (Global)</option>
     <option value="magisk-1-0-1-global">HyperOS 1.0.1 (Global)</option>
@@ -335,17 +359,22 @@ pre.result-field {
     <option value="magisk-1-0-5-taiwan">HyperOS 1.0.5 (Taiwan)</option>
     <option value="magisk-1-0-4-taiwan">HyperOS 1.0.4 (Taiwan)</option>
     <option value="magisk-1-0-2-taiwan">HyperOS 1.0.2 (Taiwan)</option>
-         <!-- MIUI 14 images -->
+
+    <!-- Global Versions -->
     <option value="magisk-14-0-8-global">MIUI 14.0.8 (Global)</option>
     <option value="magisk-14-0-7-global">MIUI 14.0.7 (Global)</option>
     <option value="magisk-14-0-6-global">MIUI 14.0.6 (Global)</option>
     <option value="magisk-14-0-5-global">MIUI 14.0.5 (Global)</option>
     <option value="magisk-14-0-4-global">MIUI 14.0.4 (Global)</option>
     <option value="magisk-14-0-3-global">MIUI 14.0.3 (Global)</option>
+    
+    <!-- India Versions -->
     <option value="magisk-14-0-7-india">MIUI 14.0.7 (India)</option>
     <option value="magisk-14-0-4-india">MIUI 14.0.4 (India)</option>
     <option value="magisk-14-0-3-india">MIUI 14.0.3 (India)</option>
     <option value="magisk-14-0-1-india">MIUI 14.0.1 (India)</option>
+    
+    <!-- EEA Versions -->
     <option value="magisk-14-0-9-eea">MIUI 14.0.9 (EEA)</option>
     <option value="magisk-14-0-8-eea">MIUI 14.0.8 (EEA)</option>
     <option value="magisk-14-0-7-eea">MIUI 14.0.7 (EEA)</option>
@@ -353,32 +382,42 @@ pre.result-field {
     <option value="magisk-14-0-5-eea">MIUI 14.0.5 (EEA)</option>
     <option value="magisk-14-0-4-eea">MIUI 14.0.4 (EEA)</option>
     <option value="magisk-14-0-2-eea">MIUI 14.0.2 (EEA)</option>
+    
+    <!-- Russia Versions -->
     <option value="magisk-14-0-7-russia">MIUI 14.0.7 (Russia)</option>
     <option value="magisk-14-0-6-russia">MIUI 14.0.6 (Russia)</option>
     <option value="magisk-14-0-5-russia">MIUI 14.0.5 (Russia)</option>
     <option value="magisk-14-0-4-russia">MIUI 14.0.4 (Russia)</option>
     <option value="magisk-14-0-3-russia">MIUI 14.0.3 (Russia)</option>
     <option value="magisk-14-0-2-russia">MIUI 14.0.2 (Russia)</option>
+    
+    <!-- China Versions -->
     <option value="magisk-14-0-7-china">MIUI 14.0.7 (China)</option>
     <option value="magisk-14-0-6-china">MIUI 14.0.6 (China)</option>
     <option value="magisk-14-0-5-china">MIUI 14.0.5 (China)</option>
     <option value="magisk-14-0-4-china">MIUI 14.0.4 (China)</option>
+    
+    <!-- Turkey Versions -->
     <option value="magisk-14-0-5-turkey">MIUI 14.0.5 (Turkey)</option>
     <option value="magisk-14-0-4-turkey">MIUI 14.0.4 (Turkey)</option>
     <option value="magisk-14-0-2-turkey">MIUI 14.0.2 (Turkey)</option>
     <option value="magisk-14-0-1-turkey">MIUI 14.0.1 (Turkey)</option>
+    
+    <!-- Taiwan Versions -->
     <option value="magisk-14-0-3-taiwan">MIUI 14.0.3 (Taiwan)</option>
     <option value="magisk-14-0-2-taiwan">MIUI 14.0.2 (Taiwan)</option>
     <option value="magisk-14-0-1-taiwan">MIUI 14.0.1 (Taiwan)</option>
 </select>
 
-<input type="submit" value="Flash Boot" class="button" />
+        
+        <input type="submit" value="Flash" class="button" />
            <!-- Progress bar for feedback -->
-<div class="rboot-progress-container" style="display:none;">
-    <div class="rboot-progress-bar" style="width:0%;"></div>
+    <div class="rboot-progress-container" style="display:none;">
+        <div class="rboot-progress-bar" style="width:0%;"></div>
+    </div>
+    </form>
 </div>
-</form>
-</div>
+
 
 <div class="container">
     <form class="boot-form">
@@ -394,7 +433,7 @@ pre.result-field {
         </select>
         <input type="submit" value="Boot" class="button" />
         <div class="progress-container" style="display: none;">
-            <div class="progress-bar" style="width:0%"></div>
+            <div class="progress-bar" style="width:0%;"></div>
         </div>
     </form>
 </div>
@@ -530,7 +569,6 @@ function hideProgressOverlay() {
     isFinalLoop = false; // Reset the final loop flag
     progressMessage.textContent = ''; // Clear the message text
 }
-       
 
 function toggleElements(disable) {
     const formElements = document.querySelectorAll("input, button, select");
@@ -541,33 +579,6 @@ function toggleElements(disable) {
     });
 }
 
-
-    function clearFormElements() {
-    const formElements = document.querySelectorAll("input, button, select, textarea");
-
-    // Store the current selected value of the rboot-flash-partition select
-    let rbootPartitionSelect = document.querySelector('.rboot-flash-partition');
-    let previousSelectedValue = rbootPartitionSelect ? rbootPartitionSelect.value : null;
-
-    formElements.forEach((element) => {
-        // Clear relevant form fields
-        if (element.tagName === "INPUT" && (element.type === "text" || element.type === "file")) {
-            element.value = ""; // Clear text and file inputs
-        } else if (element.tagName === "SELECT") {
-            element.selectedIndex = 0; // Reset selects to the first option
-        } else if (element.tagName === "TEXTAREA") {
-            element.value = ""; // Clear text areas
-        }
-    });
-
-    // After clearing, restore the previously selected value of the rboot-flash-partition select
-    if (rbootPartitionSelect && previousSelectedValue !== null) {
-        rbootPartitionSelect.value = previousSelectedValue;
-    }
-}
-
-
-       
  async function connectDevice() {
         let statusField = document.querySelector(".status-field");
         statusField.textContent = "Connecting...";
@@ -620,12 +631,10 @@ async function checkDeviceConnection() {
         let product = await device.getVariable("product");
         if (product) {
             //statusField.textContent = "Device is still connected in Fastboot mode.";
-            clearFormElements();
         }
     } catch (error) {
         statusField.textContent = "Device disconnected!";
         toggleElements(true); // Disable all elements on disconnect
-        clearFormElements();
     }
 }
 
@@ -847,7 +856,7 @@ async function runRebootCommand(command, successMessage) {
         fileField.value = "";
         rbootHideProgressOverlay();
         hideProgressOverlay();
-        await checkDeviceConnection(); // Check if device is still connected
+        await CheckDeviceConnection(); // Check if device is still connected
     }
 }
 
