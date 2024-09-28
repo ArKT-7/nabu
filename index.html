@@ -741,6 +741,7 @@ async function runRebootCommand(command, successMessage) {
             alert("Error downloading boot image. Please try again.");
         } finally {
             progressBarContainer.style.display = 'none'; // Hide the progress bar
+            progressBar.style.width = `none`;
         }
     }
 
@@ -976,6 +977,7 @@ async function rbootDownloadFlashImage(imagePath) {
         alert("Error downloading flash image. Please try again.");
     } finally {
         progressBarContainer.style.display = 'none';
+        progressBar.style.width = `none`;
     }
 }
 
