@@ -530,33 +530,29 @@ function hideProgressOverlay() {
     isFinalLoop = false; // Reset the final loop flag
     progressMessage.textContent = ''; // Clear the message text
 }
+       
 
 function toggleElements(disable) {
-    const formElements = document.querySelectorAll("input, button, select");
+    const formElements = document.querySelectorAll("input, button, select, textarea");
     formElements.forEach((element) => {
         if (!element.classList.contains('connect-button')) {
             element.disabled = disable;
-        }
-        if (disable) {
-            // Clear all input values (text, file inputs, selects)
-            if (element.tagName === 'INPUT') {
-                if (element.type === 'text' || element.type === 'file') {
-                    element.value = ''; // Clear text and file inputs
+
+            // Clear inputs and selects when disabling
+            if (disable) {
+                if (element.tagName === "INPUT" && (element.type === "text" || element.type === "file")) {
+                    element.value = ""; // Clear text and file inputs
+                } else if (element.tagName === "SELECT") {
+                    element.selectedIndex = 0; // Reset selects to the first option
+                } else if (element.tagName === "TEXTAREA") {
+                    element.value = ""; // Clear text areas
                 }
-            } else if (element.tagName === 'SELECT') {
-                element.selectedIndex = 0; // Reset select dropdown
             }
         }
     });
-
-    if (disable) {
-        // Refresh the page to reset everything
-        setTimeout(() => {
-            window.location.reload();
-        }, 500); // Optional delay for smoother experience
-    }
 }
 
+       
  async function connectDevice() {
         let statusField = document.querySelector(".status-field");
         statusField.textContent = "Connecting...";
