@@ -534,11 +534,7 @@ function hideProgressOverlay() {
 
 function toggleElements(disable) {
     const formElements = document.querySelectorAll("input, button, select, textarea");
-    
-    // Store the current selected value of the rboot-flash-partition select
-    let rbootPartitionSelect = document.querySelector('.rboot-flash-partition');
-    let previousSelectedValue = rbootPartitionSelect ? rbootPartitionSelect.value : null;
-    
+
     formElements.forEach((element) => {
         // Disable/enable elements except the connect-button
         if (!element.classList.contains('connect-button')) {
@@ -549,13 +545,20 @@ function toggleElements(disable) {
                 if (element.tagName === "INPUT" && (element.type === "text" || element.type === "file")) {
                     element.value = ""; // Clear text and file inputs
                 } else if (element.tagName === "SELECT") {
-                    element.selectedIndex = 0; // Reset selects to the first option
+                    // Check if this is the rboot-flash-partition select element
+                    if (element.classList.contains('rboot-flash-partition')) {
+                        element.value = "boot_ab"; // Always set to 'boot_ab' option
+                    } else {
+                        element.selectedIndex = 0; // Reset other selects to the first option
+                    }
                 } else if (element.tagName === "TEXTAREA") {
                     element.value = ""; // Clear text areas
                 }
             }
         }
     });
+}
+
 
     // After clearing, restore the previously selected value of the rboot-flash-partition select
     if (rbootPartitionSelect && previousSelectedValue !== null) {
