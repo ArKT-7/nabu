@@ -38,7 +38,8 @@ h1 {
 }
 
 
-.container {
+
+        .container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -47,30 +48,28 @@ h1 {
     width: 90%;
     max-width: 600px;
     margin: 30px 0;
-    background: linear-gradient(135deg, #1c1f24, #3a3f44); /* Original background colors */
+    background: linear-gradient(135deg, #1c1f24, #3a3f44); /* Keep the original background gradient */
     border-radius: 20px;
-    box-shadow: 0px 15px 40px rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(10px);
-    text-align: center;
     position: relative;
-    transition: all 0.5s ease; /* Smoothly adjust all properties */
+    text-align: center;
     overflow: hidden;
 }
 
 .container::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(45deg, #ff6ec4, #7873f5, #3a1c71, #ff6ec4); /* Glowing gradient */
+    top: -3px; /* Slight offset for the glow effect */
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    background: linear-gradient(45deg, #ff6ec4, #7873f5, #3a1c71, #ff6ec4); /* Glowing gradient for border */
     background-size: 400% 400%;
     border-radius: 20px;
     z-index: -1;
-    filter: blur(20px); /* Strong blur for glowing effect */
-    opacity: 0.5;
+    filter: blur(10px); /* Creates a glowing effect */
+    opacity: 0.8;
     animation: glow 10s ease infinite;
+    box-shadow: 0 0 15px rgba(255, 110, 196, 0.5); /* Additional shadow for more glow */
 }
 
 @keyframes glow {
@@ -85,6 +84,8 @@ h1 {
     }
 }
 
+
+        
 
 
 form {
