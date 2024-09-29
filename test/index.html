@@ -191,49 +191,13 @@ select {
 
 
 
-
-        .label {
+label {
     font-weight: bold;
-    font-size: 1.2rem; /* Slightly larger for impact */
-    display: inline-block;
-    margin-bottom: 8px;
+    display: block;
+    margin-bottom: 16px;
     margin-top: 8px;
-    padding: 5px 15px;
-    letter-spacing: 2px; /* Modern letter spacing */
-    text-transform: uppercase; /* Clean and bold look */
-    background: linear-gradient(45deg, #ff6ec4, #7873f5); /* Gradient text background */
-    color: transparent; /* Hide text color to show gradient */
-    background-clip: text; /* Gradient text effect */
-    -webkit-background-clip: text; /* Safari support */
-    position: relative;
-    transition: all 0.3s ease; /* Smooth hover effect */
-    z-index: 1;
-    cursor: pointer;
-}
-
-.label::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(45deg, #ff6ec4, #7873f5, #3a1c71); /* Glowing gradient */
-    opacity: 0.5; /* Softer glow */
-    z-index: -1;
-    filter: blur(15px); /* Soft blur for glowing effect */
-    border-radius: 10px; /* Rounded corners for glow */
-    transition: opacity 0.3s ease, transform 0.3s ease; /* Smooth animation */
-}
-
-.label:hover {
-    color: #ffffff; /* Reveal text color on hover */
-    background: none; /* Remove gradient background to focus on text */
-}
-
-.label:hover::before {
-    opacity: 1; /* Intensify the glow on hover */
-    transform: scale(1.05); /* Slight scale for dynamic effect */
+    font-size: 32px;
+    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
 }
 
 
