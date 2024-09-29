@@ -41,97 +41,45 @@ h1 {
 
 
 
-
-        body {
-    background-color: #121212; /* Dark background to contrast the glowing container */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern font */
-}
-
 .container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center; /* Center contents vertically */
-    padding: 40px;
+    padding: 30px;
     width: 90%;
     max-width: 600px;
     margin: 30px 0;
-    background: linear-gradient(135deg, #1c1f24, #3a3f44); /* Sleek dark gradient */
+    background: linear-gradient(135deg, #1c1f24, #3a3f44); /* Original gradient */
+    background-size: 200% 200%; /* Increase size for smoother movement */
     border-radius: 20px;
     position: relative;
     text-align: center;
     overflow: hidden;
-    animation: backgroundMove 30s linear infinite; /* Linear, smooth gradient movement */
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); /* Subtle box shadow for depth */
-    color: white;
-    z-index: 1; /* Ensure content stays above the glow */
+    animation: backgroundMove 20s linear infinite; /* Linear for smooth infinite animation */
 }
 
 .container::before {
     content: '';
     position: absolute;
-    top: -4px;
-    left: -4px;
-    right: -4px;
-    bottom: -4px;
-    background: linear-gradient(45deg, #ff6ec4, #7873f5, #3a1c71, #ff6ec4); /* Glowing gradient */
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    background: linear-gradient(45deg, #ff6ec4, #7873f5, #3a1c71, #ff6ec4); /* Glowing gradient for border */
     background-size: 400% 400%;
-    border-radius: 24px; /* Slightly larger radius to create a glow 'halo' */
+    border-radius: 20px;
     z-index: -1;
-    filter: blur(30px); /* Strong blur for a soft glowing effect */
-    opacity: 0.6; /* Softer glow for a modern look */
-    animation: glow 10s ease infinite;
-}
-
-.container h1, .container p {
-    margin: 0;
-    font-size: 1.5rem; /* Modern typography with good readability */
-}
-
-.container h1 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-    letter-spacing: 1px;
-}
-
-.button {
-    background-color: #1c1f24;
-    padding: 15px 30px;
-    margin-top: 20px;
-    border-radius: 50px;
-    border: 1px solid rgba(255, 110, 196, 0.4);
-    color: white;
-    cursor: pointer;
-    text-transform: uppercase;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    position: relative;
-    z-index: 1;
-}
-
-.button::before {
-    content: '';
-    position: absolute;
-    top: -5px;
-    left: -5px;
-    right: -5px;
-    bottom: -5px;
-    background: linear-gradient(45deg, #ff6ec4, #7873f5, #3a1c71, #ff6ec4); /* Glowing border */
-    background-size: 400% 400%;
-    filter: blur(15px); /* Glowing effect on button */
-    opacity: 0.6;
-    border-radius: 50px;
-    z-index: -1;
-    transition: opacity 0.3s ease;
-}
-
-.button:hover::before {
-    opacity: 1; /* Brighten glow on hover */
+    filter: blur(10px); /* Glowing effect */
+    opacity: 0.8;
+    animation: glow 10s ease infinite; /* Glowing border animation */
+    box-shadow: 
+        0 0 20px 10px rgba(255, 110, 196, 0.5),   /* General glow */
+        0 0 40px 10px rgba(255, 110, 196, 0.3) inset, /* Inner glow */
+        -10px -10px 30px rgba(255, 110, 196, 0.8), /* Top-left corner */
+        10px -10px 30px rgba(255, 110, 196, 0.8),  /* Top-right corner */
+        -10px 10px 30px rgba(255, 110, 196, 0.8),  /* Bottom-left corner */
+        10px 10px 30px rgba(255, 110, 196, 0.8);   /* Bottom-right corner */
 }
 
 @keyframes glow {
@@ -150,13 +98,13 @@ h1 {
     0% {
         background-position: 0% 50%;
     }
-    100% {
+    50% {
         background-position: 100% 50%;
     }
+    100% {
+        background-position: 0% 50%;
+    }
 }
-
-
-
 
         
 
@@ -241,13 +189,56 @@ select {
     background-color: rgba(255, 255, 255, 0.8);
 }
 
-label {
+
+
+
+        .label {
     font-weight: bold;
-    display: block;
+    font-size: 1.2rem; /* Slightly larger for impact */
+    display: inline-block;
     margin-bottom: 8px;
     margin-top: 8px;
+    padding: 5px 15px;
+    letter-spacing: 2px; /* Modern letter spacing */
+    text-transform: uppercase; /* Clean and bold look */
+    background: linear-gradient(45deg, #ff6ec4, #7873f5); /* Gradient text background */
+    color: transparent; /* Hide text color to show gradient */
+    background-clip: text; /* Gradient text effect */
+    -webkit-background-clip: text; /* Safari support */
+    position: relative;
+    transition: all 0.3s ease; /* Smooth hover effect */
+    z-index: 1;
+    cursor: pointer;
 }
 
+.label::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, #ff6ec4, #7873f5, #3a1c71); /* Glowing gradient */
+    opacity: 0.5; /* Softer glow */
+    z-index: -1;
+    filter: blur(15px); /* Soft blur for glowing effect */
+    border-radius: 10px; /* Rounded corners for glow */
+    transition: opacity 0.3s ease, transform 0.3s ease; /* Smooth animation */
+}
+
+.label:hover {
+    color: #ffffff; /* Reveal text color on hover */
+    background: none; /* Remove gradient background to focus on text */
+}
+
+.label:hover::before {
+    opacity: 1; /* Intensify the glow on hover */
+    transform: scale(1.05); /* Slight scale for dynamic effect */
+}
+
+
+
+        
 .progress-container {
     width: 100%;
     height: 30px;
