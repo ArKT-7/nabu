@@ -47,7 +47,7 @@ h1 {
     width: 90%;
     max-width: 600px;
     margin: 30px 0;
-    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); /* Cool gradient background */
+    background: linear-gradient(135deg, #1c1f24, #3a3f44); /* Original background colors */
     border-radius: 20px;
     box-shadow: 0px 15px 40px rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(10px);
@@ -60,17 +60,17 @@ h1 {
 .container::before {
     content: '';
     position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    background: linear-gradient(45deg, #00f5ff, #00b3ff, #0082ff, #0041ff); /* Cool glowing border gradient */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, #ff6ec4, #7873f5, #3a1c71, #ff6ec4); /* Glowing gradient */
     background-size: 400% 400%;
     border-radius: 20px;
     z-index: -1;
-    filter: blur(8px);
-    opacity: 0.9;
-    animation: glow 8s ease infinite;
+    filter: blur(20px); /* Strong blur for glowing effect */
+    opacity: 0.5;
+    animation: glow 10s ease infinite;
 }
 
 @keyframes glow {
@@ -84,6 +84,7 @@ h1 {
         background-position: 0% 50%;
     }
 }
+
 
 
 form {
