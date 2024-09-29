@@ -48,17 +48,19 @@ h1 {
     width: 90%;
     max-width: 600px;
     margin: 30px 0;
-    background: linear-gradient(135deg, #1c1f24, #3a3f44); /* Keep the original background gradient */
+    background: linear-gradient(135deg, #1c1f24, #3a3f44); /* Initial gradient */
+    background-size: 200% 200%; /* Make the gradient bigger for smoother movement */
     border-radius: 20px;
     position: relative;
     text-align: center;
     overflow: hidden;
+    animation: backgroundMove 30s ease infinite; /* Slow-moving gradient */
 }
 
 .container::before {
     content: '';
     position: absolute;
-    top: -3px; /* Slight offset for the glow effect */
+    top: -3px;
     left: -3px;
     right: -3px;
     bottom: -3px;
@@ -66,10 +68,10 @@ h1 {
     background-size: 400% 400%;
     border-radius: 20px;
     z-index: -1;
-    filter: blur(10px); /* Creates a glowing effect */
+    filter: blur(10px); /* Glowing effect */
     opacity: 0.8;
     animation: glow 10s ease infinite;
-    box-shadow: 0 0 15px rgba(255, 110, 196, 0.5); /* Additional shadow for more glow */
+    box-shadow: 0 0 15px rgba(255, 110, 196, 0.5); /* Extra glow */
 }
 
 @keyframes glow {
@@ -81,6 +83,15 @@ h1 {
     }
     100% {
         background-position: 0% 50%;
+    }
+}
+
+@keyframes backgroundMove {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 100% 50%;
     }
 }
 
