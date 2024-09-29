@@ -38,45 +38,100 @@ h1 {
 }
 
 
+
+
+
+
+        body {
+    background-color: #121212; /* Dark background to contrast the glowing container */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern font */
+}
+
 .container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center; /* Center contents vertically */
-    padding: 30px;
+    padding: 40px;
     width: 90%;
     max-width: 600px;
     margin: 30px 0;
-    background: linear-gradient(135deg, #1c1f24, #3a3f44); /* Original gradient */
-    background-size: 200% 200%; /* Increase size for smoother movement */
+    background: linear-gradient(135deg, #1c1f24, #3a3f44); /* Sleek dark gradient */
     border-radius: 20px;
     position: relative;
     text-align: center;
     overflow: hidden;
-    animation: backgroundMove 20s linear infinite; /* Linear for smooth infinite animation */
+    animation: backgroundMove 30s linear infinite; /* Linear, smooth gradient movement */
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); /* Subtle box shadow for depth */
+    color: white;
+    z-index: 1; /* Ensure content stays above the glow */
 }
 
 .container::before {
     content: '';
     position: absolute;
-    top: -3px;
-    left: -3px;
-    right: -3px;
-    bottom: -3px;
-    background: linear-gradient(45deg, #ff6ec4, #7873f5, #3a1c71, #ff6ec4); /* Glowing gradient for border */
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    background: linear-gradient(45deg, #ff6ec4, #7873f5, #3a1c71, #ff6ec4); /* Glowing gradient */
     background-size: 400% 400%;
-    border-radius: 20px;
+    border-radius: 24px; /* Slightly larger radius to create a glow 'halo' */
     z-index: -1;
-    filter: blur(10px); /* Glowing effect */
-    opacity: 0.8;
-    animation: glow 10s ease infinite; /* Glowing border animation */
-    box-shadow: 
-        0 0 20px 10px rgba(255, 110, 196, 0.5),   /* General glow */
-        0 0 40px 10px rgba(255, 110, 196, 0.3) inset, /* Inner glow */
-        -10px -10px 30px rgba(255, 110, 196, 0.8), /* Top-left corner */
-        10px -10px 30px rgba(255, 110, 196, 0.8),  /* Top-right corner */
-        -10px 10px 30px rgba(255, 110, 196, 0.8),  /* Bottom-left corner */
-        10px 10px 30px rgba(255, 110, 196, 0.8);   /* Bottom-right corner */
+    filter: blur(30px); /* Strong blur for a soft glowing effect */
+    opacity: 0.6; /* Softer glow for a modern look */
+    animation: glow 10s ease infinite;
+}
+
+.container h1, .container p {
+    margin: 0;
+    font-size: 1.5rem; /* Modern typography with good readability */
+}
+
+.container h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+.button {
+    background-color: #1c1f24;
+    padding: 15px 30px;
+    margin-top: 20px;
+    border-radius: 50px;
+    border: 1px solid rgba(255, 110, 196, 0.4);
+    color: white;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.button::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    background: linear-gradient(45deg, #ff6ec4, #7873f5, #3a1c71, #ff6ec4); /* Glowing border */
+    background-size: 400% 400%;
+    filter: blur(15px); /* Glowing effect on button */
+    opacity: 0.6;
+    border-radius: 50px;
+    z-index: -1;
+    transition: opacity 0.3s ease;
+}
+
+.button:hover::before {
+    opacity: 1; /* Brighten glow on hover */
 }
 
 @keyframes glow {
@@ -95,13 +150,15 @@ h1 {
     0% {
         background-position: 0% 50%;
     }
-    50% {
+    100% {
         background-position: 100% 50%;
     }
-    100% {
-        background-position: 0% 50%;
-    }
 }
+
+
+
+
+        
 
 
 
