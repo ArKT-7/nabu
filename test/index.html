@@ -97,7 +97,7 @@ h2 {
     width: 90%;
     max-width: 600px;
     margin: 30px 0;
-    background: linear-gradient(135deg, #1c1f24, #3a3f44); /* Original gradient */
+    background: linear-gradient(135deg, #f0f4f8, #dfe6ed); /* Light gradient for background */
     background-size: 200% 200%; /* Increase size for smoother movement */
     border-radius: 20px;
     position: relative;
@@ -113,7 +113,7 @@ h2 {
     left: -3px;
     right: -3px;
     bottom: -3px;
-    background: linear-gradient(45deg, #ff6ec4, #7873f5, #3a1c71, #ff6ec4); /* Glowing gradient for border */
+    background: linear-gradient(45deg, #ff9ecf, #a0b9ff, #d1e3ff, #ff9ecf); /* Lighter glowing gradient for border */
     background-size: 400% 400%;
     border-radius: 20px;
     z-index: -1;
@@ -121,12 +121,12 @@ h2 {
     opacity: 0.8;
     animation: glow 10s ease infinite; /* Glowing border animation */
     box-shadow: 
-        0 0 20px 10px rgba(255, 110, 196, 0.5),   /* General glow */
-        0 0 40px 10px rgba(255, 110, 196, 0.3) inset, /* Inner glow */
-        -10px -10px 30px rgba(255, 110, 196, 0.8), /* Top-left corner */
-        10px -10px 30px rgba(255, 110, 196, 0.8),  /* Top-right corner */
-        -10px 10px 30px rgba(255, 110, 196, 0.8),  /* Bottom-left corner */
-        10px 10px 30px rgba(255, 110, 196, 0.8);   /* Bottom-right corner */
+        0 0 20px 10px rgba(255, 158, 207, 0.3),   /* General softer glow */
+        0 0 40px 10px rgba(255, 158, 207, 0.2) inset, /* Inner softer glow */
+        -10px -10px 30px rgba(255, 158, 207, 0.5), /* Top-left corner softer glow */
+        10px -10px 30px rgba(255, 158, 207, 0.5),  /* Top-right corner softer glow */
+        -10px 10px 30px rgba(255, 158, 207, 0.5),  /* Bottom-left corner softer glow */
+        10px 10px 30px rgba(255, 158, 207, 0.5);   /* Bottom-right corner softer glow */
 }
 
 @keyframes glow {
@@ -153,10 +153,6 @@ h2 {
     }
 }
 
-        
-
-
-
 form {
     display: flex;
     flex-direction: column; /* Align form elements vertically */
@@ -174,6 +170,7 @@ form {
         transform: translateY(0);
     }
 }
+
 
 .button {
     background: linear-gradient(135deg, #007bff, #00d4ff);
