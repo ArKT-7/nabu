@@ -15,7 +15,27 @@
     <title>Fastboot Tool by ArKT</title>
     <link rel="icon" href="https://img.icons8.com/fluency/48/android.png" type="image/png">
     <style>
-    body {
+        /* Font definitions for Sacramento */
+        /* latin-ext */
+        @font-face {
+            font-family: 'Sacramento';
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src: url(https://fonts.gstatic.com/s/sacramento/v15/buEzpo6gcdjy0EiZMBUG4CMf_exL.woff2) format('woff2');
+            unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+        }
+        /* latin */
+        @font-face {
+            font-family: 'Sacramento';
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src: url(https://fonts.gstatic.com/s/sacramento/v15/buEzpo6gcdjy0EiZMBUG4C0f_Q.woff2) format('woff2');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+        }
+
+        body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #202124, #18191A);
             color: #e8eaed;
@@ -91,28 +111,25 @@
             }
         }
 
-        /* Add your other styles here as needed */
-
+        /* Neon Effect Styles */
         :root {
-    --neon-color: #00d1ff; /* Define your neon color */
-}
+            --neon-color: #BC13FE; /* Neon color */
+        }
 
-.neon-effect {
-    margin: 0;
-    font-size: 100px; /* Font size */
-    font-weight: normal;
-    text-shadow:
-        0 0 2px #FFF,
-        0 0 4px #FFF,
-        0 0 6px #FFF,
-        0 0 15px var(--neon-color),
-        0 0 23px var(--neon-color),
-        0 0 36px var(--neon-color),
-        0 0 42px var(--neon-color),
-        0 0 67px var(--neon-color); /* Glow effect */
-    animation: pulsate 1.5s infinite alternate; /* Pulsating animation */
-}
-
+        .neon-effect {
+            font-size: 48px; /* Adjusted size for better visibility */
+            font-family: 'Sacramento', sans-serif; /* Use Sacramento font */
+            text-shadow:
+                0 0 2px #FFF,
+                0 0 4px #FFF,
+                0 0 6px #FFF,
+                0 0 15px var(--neon-color),
+                0 0 23px var(--neon-color),
+                0 0 36px var(--neon-color),
+                0 0 42px var(--neon-color),
+                0 0 67px var(--neon-color); /* Glow effect */
+            animation: pulsate 1.5s infinite alternate; /* Pulsating animation */
+        }
 
         @keyframes pulsate {
             0% {
@@ -478,9 +495,9 @@ label {
 </head>
 <body>
   <h1 class="title">
-    <span class="text-gradient">Nabu Fastboot Tool</span>
-</h1>
-<h1 class="subtitle rainbow-text neon-effect">By ArKT</h1> <!-- Apply the neon-effect class here -->
+        <span class="text-gradient">Nabu Fastboot Tool</span>
+    </h1>
+    <h1 class="neon-effect">By ARKT</h1> <!-- Neon effect added here -->
 
 
 
