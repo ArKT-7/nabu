@@ -197,6 +197,35 @@ select {
 		position: relative;
 		}
 
+	    select::-ms-expand {
+		display: none;
+		}
+
+	    select::after {
+		content: '\25BC'; /* Unicode for down arrow */
+		position: absolute;
+		right: 10px;
+		top: 50%;
+		transform: translateY(-50%);
+		color: #00FFFF; /* Arrow color */
+		pointer-events: none; /* Prevent interaction with the arrow */
+		}
+
+	    select option {
+		background-color: #444; /* Background color of options */
+		color: #00FFFF; /* Text color of options */
+		text-align: center; /* Center text within options */
+		}
+
+	      select:hover, button:hover {
+            transform: scale(1.1);
+        }
+
+        select:focus, button:focus {
+            outline: none;
+            transform: scale(1.1);
+        }
+
 
 label {
     font-weight: bold;
