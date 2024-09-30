@@ -92,18 +92,19 @@ h2 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center; /* Center contents vertically */
+    justify-content: center;
     padding: 30px;
     width: 90%;
     max-width: 600px;
     margin: 30px 0;
-    background: linear-gradient(135deg, #f0f4f8, #dfe6ed); /* Light gradient for background */
+    background: linear-gradient(135deg, #e0e6ed, #c8d0d8); /* Slightly darker gradient */
     background-size: 200% 200%; /* Increase size for smoother movement */
     border-radius: 20px;
     position: relative;
     text-align: center;
     overflow: hidden;
     animation: backgroundMove 20s linear infinite; /* Linear for smooth infinite animation */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Added shadow for better visibility */
 }
 
 .container::before {
@@ -128,6 +129,7 @@ h2 {
         -10px 10px 30px rgba(255, 158, 207, 0.5),  /* Bottom-left corner softer glow */
         10px 10px 30px rgba(255, 158, 207, 0.5);   /* Bottom-right corner softer glow */
 }
+
 
 @keyframes glow {
     0% {
