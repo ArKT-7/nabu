@@ -173,56 +173,31 @@ form {
 } */
 
 
-
-
-	    input[type="file"],
+input[type="file"],
 input[type="text"], 
-select {
+	    select {
     text-align: center; /* Center align text inside input fields */
     width: 100%; /* Use full width of the container */
     max-width: 600px; /* Set a max width for better appearance */
-    padding: 15px 20px; /* Padding for comfort */
+    padding: 15px 20px;
     margin: 10px 0; /* Vertical spacing between inputs */
-    border-radius: 20px; /* Rounded corners */
-    border: none; /* Remove default border */
+    border-radius: 20px;
+    border: none;
     box-sizing: border-box; /* Ensure padding and borders are included in the width */
+   background-color: #ffffff;
     background: linear-gradient(135deg, #333, #444); /* Gradient background */
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
-    transition: all 0.3s ease; /* Smooth transitions */
-    -webkit-appearance: none; /* Remove default styling */
-    -moz-appearance: none; /* Remove default styling */
-    appearance: none; /* Remove default styling */
-    color: white; /* Text color */
-    font-size: 14px; /* Font size */
-    font-weight: bold; /* Bold text */
-}
-
-/* File input style */
-input[type="file"] {
-    display: none; /* Hide the default file input */
-}
-
-/* Label acting as a button */
-input[type="file"] + label {
-    display: inline-block; /* Display as an inline block */
-    background: #444; /* Background color to match */
-    color: white; /* Text color */
-    border-radius: 20px; /* Match the border radius */
-    padding: 15px 20px; /* Padding for the button */
-    text-align: center; /* Center align text */
-    font-weight: bold; /* Bold text */
-    cursor: pointer; /* Pointer cursor */
-    transition: background 0.3s ease; /* Smooth background transition */
-}
-
-/* Change background on hover */
-input[type="file"] + label:hover {
-    background: #555; /* Slightly lighter on hover */
+	box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+		transition: all 0.3s ease;
+	-webkit-appearance: none; /* Remove default styling */
+		-moz-appearance: none; /* Remove default styling */
+		appearance: none; /* Remove default styling */
+	background-color: #444;
+	font-size: 14px;
+	font-weight: bold;
+	color: white;
 }
 
 
-
-	    
 /*select {
     text-align: center; /* Center align text inside select fields 
     width: 100%;
@@ -439,8 +414,7 @@ label {
     <div class="container">
     <form class="rboot-flash-form">
         <label for="rboot-flash-file">Flash any rooted or normal boot image</label>
-    <input type="file" name="rboot-flash-file" class="rboot-flash-file" id="file-upload" accept=".img" /> <!-- Hidden file input -->
-    <label for="file-upload">Choose File</label> <!-- Label acting as the button -->
+        <input type="file" name="rboot-flash-file" class="rboot-flash-file" accept=".img" />
         <!-- New dropdown for partition selection -->
         <label2 for="rboot-flash-partition">Select Flash boot partition</label2>
         <select name="rboot-flash-partition" class="rboot-flash-partition" required>
