@@ -606,18 +606,18 @@ label.dark {
     border-radius: 15px;
 }
 
-	    .toggle-container {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    z-index: 1000; /* Ensure it appears above other elements */
+	.toggle-container {
+    position: absolute; /* Position it at the corner */
+    top: 20px; /* Distance from the top */
+    right: 20px; /* Distance from the right */
+    z-index: 100; /* Make sure it's on top */
 }
 
 .switch {
     position: relative;
     display: inline-block;
-    width: 60px;
-    height: 34px;
+    width: 60px; /* Width of the switch */
+    height: 34px; /* Height of the switch */
 }
 
 .switch input {
@@ -633,51 +633,41 @@ label.dark {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ccc;
-    border-radius: 34px;
-    transition: .4s;
+    background-color: #ccc; /* Background color when off */
+    transition: .4s; /* Transition effect */
+    border-radius: 34px; /* Rounded corners */
 }
 
 .slider:before {
     position: absolute;
     content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    border-radius: 50%;
-    transition: .4s;
+    height: 26px; /* Height of the knob */
+    width: 26px; /* Width of the knob */
+    left: 4px; /* Knob position */
+    bottom: 4px; /* Knob position */
+    background-color: white; /* Knob color */
+    transition: .4s; /* Transition effect */
+    border-radius: 50%; /* Circular knob */
 }
 
 input:checked + .slider {
-    background-color: #2196F3; /* Color when toggled on */
+    background-color: #2196F3; /* Background color when on */
 }
 
 input:checked + .slider:before {
-    transform: translateX(26px);
+    transform: translateX(26px); /* Move the knob to the right */
 }
 
 
 
     </style>
 </head>
-<body class="dark-mode"> <!-- Default to dark mode -->
+<body class="dark-mode">
     <div class="toggle-container">
         <label class="switch">
-            <input type="checkbox" id="mode-toggle" checked> <!-- Checked for dark mode -->
-            <span class="slider"></span>
+            <input type="checkbox" id="modeToggle" checked>
+            <span class="slider round"></span>
         </label>
-    </div>
-    
-    <div class="container dark">
-        <h1 class="dark-mode">Your Heading</h1>
-        <h2 class="dark-mode">Your Subheading</h2>
-        <form>
-            <input type="file" class="dark" />
-            <input type="text" class="dark" placeholder="Your Text Here" />
-            <button class="button dark">Submit</button>
-        </form>
     </div>
      <h1 class="title">
     <span class="text-gradient">Nabu Fastboot Tool</span>
@@ -847,15 +837,27 @@ input:checked + .slider:before {
     import { BlobStore } from "../download.js";
 
 
-	   document.getElementById('mode-toggle').addEventListener('change', function () {
-    document.body.classList.toggle('light-mode', this.checked);
-    document.body.classList.toggle('dark-mode', !this.checked);
+	const toggleSwitch = document.getElementById('modeToggle');
+    const body = document.body;
 
-    const container = document.querySelector('.container');
-    container.classList.toggle('light', this.checked);
-    container.classList.toggle('dark', !this.checked);
-});
+    // Set default mode
+    if (!localStorage.getItem('mode')) {
+        localStorage.setItem('mode', 'dark');
+    }
+    body.classList.toggle('dark-mode', localStorage.getItem('mode') === 'dark');
 
+    // Function to toggle the mode
+    toggleSwitch.addEventListener('change', () => {
+        if (toggleSwitch.checked) {
+            body.classList.remove('dark-mode');
+            body.classList.add('light-mode');
+            localStorage.setItem('mode', 'light');
+        } else {
+            body.classList.remove('light-mode');
+            body.classList.add('dark-mode');
+            localStorage.setItem('mode', 'dark');
+        }
+    });
 
     let device = new fastboot.FastbootDevice();
     window.device = device;
