@@ -186,8 +186,18 @@ select {
 label {
     font-weight: bold;
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
+    font-size: 19px;
+    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+}
+
+        label2 {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 6px;
     margin-top: 8px;
+    font-size: 18px;
+    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
 }
 
 .progress-container {
@@ -368,7 +378,7 @@ label {
         <label for="rboot-flash-file">Flash any rooted or normal boot image</label>
         <input type="file" name="rboot-flash-file" class="rboot-flash-file" accept=".img" />
         <!-- New dropdown for partition selection -->
-        <label for="rboot-flash-partition">Select Flash boot partition</label>
+        <label2 for="rboot-flash-partition">Select Flash boot partition</label2>
         <select name="rboot-flash-partition" class="rboot-flash-partition" required>
             <option value="">Select boot partition</option>
             <option value="boot_ab" selected>Flash to Boot ab (both slots)</option>
@@ -377,7 +387,7 @@ label {
             <option value="boot_b">Flash to Boot B only</option>
         </select>
         <!-- New dropdown for selecting predefined images -->
-       <label for="rboot-flash-image">Magisk V27-stable Rooted Boot Images</label>
+       <label2 for="rboot-flash-image">Magisk V27-stable Rooted Boot Images</label2>
 <select name="rboot-flash-image" class="rboot-flash-image">
     <option value="">Select rooted HyperOS/MIUI 14 boot</option>
     <option value="magisk-1-0-5-global">HyperOS 1.0.5 (Global)</option>
@@ -484,7 +494,7 @@ label {
     <form class="flash-form">
         <label for="flash-file">Flash any images</label>
         <input type="file" name="flash-file" id="flash-file" accept=".img" />
-        <label for="flash-partition">Enter Partition</label>
+        <label2 for="flash-partition">Enter Partition</label2>
         <input type="text" name="flash-partition" class="flash-partition" placeholder="Enter partition like- boot, dtbo, cust, recovery, etc." />
         <input type="submit" value="Flash" class="button" />
     </form>
