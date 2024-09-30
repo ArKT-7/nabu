@@ -65,13 +65,35 @@
     background: linear-gradient(135deg, #00d1ff, #0052cc);
     -webkit-background-clip: text;
     color: transparent;
-    -webkit-text-stroke: 1px #ffdd00; /* Adds a yellow border around each letter */
+    font-size: 38px;
+    letter-spacing: 1px;
+    position: relative;
+    -webkit-text-stroke: 1px transparent; /* No stroke on letters */
     text-shadow: 
-        0 0 5px rgba(255, 255, 0, 0.7), /* Yellow glow */
-        0 0 10px rgba(255, 255, 0, 0.5),
-        0 0 15px rgba(255, 255, 0, 0.3);
-    animation: textGlow 2s ease-in-out infinite;
+        2px 2px 2px #ffdd00, /* Subtle border effect */
+        0 0 8px rgba(255, 255, 0, 0.8), /* Neon glow */
+        0 0 15px rgba(255, 165, 0, 0.7), /* Deep glow */
+        0 0 20px rgba(255, 165, 0, 0.5); /* Further diffusion of glow */
+    animation: textGlow 4s ease-in-out infinite;
 }
+
+@keyframes textGlow {
+    0%, 100% {
+        text-shadow: 
+            2px 2px 2px #ffdd00, 
+            0 0 8px rgba(255, 255, 0, 0.8),
+            0 0 15px rgba(255, 165, 0, 0.7),
+            0 0 20px rgba(255, 165, 0, 0.5);
+    }
+    50% {
+        text-shadow: 
+            4px 4px 4px #ffdd00, 
+            0 0 12px rgba(255, 255, 0, 1),
+            0 0 20px rgba(255, 165, 0, 0.8),
+            0 0 30px rgba(255, 165, 0, 0.6);
+    }
+}
+
 
 
 
@@ -81,20 +103,6 @@
             font-size: 24px;
             margin-top: -5px;
         }
-
-        @keyframes textGlow {
-            0%, 100% {
-                text-shadow: 
-                    0 0 8px rgba(0, 82, 204, 0.8), 
-                    0 0 20px rgba(0, 209, 255, 0.5);
-            }
-            50% {
-                text-shadow: 
-                    0 0 16px rgba(0, 82, 204, 0.8), 
-                    0 0 30px rgba(0, 209, 255, 0.5);
-            }
-        }
-
 
 
 
