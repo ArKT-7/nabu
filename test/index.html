@@ -29,29 +29,64 @@
 }
 
 h1 {
-    color: #4a4a4a;
+    color: #4a4a4a; /* Fallback color for browsers that don't support the gradient */
     text-align: center;
     margin-bottom: 20px;
-    font-size: 32px;
+    font-size: 38px;
     text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
 }
 
-/*.container {
-    background: rgba(255, 255, 255, 0.7);
-    border-radius: 20px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 10px rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(10px);
-    padding: 30px;
-    width: 90%;
-    max-width: 600px;
-    margin: 30px 0;
-    animation: fadeInUp 0.6s ease-in-out;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    /*overflow: hidden;
-    display: flex; /* Enable flexbox layout 
-    flex-direction: column; /* Align items vertically 
-    align-items: center; /* Center children horizontally 
-}*/
+	    h2 {
+            color: #f8f9fa;
+			margin-top: 0px;
+            margin-bottom: 5px;
+            font-size: 24px;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #00d1ff, #0052cc);
+            -webkit-background-clip: text;
+            color: transparent;
+            animation: textGlow 4s ease-in-out infinite;
+        }
+
+.title {
+    text-align: center;
+    font-size: 32px;
+    letter-spacing: 0.5px;
+}
+
+.text-gradient {
+    background: linear-gradient(135deg, #00d1ff, #0052cc);
+    -webkit-background-clip: text;
+    color: transparent;
+    text-shadow: 
+        0 0 5px rgba(0, 209, 255, 0.7), 
+        0 0 10px rgba(0, 209, 255, 0.5), 
+        0 0 15px rgba(0, 209, 255, 0.3), 
+        0 0 20px rgba(0, 209, 255, 0.2);
+    animation: textGlow 2s ease-in-out infinite;
+}
+
+.subtitle {
+    color: #f8f9fa;
+    text-align: center;
+    font-size: 24px;
+    margin-top: -5px;
+}
+
+@keyframes textGlow {
+    0%, 100% {
+        text-shadow: 
+            0 0 8px rgba(0, 82, 204, 0.8), 
+            0 0 20px rgba(0, 209, 255, 0.5);
+    }
+    50% {
+        text-shadow: 
+            0 0 16px rgba(0, 82, 204, 0.8), 
+            0 0 30px rgba(0, 209, 255, 0.5);
+    }
+}
+
+
 .container {
     display: flex;
     flex-direction: column;
@@ -291,7 +326,10 @@ label {
     </style>
 </head>
 <body>
-    <h1>Fastboot Tool by ArKT</h1>
+    <h1 class="title">
+  <span class="text-gradient">Nabu Fastboot Tool</span>
+</h1>
+<h2 class="subtitle">By ArKT :)</h2>
 
 <!-- Add a progress overlay for the "Processing... Please wait" message -->
 <div id="progress-overlay">
