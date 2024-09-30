@@ -184,62 +184,18 @@ input[type="text"] {
 
 
 select {
-	width: 100%;
-		padding: 12px 20px;
-		margin: 8px 0;
-		border-radius: 12px;
-		border: none;
-		font-size: 18px;
-		font-weight: bold;
-		box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-		transition: all 0.3s ease;
-		text-align: center; /* Center text horizontally */
-		display: inline-block; /* Ensure centering works */
-		background-color: #ffffff;
-		font-size: 16px;
-		color: #00FFFF;
-		background: linear-gradient(135deg, #333, #444); /* Gradient background */
-		color: #00FFFF; /* Text color */
-		text-align: center; /* Center text horizontally */
-		-webkit-appearance: none; /* Remove default styling */
-		-moz-appearance: none; /* Remove default styling */
-		appearance: none; /* Remove default styling */
-		padding-right: 30px; /* Space for custom arrow (if any) */
-		position: relative;
-		}
+    text-align: center; /* Center align text inside select fields */
+    width: 100%;
+    padding: 15px 20px;
+    margin: 10px 0;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+	background-color: #ffffff;
+	color: #00FFFF;
+    background: linear-gradient(135deg, #333, #444); /* Gradient background */
+}
 
-	    select::-ms-expand {
-		display: none;
-		}
-
-	    select::after {
-		content: '\25BC'; /* Unicode for down arrow */
-		position: absolute;
-		right: 10px;
-		top: 50%;
-		transform: translateY(-50%);
-		color: #00FFFF; /* Arrow color */
-		pointer-events: none; /* Prevent interaction with the arrow */
-		}
-
-	    select option {
-		background-color: #444; /* Background color of options */
-		color: #00FFFF; /* Text color of options */
-		text-align: center; /* Center text within options */
-		}
-
-	      select:hover, button:hover {
-            transform: scale(1.1);
-        }
-
-        select:focus, button:focus {
-            outline: none;
-            transform: scale(1.1);
-        }
-	     select {
-                font-size: 14px;
-                padding: 10px 15px;
-            }
 
 
 label {
