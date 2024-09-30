@@ -17,8 +17,8 @@
     <style>
         body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #202124, #18191A);
-    color: #e8eaed;
+    background: linear-gradient(135deg, #f0f0f0, #d4e0e5);
+    color: #333;
     margin: 0;
     padding: 20px;
     display: flex;
@@ -26,70 +26,32 @@
     align-items: center;
     position: relative;
     min-height: 100vh;
-    background-color: #202124;
 }
 
-
 h1 {
-    color: #4a4a4a; /* Fallback color for browsers that don't support the gradient */
+    color: #4a4a4a;
     text-align: center;
     margin-bottom: 20px;
-    font-size: 38px;
+    font-size: 32px;
     text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
 }
 
-	    h2 {
-            color: #f8f9fa;
-			margin-top: 0px;
-            margin-bottom: 5px;
-            font-size: 24px;
-            letter-spacing: 2px;
-            background: linear-gradient(135deg, #00d1ff, #0052cc);
-            -webkit-background-clip: text;
-            color: transparent;
-            animation: textGlow 4s ease-in-out infinite;
-        }
-
-.title {
-    text-align: center;
-    font-size: 32px;
-    letter-spacing: 0.5px;
-}
-
-.text-gradient {
-    background: linear-gradient(135deg, #00d1ff, #0052cc);
-    -webkit-background-clip: text;
-    color: transparent;
-    text-shadow: 
-        0 0 5px rgba(0, 209, 255, 0.7), 
-        0 0 10px rgba(0, 209, 255, 0.5), 
-        0 0 15px rgba(0, 209, 255, 0.3), 
-        0 0 20px rgba(0, 209, 255, 0.2);
-    animation: textGlow 2s ease-in-out infinite;
-}
-
-.subtitle {
-    color: #f8f9fa;
-    text-align: center;
-    font-size: 24px;
-    margin-top: -5px;
-}
-
-@keyframes textGlow {
-    0%, 100% {
-        text-shadow: 
-            0 0 8px rgba(0, 82, 204, 0.8), 
-            0 0 20px rgba(0, 209, 255, 0.5);
-    }
-    50% {
-        text-shadow: 
-            0 0 16px rgba(0, 82, 204, 0.8), 
-            0 0 30px rgba(0, 209, 255, 0.5);
-    }
-}
-
-
-
+/*.container {
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 10px rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    padding: 30px;
+    width: 90%;
+    max-width: 600px;
+    margin: 30px 0;
+    animation: fadeInUp 0.6s ease-in-out;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    /*overflow: hidden;
+    display: flex; /* Enable flexbox layout 
+    flex-direction: column; /* Align items vertically 
+    align-items: center; /* Center children horizontally 
+}*/
 .container {
     display: flex;
     flex-direction: column;
@@ -99,65 +61,12 @@ h1 {
     width: 90%;
     max-width: 600px;
     margin: 30px 0;
-    background: linear-gradient(135deg, #1c1f24, #3a3f44); /* Original gradient */
-    background-size: 200% 200%; /* Increase size for smoother movement */
+    background: rgba(255, 255, 255, 0.7);
     border-radius: 20px;
-    position: relative;
-    text-align: center;
-    overflow: hidden;
-    animation: backgroundMove 20s linear infinite; /* Linear for smooth infinite animation */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 10px rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }
-
-.container::before {
-    content: '';
-    position: absolute;
-    top: -3px;
-    left: -3px;
-    right: -3px;
-    bottom: -3px;
-    background: linear-gradient(45deg, #ff6ec4, #7873f5, #3a1c71, #ff6ec4); /* Glowing gradient for border */
-    background-size: 400% 400%;
-    border-radius: 20px;
-    z-index: -1;
-    filter: blur(10px); /* Glowing effect */
-    opacity: 0.8;
-    animation: glow 10s ease infinite; /* Glowing border animation */
-    box-shadow: 
-        0 0 20px 10px rgba(255, 110, 196, 0.5),   /* General glow */
-        0 0 40px 10px rgba(255, 110, 196, 0.3) inset, /* Inner glow */
-        -10px -10px 30px rgba(255, 110, 196, 0.8), /* Top-left corner */
-        10px -10px 30px rgba(255, 110, 196, 0.8),  /* Top-right corner */
-        -10px 10px 30px rgba(255, 110, 196, 0.8),  /* Bottom-left corner */
-        10px 10px 30px rgba(255, 110, 196, 0.8);   /* Bottom-right corner */
-}
-
-@keyframes glow {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
-}
-
-@keyframes backgroundMove {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
-}
-
-        
-
-
 
 form {
     display: flex;
@@ -178,27 +87,17 @@ form {
 }
 
 .button {
-	background-color: #ffffff;
     background: linear-gradient(135deg, #007bff, #00d4ff);
     border: none;
     border-radius: 20px;
     color: white;
     padding: 15px 20px;
     font-size: 18px;
-    font-weight: bold;
-    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: background 0.3s ease, transform 0.3s ease;
     margin: 10px 0;
     width: 100%;
     box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
-            color: #fff;
-            cursor: pointer;
-            animation: buttonGlow 3s ease-in-out infinite alternate;
-
-	
-	box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-		transition: all 0.3s ease;
 }
 
 .button:hover {
@@ -223,80 +122,38 @@ form {
 
 
 input[type="file"],
-input[type="text"], 
-	    select {
+input[type="text"] {
     text-align: center; /* Center align text inside input fields */
     width: 100%; /* Use full width of the container */
     max-width: 600px; /* Set a max width for better appearance */
     padding: 15px 20px;
     margin: 10px 0; /* Vertical spacing between inputs */
     border-radius: 20px;
-    border: none;
+    border: 1px solid #ccc;
+    box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.8);
     box-sizing: border-box; /* Ensure padding and borders are included in the width */
-   background-color: #ffffff;
-    background: linear-gradient(135deg, #333, #444); /* Gradient background */
-	box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-		transition: all 0.3s ease;
-	-webkit-appearance: none; /* Remove default styling */
-		-moz-appearance: none; /* Remove default styling */
-		appearance: none; /* Remove default styling */
-	background-color: #444;
-	font-size: 14px;
-	font-weight: bold;
-	color: white;
 }
 
 
-	    input[type="file"] {
-	box-shadow: 0px 3px 9px rgba(0, 0, 0, 0.2);
-		transition: all 0.3s ease;
-	-webkit-appearance: none; /* Remove default styling */
-		-moz-appearance: none; /* Remove default styling */
-		appearance: none; /* Remove default styling */
-}
-
-/*select {
-    text-align: center; /* Center align text inside select fields 
+select {
+    text-align: center; /* Center align text inside select fields */
     width: 100%;
     padding: 15px 20px;
     margin: 10px 0;
     border-radius: 20px;
-	border: none;
-	background-color: #ffffff;
-    background: linear-gradient(135deg, #333, #444); /* Gradient background 
-	box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-		transition: all 0.3s ease;
-	-webkit-appearance: none; /* Remove default styling 
-		-moz-appearance: none; /* Remove default styling 
-		appearance: none; /* Remove default styling 
-	background-color: #444;
-	font-size: 14px;
-	font-weight: bold;
-	color: white;
-}*/
-
-
+    border: 1px solid #ccc;
+    box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.8);
+}
 
 label {
     font-weight: bold;
     display: block;
-    margin-bottom: 12px;
-    font-size: 19px;
-    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
-}
-
-        label2 {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     margin-top: 8px;
-    font-size: 18px;
-    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
 }
 
-
-
-        
 .progress-container {
     width: 100%;
     height: 30px;
@@ -318,11 +175,9 @@ label {
 
 .status-field {
     font-weight: bold;
-    display: block;
     margin-bottom: 10px;
-    margin-top: 1px;
-    font-size: 20px;
-    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+    color: #333;
+    font-size: 16px;
 }
 
 /*pre.result-field {
@@ -436,16 +291,7 @@ label {
     </style>
 </head>
 <body>
-  <h1 class="title">
-  <span class="text-gradient">Nabu Fastboot Tool</span>
-</h1>
-<h2 class="subtitle">By ArKT :)</h2>
-
-
-
-
-
-
+    <h1>Fastboot Tool by ArKT</h1>
 
 <!-- Add a progress overlay for the "Processing... Please wait" message -->
 <div id="progress-overlay">
@@ -457,6 +303,7 @@ label {
     <button class="button connect-button">Connect device Fastboot</button>
 </div>
 
+<hr />
 
 <div class="container">
     <form class="command-form">
@@ -482,7 +329,7 @@ label {
         <label for="rboot-flash-file">Flash any rooted or normal boot image</label>
         <input type="file" name="rboot-flash-file" class="rboot-flash-file" accept=".img" />
         <!-- New dropdown for partition selection -->
-        <label2 for="rboot-flash-partition">Select Flash boot partition</label2>
+        <label for="rboot-flash-partition">Select Flash boot partition</label>
         <select name="rboot-flash-partition" class="rboot-flash-partition" required>
             <option value="">Select boot partition</option>
             <option value="boot_ab" selected>Flash to Boot ab (both slots)</option>
@@ -491,7 +338,7 @@ label {
             <option value="boot_b">Flash to Boot B only</option>
         </select>
         <!-- New dropdown for selecting predefined images -->
-       <label2 for="rboot-flash-image">Magisk V27 Rooted Boot Images</label2>
+       <label for="rboot-flash-image">Magisk V27-stable Rooted Boot Images</label>
 <select name="rboot-flash-image" class="rboot-flash-image">
     <option value="">Select rooted HyperOS/MIUI 14 boot</option>
     <option value="magisk-1-0-5-global">HyperOS 1.0.5 (Global)</option>
@@ -598,14 +445,15 @@ label {
     <form class="flash-form">
         <label for="flash-file">Flash any images</label>
         <input type="file" name="flash-file" id="flash-file" accept=".img" />
-        <label2 for="flash-partition">Enter Partition</label2>
-        <input type="text" name="flash-partition" class="flash-partition" placeholder="Partition like - boot, dtbo, cust, recovery, etc." />
+        <label for="flash-partition">Enter Partition</label>
+        <input type="text" name="flash-partition" class="flash-partition" placeholder="Enter partition like- boot, dtbo, cust, recovery, etc." />
         <input type="submit" value="Flash" class="button" />
     </form>
 </div>
 
 
 
+    <hr />
 
    <script type="module">
     import * as fastboot from "../dist/fastboot.mjs";
