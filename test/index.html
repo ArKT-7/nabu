@@ -62,16 +62,17 @@
         }
 
         .text-gradient {
-            background: linear-gradient(135deg, #00d1ff, #0052cc);
-            -webkit-background-clip: text;
-            color: transparent;
-            text-shadow: 
-                0 0 5px rgba(0, 209, 255, 0.7), 
-                0 0 10px rgba(0, 209, 255, 0.5), 
-                0 0 15px rgba(0, 209, 255, 0.3), 
-                0 0 20px rgba(0, 209, 255, 0.2);
-            animation: textGlow 2s ease-in-out infinite;
-        }
+    background: linear-gradient(135deg, #00d1ff, #0052cc);
+    -webkit-background-clip: text;
+    color: transparent;
+    text-shadow: 
+        0 0 5px rgba(255, 255, 0, 0.8), /* Yellow glow */
+        0 0 10px rgba(255, 255, 0, 0.6), 
+        0 0 15px rgba(255, 255, 0, 0.4), 
+        0 0 20px rgba(255, 255, 0, 0.2); /* Gradual glow effect */
+    animation: textGlow 2s ease-in-out infinite;
+}
+
 
         .subtitle {
             color: #f8f9fa;
