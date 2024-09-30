@@ -93,21 +93,26 @@
 
         /* Add your other styles here as needed */
 
-        .neon-effect {
-            margin: 0;
-            font-size: 100px; /* Font size */
-            font-weight: normal;
-            text-shadow:
-                0 0 2px #FFF,
-                0 0 4px #FFF,
-                0 0 6px #FFF,
-                0 0 15px var(--neon-color),
-                0 0 23px var(--neon-color),
-                0 0 36px var(--neon-color),
-                0 0 42px var(--neon-color),
-                0 0 67px var(--neon-color); /* Glow effect */
-            animation: pulsate 1.5s infinite alternate; /* Pulsating animation */
-        }
+        :root {
+    --neon-color: #00d1ff; /* Define your neon color */
+}
+
+.neon-effect {
+    margin: 0;
+    font-size: 100px; /* Font size */
+    font-weight: normal;
+    text-shadow:
+        0 0 2px #FFF,
+        0 0 4px #FFF,
+        0 0 6px #FFF,
+        0 0 15px var(--neon-color),
+        0 0 23px var(--neon-color),
+        0 0 36px var(--neon-color),
+        0 0 42px var(--neon-color),
+        0 0 67px var(--neon-color); /* Glow effect */
+    animation: pulsate 1.5s infinite alternate; /* Pulsating animation */
+}
+
 
         @keyframes pulsate {
             0% {
@@ -472,10 +477,11 @@ label {
     </style>
 </head>
 <body>
-  <<h1 class="title">
-        <span class="text-gradient">Nabu Fastboot Tool</span>
-    </h1>
-    <h1 class="subtitle rainbow-text">By ArKT</h1>
+  <h1 class="title">
+    <span class="text-gradient">Nabu Fastboot Tool</span>
+</h1>
+<h1 class="subtitle rainbow-text neon-effect">By ArKT</h1> <!-- Apply the neon-effect class here -->
+
 
 
 
