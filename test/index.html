@@ -31,7 +31,7 @@
 
 
 
-	    h1 {
+	  h1 {
     color: #4a4a4a; /* Fallback color */
     text-align: center;
     margin-bottom: 20px;
@@ -57,37 +57,32 @@
     animation: textGlow 2s ease-in-out infinite;
 }
 
-/* Color-switching effect for By ArKT */
-.color-switch {
-    background: linear-gradient(45deg, #ff00ff, #00d1ff, #00ff6a, #ff9900);
-    background-size: 300%;
+/* Neon gradient effect for By ArKT */
+.neon-gradient {
+    background: linear-gradient(45deg, #00ffcc, #00d1ff, #0052cc, #ff00ff);
+    background-size: 400%;
     -webkit-background-clip: text;
     color: transparent;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.6);
-    animation: colorSwitch 3s ease-in-out infinite, textGlow 2s ease-in-out infinite;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.8), 0 0 20px rgba(0, 255, 255, 0.6),
+                 0 0 30px rgba(0, 255, 255, 0.4), 0 0 40px rgba(0, 255, 255, 0.2);
+    animation: neonSwitch 5s ease-in-out infinite, glowPulse 3s ease-in-out infinite;
 }
 
-.subtitle {
-    color: #f8f9fa;
-    text-align: center;
-    font-size: 24px;
-    margin-top: -5px;
-}
 
-@keyframes textGlow {
+/* Glow animation for By ArKT */
+@keyframes glowPulse {
     0%, 100% {
-        text-shadow: 
-            0 0 8px rgba(0, 82, 204, 0.8), 
-            0 0 20px rgba(0, 209, 255, 0.5);
+        text-shadow: 0 0 10px rgba(0, 255, 255, 0.8), 0 0 20px rgba(0, 255, 255, 0.6),
+                     0 0 30px rgba(0, 255, 255, 0.4), 0 0 40px rgba(0, 255, 255, 0.2);
     }
     50% {
-        text-shadow: 
-            0 0 16px rgba(0, 82, 204, 0.8), 
-            0 0 30px rgba(0, 209, 255, 0.5);
+        text-shadow: 0 0 20px rgba(0, 255, 255, 1), 0 0 30px rgba(0, 255, 255, 0.7),
+                     0 0 40px rgba(0, 255, 255, 0.5), 0 0 50px rgba(0, 255, 255, 0.3);
     }
 }
 
-@keyframes colorSwitch {
+/* Smooth gradient switching effect */
+@keyframes neonSwitch {
     0% {
         background-position: 0% 50%;
     }
@@ -442,7 +437,8 @@ label {
   <h1 class="title">
   <span class="text-gradient">Nabu Fastboot Tool</span>
 </h1>
-<h1 class="subtitle">By <span class="color-switch">ArKT</span></h1>
+<h1><span class="neon-gradient">By ArKT</span></h1>
+
 
 
 
