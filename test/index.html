@@ -173,29 +173,74 @@ form {
 } */
 
 
-input[type="file"],
+
+
+	    input[type="file"],
 input[type="text"], 
-	    select {
+select {
     text-align: center; /* Center align text inside input fields */
     width: 100%; /* Use full width of the container */
     max-width: 600px; /* Set a max width for better appearance */
-    padding: 15px 20px;
+    padding: 15px 20px; /* Padding for comfort */
     margin: 10px 0; /* Vertical spacing between inputs */
-    border-radius: 20px;
-    border: none;
+    border-radius: 20px; /* Rounded corners */
+    border: none; /* Remove default border */
     box-sizing: border-box; /* Ensure padding and borders are included in the width */
-   background-color: #ffffff;
     background: linear-gradient(135deg, #333, #444); /* Gradient background */
-	box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-		transition: all 0.3s ease;
-	-webkit-appearance: none; /* Remove default styling */
-		-moz-appearance: none; /* Remove default styling */
-		appearance: none; /* Remove default styling */
-	background-color: #444;
-	font-size: 14px;
-	font-weight: bold;
-	color: white;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    transition: all 0.3s ease; /* Smooth transitions */
+    -webkit-appearance: none; /* Remove default styling */
+    -moz-appearance: none; /* Remove default styling */
+    appearance: none; /* Remove default styling */
+    color: white; /* Text color */
+    font-size: 14px; /* Font size */
+    font-weight: bold; /* Bold text */
+    cursor: pointer; /* Pointer cursor on hover */
 }
+
+/* Custom file input styling */
+input[type="file"] {
+    position: relative; /* For positioning the custom button */
+    overflow: hidden; /* Hide the default file input */
+}
+
+input[type="file"]::before {
+    content: "Choose File"; /* Label for the button */
+    display: inline-block; /* Make it behave like a button */
+    text-align: center; /* Center text in the button */
+    background: linear-gradient(135deg, #ff6ec4, #7873f5); /* Glowing gradient background */
+    padding: 10px 20px; /* Padding for the button */
+    border-radius: 20px; /* Rounded corners */
+    position: absolute; /* Position relative to the input */
+    left: 0;
+    right: 0;
+    top: 0; /* Position on top of the input */
+    z-index: 1; /* Above the input */
+    color: white; /* Text color */
+    font-weight: bold; /* Bold text */
+    font-size: 14px; /* Font size */
+    transition: background 0.3s ease; /* Smooth background transition */
+    cursor: pointer; /* Pointer cursor for button */
+}
+
+/* When the file input is hovered or focused */
+input[type="file"]:hover::before,
+input[type="file"]:focus::before {
+    background: linear-gradient(135deg, #ff6ec4, #7873f5, #3a1c71); /* Darken gradient on hover/focus */
+}
+
+/* Hide the default file input */
+input[type="file"]::-webkit-file-upload-button {
+    display: none; /* Hide default button */
+}
+
+/* Change opacity of the button when file is chosen */
+input[type="file"]:focus::before {
+    opacity: 0.8; /* Slightly less opaque when focused */
+}
+
+
+	    
 
 
 /*select {
