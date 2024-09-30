@@ -15,49 +15,83 @@
     <title>Fastboot Tool by ArKT</title>
     <link rel="icon" href="https://img.icons8.com/fluency/48/android.png" type="image/png">
     <style>
-        
-
-
-
-
-
-
-	     @font-face {
-            font-family: 'Sacramento';
-            font-style: normal;
-            font-weight: 400;
-            font-display: swap;
-            src: url(https://fonts.gstatic.com/s/sacramento/v15/buEzpo6gcdjy0EiZMBUG4CMf_exL.woff2) format('woff2');
-            unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-        }
-        /* latin */
-        @font-face {
-            font-family: 'Sacramento';
-            font-style: normal;
-            font-weight: 400;
-            font-display: swap;
-            src: url(https://fonts.gstatic.com/s/sacramento/v15/buEzpo6gcdjy0EiZMBUG4C0f_Q.woff2) format('woff2');
-            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #202124, #18191A);
+            color: #e8eaed;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            min-height: 100vh;
+            background-color: #202124;
         }
 
-        :root {
-            --neon-color: #BC13FE; /* Neon color */
+        h1 {
+            color: #4a4a4a;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 32px;
+            text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
         }
 
-	    body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, Sacramento, sans-serif;
-    background: linear-gradient(135deg, #202124, #18191A);
-    color: #e8eaed;
-    margin: 0;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    min-height: 100vh;
-    background-color: #202124;
-}
+        .title {
+            text-align: center;
+            font-size: 32px;
+            letter-spacing: 0.5px;
+        }
 
+        .text-gradient {
+            background: linear-gradient(135deg, #00d1ff, #0052cc);
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 
+                0 0 5px rgba(0, 209, 255, 0.7), 
+                0 0 10px rgba(0, 209, 255, 0.5), 
+                0 0 15px rgba(0, 209, 255, 0.3), 
+                0 0 20px rgba(0, 209, 255, 0.2);
+            animation: textGlow 2s ease-in-out infinite;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 24px;
+            margin-top: -5px;
+        }
+
+        .rainbow-text {
+            background: linear-gradient(270deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
+            background-size: 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: rainbow 5s linear infinite;
+        }
+
+        @keyframes rainbow {
+            0% {
+                background-position: 0% 50%;
+            }
+            100% {
+                background-position: 100% 50%;
+            }
+        }
+
+        @keyframes textGlow {
+            0%, 100% {
+                text-shadow: 
+                    0 0 8px rgba(0, 82, 204, 0.8), 
+                    0 0 20px rgba(0, 209, 255, 0.5);
+            }
+            50% {
+                text-shadow: 
+                    0 0 16px rgba(0, 82, 204, 0.8), 
+                    0 0 30px rgba(0, 209, 255, 0.5);
+            }
+        }
+
+        /* Add your other styles here as needed */
 
         .neon-effect {
             margin: 0;
@@ -87,7 +121,6 @@
                     0 0 42px var(--neon-color),
                     0 0 67px var(--neon-color);
             }
-
             100% {
                 text-shadow:
                     0 0 5px #FFF,
@@ -100,72 +133,6 @@
                     0 0 140px var(--neon-color);
             }
         }
-
-
-h1 {
-    color: #4a4a4a; /* Fallback color for browsers that don't support the gradient */
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 32px;
-    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
-}
-
-	    
-.title {
-    text-align: center;
-    font-size: 32px;
-    letter-spacing: 0.5px;
-}
-
-.text-gradient {
-    background: linear-gradient(135deg, #00d1ff, #0052cc);
-    -webkit-background-clip: text;
-    color: transparent;
-    text-shadow: 
-        0 0 5px rgba(0, 209, 255, 0.7), 
-        0 0 10px rgba(0, 209, 255, 0.5), 
-        0 0 15px rgba(0, 209, 255, 0.3), 
-        0 0 20px rgba(0, 209, 255, 0.2);
-    animation: textGlow 2s ease-in-out infinite;
-}
-
-.subtitle {
-    text-align: center;
-    font-size: 24px;
-    margin-top: -5px;
-}
-
-.rainbow-text {
-    background: linear-gradient(270deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
-    background-size: 400%; /* Make the gradient move smoothly */
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent; /* Make text fill color transparent */
-    animation: rainbow 5s linear infinite; /* Rainbow animation */
-}
-
-@keyframes rainbow {
-    0% {
-        background-position: 0% 50%;
-    }
-    100% {
-        background-position: 100% 50%;
-    }
-}
-
-@keyframes textGlow {
-    0%, 100% {
-        text-shadow: 
-            0 0 8px rgba(0, 82, 204, 0.8), 
-            0 0 20px rgba(0, 209, 255, 0.5);
-    }
-    50% {
-        text-shadow: 
-            0 0 16px rgba(0, 82, 204, 0.8), 
-            0 0 30px rgba(0, 209, 255, 0.5);
-    }
-}
-
-
 
 .container {
     display: flex;
@@ -505,11 +472,10 @@ label {
     </style>
 </head>
 <body>
-  <h1 class="title">
-  <span class="text-gradient">Nabu Fastboot Tool</span>
-</h1>
-	<h1 class="neon-effect">By ArKT</h1>
-
+  <<h1 class="title">
+        <span class="text-gradient">Nabu Fastboot Tool</span>
+    </h1>
+    <h1 class="subtitle rainbow-text">By ArKT</h1>
 
 
 
