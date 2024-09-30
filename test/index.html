@@ -403,10 +403,69 @@ label {
     border-radius: 15px;
 }
 
+	    .switch-wrapper {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+
 
     </style>
 </head>
 <body>
+	<div class="switch-wrapper">
+    <label class="switch">
+        <input type="checkbox" id="theme-toggle">
+        <span class="slider"></span>
+    </label>
+</div>
+
      <h1 class="title">
     <span class="text-gradient">Nabu Fastboot Tool</span>
   </h1>
@@ -577,6 +636,40 @@ label {
     let device = new fastboot.FastbootDevice();
     window.device = device;
     let blobStore = new BlobStore();
+
+const toggleSwitch = document.getElementById('theme-toggle');
+const body = document.body;
+const containers = document.querySelectorAll('.container');
+const buttons = document.querySelectorAll('.button');
+
+toggleSwitch.addEventListener('change', function() {
+    if (this.checked) {
+        body.classList.remove('light-mode');
+        body.classList.add('dark-mode');
+        containers.forEach(container => {
+            container.classList.remove('light-mode');
+            container.classList.add('dark-mode');
+        });
+        buttons.forEach(button => {
+            button.classList.remove('light-mode');
+            button.classList.add('dark-mode');
+        });
+    } else {
+        body.classList.remove('dark-mode');
+        body.classList.add('light-mode');
+        containers.forEach(container => {
+            container.classList.remove('dark-mode');
+            container.classList.add('light-mode');
+        });
+        buttons.forEach(button => {
+            button.classList.remove('dark-mode');
+            button.classList.add('light-mode');
+        });
+    }
+});
+
+
+	   
 
     fastboot.setDebugLevel(2);
 
