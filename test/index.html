@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
-    <script src="dist/fastboot.mjs" type="module"></script>
-    <script src="download.js" type="module"></script>
+    <script src="../dist/fastboot.mjs" type="module"></script>
+    <script src="../download.js" type="module"></script>
     <meta property="og:title" content="Fastboot Tool by ArKT" />
     <meta property="og:description" content="It can boot Images like recovery and can flash images in any partition" />
     <meta property="og:url" content="https://arkt-7.github.io/nabu/" />
@@ -17,8 +17,8 @@
     <style>
         body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #202124, #18191A);
-    color: #e8eaed;
+    background: linear-gradient(135deg, #f0f0f0, #d4e0e5);
+    color: #333;
     margin: 0;
     padding: 20px;
     display: flex;
@@ -26,50 +26,48 @@
     align-items: center;
     position: relative;
     min-height: 100vh;
-    background-color: #202124;
 }
 
 
-h1 {
-    color: #4a4a4a; /* Fallback color for browsers that don't support the gradient */
+  h1 {
+    color: #333333; /* Darker color for better contrast on white */
     text-align: center;
     margin-bottom: 20px;
     font-size: 38px;
-    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow */
 }
 
-	    h2 {
-            color: #f8f9fa;
-			margin-top: 0px;
-            margin-bottom: 5px;
-            font-size: 24px;
-            letter-spacing: 2px;
-            background: linear-gradient(135deg, #00d1ff, #0052cc);
-            -webkit-background-clip: text;
-            color: transparent;
-            animation: textGlow 4s ease-in-out infinite;
-        }
+h2 {
+    color: #333333; /* Fallback color */
+    margin-top: 0px;
+    margin-bottom: 5px;
+    font-size: 24px;
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, #007bff, #003b80); /* Adjusted gradient to a more professional blue */
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: textGlow 4s ease-in-out infinite;
+}
 
 .title {
     text-align: center;
     font-size: 32px;
     letter-spacing: 0.5px;
+    color: #333333; /* Darker color for titles */
 }
 
 .text-gradient {
-    background: linear-gradient(135deg, #00d1ff, #0052cc);
+    background: linear-gradient(135deg, #007bff, #003b80); /* Adjusted gradient */
     -webkit-background-clip: text;
     color: transparent;
     text-shadow: 
-        0 0 5px rgba(0, 209, 255, 0.7), 
-        0 0 10px rgba(0, 209, 255, 0.5), 
-        0 0 15px rgba(0, 209, 255, 0.3), 
-        0 0 20px rgba(0, 209, 255, 0.2);
+        0 0 3px rgba(0, 123, 255, 0.5), /* Softer, professional glow */
+        0 0 8px rgba(0, 123, 255, 0.3);
     animation: textGlow 2s ease-in-out infinite;
 }
 
 .subtitle {
-    color: #f8f9fa;
+    color: #333333; /* Darker subtitle for contrast */
     text-align: center;
     font-size: 24px;
     margin-top: -5px;
@@ -78,13 +76,13 @@ h1 {
 @keyframes textGlow {
     0%, 100% {
         text-shadow: 
-            0 0 8px rgba(0, 82, 204, 0.8), 
-            0 0 20px rgba(0, 209, 255, 0.5);
+            0 0 8px rgba(0, 123, 255, 0.6), /* Softer blue glow */
+            0 0 16px rgba(0, 123, 255, 0.4);
     }
     50% {
         text-shadow: 
-            0 0 16px rgba(0, 82, 204, 0.8), 
-            0 0 30px rgba(0, 209, 255, 0.5);
+            0 0 12px rgba(0, 123, 255, 0.6),
+            0 0 20px rgba(0, 123, 255, 0.4);
     }
 }
 
@@ -94,18 +92,19 @@ h1 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center; /* Center contents vertically */
+    justify-content: center;
     padding: 30px;
     width: 90%;
     max-width: 600px;
     margin: 30px 0;
-    background: linear-gradient(135deg, #1c1f24, #3a3f44); /* Original gradient */
+    background: linear-gradient(135deg, #e0e6ed, #c8d0d8); /* Slightly darker gradient */
     background-size: 200% 200%; /* Increase size for smoother movement */
     border-radius: 20px;
     position: relative;
     text-align: center;
     overflow: hidden;
     animation: backgroundMove 20s linear infinite; /* Linear for smooth infinite animation */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Added shadow for better visibility */
 }
 
 .container::before {
@@ -115,7 +114,7 @@ h1 {
     left: -3px;
     right: -3px;
     bottom: -3px;
-    background: linear-gradient(45deg, #ff6ec4, #7873f5, #3a1c71, #ff6ec4); /* Glowing gradient for border */
+    background: linear-gradient(45deg, #ff9ecf, #a0b9ff, #d1e3ff, #ff9ecf); /* Lighter glowing gradient for border */
     background-size: 400% 400%;
     border-radius: 20px;
     z-index: -1;
@@ -123,13 +122,14 @@ h1 {
     opacity: 0.8;
     animation: glow 10s ease infinite; /* Glowing border animation */
     box-shadow: 
-        0 0 20px 10px rgba(255, 110, 196, 0.5),   /* General glow */
-        0 0 40px 10px rgba(255, 110, 196, 0.3) inset, /* Inner glow */
-        -10px -10px 30px rgba(255, 110, 196, 0.8), /* Top-left corner */
-        10px -10px 30px rgba(255, 110, 196, 0.8),  /* Top-right corner */
-        -10px 10px 30px rgba(255, 110, 196, 0.8),  /* Bottom-left corner */
-        10px 10px 30px rgba(255, 110, 196, 0.8);   /* Bottom-right corner */
+        0 0 20px 10px rgba(255, 158, 207, 0.3),   /* General softer glow */
+        0 0 40px 10px rgba(255, 158, 207, 0.2) inset, /* Inner softer glow */
+        -10px -10px 30px rgba(255, 158, 207, 0.5), /* Top-left corner softer glow */
+        10px -10px 30px rgba(255, 158, 207, 0.5),  /* Top-right corner softer glow */
+        -10px 10px 30px rgba(255, 158, 207, 0.5),  /* Bottom-left corner softer glow */
+        10px 10px 30px rgba(255, 158, 207, 0.5);   /* Bottom-right corner softer glow */
 }
+
 
 @keyframes glow {
     0% {
@@ -155,10 +155,6 @@ h1 {
     }
 }
 
-        
-
-
-
 form {
     display: flex;
     flex-direction: column; /* Align form elements vertically */
@@ -177,8 +173,8 @@ form {
     }
 }
 
+
 .button {
-	background-color: #ffffff;
     background: linear-gradient(135deg, #007bff, #00d4ff);
     border: none;
     border-radius: 20px;
@@ -186,7 +182,6 @@ form {
     padding: 15px 20px;
     font-size: 18px;
     font-weight: bold;
-    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: background 0.3s ease, transform 0.3s ease;
     margin: 10px 0;
@@ -197,7 +192,7 @@ form {
             animation: buttonGlow 3s ease-in-out infinite alternate;
 
 	
-	box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+	box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15); /* Subtle shadow */
 		transition: all 0.3s ease;
 }
 
@@ -224,57 +219,35 @@ form {
 
 input[type="file"],
 input[type="text"], 
-	    select {
+select {
     text-align: center; /* Center align text inside input fields */
     width: 100%; /* Use full width of the container */
     max-width: 600px; /* Set a max width for better appearance */
     padding: 15px 20px;
     margin: 10px 0; /* Vertical spacing between inputs */
     border-radius: 20px;
-    border: none;
+    border: 1px solid #ccc; /* Light border for input fields */
     box-sizing: border-box; /* Ensure padding and borders are included in the width */
-   background-color: #ffffff;
-    background: linear-gradient(135deg, #333, #444); /* Gradient background */
-	box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-		transition: all 0.3s ease;
-	-webkit-appearance: none; /* Remove default styling */
-		-moz-appearance: none; /* Remove default styling */
-		appearance: none; /* Remove default styling */
-	background-color: #444;
-	font-size: 14px;
-	font-weight: bold;
-	color: white;
+    background: linear-gradient(135deg, #f0f4f8, #e2e8f0); /* Light gradient background */
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.08); /* Subtle shadow */
+    transition: all 0.3s ease;
+    -webkit-appearance: none; /* Remove default styling */
+    -moz-appearance: none; /* Remove default styling */
+    appearance: none; /* Remove default styling */
+    font-size: 14px;
+    font-weight: bold;
+    color: #333; /* Dark text color for light mode */
 }
 
-
-	    input[type="file"] {
-	box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
-		transition: all 0.3s ease;
-	-webkit-appearance: none; /* Remove default styling */
-		-moz-appearance: none; /* Remove default styling */
-		appearance: none; /* Remove default styling */
+input[type="file"] {
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05); /* Minimal shadow */
+    transition: all 0.3s ease;
+    -webkit-appearance: none; /* Remove default styling */
+    -moz-appearance: none; /* Remove default styling */
+    appearance: none; /* Remove default styling */
+    background: linear-gradient(135deg, #f0f4f8, #e2e8f0); /* Match gradient to other inputs */
+    color: #333; /* Text color for light mode */
 }
-
-/*select {
-    text-align: center; /* Center align text inside select fields 
-    width: 100%;
-    padding: 15px 20px;
-    margin: 10px 0;
-    border-radius: 20px;
-	border: none;
-	background-color: #ffffff;
-    background: linear-gradient(135deg, #333, #444); /* Gradient background 
-	box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-		transition: all 0.3s ease;
-	-webkit-appearance: none; /* Remove default styling 
-		-moz-appearance: none; /* Remove default styling 
-		appearance: none; /* Remove default styling 
-	background-color: #444;
-	font-size: 14px;
-	font-weight: bold;
-	color: white;
-}*/
-
 
 
 label {
@@ -294,9 +267,6 @@ label {
     text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
 }
 
-
-
-        
 .progress-container {
     width: 100%;
     height: 30px;
@@ -315,6 +285,7 @@ label {
     transition: width 0.5s ease;
     border-radius: 15px;
 }
+
 
 .status-field {
     font-weight: bold;
@@ -436,16 +407,10 @@ label {
     </style>
 </head>
 <body>
-  <h1 class="title">
-  <span class="text-gradient">Nabu Fastboot Tool</span>
-</h1>
-<h2 class="subtitle">By ArKT :)</h2>
-
-
-
-
-
-
+     <h1 class="title">
+    <span class="text-gradient">Nabu Fastboot Tool</span>
+  </h1>
+  <h2 class="subtitle">By ArKT :)</h2>
 
 <!-- Add a progress overlay for the "Processing... Please wait" message -->
 <div id="progress-overlay">
@@ -491,7 +456,7 @@ label {
             <option value="boot_b">Flash to Boot B only</option>
         </select>
         <!-- New dropdown for selecting predefined images -->
-       <label2 for="rboot-flash-image">Magisk V27 Rooted Boot Images</label2>
+       <label2 for="rboot-flash-image">Magisk V27-stable Rooted Boot Images</label2>
 <select name="rboot-flash-image" class="rboot-flash-image">
     <option value="">Select rooted HyperOS/MIUI 14 boot</option>
     <option value="magisk-1-0-5-global">HyperOS 1.0.5 (Global)</option>
@@ -605,11 +570,9 @@ label {
 </div>
 
 
-
-
    <script type="module">
-    import * as fastboot from "./dist/fastboot.mjs";
-    import { BlobStore } from "./download.js";
+    import * as fastboot from "../dist/fastboot.mjs";
+    import { BlobStore } from "../download.js";
 
     let device = new fastboot.FastbootDevice();
     window.device = device;
