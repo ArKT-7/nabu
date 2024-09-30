@@ -15,80 +15,156 @@
     <title>Fastboot Tool by ArKT</title>
     <link rel="icon" href="https://img.icons8.com/fluency/48/android.png" type="image/png">
     <style>
-        body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #f0f0f0, #d4e0e5);
-    color: #333;
-    margin: 0;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    min-height: 100vh;
-}
+	    body.light-mode {
+		    
+    		    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    		    background: linear-gradient(135deg, #f0f0f0, #d4e0e5);
+   		    color: #333;
+   		    margin: 0;
+   		    padding: 20px;
+    		    display: flex;
+    		    flex-direction: column;
+   		    align-items: center;
+   		    position: relative;
+   		    min-height: 100vh;
+	    }
+	    
+	    body.dark-mode {
+    		    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    		    background: linear-gradient(135deg, #202124, #18191A);
+    		    color: #e8eaed;
+                    margin: 0;
+   		    padding: 20px;
+   		    display: flex;
+   	            flex-direction: column;
+    		    align-items: center;
+    	            position: relative;
+    		    min-height: 100vh;
+   		    background-color: #202124;
+	    }
+
+	    h1.light-mode {
+    		    color: #333333; /* Darker color for better contrast on white */
+		    text-align: center;
+		    margin-bottom: 20px;
+		    font-size: 38px;
+		    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+	    }
+
+	    h1.dark-mode {
+		    color: #4a4a4a; /* Fallback color for browsers that don't support the gradient */
+		    text-align: center;
+		    margin-bottom: 20px;
+		    font-size: 38px;
+		    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+	    }
+
+	    h2.light-mode {
+		    color: #333333; /* Fallback color */
+		    margin-top: 0px;
+		    margin-bottom: 5px;
+		    font-size: 24px;
+		    letter-spacing: 2px;
+		    background: linear-gradient(135deg, #007bff, #003b80); /* Adjusted gradient to a more professional blue */
+		    -webkit-background-clip: text;
+		    color: transparent;
+		    animation: textGlow 4s ease-in-out infinite;
+	    }
+	    
+	    h2.dark-mode {
+	            color: #f8f9fa;
+		    margin-top: 0px;
+	            margin-bottom: 5px;
+	            font-size: 24px;
+	            letter-spacing: 2px;
+	            background: linear-gradient(135deg, #00d1ff, #0052cc);
+	            -webkit-background-clip: text;
+	            color: transparent;
+	            animation: textGlow 4s ease-in-out infinite;
+	    }
+	       
+
+	    .light-mode .title {	    
+		    text-align: center;
+		    font-size: 32px;
+		    letter-spacing: 0.5px;
+		    color: #333333; /* Darker color for titles */
+	    }
+
+	    .light-mode .text-gradient {
+		    background: linear-gradient(135deg, #007bff, #003b80); /* Adjusted gradient */
+		    -webkit-background-clip: text;
+		    color: transparent;
+		    text-shadow: 
+		        0 0 3px rgba(0, 123, 255, 0.5), /* Softer, professional glow */
+		        0 0 8px rgba(0, 123, 255, 0.3);
+		    animation: textGlow 2s ease-in-out infinite;
+	    }
+	    
+	    .light-mode .subtitle {
+		    color: #333333; /* Darker subtitle for contrast */
+		    text-align: center;
+		    font-size: 24px;
+		    margin-top: -5px;
+	    }
 
 
-  h1 {
-    color: #333333; /* Darker color for better contrast on white */
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 38px;
-    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow */
-}
+	    .dark-mode .title {
+		    text-align: center;
+		    font-size: 32px;
+		    letter-spacing: 0.5px;
+	    }
 
-h2 {
-    color: #333333; /* Fallback color */
-    margin-top: 0px;
-    margin-bottom: 5px;
-    font-size: 24px;
-    letter-spacing: 2px;
-    background: linear-gradient(135deg, #007bff, #003b80); /* Adjusted gradient to a more professional blue */
-    -webkit-background-clip: text;
-    color: transparent;
-    animation: textGlow 4s ease-in-out infinite;
-}
+	    .dark-mode .text-gradient {
+		    background: linear-gradient(135deg, #00d1ff, #0052cc);
+		    -webkit-background-clip: text;
+		    color: transparent;
+		    text-shadow: 
+		        0 0 5px rgba(0, 209, 255, 0.7), 
+		        0 0 10px rgba(0, 209, 255, 0.5), 
+		        0 0 15px rgba(0, 209, 255, 0.3), 
+		        0 0 20px rgba(0, 209, 255, 0.2);
+		    animation: textGlow 2s ease-in-out infinite;
+	    }
+	    
+	    .dark-mode .subtitle {
+		    color: #f8f9fa;
+		    text-align: center;
+		    font-size: 24px;
+		    margin-top: -5px;
+	    }
 
-.title {
-    text-align: center;
-    font-size: 32px;
-    letter-spacing: 0.5px;
-    color: #333333; /* Darker color for titles */
-}
 
-.text-gradient {
-    background: linear-gradient(135deg, #007bff, #003b80); /* Adjusted gradient */
-    -webkit-background-clip: text;
-    color: transparent;
-    text-shadow: 
-        0 0 3px rgba(0, 123, 255, 0.5), /* Softer, professional glow */
-        0 0 8px rgba(0, 123, 255, 0.3);
-    animation: textGlow 2s ease-in-out infinite;
-}
-
-.subtitle {
-    color: #333333; /* Darker subtitle for contrast */
-    text-align: center;
-    font-size: 24px;
-    margin-top: -5px;
-}
-
-@keyframes textGlow {
-    0%, 100% {
-        text-shadow: 
-            0 0 8px rgba(0, 123, 255, 0.6), /* Softer blue glow */
-            0 0 16px rgba(0, 123, 255, 0.4);
-    }
-    50% {
-        text-shadow: 
-            0 0 12px rgba(0, 123, 255, 0.6),
-            0 0 20px rgba(0, 123, 255, 0.4);
-    }
-}
+	    
+	    /* Combined keyframes for text glow */
+	@keyframes textGlow {
+	    0%, 100% {
+	        text-shadow: 
+	            0 0 8px rgba(0, 123, 255, 0.6), /* Softer blue glow */
+	            0 0 16px rgba(0, 123, 255, 0.4);
+	    }
+	    50% {
+	        text-shadow: 
+	            0 0 12px rgba(0, 123, 255, 0.6),
+	            0 0 20px rgba(0, 123, 255, 0.4);
+	    }
+	
+	    /* Additional glow effect for dark mode */
+	    0%, 100% {
+	        text-shadow: 
+	            0 0 8px rgba(0, 82, 204, 0.8), 
+	            0 0 20px rgba(0, 209, 255, 0.5);
+	    }
+	    50% {
+	        text-shadow: 
+	            0 0 16px rgba(0, 82, 204, 0.8), 
+	            0 0 30px rgba(0, 209, 255, 0.5);
+	    }
+	}
 
 
 
-.container {
+.container.light {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -107,7 +183,7 @@ h2 {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Added shadow for better visibility */
 }
 
-.container::before {
+.container.dark::before {
     content: '';
     position: absolute;
     top: -3px;
@@ -128,6 +204,47 @@ h2 {
         10px -10px 30px rgba(255, 158, 207, 0.5),  /* Top-right corner softer glow */
         -10px 10px 30px rgba(255, 158, 207, 0.5),  /* Bottom-left corner softer glow */
         10px 10px 30px rgba(255, 158, 207, 0.5);   /* Bottom-right corner softer glow */
+}
+
+.container.dark {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Center contents vertically */
+    padding: 30px;
+    width: 90%;
+    max-width: 600px;
+    margin: 30px 0;
+    background: linear-gradient(135deg, #1c1f24, #3a3f44); /* Original gradient */
+    background-size: 200% 200%; /* Increase size for smoother movement */
+    border-radius: 20px;
+    position: relative;
+    text-align: center;
+    overflow: hidden;
+    animation: backgroundMove 20s linear infinite; /* Linear for smooth infinite animation */
+}
+
+.container.dark::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    background: linear-gradient(45deg, #ff6ec4, #7873f5, #3a1c71, #ff6ec4); /* Glowing gradient for border */
+    background-size: 400% 400%;
+    border-radius: 20px;
+    z-index: -1;
+    filter: blur(10px); /* Glowing effect */
+    opacity: 0.8;
+    animation: glow 10s ease infinite; /* Glowing border animation */
+    box-shadow: 
+        0 0 20px 10px rgba(255, 110, 196, 0.5),   /* General glow */
+        0 0 40px 10px rgba(255, 110, 196, 0.3) inset, /* Inner glow */
+        -10px -10px 30px rgba(255, 110, 196, 0.8), /* Top-left corner */
+        10px -10px 30px rgba(255, 110, 196, 0.8),  /* Top-right corner */
+        -10px 10px 30px rgba(255, 110, 196, 0.8),  /* Bottom-left corner */
+        10px 10px 30px rgba(255, 110, 196, 0.8);   /* Bottom-right corner */
 }
 
 
@@ -174,7 +291,7 @@ form {
 }
 
 
-.button {
+.button.light {
     background: linear-gradient(135deg, #007bff, #00d4ff);
     border: none;
     border-radius: 20px;
@@ -196,12 +313,12 @@ form {
 		transition: all 0.3s ease;
 }
 
-.button:hover {
+.button.light:hover {
     background: linear-gradient(135deg, #0056b3, #0094c6);
     transform: scale(1.05);
 }
         
-.button:disabled {
+.button.light:disabled {
     background: linear-gradient(135deg, #b0b0b0, #d4d4d4);
     color: #888; /* Dull text color to emphasize the disabled state */
     cursor: not-allowed;
@@ -209,17 +326,49 @@ form {
     transform: none;
 }
 
-/*.flash-form, .boot-form, .rboot-flash-form, .command-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Center the form horizontally 
-    width: 100%; /* Full width for the form 
-} */
+
+.button.dark {
+	background-color: #ffffff;
+    background: linear-gradient(135deg, #007bff, #00d4ff);
+    border: none;
+    border-radius: 20px;
+    color: white;
+    padding: 15px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+    margin: 10px 0;
+    width: 100%;
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+            color: #fff;
+            cursor: pointer;
+            animation: buttonGlow 3s ease-in-out infinite alternate;
+
+	
+	box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+		transition: all 0.3s ease;
+}
+
+.button.dark:hover {
+    background: linear-gradient(135deg, #0056b3, #0094c6);
+    transform: scale(1.05);
+}
+        
+.button.dark:disabled {
+    background: linear-gradient(135deg, #b0b0b0, #d4d4d4);
+    color: #888; /* Dull text color to emphasize the disabled state */
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
 
 
-input[type="file"],
-input[type="text"], 
-select {
+
+input[type="file"].light,
+input[type="text"].light,
+select.light {
     text-align: center; /* Center align text inside input fields */
     width: 100%; /* Use full width of the container */
     max-width: 600px; /* Set a max width for better appearance */
@@ -239,7 +388,7 @@ select {
     color: #333; /* Dark text color for light mode */
 }
 
-input[type="file"] {
+input[type="file"].light {
     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05); /* Minimal shadow */
     transition: all 0.3s ease;
     -webkit-appearance: none; /* Remove default styling */
@@ -250,7 +399,7 @@ input[type="file"] {
 }
 
 
-label {
+label.light {
     font-weight: bold;
     display: block;
     margin-bottom: 12px;
@@ -258,7 +407,7 @@ label {
     text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
 }
 
-        label2 {
+        label2.light {
     font-weight: bold;
     display: block;
     margin-bottom: 6px;
@@ -266,6 +415,60 @@ label {
     font-size: 18px;
     text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
 }
+
+
+	    
+input[type="file"].dark ,
+input[type="text"].dark , 
+	    select.dark {
+    text-align: center; /* Center align text inside input fields */
+    width: 100%; /* Use full width of the container */
+    max-width: 600px; /* Set a max width for better appearance */
+    padding: 15px 20px;
+    margin: 10px 0; /* Vertical spacing between inputs */
+    border-radius: 20px;
+    border: none;
+    box-sizing: border-box; /* Ensure padding and borders are included in the width */
+   background-color: #ffffff;
+    background: linear-gradient(135deg, #333, #444); /* Gradient background */
+	box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+		transition: all 0.3s ease;
+	-webkit-appearance: none; /* Remove default styling */
+		-moz-appearance: none; /* Remove default styling */
+		appearance: none; /* Remove default styling */
+	background-color: #444;
+	font-size: 14px;
+	font-weight: bold;
+	color: white;
+}
+
+
+	    input[type="file"].dark {
+	box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
+		transition: all 0.3s ease;
+	-webkit-appearance: none; /* Remove default styling */
+		-moz-appearance: none; /* Remove default styling */
+		appearance: none; /* Remove default styling */
+}
+
+label.dark {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 12px;
+    font-size: 19px;
+    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+}
+
+        label2.dark {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 6px;
+    margin-top: 8px;
+    font-size: 18px;
+    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+}
+
+	    
 
 .progress-container {
     width: 100%;
@@ -403,10 +606,79 @@ label {
     border-radius: 15px;
 }
 
+	    .toggle-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1000; /* Ensure it appears above other elements */
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input {
+    opacity: 0; /* Hide the default checkbox */
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    border-radius: 34px;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    border-radius: 50%;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #2196F3; /* Color when toggled on */
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+
 
     </style>
 </head>
-<body>
+<body class="dark-mode"> <!-- Default to dark mode -->
+    <div class="toggle-container">
+        <label class="switch">
+            <input type="checkbox" id="mode-toggle" checked> <!-- Checked for dark mode -->
+            <span class="slider"></span>
+        </label>
+    </div>
+    
+    <div class="container dark">
+        <h1 class="dark-mode">Your Heading</h1>
+        <h2 class="dark-mode">Your Subheading</h2>
+        <form>
+            <input type="file" class="dark" />
+            <input type="text" class="dark" placeholder="Your Text Here" />
+            <button class="button dark">Submit</button>
+        </form>
+    </div>
      <h1 class="title">
     <span class="text-gradient">Nabu Fastboot Tool</span>
   </h1>
@@ -573,6 +845,17 @@ label {
    <script type="module">
     import * as fastboot from "../dist/fastboot.mjs";
     import { BlobStore } from "../download.js";
+
+
+	   document.getElementById('mode-toggle').addEventListener('change', function () {
+    document.body.classList.toggle('light-mode', this.checked);
+    document.body.classList.toggle('dark-mode', !this.checked);
+
+    const container = document.querySelector('.container');
+    container.classList.toggle('light', this.checked);
+    container.classList.toggle('dark', !this.checked);
+});
+
 
     let device = new fastboot.FastbootDevice();
     window.device = device;
