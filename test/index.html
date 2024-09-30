@@ -29,14 +29,72 @@
     background-color: #202124;
 }
 
+        h1 {
+            color: #4a4a4a; /* Fallback color for browsers that don't support the gradient */
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 38px;
+            text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+        }
 
-h1 {
-    color: #4a4a4a; /* Fallback color for browsers that don't support the gradient */
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 38px;
-    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
-}
+        .title {
+            text-align: center;
+            font-size: 32px;
+            letter-spacing: 0.5px;
+            padding: 10px;
+            border-radius: 10px;
+            position: relative;
+            display: inline-block;
+            background-color: rgba(0, 0, 0, 0.4); /* For visibility */
+        }
+
+        .title::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border: 2px solid rgba(255, 255, 0, 0.8); /* Yellow border */
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 255, 0, 0.5), 
+                        0 0 30px rgba(255, 255, 0, 0.3);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #00d1ff, #0052cc);
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 
+                0 0 5px rgba(0, 209, 255, 0.7), 
+                0 0 10px rgba(0, 209, 255, 0.5), 
+                0 0 15px rgba(0, 209, 255, 0.3), 
+                0 0 20px rgba(0, 209, 255, 0.2);
+            animation: textGlow 2s ease-in-out infinite;
+        }
+
+        .subtitle {
+            color: #f8f9fa;
+            text-align: center;
+            font-size: 24px;
+            margin-top: -5px;
+        }
+
+        @keyframes textGlow {
+            0%, 100% {
+                text-shadow: 
+                    0 0 8px rgba(0, 82, 204, 0.8), 
+                    0 0 20px rgba(0, 209, 255, 0.5);
+            }
+            50% {
+                text-shadow: 
+                    0 0 16px rgba(0, 82, 204, 0.8), 
+                    0 0 30px rgba(0, 209, 255, 0.5);
+            }
+        }
+
+
+
 
 	    h2 {
             color: #f8f9fa;
@@ -50,43 +108,6 @@ h1 {
             animation: textGlow 4s ease-in-out infinite;
         }
 
-.title {
-    text-align: center;
-    font-size: 32px;
-    letter-spacing: 0.5px;
-}
-
-.text-gradient {
-    background: linear-gradient(135deg, #00d1ff, #0052cc);
-    -webkit-background-clip: text;
-    color: transparent;
-    text-shadow: 
-        0 0 5px rgba(0, 209, 255, 0.7), 
-        0 0 10px rgba(0, 209, 255, 0.5), 
-        0 0 15px rgba(0, 209, 255, 0.3), 
-        0 0 20px rgba(0, 209, 255, 0.2);
-    animation: textGlow 2s ease-in-out infinite;
-}
-
-.subtitle {
-    color: #f8f9fa;
-    text-align: center;
-    font-size: 24px;
-    margin-top: -5px;
-}
-
-@keyframes textGlow {
-    0%, 100% {
-        text-shadow: 
-            0 0 8px rgba(0, 82, 204, 0.8), 
-            0 0 20px rgba(0, 209, 255, 0.5);
-    }
-    50% {
-        text-shadow: 
-            0 0 16px rgba(0, 82, 204, 0.8), 
-            0 0 30px rgba(0, 209, 255, 0.5);
-    }
-}
 
 
 
@@ -429,9 +450,9 @@ label {
 </head>
 <body>
   <h1 class="title">
-  <span class="text-gradient">Nabu Fastboot Tool</span>
-</h1>
-<h2 class="subtitle">By ArKT :)</h2>
+      <span class="text-gradient">Nabu Fastboot Tool</span>
+  </h1>
+  <h2 class="subtitle">By ArKT :)</h2>
 
 
 
