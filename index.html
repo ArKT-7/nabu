@@ -721,6 +721,39 @@ input:checked + .slider:before {
 
     fastboot.setDebugLevel(2);
 
+
+	   window.onload = function() {
+            const toggleInput = document.getElementById('toggle-input');
+            toggleInput.checked = false; // Always set to off on load
+        };
+
+        function redirectToUrl() {
+            const toggleInput = document.getElementById('toggle-input');
+
+            // Wait for the animation to complete
+            setTimeout(() => {
+                window.location.href = "https://arkt-7.github.io/nabu/"; // Change this to your URL
+            }, 400); // Match this time with the transition duration
+        }
+
+        // Redirect only when the toggle is switched on
+        const toggleInput = document.getElementById('toggle-input');
+        toggleInput.addEventListener('change', function() {
+            if (this.checked) {
+                redirectToUrl(); // Redirect only if it is turned on
+            } else {
+                this.checked = false; // Keep it off if turned off
+            }
+        });
+
+        // Prevent the state from changing back to "on" when returning to the page
+        window.onbeforeunload = function() {
+            const toggleInput = document.getElementById('toggle-input');
+            toggleInput.checked = false; // Reset to off on page unload
+        };
+
+	   
+
     // Utility function to show the progress overlay and disable buttons
  let messageInterval; // Store the timeout globally, so we can clear it later
 let typingInterval;  // Store typing interval globally, to clear it when necessary
@@ -831,7 +864,8 @@ function hideProgressOverlay() {
 function toggleElements(disable) {
     const formElements = document.querySelectorAll("input, button, select");
     formElements.forEach((element) => {
-        if (!element.classList.contains('connect-button')) {
+        // Only disable elements without 'connect-button' or 'switchx' class
+        if (!element.classList.contains('connect-button') && !element.closest('.switchx')) {
             element.disabled = disable;
         }
     });
