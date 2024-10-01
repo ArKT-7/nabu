@@ -407,22 +407,22 @@ label {
 
 
 .switchx {
-            font-size: 17px;
-            position: absolute;
-            top: 1px; /* Adjust for positioning */
-            right: 1px; /* Adjust for positioning */
-            display: inline-block;
-            width: 54px;
-            height: 24px;
-        }
+    font-size: 17px;
+    position: absolute;
+    top: 10px; /* Adjust for positioning */
+    right: 10px; /* Adjust for positioning */
+    display: inline-block;
+    width: 40px; /* Reduced width */
+    height: 22px; /* Reduced height */
+}
 
-        .switchx input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
+.switchx input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
 
-   .slider {
+.slider {
     position: absolute;
     cursor: pointer;
     top: 0;
@@ -431,63 +431,61 @@ label {
     bottom: 0;
     background-color: #73C0FC;
     transition: 0.4s;
-    border-radius: 30px;
-    box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.2), 0 6px 12px rgba(0, 0, 0, 0.1); /* Depth effect */
+    border-radius: 15px; /* Smaller border radius */
+    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.1); /* Adjusted depth effect */
 }
 
 .slider:before {
     position: absolute;
     content: "";
-    height: 30px;
-    width: 30px;
-    border-radius: 20px;
+    height: 18px; /* Smaller knob */
+    width: 18px; /* Smaller knob */
+    border-radius: 50%; /* Circular knob */
     left: 2px;
     bottom: 2px;
     z-index: 2;
     background-color: #e8e8e8;
     transition: 0.4s;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Knob shadow */
+    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.2); /* Adjusted shadow for the smaller knob */
 }
 
+/* Adjusted sun icon for smaller size */
+.sun svg {
+    position: absolute;
+    top: 2px; /* Adjusted position */
+    left: 24px; /* Adjusted to fit smaller toggle */
+    z-index: 1;
+    width: 14px; /* Smaller size */
+    height: 14px; /* Smaller size */
+}
 
+/* Adjusted moon icon for smaller size */
+.moon svg {
+    fill: #73C0FC;
+    position: absolute;
+    top: 3px; /* Adjusted position */
+    left: 4px; /* Adjusted to fit smaller toggle */
+    z-index: 1;
+    width: 14px; /* Smaller size */
+    height: 14px; /* Smaller size */
+}
 
-        .sun svg {
-            position: absolute;
-            top: 6px;
-            left: 36px;
-            z-index: 1;
-            width: 24px;
-            height: 24px;
-        }
-
-        .moon svg {
-            fill: #73C0FC;
-            position: absolute;
-            top: 5px;
-            left: 5px;
-            z-index: 1;
-            width: 24px;
-            height: 24px;
-        }
-
-  
-
-
-
-        /* When slider is checked (dark mode) */
+/* When slider is checked (dark mode) */
 input:checked + .slider {
     background-color: #183153;
-    box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.5), 0 6px 12px rgba(0, 0, 0, 0.2); /* Dark mode depth */
+    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 0.2); /* Dark mode depth */
 }
 
 input:checked + .slider:before {
     background-color: #ffffff;
-    transform: translateX(30px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Knob shadow in dark mode */
+    transform: translateX(18px); /* Adjust translation for smaller slider */
+    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.3); /* Knob shadow in dark mode */
 }
-        .inputx:focus + .slider {
-            box-shadow: 0 0 1px #183153;
-        }
+
+.inputx:focus + .slider {
+    box-shadow: 0 0 1px #183153;
+}
+
 
     </style>
 </head>
