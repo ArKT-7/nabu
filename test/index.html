@@ -436,7 +436,7 @@ label {
 </div>
 
 <div class="container">
-	<button class="small-button"
+	<button class="button small-button"
         onclick="window.location.href = 'https://arkt-7.github.io/nabu';">
         Click Here
     </button>
@@ -712,9 +712,9 @@ function hideProgressOverlay() {
 function toggleElements(disable) {
     const formElements = document.querySelectorAll("input, button, select");
     formElements.forEach((element) => {
-        if (!element.classList.contains('connect-button')) {
-            element.disabled = disable;
-        }
+       if (!element.classList.contains('connect-button') && !element.classList.contains('small-button')) {
+    element.disabled = disable;
+}
     });
 }
 
