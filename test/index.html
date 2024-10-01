@@ -405,59 +405,73 @@ label {
 
 
 
-	    .switch {
-    font-size: 17px;
-    position: absolute; /* Adjust this for positioning */
-    top: 10px; /* Adjust this for positioning */
-    right: 10px; /* Adjust this for positioning */
-    display: inline-block;
-    width: 64px;
-    height: 34px;
-}
+* {
+            padding: 0;
+            margin: 0;
+        }
 
-.switch inputswitch {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            background-color: #000;
+        }
 
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #73C0FC;
-    transition: .4s;
-    border-radius: 30px;
-}
+        .switch {
+            font-size: 17px;
+            position: absolute;
+            top: 10px; /* Adjust this for positioning */
+            right: 10px; /* Adjust this for positioning */
+            display: inline-block;
+            width: 64px;
+            height: 34px;
+        }
 
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 30px;
-    width: 30px;
-    border-radius: 20px;
-    left: 2px;
-    bottom: 2px;
-    z-index: 2;
-    background-color: #e8e8e8;
-    transition: .4s;
-}
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
 
-.inputswitch:checked + .slider {
-    background-color: #183153;
-}
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #73C0FC;
+            transition: .4s;
+            border-radius: 30px;
+        }
 
-.inputswitch:focus + .slider {
-    box-shadow: 0 0 1px #183153;
-}
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 30px;
+            width: 30px;
+            border-radius: 20px;
+            left: 2px;
+            bottom: 2px;
+            z-index: 2;
+            background-color: #e8e8e8;
+            transition: .4s;
+        }
 
-.inputswitch:checked + .slider:before {
-    transform: translateX(30px);
-}
+        .input:checked + .slider {
+            background-color: #183153;
+        }
 
+        .input:checked + .slider:before {
+            transform: translateX(30px);
+        }
+
+        .container {
+            margin-top: 60px; /* Space for the toggle */
+            text-align: center;
+            color: white; /* Adjust text color as needed */
+        }
 
 
     </style>
@@ -466,14 +480,9 @@ label {
      <h1 class="title">
     <span class="text-gradient">Nabu Fastboot Tool</span>
   </h1>
-  <h2 class="subtitle">By ArKT :)</h2>
+ <h2 class="subtitle">By ArKT :)</h2>
 
-<!-- Add a progress overlay for the "Processing... Please wait" message -->
-<div id="progress-overlay">
-    <div id="progress-message">Processing... Please wait</div>
-</div>
-
-<<div class="container">
+    <div class="container">
         <div class="switch">
             <input type="checkbox" class="input" id="toggle-input">
             <span class="slider"></span>
@@ -481,6 +490,7 @@ label {
         <p class="status-field">Not connected in Fastboot</p>
         <button class="button connect-button">Connect device Fastboot</button>
     </div>
+
 
 
 <div class="container">
@@ -640,6 +650,38 @@ label {
 
     fastboot.setDebugLevel(2);
 
+
+	   // Set the toggle state to "off" when the page is loaded
+        window.onload = function() {
+            const toggleInput = document.getElementById('toggle-input');
+            toggleInput.checked = false; // Always set to off on load
+        };
+
+        function redirectToUrl() {
+            const toggleInput = document.getElementById('toggle-input');
+
+            // Wait for the animation to complete
+            setTimeout(() => {
+                window.location.href = "https://your-desired-url.com"; // Change this to your URL
+            }, 400); // Match this time with the transition duration
+        }
+
+        // Redirect only when the toggle is switched on
+        const toggleInput = document.getElementById('toggle-input');
+        toggleInput.addEventListener('change', function() {
+            if (this.checked) {
+                redirectToUrl(); // Redirect only if it is turned on
+            } else {
+                this.checked = false; // Keep it off if turned off
+            }
+        });
+
+        // Prevent the state from changing back to "on" when returning to the page
+        window.onbeforeunload = function() {
+            const toggleInput = document.getElementById('toggle-input');
+            toggleInput.checked = false; // Reset to off on page unload
+        };
+	   
     // Utility function to show the progress overlay and disable buttons
  let messageInterval; // Store the timeout globally, so we can clear it later
 let typingInterval;  // Store typing interval globally, to clear it when necessary
@@ -781,38 +823,7 @@ function clearFormElements() {
 }
 
 
-	   // Set the toggle state to "off" when the page is loaded
-window.onload = function() {
-    const toggleInput = document.getElementById('toggle-input');
-    toggleInput.checked = false; // Always set to off on load
-};
-
-function redirectToUrl() {
-    const toggleInput = document.getElementById('toggle-input');
-
-    // Wait for the animation to complete
-    setTimeout(() => {
-        window.location.href = "https://your-desired-url.com"; // Change this to your URL
-    }, 400); // Match this time with the transition duration
-}
-
-// Redirect only when the toggle is switched on
-const toggleInput = document.getElementById('toggle-input');
-toggleInput.addEventListener('change', function() {
-    if (this.checked) {
-        redirectToUrl(); // Redirect only if it is turned on
-    } else {
-        this.checked = false; // Keep it off if turned off
-    }
-});
-
-// Prevent the state from changing back to "on" when returning to the page
-window.onbeforeunload = function() {
-    const toggleInput = document.getElementById('toggle-input');
-    toggleInput.checked = false; // Reset to off on page unload
-};
-
-
+	
 	   
 
  async function connectDevice() {
