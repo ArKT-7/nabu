@@ -403,22 +403,6 @@ label {
     border-radius: 15px;
 }
 
- .small-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 20px;
-            padding: 10px;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
-        }
-
-        .small-button:hover {
-            background-color: #0056b3;
-        }
 
     </style>
 </head>
@@ -433,13 +417,10 @@ label {
     <div id="progress-message">Processing... Please wait</div>
 </div>
 
-
-  <!-- Container with status field and single button -->
-    <div class="container">
-        <button class="small-button" onclick="window.location.href='https://arkt-7.github.io/nabu'">Dark</button>
-        <p class="status-field">Not connected in Fastboot</p>
-        <button class="button connect-button">Connect device Fastboot</button>
-    </div>
+<div class="container">
+    <p class="status-field">Not connected in Fastboot</p>
+    <button class="button connect-button">Connect device Fastboot</button>
+</div>
 
 
 <div class="container">
@@ -598,12 +579,6 @@ label {
     let blobStore = new BlobStore();
 
     fastboot.setDebugLevel(2);
-
-	   
-	   // Optional: If you want to open the link in a new tab instead of redirecting
-        document.querySelector('.small-button').addEventListener('click', function() {
-            window.open('https://arkt-7.github.io/nabu/', '_blank');
-        });
 
     // Utility function to show the progress overlay and disable buttons
  let messageInterval; // Store the timeout globally, so we can clear it later
