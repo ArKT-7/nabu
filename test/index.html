@@ -209,6 +209,13 @@ form {
     transform: none;
 }
 
+/*.flash-form, .boot-form, .rboot-flash-form, .command-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center the form horizontally 
+    width: 100%; /* Full width for the form 
+} */
+
 
 input[type="file"],
 input[type="text"], 
@@ -289,6 +296,17 @@ label {
     text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
 }
 
+/*pre.result-field {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 15px;
+    border-radius: 15px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    max-height: 250px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}*/
+        
 #progress-overlay {
     position: fixed;
     top: 0;
@@ -347,7 +365,26 @@ label {
     transform: translateY(-3px);
 }
 
+/* Progress Bar
 .rboot-progress-container {
+    width: 100%;
+    background-color: #f3f3f3;
+    border-radius: 20px;
+    margin: 20px 0;
+    height: 30px;
+    overflow: hidden;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.rboot-progress-bar {
+    width: 0%;
+    height: 100%;
+    background-color: #4caf50;
+    border-radius: 20px;
+    transition: width 0.4s ease;
+} */
+
+        .rboot-progress-container {
     width: 100%;
     height: 30px;
     background-color: #f3f3f3;
@@ -367,7 +404,7 @@ label {
 }
 
 
-	    .small-button {
+	        .small-button {
         position: absolute;
         top: 10px;
         right: 10px;
@@ -399,7 +436,10 @@ label {
 </div>
 
 <div class="container">
-	<button class="small-button" onclick="openDarkMode()">Dark</button>
+	<button class="small-button"
+        onclick="window.location.href = 'https://arkt-7.github.io/nabu';">
+        Click Here
+    </button>
     <p class="status-field">Not connected in Fastboot</p>
     <button class="button connect-button">Connect device Fastboot</button>
 </div>
@@ -701,9 +741,7 @@ function clearFormElements() {
         rbootPartitionSelect.value = previousSelectedValue;
     }
 }
-       function openDarkMode() {
-        window.location.href = 'https://arkt-7.github.io/nabu/';
-    }
+       
 
  async function connectDevice() {
         let statusField = document.querySelector(".status-field");
