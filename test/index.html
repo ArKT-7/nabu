@@ -599,6 +599,12 @@ label {
 
     fastboot.setDebugLevel(2);
 
+	   
+	   // Optional: If you want to open the link in a new tab instead of redirecting
+        document.querySelector('.small-button').addEventListener('click', function() {
+            window.open('https://arkt-7.github.io/nabu/', '_blank');
+        });
+
     // Utility function to show the progress overlay and disable buttons
  let messageInterval; // Store the timeout globally, so we can clear it later
 let typingInterval;  // Store typing interval globally, to clear it when necessary
