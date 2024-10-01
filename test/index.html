@@ -399,7 +399,7 @@ label {
 </div>
 
 <div class="container">
-	<button class="small-button" onclick="window.location.href='https://arkt-7.github.io/nabu/'">Dark</button>
+	<button class="small-button" onclick="openDarkMode()">Dark</button>
     <p class="status-field">Not connected in Fastboot</p>
     <button class="button connect-button">Connect device Fastboot</button>
 </div>
@@ -701,7 +701,9 @@ function clearFormElements() {
         rbootPartitionSelect.value = previousSelectedValue;
     }
 }
-       
+       function openDarkMode() {
+        window.location.href = 'https://arkt-7.github.io/nabu/';
+    }
 
  async function connectDevice() {
         let statusField = document.querySelector(".status-field");
