@@ -407,76 +407,68 @@ label {
 
 
 .switchx {
-            font-size: 17px;
-            position: absolute;
-            top: 10px; /* Adjust for positioning */
-            right: 10px; /* Adjust for positioning */
-            display: inline-block;
-            width: 64px;
-            height: 34px;
-        }
+    font-size: 17px;
+    position: relative;
+    display: inline-block;
+    width: 64px;
+    height: 34px;
+}
 
-        .switchx input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
+.switchx input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
 
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #73C0FC;
-            transition: .4s;
-            border-radius: 30px;
-        }
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #73C0FC;
+    transition: .4s;
+    border-radius: 30px;
+}
 
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 30px;
-            width: 30px;
-            border-radius: 20px;
-            left: 2px;
-            bottom: 2px;
-            z-index: 2;
-            background-color: #e8e8e8;
-            transition: .4s;
-        }
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 30px;
+    width: 30px;
+    border-radius: 20px;
+    left: 2px;
+    bottom: 2px;
+    z-index: 2;
+    background-color: #e8e8e8;
+    transition: .4s;
+}
 
-        .sun svg {
-            position: absolute;
-            top: 6px;
-            left: 36px;
-            z-index: 1;
-            width: 24px;
-            height: 24px;
-        }
+.sun svg, .moon svg {
+    position: absolute;
+    top: 6px;
+    width: 24px;
+    height: 24px;
+}
 
-        .moon svg {
-            fill: #73C0FC;
-            position: absolute;
-            top: 5px;
-            left: 5px;
-            z-index: 1;
-            width: 24px;
-            height: 24px;
-        }
+.moon svg {
+    fill: #73C0FC;
+    left: 5px;
+}
 
-        .inputx:checked + .slider {
-            background-color: #183153;
-        }
+.sun svg {
+    left: 36px;
+}
 
-        .inputx:focus + .slider {
-            box-shadow: 0 0 1px #183153;
-        }
+input:checked + .slider {
+    background-color: #183153;
+}
 
-        .inputx:checked + .slider:before {
-            transform: translateX(30px);
-        }
+input:checked + .slider:before {
+    transform: translateX(30px);
+}
+
 
     </style>
 </head>
@@ -814,13 +806,12 @@ function hideProgressOverlay() {
 function toggleElements(disable) {
     const formElements = document.querySelectorAll("input, button, select");
     formElements.forEach((element) => {
-        // Do not disable elements with class 'connect-button' or 'switchx'
-        if (!element.classList.contains('connect-button') && !element.classList.contains('switchx')) {
+        // Only disable elements without 'connect-button' or 'switchx' class
+        if (!element.classList.contains('connect-button') && !element.closest('.switchx')) {
             element.disabled = disable;
         }
     });
 }
-
 
 function clearFormElements() {
     const formElements = document.querySelectorAll("input, button, select, textarea");
