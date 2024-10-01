@@ -404,33 +404,46 @@ label {
 }
 
 
-	.small-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    padding: 10px;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
-}
+ /* Slider button styling */
+        .slider-button-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 80px;
+            height: 40px;
+            background-color: #ccc;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 5px;
+            transition: background-color 0.3s ease;
+        }
 
-.small-button:hover {
-    background-color: #0056b3;
-}
+        .slider-circle {
+            width: 30px;
+            height: 30px;
+            background-color: #007bff;
+            border-radius: 50%;
+            transition: transform 0.5s ease;
+        }
 
-#slider {
-    width: 0;
-    height: 5px;
-    background-color: #007bff;
-    position: absolute;
-    top: 50px;
-    left: 0;
-    transition: width 1s ease; /* The slider transition duration */
-}
+        .slider-button-container.active {
+            background-color: #007bff;
+        }
 
+        .slider-button-container.active .slider-circle {
+            transform: translateX(40px); /* Moves the circle to the other end */
+        }
+
+        .slider-button-container:hover {
+            background-color: #b3b3b3;
+        }
+
+        .slider-circle:hover {
+            background-color: #0056b3;
+        }
 
 
     </style>
@@ -446,12 +459,14 @@ label {
     <div id="progress-message">Processing... Please wait</div>
 </div>
 
-<div class="container">
-    <button class="small-button" id="dark-mode-button">Dark Mode</button>
-    <div id="slider"></div> <!-- Slider element -->
-    <p class="status-field">Not connected in Fastboot</p>
-    <button class="button connect-button">Connect device Fastboot</button>
-</div>
+ <!-- Container with slider button and status field -->
+    <div class="container">
+        <div class="slider-button-container" id="slider-button">
+            <div class="slider-circle"></div>
+        </div>
+        <p class="status-field">Not connected in Fastboot</p>
+        <button class="button connect-button">Connect device Fastboot</button>
+    </div>
 
 
 
@@ -683,16 +698,15 @@ function cycleMessages() {
 }
 
 
-	   document.getElementById('dark-mode-button').addEventListener('click', function() {
-    // Trigger the slider animation
-    const slider = document.getElementById('slider');
-    slider.style.width = '100%'; // Expand the slider to full width
-    
-    // After the animation completes, redirect to the dark mode page
-    setTimeout(function() {
-        window.location.href = 'https://arkt-7.github.io/nabu/dark/';
-    }, 1000); // 1-second delay matches the slider animation time
-});
+  document.getElementById('slider-button').addEventListener('click', function() {
+            // Add the active class to start the animation
+            this.classList.add('active');
+
+            // After the animation completes, redirect to the dark mode page
+            setTimeout(function() {
+                window.location.href = 'https://arkt-7.github.io/nabu/dark/';
+            }, 500); // 500ms delay for the slider animation
+        });
 
 	   
 
