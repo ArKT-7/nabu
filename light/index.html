@@ -1,1 +1,1191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <script src="../dist/fastboot.mjs" type="module"></script>
+    <script src="../download.js" type="module"></script>
+    <meta property="og:title" content="Fastboot Tool by ArKT" />
+    <meta property="og:description" content="It can boot Images like recovery and can flash images in any partition" />
+    <meta property="og:url" content="https://arkt-7.github.io/nabu/" />
+    <meta property="og:type" content="website" />
+    <meta name="description" content="It can boot Images like recovery and can flash images in any partition" />
+    <meta name="title" content="Fastboot Tool for flashing/booting/rooting" />
+    <title>Fastboot Tool by ArKT</title>
+    <link rel="icon" href="https://img.icons8.com/fluency/48/android.png" type="image/png">
+    <style>
+        body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f0f0f0, #d4e0e5);
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    min-height: 100vh;
+}
 
+
+  h1 {
+    color: #333333; /* Darker color for better contrast on white */
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 38px;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}
+
+h2 {
+    color: #333333; /* Fallback color */
+    margin-top: 0px;
+    margin-bottom: 5px;
+    font-size: 24px;
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, #007bff, #003b80); /* Adjusted gradient to a more professional blue */
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: textGlow 4s ease-in-out infinite;
+}
+
+.title {
+    text-align: center;
+    font-size: 32px;
+    letter-spacing: 0.5px;
+    color: #333333; /* Darker color for titles */
+}
+
+.text-gradient {
+    background: linear-gradient(135deg, #007bff, #003b80); /* Adjusted gradient */
+    -webkit-background-clip: text;
+    color: transparent;
+    text-shadow: 
+        0 0 3px rgba(0, 123, 255, 0.5), /* Softer, professional glow */
+        0 0 8px rgba(0, 123, 255, 0.3);
+    animation: textGlow 2s ease-in-out infinite;
+}
+
+.subtitle {
+    color: #333333; /* Darker subtitle for contrast */
+    text-align: center;
+    font-size: 24px;
+    margin-top: -5px;
+}
+
+@keyframes textGlow {
+    0%, 100% {
+        text-shadow: 
+            0 0 8px rgba(0, 123, 255, 0.6), /* Softer blue glow */
+            0 0 16px rgba(0, 123, 255, 0.4);
+    }
+    50% {
+        text-shadow: 
+            0 0 12px rgba(0, 123, 255, 0.6),
+            0 0 20px rgba(0, 123, 255, 0.4);
+    }
+}
+
+
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    width: 90%;
+    max-width: 600px;
+    margin: 30px 0;
+    background: linear-gradient(135deg, #e0e6ed, #c8d0d8); /* Slightly darker gradient */
+    background-size: 200% 200%; /* Increase size for smoother movement */
+    border-radius: 20px;
+    position: relative;
+    text-align: center;
+    overflow: hidden;
+    animation: backgroundMove 20s linear infinite; /* Linear for smooth infinite animation */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Added shadow for better visibility */
+}
+
+.container::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    background: linear-gradient(45deg, #ff9ecf, #a0b9ff, #d1e3ff, #ff9ecf); /* Lighter glowing gradient for border */
+    background-size: 400% 400%;
+    border-radius: 20px;
+    z-index: -1;
+    filter: blur(10px); /* Glowing effect */
+    opacity: 0.8;
+    animation: glow 10s ease infinite; /* Glowing border animation */
+    box-shadow: 
+        0 0 20px 10px rgba(255, 158, 207, 0.3),   /* General softer glow */
+        0 0 40px 10px rgba(255, 158, 207, 0.2) inset, /* Inner softer glow */
+        -10px -10px 30px rgba(255, 158, 207, 0.5), /* Top-left corner softer glow */
+        10px -10px 30px rgba(255, 158, 207, 0.5),  /* Top-right corner softer glow */
+        -10px 10px 30px rgba(255, 158, 207, 0.5),  /* Bottom-left corner softer glow */
+        10px 10px 30px rgba(255, 158, 207, 0.5);   /* Bottom-right corner softer glow */
+}
+
+
+@keyframes glow {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes backgroundMove {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+form {
+    display: flex;
+    flex-direction: column; /* Align form elements vertically */
+    width: 100%;
+    align-items: center; /* Center form elements */
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+.button {
+    background: linear-gradient(135deg, #007bff, #00d4ff);
+    border: none;
+    border-radius: 20px;
+    color: white;
+    padding: 15px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+    margin: 10px 0;
+    width: 100%;
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+            color: #fff;
+            cursor: pointer;
+            animation: buttonGlow 3s ease-in-out infinite alternate;
+
+	
+	box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15); /* Subtle shadow */
+		transition: all 0.3s ease;
+}
+
+.button:hover {
+    background: linear-gradient(135deg, #0056b3, #0094c6);
+    transform: scale(1.05);
+}
+        
+.button:disabled {
+    background: linear-gradient(135deg, #b0b0b0, #d4d4d4);
+    color: #888; /* Dull text color to emphasize the disabled state */
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+/*.flash-form, .boot-form, .rboot-flash-form, .command-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center the form horizontally 
+    width: 100%; /* Full width for the form 
+} */
+
+
+input[type="file"],
+input[type="text"], 
+select {
+    text-align: center; /* Center align text inside input fields */
+    width: 100%; /* Use full width of the container */
+    max-width: 600px; /* Set a max width for better appearance */
+    padding: 15px 20px;
+    margin: 10px 0; /* Vertical spacing between inputs */
+    border-radius: 20px;
+    border: 1px solid #ccc; /* Light border for input fields */
+    box-sizing: border-box; /* Ensure padding and borders are included in the width */
+    background: linear-gradient(135deg, #f0f4f8, #e2e8f0); /* Light gradient background */
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.08); /* Subtle shadow */
+    transition: all 0.3s ease;
+    -webkit-appearance: none; /* Remove default styling */
+    -moz-appearance: none; /* Remove default styling */
+    appearance: none; /* Remove default styling */
+    font-size: 14px;
+    font-weight: bold;
+    color: #333; /* Dark text color for light mode */
+}
+
+input[type="file"] {
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05); /* Minimal shadow */
+    transition: all 0.3s ease;
+    -webkit-appearance: none; /* Remove default styling */
+    -moz-appearance: none; /* Remove default styling */
+    appearance: none; /* Remove default styling */
+    background: linear-gradient(135deg, #f0f4f8, #e2e8f0); /* Match gradient to other inputs */
+    color: #333; /* Text color for light mode */
+}
+
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 12px;
+    font-size: 19px;
+    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+}
+
+        label2 {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 6px;
+    margin-top: 8px;
+    font-size: 18px;
+    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+}
+
+.progress-container {
+    width: 100%;
+    height: 30px;
+    background-color: #f3f3f3;
+    border-radius: 15px;
+    overflow: hidden;
+    margin-top: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    display: none; /* Initially hidden */
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: #4caf50;
+    transition: width 0.5s ease;
+    border-radius: 15px;
+}
+
+
+.status-field {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 10px;
+    margin-top: 1px;
+    font-size: 20px;
+    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+}
+
+/*pre.result-field {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 15px;
+    border-radius: 15px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    max-height: 250px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}*/
+        
+#progress-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none; /* Hidden initially */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Bring it above everything */
+}
+
+#progress-overlay.active {
+    display: flex;
+}
+
+#progress-message {
+    color: white;
+    font-size: 24px;
+    text-align: center;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Neumorphic Buttons */
+.rboot-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 15px 25px;
+    cursor: pointer;
+    border-radius: 20px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.15), -4px -4px 10px rgba(255, 255, 255, 0.7);
+    transition: box-shadow 0.3s, transform 0.2s;
+}
+
+.rboot-button:hover {
+    background-color: #0056b3;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15), -2px -2px 6px rgba(255, 255, 255, 0.7);
+    transform: translateY(-3px);
+}
+
+/* Progress Bar
+.rboot-progress-container {
+    width: 100%;
+    background-color: #f3f3f3;
+    border-radius: 20px;
+    margin: 20px 0;
+    height: 30px;
+    overflow: hidden;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.rboot-progress-bar {
+    width: 0%;
+    height: 100%;
+    background-color: #4caf50;
+    border-radius: 20px;
+    transition: width 0.4s ease;
+} */
+
+        .rboot-progress-container {
+    width: 100%;
+    height: 30px;
+    background-color: #f3f3f3;
+    border-radius: 15px;
+    overflow: hidden;
+    margin-top: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    display: none; /* Initially hidden */
+}
+
+.rboot-progress-bar  {
+    height: 100%;
+    width: 0%;
+    background-color: #4caf50;
+    transition: width 0.5s ease;
+    border-radius: 15px;
+}
+
+
+    </style>
+</head>
+<body>
+     <h1 class="title">
+    <span class="text-gradient">Nabu Fastboot Tool</span>
+  </h1>
+  <h2 class="subtitle">By ArKT :)</h2>
+
+<!-- Add a progress overlay for the "Processing... Please wait" message -->
+<div id="progress-overlay">
+    <div id="progress-message">Processing... Please wait</div>
+</div>
+
+<div class="container">
+    <p class="status-field">Not connected in Fastboot</p>
+    <button class="button connect-button">Connect device Fastboot</button>
+</div>
+
+
+<div class="container">
+    <form class="command-form">
+        <label for="command">Fastboot Commands</label>
+        <input type="text" name="command" class="command-input" placeholder="Enter fastboot command here without 'fastboot' " />
+        <input type="submit" value="Send" class="button" />
+    </form>
+    <button class="button reboot-button">Reboot Device</button>
+    <button class="button reboot-bootloader-button">Reboot to Bootloader</button>
+    <button class="button reboot-recovery-button">Reboot to Recovery</button>
+    <button class="button reboot-fastbootd-button">Reboot to FastbootD</button>
+    <button class="button reboot-edl-button">Reboot to EDL</button>
+    <!-- Result field to display command outputs 
+<p>Result:</p>
+            <pre class="result-field"></pre> -->
+        </div>
+
+</div>
+
+   <!-- New Container for Downloading and Flashing Images -->
+    <div class="container">
+    <form class="rboot-flash-form">
+        <label for="rboot-flash-file">Flash any rooted or normal boot image</label>
+        <input type="file" name="rboot-flash-file" class="rboot-flash-file" accept=".img" />
+        <!-- New dropdown for partition selection -->
+        <label2 for="rboot-flash-partition">Select Flash boot partition</label2>
+        <select name="rboot-flash-partition" class="rboot-flash-partition" required>
+            <option value="">Select boot partition</option>
+            <option value="boot_ab" selected>Flash to Boot ab (both slots)</option>
+            <option value="boot">Flash to Boot (current slot)</option>
+            <option value="boot_a">Flash to Boot A only</option>
+            <option value="boot_b">Flash to Boot B only</option>
+        </select>
+        <!-- New dropdown for selecting predefined images -->
+       <label2 for="rboot-flash-image">Magisk V27-stable Rooted Boot Images</label2>
+<select name="rboot-flash-image" class="rboot-flash-image">
+    <option value="">Select rooted HyperOS/MIUI 14 boot</option>
+    <option value="magisk-1-0-5-global">HyperOS 1.0.5 (Global)</option>
+    <option value="magisk-1-0-4-global">HyperOS 1.0.4 (Global)</option>
+    <option value="magisk-1-0-1-global">HyperOS 1.0.1 (Global)</option>
+    <option value="magisk-1-0-8-india">HyperOS 1.0.8 (India)</option>
+    <option value="magisk-1-0-7-india">HyperOS 1.0.7 (India)</option>
+    <option value="magisk-1-0-4-india">HyperOS 1.0.4 (India)</option>
+    <option value="magisk-1-0-5-eea">HyperOS 1.0.5 (EEA)</option>
+    <option value="magisk-1-0-2-eea">HyperOS 1.0.2 (EEA)</option>
+    <option value="magisk-1-0-1-eea">HyperOS 1.0.1 (EEA)</option>
+    <option value="magisk-1-0-4-russia">HyperOS 1.0.4 (Russia)</option>
+    <option value="magisk-1-0-3-russia">HyperOS 1.0.3 (Russia)</option>
+    <option value="magisk-1-0-1-russia">HyperOS 1.0.1 (Russia)</option>
+    <option value="magisk-1-0-3-china">HyperOS 1.0.3 (China)</option>
+    <option value="magisk-1-0-2-china">HyperOS 1.0.2 (China)</option>
+    <option value="magisk-1-0-5-turkey">HyperOS 1.0.5 (Turkey)</option>
+    <option value="magisk-1-0-4-turkey">HyperOS 1.0.4 (Turkey)</option>
+    <option value="magisk-1-0-2-turkey">HyperOS 1.0.2 (Turkey)</option>
+    <option value="magisk-1-0-5-taiwan">HyperOS 1.0.5 (Taiwan)</option>
+    <option value="magisk-1-0-4-taiwan">HyperOS 1.0.4 (Taiwan)</option>
+    <option value="magisk-1-0-2-taiwan">HyperOS 1.0.2 (Taiwan)</option>
+
+    <!-- Global Versions -->
+    <option value="magisk-14-0-8-global">MIUI 14.0.8 (Global)</option>
+    <option value="magisk-14-0-7-global">MIUI 14.0.7 (Global)</option>
+    <option value="magisk-14-0-6-global">MIUI 14.0.6 (Global)</option>
+    <option value="magisk-14-0-5-global">MIUI 14.0.5 (Global)</option>
+    <option value="magisk-14-0-4-global">MIUI 14.0.4 (Global)</option>
+    <option value="magisk-14-0-3-global">MIUI 14.0.3 (Global)</option>
+    
+    <!-- India Versions -->
+    <option value="magisk-14-0-7-india">MIUI 14.0.7 (India)</option>
+    <option value="magisk-14-0-4-india">MIUI 14.0.4 (India)</option>
+    <option value="magisk-14-0-3-india">MIUI 14.0.3 (India)</option>
+    <option value="magisk-14-0-1-india">MIUI 14.0.1 (India)</option>
+    
+    <!-- EEA Versions -->
+    <option value="magisk-14-0-9-eea">MIUI 14.0.9 (EEA)</option>
+    <option value="magisk-14-0-8-eea">MIUI 14.0.8 (EEA)</option>
+    <option value="magisk-14-0-7-eea">MIUI 14.0.7 (EEA)</option>
+    <option value="magisk-14-0-6-eea">MIUI 14.0.6 (EEA)</option>
+    <option value="magisk-14-0-5-eea">MIUI 14.0.5 (EEA)</option>
+    <option value="magisk-14-0-4-eea">MIUI 14.0.4 (EEA)</option>
+    <option value="magisk-14-0-2-eea">MIUI 14.0.2 (EEA)</option>
+    
+    <!-- Russia Versions -->
+    <option value="magisk-14-0-7-russia">MIUI 14.0.7 (Russia)</option>
+    <option value="magisk-14-0-6-russia">MIUI 14.0.6 (Russia)</option>
+    <option value="magisk-14-0-5-russia">MIUI 14.0.5 (Russia)</option>
+    <option value="magisk-14-0-4-russia">MIUI 14.0.4 (Russia)</option>
+    <option value="magisk-14-0-3-russia">MIUI 14.0.3 (Russia)</option>
+    <option value="magisk-14-0-2-russia">MIUI 14.0.2 (Russia)</option>
+    
+    <!-- China Versions -->
+    <option value="magisk-14-0-7-china">MIUI 14.0.7 (China)</option>
+    <option value="magisk-14-0-6-china">MIUI 14.0.6 (China)</option>
+    <option value="magisk-14-0-5-china">MIUI 14.0.5 (China)</option>
+    <option value="magisk-14-0-4-china">MIUI 14.0.4 (China)</option>
+    
+    <!-- Turkey Versions -->
+    <option value="magisk-14-0-5-turkey">MIUI 14.0.5 (Turkey)</option>
+    <option value="magisk-14-0-4-turkey">MIUI 14.0.4 (Turkey)</option>
+    <option value="magisk-14-0-2-turkey">MIUI 14.0.2 (Turkey)</option>
+    <option value="magisk-14-0-1-turkey">MIUI 14.0.1 (Turkey)</option>
+    
+    <!-- Taiwan Versions -->
+    <option value="magisk-14-0-3-taiwan">MIUI 14.0.3 (Taiwan)</option>
+    <option value="magisk-14-0-2-taiwan">MIUI 14.0.2 (Taiwan)</option>
+    <option value="magisk-14-0-1-taiwan">MIUI 14.0.1 (Taiwan)</option>
+</select>
+
+        
+        <input type="submit" value="Flash" class="button" />
+           <!-- Progress bar for feedback -->
+    <div class="rboot-progress-container" style="display:none;">
+        <div class="rboot-progress-bar" style="width:0%;"></div>
+    </div>
+    </form>
+</div>
+
+
+<div class="container">
+    <form class="boot-form">
+        <label for="boot-file">Boot any images</label>
+        <input type="file" name="boot-file" id="boot-file" accept=".img" />
+        <select name="boot-type" class="boot-type">
+            <option value="">Select Images to boot on Nabu directly</option>
+            <option value="twrp-nabu">Twrp Recovery Nabu</option>
+            <option value="pbrp-nabu">Pitch Black Recovery Nabu</option>
+            <option value="win-uefi-nabu">Windows UEFI Boot Nabu</option>
+            <option value="twrp-mod-nabu">Twrp Modded Recovery Nabu</option>
+            <option value="orangefox-mod-nabu">OrangeFox Modded Recovery Nabu</option>
+        </select>
+        <input type="submit" value="Boot" class="button" />
+        <div class="progress-container" style="display: none;">
+            <div class="progress-bar" style="width:0%;"></div>
+        </div>
+    </form>
+</div>
+
+
+<div class="container">
+    <form class="flash-form">
+        <label for="flash-file">Flash any images</label>
+        <input type="file" name="flash-file" id="flash-file" accept=".img" />
+        <label2 for="flash-partition">Enter Partition</label2>
+        <input type="text" name="flash-partition" class="flash-partition" placeholder="Partition like - boot, dtbo, cust, recovery, etc." />
+        <input type="submit" value="Flash" class="button" />
+    </form>
+</div>
+
+
+   <script type="module">
+    import * as fastboot from "../dist/fastboot.mjs";
+    import { BlobStore } from "../download.js";
+
+    let device = new fastboot.FastbootDevice();
+    window.device = device;
+    let blobStore = new BlobStore();
+
+    fastboot.setDebugLevel(2);
+
+    // Utility function to show the progress overlay and disable buttons
+ let messageInterval; // Store the timeout globally, so we can clear it later
+let typingInterval;  // Store typing interval globally, to clear it when necessary
+let clearingInterval;  // Store clearing interval globally, to clear it when necessary
+const progressMessage = document.getElementById('progress-message');
+const messages = [
+    'Hi its downloading, ig Flashing...',
+    'idk may be Booting...',
+    'Going inside device...xd',
+    'IDK what\'s going on lol',
+    'Processing... ig Please wait now'
+];
+const finalMessage = 'Please wait...'; // Final message to keep looping
+let messageIndex = 0;
+let isFinalLoop = false; // Flag to track if we're in the final loop
+
+function typeMessage(message, callback) {
+    let i = 0;
+    progressMessage.textContent = ''; // Ensure text is cleared before typing starts
+    typingInterval = setInterval(() => {
+        if (i < message.length) {
+            progressMessage.textContent += message[i];
+            i++;
+        } else {
+            clearInterval(typingInterval);
+            if (callback) callback(); // Trigger the callback when done typing
+        }
+    }, 60); // Adjust typing speed
+}
+
+function clearMessage(callback) {
+    clearingInterval = setInterval(() => {
+        if (progressMessage.textContent.length > 0) {
+            progressMessage.textContent = progressMessage.textContent.slice(0, -1); // Remove last character
+        } else {
+            clearInterval(clearingInterval);
+            if (callback) callback(); // Trigger the callback when text is cleared
+        }
+    }, 50); // Adjust clearing speed
+}
+
+function cycleMessages() {
+    // First, clear any ongoing intervals to avoid overlapping messages
+    clearInterval(typingInterval);
+    clearInterval(clearingInterval);
+    
+    // Clear the current message before typing the next one
+    clearMessage(() => {
+        if (isFinalLoop) {
+            // In the final loop, only repeat the "Please wait..." message
+            typeMessage(finalMessage, () => {
+                messageInterval = setTimeout(cycleMessages, 5000); // Loop indefinitely
+            });
+        } else {
+            // Cycle through initial messages
+            typeMessage(messages[messageIndex], () => {
+                messageIndex++;
+                if (messageIndex < messages.length) {
+                    // Adjust the timing, keeping the last message longer
+                    messageInterval = setTimeout(cycleMessages, messageIndex === messages.length - 1 ? 5000 : 1000);
+                } else {
+                    // After all messages are shown, start looping the final message
+                    isFinalLoop = true;
+                    messageInterval = setTimeout(cycleMessages, 1000); // Start looping the final message
+                }
+            });
+        }
+    });
+}
+
+// Utility function to show the progress overlay and disable buttons
+function showProgressOverlay() {
+    const progressOverlay = document.getElementById('progress-overlay');
+    const buttons = document.querySelectorAll('.button');
+    progressOverlay.classList.add('active');
+    buttons.forEach(button => {
+        button.disabled = true;
+    });
+
+    // Reset the message cycle to start from the beginning
+    messageIndex = 0;
+    isFinalLoop = false;
+
+    // Start the message cycling animation
+    cycleMessages();
+}
+
+// Utility function to hide the progress overlay and enable buttons
+function hideProgressOverlay() {
+    const progressOverlay = document.getElementById('progress-overlay');
+    const buttons = document.querySelectorAll('.button');
+    progressOverlay.classList.remove('active');
+    buttons.forEach(button => {
+        button.disabled = false;
+    });
+
+    // Stop any ongoing intervals (typing, clearing, cycling)
+    clearTimeout(messageInterval);
+    clearInterval(typingInterval);
+    clearInterval(clearingInterval);
+    
+    // Reset the message content and clear the typing state
+    messageIndex = 0; // Reset to the first message
+    isFinalLoop = false; // Reset the final loop flag
+    progressMessage.textContent = ''; // Clear the message text
+}
+
+function toggleElements(disable) {
+    const formElements = document.querySelectorAll("input, button, select");
+    formElements.forEach((element) => {
+        if (!element.classList.contains('connect-button')) {
+            element.disabled = disable;
+        }
+    });
+}
+
+function clearFormElements() {
+    const formElements = document.querySelectorAll("input, button, select, textarea");
+
+    // Store the current selected value of the rboot-flash-partition select
+    let rbootPartitionSelect = document.querySelector('.rboot-flash-partition');
+    let previousSelectedValue = rbootPartitionSelect ? rbootPartitionSelect.value : null;
+
+    formElements.forEach((element) => {
+        // Clear relevant form fields
+        if (element.tagName === "INPUT" && (element.type === "text" || element.type === "file")) {
+            element.value = ""; // Clear text and file inputs
+        } else if (element.tagName === "SELECT") {
+            element.selectedIndex = 0; // Reset selects to the first option
+        } else if (element.tagName === "TEXTAREA") {
+            element.value = ""; // Clear text areas
+        }
+    });
+
+    // After clearing, restore the previously selected value of the rboot-flash-partition select
+    if (rbootPartitionSelect && previousSelectedValue !== null) {
+        rbootPartitionSelect.value = previousSelectedValue;
+    }
+}
+       
+
+ async function connectDevice() {
+        let statusField = document.querySelector(".status-field");
+        statusField.textContent = "Connecting...";
+
+        try {
+            await device.connect();
+        } catch (error) {
+            statusField.textContent = `Failed to connect to device: ${error.message}`;
+            toggleElements(true); // Enable all elements when connected
+            return;
+        }
+
+        let product = await device.getVariable("product");
+        let slot = await device.getVariable("current-slot");
+        let serial = await device.getVariable("serialno");
+        let bootloaderStatus = await device.getVariable("unlocked");
+        let bootloaderStatusText = bootloaderStatus === "yes" ? "unlocked" : "locked";
+
+        let deviceName = "";
+        if (product === "nabu") {
+            deviceName = "Device name - Xiaomi Pad 5";
+        } else if (product === "dm3q") {
+            deviceName = "Device name - Samsung S23 Ultra";
+        }
+
+        let status = `Connected to - ${product} <br /> Current slot - ${slot} <br /> (serial: ${serial})`;
+        if (deviceName) {
+            status += `<br />${deviceName}`;
+        }
+
+        status += `<br />Bootloader status: ${bootloaderStatusText}`;
+        statusField.innerHTML = status;
+
+        toggleElements(false); // Enable all elements when connected
+    }
+
+    toggleElements(true); // Initially disable all features
+
+    function handleDisconnect() {
+        let statusField = document.querySelector(".status-field");
+        statusField.textContent = "Not connected in Fastboot";
+        toggleElements(true); // Disable all elements on disconnect
+    }
+
+       // Function to check if the device is still connected after operations
+async function checkDeviceConnection() {
+    let statusField = document.querySelector(".status-field");
+
+    try {
+        let product = await device.getVariable("product");
+        if (product) {
+            //statusField.textContent = "Device is still connected in Fastboot mode.";
+        }
+    } catch (error) {
+        statusField.textContent = "Device disconnected!";
+        toggleElements(true); // Disable all elements on disconnect
+    }
+    clearFormElements();
+}
+
+    async function sendFormCommand(event) {
+    event.preventDefault();
+    let inputField = document.querySelector(".command-input");
+    let command = inputField.value;
+    if (!command.trim()) {
+        alert("Please enter a command!");
+        return;
+    }
+
+    let result = (await device.runCommand(command)).text;
+    //let resultField = document.querySelector(".result-field");
+    //resultField.textContent = result;
+    //resultField.style.display = 'block'; // Show the result field
+    inputField.value = "";
+        await checkDeviceConnection(); // Check if device is still connected after reboot
+}
+
+
+    async function rebootDevice() {
+        await runRebootCommand("reboot", "Device rebooted successfully!");
+    }
+
+    async function rebootToBootloader() {
+        await runRebootCommand("reboot-bootloader", "Rebooted to Bootloader successfully!");
+    }
+
+    async function rebootToRecovery() {
+        await runRebootCommand("reboot-recovery", "Rebooted to Recovery successfully!");
+    }
+
+    async function rebootToFastbootD() {
+        await runRebootCommand("reboot-fastboot", "Rebooted to FastbootD successfully!");
+    }
+
+    async function rebootToEDL() {
+        await runRebootCommand("oem edl", "Rebooted to EDL successfully!");
+    }
+
+   //async function runRebootCommand(command, successMessage) {
+       // let result = (await device.runCommand(command)).text;
+       // document.querySelector(".result-field").textContent = result;
+   // } 
+
+       // After rebooting
+async function runRebootCommand(command, successMessage) {
+    try {
+        let result = (await device.runCommand(command)).text;
+       // document.querySelector(".result-field").textContent = result;
+        alert(successMessage);
+    } catch (error) {
+        alert(`Error during reboot: ${error.message}`);
+    } finally {
+        await checkDeviceConnection(); // Check if device is still connected after reboot
+    }
+}
+
+    async function bootFormFile(event) {
+        event.preventDefault();
+        showProgressOverlay();
+        let fileField = document.querySelector("#boot-file");
+        let bootTypeSelect = document.querySelector(".boot-type");
+        let selectedBootType = bootTypeSelect.value;
+
+        let file;
+        if (fileField.files.length > 0) {
+            file = fileField.files[0];
+        } else if (selectedBootType) {
+            file = await downloadBootImage(getImagePath(selectedBootType));
+        } else {
+            alert("Please select a boot image file or choose a boot type!");
+            hideProgressOverlay();
+            return;
+        }
+
+        if (!file) {
+            alert("Failed to obtain a valid boot image.");
+            hideProgressOverlay();
+            return;
+        }
+
+        try {
+            await device.bootBlob(file);
+            alert("Boot image booted successfully!");
+        } catch (error) {
+            console.error("Error booting image:", error);
+            alert("Error booting image. Please try again.");
+        } finally {
+            fileField.value = ""; // Reset file input after use
+            bootTypeSelect.selectedIndex = 0; // Reset selection
+            hideProgressOverlay();
+            await checkDeviceConnection(); // Check if device is still connected
+        }
+    }
+    
+
+    function getImagePath(selectedBootType) {
+        switch (selectedBootType) {
+            case "twrp-nabu":
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/twrp-nabu.img";
+            case "win-uefi-nabu":
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/uefi-windows.img";
+            case "twrp-mod-nabu":
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/twrp-modded.img";
+            case "orangefox-mod-nabu":
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/orangefox-modded.img";
+            case "pbrp-nabu":
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/pitchblack-pbrp.img";
+            default:
+                return null;
+        }
+    }
+
+    async function downloadBootImage(imagePath) {
+        const progressBarContainer = document.querySelector('.progress-container');
+        const progressBar = document.querySelector('.progress-bar');
+        progressBarContainer.style.display = 'block'; // Show the progress bar
+
+        try {
+            const response = await fetch(imagePath);
+            if (!response.ok) throw new Error("Failed to download boot image");
+
+            const contentLength = response.headers.get('Content-Length');
+            const total = parseInt(contentLength, 10);
+            let loaded = 0;
+
+            const reader = response.body.getReader();
+            const chunks = [];
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                chunks.push(value);
+                loaded += value.length;
+                progressBar.style.width = `${(loaded / total) * 100}%`;
+            }
+
+            const blob = new Blob(chunks);
+            return blob;
+        } catch (error) {
+            console.error("Download error:", error);
+            alert("Error downloading boot image. Please try again.");
+        } finally {
+            progressBarContainer.style.display = 'none'; // Hide the progress bar
+            progressBar.style.width = `0%`;
+        }
+    }
+
+    async function flashFormFile(event) {
+        event.preventDefault();
+        showProgressOverlay();
+        let fileField = document.querySelector("#flash-file");
+        let partField = document.querySelector(".flash-partition");
+        let file = fileField.files[0];
+
+        if (!file) {
+            alert("Please select a file to flash!");
+            hideProgressOverlay();
+            return;
+        }
+
+        if (!partField.value) {
+            alert("Please specify a partition to flash!");
+            hideProgressOverlay();
+            return;
+        }
+
+        try {
+            await device.flashBlob(partField.value, file);
+            alert(`Successfully flashed ${partField.value}`);
+        } catch (error) {
+            alert(`Failed to flash: ${error.message}`);
+        } finally {
+            fileField.value = "";
+            partField.value = "";
+            hideProgressOverlay();
+            await checkDeviceConnection(); // Check if device is still connected
+        }
+    }
+
+
+       async function rbootFlashFormFile(event) {
+    event.preventDefault();
+    rbootShowProgressOverlay();
+           showProgressOverlay();
+
+    let fileField = document.querySelector(".rboot-flash-file");
+    let partField = document.querySelector(".rboot-flash-partition");  // Updated to use dropdown
+    let selectedImage = document.querySelector(".rboot-flash-image").value;
+
+    let file;
+
+    // Check if a file is uploaded or a predefined image is selected
+    if (fileField.files.length > 0) {
+        file = fileField.files[0];
+    } else if (selectedImage) {
+        file = await rbootDownloadFlashImage(rbootGetImagePath(selectedImage)); // Predefined image
+    } else {
+        alert("Please select a file to flash or choose a predefined image!");
+        rbootHideProgressOverlay();
+        hideProgressOverlay();
+        return;
+    }
+
+    if (!file || !partField.value) {
+        alert("Please select a valid file and partition!");
+        rbootHideProgressOverlay();
+        hideProgressOverlay();
+        return;
+    }
+
+    try {
+        await device.flashBlob(partField.value, file);
+        alert(`Successfully flashed to ${partField.value}`);
+    } catch (error) {
+        alert(`Failed to flash: ${error.message}`);
+    } finally {
+        fileField.value = "";
+        rbootHideProgressOverlay();
+        hideProgressOverlay();
+        await checkDeviceConnection(); // Check if device is still connected
+    }
+}
+
+
+function rbootGetImagePath(selectedImage) {
+    switch (selectedImage) {
+        case "magisk-1-0-5-global":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.5.0.TKXMIXM.GLOBAL.boot.img";
+        case "magisk-1-0-4-global":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.4.0.TKXMIXM.GLOBAL.boot.img";
+        case "magisk-1-0-1-global":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.1.0.TKXMIXM.GLOBAL.boot.img";
+        case "magisk-1-0-8-india":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.8.0.TKXINXM.INDIA.boot.img";
+        case "magisk-1-0-7-india":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.7.0.TKXINXM.INDIA.boot.img";
+        case "magisk-1-0-4-india":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.4.0.TKXINXM.INDIA.boot.img";
+        case "magisk-1-0-5-eea":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.5.0.TKXEUXM.EEA.boot.img";
+        case "magisk-1-0-2-eea":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.2.0.TKXEUXM.EEA.boot.img";
+        case "magisk-1-0-1-eea":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.1.0.TKXEUXM.EEA.boot.img";
+        case "magisk-1-0-4-russia":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.4.0.TKXRUXM.RUSSIA.boot.img";
+        case "magisk-1-0-3-russia":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.3.0.TKXRUXM.RUSSIA.boot.img";
+        case "magisk-1-0-1-russia":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.1.0.TKXRUXM.RUSSIA.boot.img";
+        case "magisk-1-0-3-china":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.3.0.TKXCNXM.CHINA.boot.img";
+        case "magisk-1-0-2-china":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.2.0.TKXCNXM.CHINA.boot.img";
+        case "magisk-1-0-5-turkey":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.5.0.TKXTRXM.TURKEY.boot.img";
+        case "magisk-1-0-4-turkey":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.4.0.TKXTRXM.TURKEY.boot.img";
+        case "magisk-1-0-2-turkey":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.2.0.TKXTRXM.TURKEY.boot.img";
+        case "magisk-1-0-5-taiwan":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.5.0.TKXTWXM.TAIWAN.boot.img";
+        case "magisk-1-0-4-taiwan":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.4.0.TKXTWXM.TAIWAN.boot.img";
+        case "magisk-1-0-2-taiwan":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.2.0.TKXTWXM.TAIWAN.boot.img";
+        // Global Versions
+        case "magisk-14-0-8-global":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.8.0.TKXMIXM.GLOBAL.boot.img";
+        case "magisk-14-0-7-global":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.7.0.TKXMIXM.GLOBAL.boot.img";
+        case "magisk-14-0-6-global":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.6.0.TKXMIXM.GLOBAL.boot.img";
+        case "magisk-14-0-5-global":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.5.0.TKXMIXM.GLOBAL.boot.img";
+        case "magisk-14-0-4-global":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.4.0.TKXMIXM.GLOBAL.boot.img";
+        case "magisk-14-0-3-global":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.3.0.TKXMIXM.GLOBAL.boot.img";
+            
+        case "magisk-14-0-7-india":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.7.0.TKXINXM.INDIA.boot.img";
+        case "magisk-14-0-4-india":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.4.0.TKXINXM.INDIA.boot.img";
+        case "magisk-14-0-3-india":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.3.0.TKXINXM.INDIA.boot.img";
+        case "magisk-14-0-1-india":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.1.0.TKXINXM.INDIA.boot.img";
+            
+        case "magisk-14-0-9-eea":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.9.0.TKXEUXM.EEA.boot.img";
+        case "magisk-14-0-8-eea":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.8.0.TKXEUXM.EEA.boot.img";
+        case "magisk-14-0-7-eea":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.7.0.TKXEUXM.EEA.boot.img";
+        case "magisk-14-0-6-eea":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.6.0.TKXEUXM.EEA.boot.img";
+        case "magisk-14-0-5-eea":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.5.0.TKXEUXM.EEA.boot.img";
+        case "magisk-14-0-4-eea":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.4.0.TKXEUXM.EEA.boot.img";
+        case "magisk-14-0-2-eea":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.2.0.TKXEUXM.EEA.boot.img";
+            
+        case "magisk-14-0-7-russia":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.7.0.TKXRUXM.RUSSIA.boot.img";
+        case "magisk-14-0-6-russia":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.6.0.TKXRUXM.RUSSIA.boot.img";
+        case "magisk-14-0-5-russia":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.5.0.TKXRUXM.RUSSIA.boot.img";
+        case "magisk-14-0-4-russia":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.4.0.TKXRUXM.RUSSIA.boot.img";
+        case "magisk-14-0-3-russia":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.3.0.TKXRUXM.RUSSIA.boot.img";
+        case "magisk-14-0-2-russia":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.2.0.TKXRUXM.RUSSIA.boot.img";
+            
+        case "magisk-14-0-7-china":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.7.0.TKXCNXM.CHINA.boot.img";
+        case "magisk-14-0-6-china":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.6.0.TKXCNXM.CHINA.boot.img";
+        case "magisk-14-0-5-china":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.5.0.TKXCNXM.CHINA.boot.img";
+        case "magisk-14-0-4-china":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.4.0.TKXCNXM.CHINA.boot.img";
+            
+        case "magisk-14-0-5-turkey":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.5.0.TKXTRXM.TURKEY.boot.img";
+        case "magisk-14-0-4-turkey":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.4.0.TKXTRXM.TURKEY.boot.img";
+        case "magisk-14-0-2-turkey":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.2.0.TKXTRXM.TURKEY.boot.img";
+        case "magisk-14-0-1-turkey":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.1.0.TKXTRXM.TURKEY.boot.img";
+            
+        case "magisk-14-0-3-taiwan":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.3.0.TKXTWXM.TAIWAN.boot.img";
+        case "magisk-14-0-2-taiwan":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.2.0.TKXTWXM.TAIWAN.boot.img";
+        case "magisk-14-0-1-taiwan":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.27.NABU.V14.0.1.0.TKXTWXM.TAIWAN.boot.img";
+        
+        default:
+            return null;
+    }
+}
+
+async function rbootDownloadFlashImage(imagePath) {
+    const progressBarContainer = document.querySelector('.rboot-progress-container');
+    const progressBar = document.querySelector('.rboot-progress-bar');
+    progressBarContainer.style.display = 'block';
+
+    try {
+        const response = await fetch(imagePath);
+        if (!response.ok) throw new Error("Failed to download flash image");
+
+        const contentLength = response.headers.get('Content-Length');
+        const total = parseInt(contentLength, 10);
+        let loaded = 0;
+
+        const reader = response.body.getReader();
+        const chunks = [];
+
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            chunks.push(value);
+            loaded += value.length;
+            progressBar.style.width = `${(loaded / total) * 100}%`;
+        }
+
+        const blob = new Blob(chunks);
+        return blob;
+    } catch (error) {
+        console.error("Download error:", error);
+        alert("Error downloading flash image. Please try again.");
+    } finally {
+        progressBarContainer.style.display = 'none';
+        progressBar.style.width = `0%`;
+    }
+}
+
+function rbootShowProgressOverlay() {
+    const progressBarContainer = document.querySelector('.rboot-progress-container');
+    const progressBar = document.querySelector('.rboot-progress-bar');
+    progressBarContainer.style.display = 'block';
+    progressBar.style.width = '0%'; // Reset progress bar
+}
+
+function rbootHideProgressOverlay() {
+    const progressBarContainer = document.querySelector('.rboot-progress-container');
+    progressBarContainer.style.display = 'none';
+}
+
+
+    document.querySelector(".connect-button").addEventListener("click", connectDevice);
+    document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
+    document.querySelector(".reboot-button").addEventListener("click", rebootDevice);
+    document.querySelector(".reboot-bootloader-button").addEventListener("click", rebootToBootloader);
+    document.querySelector(".reboot-recovery-button").addEventListener("click", rebootToRecovery);
+    document.querySelector(".reboot-fastbootd-button").addEventListener("click", rebootToFastbootD);
+    document.querySelector(".reboot-edl-button").addEventListener("click", rebootToEDL);
+    document.querySelector(".boot-form").addEventListener("submit", bootFormFile);
+    document.querySelector(".flash-form").addEventListener("submit", flashFormFile);
+    document.querySelector(".rboot-flash-form").addEventListener("submit", rbootFlashFormFile);
+</script>
+</body>
+</html>
