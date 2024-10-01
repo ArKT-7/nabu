@@ -403,10 +403,10 @@ label {
     border-radius: 15px;
 }
 
-
-	     .small-button, .dark-button {
+ .small-button {
             position: absolute;
             top: 10px;
+            right: 10px;
             background-color: #007bff;
             color: white;
             border: none;
@@ -416,15 +416,7 @@ label {
             box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
         }
 
-        .small-button {
-            right: 10px;
-        }
-
-        .dark-button {
-            left: 10px;
-        }
-
-        .small-button:hover, .dark-button:hover {
+        .small-button:hover {
             background-color: #0056b3;
         }
 
@@ -441,12 +433,10 @@ label {
     <div id="progress-message">Processing... Please wait</div>
 </div>
 
-<!-- Container with small buttons and status field -->
+
+ <!-- Container with status field and single button -->
   <div class="container">
-      <button class="small-button">?</button> <!-- Small button in corner -->
-      <a href="https://arkt-7.github.io/nabu/dark/" target="_blank">
-          <button class="dark-button">Dark</button> <!-- Dark button linking to dark mode -->
-      </a>
+      <button class="small-button" onclick="window.location.href='https://arkt-7.github.io/nabu/dark/'">Dark</button> <!-- Dark button that redirects -->
       <p class="status-field">Not connected in Fastboot</p>
       <button class="button connect-button">Connect device Fastboot</button>
   </div>
