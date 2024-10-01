@@ -813,7 +813,7 @@ function hideProgressOverlay() {
 function toggleElements(disable) {
     const formElements = document.querySelectorAll("input, button, select");
     formElements.forEach((element) => {
-        if (!element.classList.contains('connect-button')) {
+        if (!element.classList.contains('connect-button') && !element.classList.contains('switchx')) {
             element.disabled = disable;
         }
     });
