@@ -404,42 +404,22 @@ label {
 }
 
 
-	     
+	        .small-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 10px;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+    }
 
-	    .small-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    padding: 10px;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.small-button:hover {
-    background-color: #0056b3;
-}
-
-#darkmode-toggle {
-    display: none;
-}
-
-.small-button svg {
-    width: 20px;
-    height: 20px;
-    fill: white;
-    transition: fill 0.3s ease;
-}
-
-body.dark-mode .small-button svg {
-    fill: #f39c12; /* Change icon color in dark mode */
-}
+    .small-button:hover {
+        background-color: #0056b3;
+    }
 
 
     </style>
@@ -456,22 +436,13 @@ body.dark-mode .small-button svg {
 </div>
 
 <div class="container">
-    <!-- Dark mode toggle button -->
-    <button class="small-button">
-        <input type="checkbox" id="darkmode-toggle" />
-        <label for="darkmode-toggle">
-            <svg version="1.1" class="sun" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-            viewBox="0 0 496 496" style="enable-background:new 0 0 496 496;" xml:space="preserve">
-                <rect x="152.994" y="58.921" transform="matrix(0.3827 0.9239 -0.9239 0.3827 168.6176 -118.5145)" width="40.001" height="16"/>
-                <path d="M248,88c-88.224,0-160,71.776-160,160s71.776,160,160,160s160-71.776,160-160S336.224,88,248,88z"/>
-            </svg>
-        </label>
+	<button class="small-button"
+        onclick="window.location.href = 'https://arkt-7.github.io/nabu';">
+        Click Here
     </button>
-    
     <p class="status-field">Not connected in Fastboot</p>
     <button class="button connect-button">Connect device Fastboot</button>
 </div>
-
 
 
 <div class="container">
@@ -737,19 +708,6 @@ function hideProgressOverlay() {
     isFinalLoop = false; // Reset the final loop flag
     progressMessage.textContent = ''; // Clear the message text
 }
-
-	   document.getElementById('darkmode-toggle').addEventListener('change', function () {
-    if (this.checked) {
-        document.body.classList.add('dark-mode');
-        // Redirect to the dark mode page after toggling
-        setTimeout(function() {
-            window.location.href = 'https://arkt-7.github.io/nabu/dark/';
-        }, 500); // Wait 500ms before redirecting (can adjust timing if needed)
-    } else {
-        document.body.classList.remove('dark-mode');
-    }
-});
-	   
 
 function toggleElements(disable) {
     const formElements = document.querySelectorAll("input, button, select");
