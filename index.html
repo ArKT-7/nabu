@@ -850,11 +850,17 @@ function toggleElements(disable, isNabu = false) {
         }
     });
 
-    // Specifically disable the rboot-flash-image select if nabu device is detected
+    // Specifically disable the select elements if nabu device is detected
     if (isNabu) {
-        const rbootFlashSelect = document.querySelector(".rboot-flash-image, .boot-type");
+        const rbootFlashSelect = document.querySelector(".rboot-flash-image");
+        const bootTypeSelect = document.querySelector(".boot-type");
+
         if (rbootFlashSelect) {
-            rbootFlashSelect.disabled = true; // Always disable the select if nabu is detected
+            rbootFlashSelect.disabled = true; // Disable rboot-flash-image select
+        }
+        
+        if (bootTypeSelect) {
+            bootTypeSelect.disabled = true; // Disable boot-type select
         }
     }
 }
