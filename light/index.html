@@ -726,8 +726,8 @@ input:checked + .slider:before {
 
 
    <script type="module">
-    import * as fastboot from "./dist/fastboot.mjs";
-    import { BlobStore } from "./download.js";
+    import * as fastboot from "../dist/fastboot.mjs";
+    import { BlobStore } from "../download.js";
 
     let device = new fastboot.FastbootDevice();
     window.device = device;
@@ -746,7 +746,7 @@ input:checked + .slider:before {
 
             // Wait for the animation to complete
             setTimeout(() => {
-                window.location.href = "https://arkt-7.github.io/nabu/light/"; // Change this to your URL
+                window.location.href = "https://arkt-7.github.io/nabu/"; // Change this to your URL
             }, 400); // Match this time with the transition duration
         }
 
