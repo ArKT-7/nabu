@@ -841,14 +841,24 @@ function hideProgressOverlay() {
     progressMessage.textContent = ''; 
 }
 
-function toggleElements(disable) {
+function toggleElements(disable, isNabu = false) {
     const formElements = document.querySelectorAll("input, button, select");
+    
     formElements.forEach((element) => {
         if (!element.classList.contains('connect-button') && !element.closest('.switchx')) {
-            element.disabled = disable;
+            element.disabled = disable; // General enable/disable logic
         }
     });
+
+    // Specifically disable the rboot-flash-image select if nabu device is detected
+    if (isNabu) {
+        const rbootFlashSelect = document.querySelector(".rboot-flash-image");
+        if (rbootFlashSelect) {
+            rbootFlashSelect.disabled = true; // Always disable the select if nabu is detected
+        }
+    }
 }
+	
 
 function clearFormElements() {
     const formElements = document.querySelectorAll("input, button, select, textarea");
@@ -872,46 +882,47 @@ function clearFormElements() {
 }
        
 
- async function connectDevice() {
-        let statusField = document.querySelector(".status-field");
-        statusField.textContent = "Connecting...";
+async function connectDevice() {
+    let statusField = document.querySelector(".status-field");
+    statusField.textContent = "Connecting...";
 
-        try {
-            await device.connect();
-        } catch (error) {
-            statusField.textContent = `Failed to connect to device: ${error.message}`;
-            toggleElements(true); 
-            return;
-        }
-
-        let product = await device.getVariable("product");
-        let slot = await device.getVariable("current-slot");
-        let serial = await device.getVariable("serialno");
-        let bootloaderStatus = await device.getVariable("unlocked");
-        let bootloaderStatusText = bootloaderStatus === "yes" ? "unlocked" : "locked";
-
-        let deviceName = "";
-        if (product === "nabu") {
-		
-            deviceName = "Device name - Xiaomi Pad 5";
-        } else if (product === "dm3q") {
-            deviceName = "Device name - Samsung S23 Ultra";
-        }
-
-        let status = `Connected to - ${product} <br /> Current slot - ${slot} <br /> (serial: ${serial})`;
-        if (deviceName) {
-            status += `<br />${deviceName}`;
-        }
-
-        status += `<br />Bootloader status: ${bootloaderStatusText}`;
-        statusField.innerHTML = status;
-
-        toggleElements(false); 
+    try {
+        await device.connect();
+    } catch (error) {
+        statusField.textContent = `Failed to connect to device: ${error.message}`;
+        toggleElements(true); 
+        return;
     }
+
+    let product = await device.getVariable("product");
+    let slot = await device.getVariable("current-slot");
+    let serial = await device.getVariable("serialno");
+    let bootloaderStatus = await device.getVariable("unlocked");
+    let bootloaderStatusText = bootloaderStatus === "yes" ? "unlocked" : "locked";
+
+    let deviceName = "";
+    let isNabu = false;
+    if (product === "nabu") {
+        deviceName = "Device name - Xiaomi Pad 5";
+        isNabu = true; // Set flag if device is nabu
+    } else if (product === "dm3q") {
+        deviceName = "Device name - Samsung S23 Ultra";
+    }
+
+    let status = `Connected to - ${product} <br /> Current slot - ${slot} <br /> (serial: ${serial})`;
+    if (deviceName) {
+        status += `<br />${deviceName}`;
+    }
+
+    status += `<br />Bootloader status: ${bootloaderStatusText}`;
+    statusField.innerHTML = status;
+
+    // Call toggleElements with the isNabu flag
+    toggleElements(false, isNabu); 
+}
 
     toggleElements(true); 
 
-	document.getElementById("rbootFlashImage").disabled = true;
 
     function handleDisconnect() {
         let statusField = document.querySelector(".status-field");
