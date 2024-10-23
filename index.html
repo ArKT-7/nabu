@@ -731,7 +731,6 @@
         function redirectToUrl() {
             const toggleInput = document.getElementById('toggle-input');
 
-            // Wait for the animation to complete
             setTimeout(() => {
                 window.location.href = "https://arkt-7.github.io/nabu/light/"; 
             }, 400);
@@ -893,6 +892,7 @@ function clearFormElements() {
 
         let deviceName = "";
         if (product === "nabu") {
+		document.getElementById("rbootFlashImage").disabled = true;
             deviceName = "Device name - Xiaomi Pad 5";
         } else if (product === "dm3q") {
             deviceName = "Device name - Samsung S23 Ultra";
