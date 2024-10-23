@@ -841,11 +841,24 @@ function hideProgressOverlay() {
     progressMessage.textContent = ''; 
 }
 
-function toggleElements(disable) {
+function toggleElements(disable, isNabu = false) {
     const formElements = document.querySelectorAll("input, button, select");
+
     formElements.forEach((element) => {
         if (!element.classList.contains('connect-button') && !element.closest('.switchx')) {
-            element.disabled = disable;
+            if (element.tagName === "SELECT" && element.classList.contains("rboot-flash-image") && isNabu) {
+                // If the device is "nabu", ensure the specific options remain disabled
+                let options = element.querySelectorAll("option");
+                options.forEach((option) => {
+                    if (option.value.includes("magisk")) {
+                        option.disabled = true; // Keep magisk options disabled for "nabu"
+                    } else {
+                        option.disabled = disable; // Enable/Disable other options based on disable flag
+                    }
+                });
+            } else {
+                element.disabled = disable; // General enable/disable logic for other elements
+            }
         }
     });
 }
@@ -892,7 +905,7 @@ function clearFormElements() {
 
         let deviceName = "";
         if (product === "nabu") {
-		document.getElementById("rbootFlashImage").disabled = true;
+            isNabu = true;
             deviceName = "Device name - Xiaomi Pad 5";
         } else if (product === "dm3q") {
             deviceName = "Device name - Samsung S23 Ultra";
