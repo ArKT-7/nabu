@@ -710,10 +710,9 @@
     </div>
 
 
-   <script type="module">
+<script type="module">
     import * as fastboot from "../dist/fastboot.mjs";
     import { BlobStore } from "../download.js";
-
     let device = new fastboot.FastbootDevice();
     window.device = device;
     let blobStore = new BlobStore();
@@ -723,40 +722,35 @@
 
 	   window.onload = function() {
             const toggleInput = document.getElementById('toggle-input');
-            toggleInput.checked = false; // Always set to off on load
+            toggleInput.checked = false;
         };
 
         function redirectToUrl() {
             const toggleInput = document.getElementById('toggle-input');
 
-            // Wait for the animation to complete
             setTimeout(() => {
-                window.location.href = "https://arkt-7.github.io/nabu/"; // Change this to your URL
-            }, 400); // Match this time with the transition duration
+                window.location.href = "https://arkt-7.github.io/nabu/"; 
+            }, 400);
         }
 
-        // Redirect only when the toggle is switched on
         const toggleInput = document.getElementById('toggle-input');
         toggleInput.addEventListener('change', function() {
             if (this.checked) {
-                redirectToUrl(); // Redirect only if it is turned on
+                redirectToUrl(); 
             } else {
-                this.checked = false; // Keep it off if turned off
+                this.checked = false;
             }
         });
 
-        // Prevent the state from changing back to "on" when returning to the page
         window.onbeforeunload = function() {
             const toggleInput = document.getElementById('toggle-input');
-            toggleInput.checked = false; // Reset to off on page unload
+            toggleInput.checked = false;
         };
 
 	   
-
-    // Utility function to show the progress overlay and disable buttons
- let messageInterval; // Store the timeout globally, so we can clear it later
-let typingInterval;  // Store typing interval globally, to clear it when necessary
-let clearingInterval;  // Store clearing interval globally, to clear it when necessary
+let messageInterval;
+let typingInterval; 
+let clearingInterval; 
 const progressMessage = document.getElementById('progress-message');
 const messages = [
     'Hi its downloading, ig Flashing...',
@@ -765,65 +759,57 @@ const messages = [
     'IDK what\'s going on lol',
     'Processing... ig Please wait now'
 ];
-const finalMessage = 'Please wait...'; // Final message to keep looping
+const finalMessage = 'Please wait...'; 
 let messageIndex = 0;
-let isFinalLoop = false; // Flag to track if we're in the final loop
+let isFinalLoop = false;
 
 function typeMessage(message, callback) {
     let i = 0;
-    progressMessage.textContent = ''; // Ensure text is cleared before typing starts
+    progressMessage.textContent = '';
     typingInterval = setInterval(() => {
         if (i < message.length) {
             progressMessage.textContent += message[i];
             i++;
         } else {
             clearInterval(typingInterval);
-            if (callback) callback(); // Trigger the callback when done typing
+            if (callback) callback(); 
         }
-    }, 60); // Adjust typing speed
+    }, 60);
 }
 
 function clearMessage(callback) {
     clearingInterval = setInterval(() => {
         if (progressMessage.textContent.length > 0) {
-            progressMessage.textContent = progressMessage.textContent.slice(0, -1); // Remove last character
+            progressMessage.textContent = progressMessage.textContent.slice(0, -1);
         } else {
             clearInterval(clearingInterval);
-            if (callback) callback(); // Trigger the callback when text is cleared
+            if (callback) callback(); 
         }
-    }, 50); // Adjust clearing speed
+    }, 50); 
 }
 
 function cycleMessages() {
-    // First, clear any ongoing intervals to avoid overlapping messages
     clearInterval(typingInterval);
     clearInterval(clearingInterval);
-    
-    // Clear the current message before typing the next one
     clearMessage(() => {
         if (isFinalLoop) {
-            // In the final loop, only repeat the "Please wait..." message
             typeMessage(finalMessage, () => {
-                messageInterval = setTimeout(cycleMessages, 5000); // Loop indefinitely
+                messageInterval = setTimeout(cycleMessages, 5000);
             });
         } else {
-            // Cycle through initial messages
             typeMessage(messages[messageIndex], () => {
                 messageIndex++;
                 if (messageIndex < messages.length) {
-                    // Adjust the timing, keeping the last message longer
                     messageInterval = setTimeout(cycleMessages, messageIndex === messages.length - 1 ? 5000 : 1000);
                 } else {
-                    // After all messages are shown, start looping the final message
                     isFinalLoop = true;
-                    messageInterval = setTimeout(cycleMessages, 1000); // Start looping the final message
+                    messageInterval = setTimeout(cycleMessages, 1000);
                 }
             });
         }
     });
 }
 
-// Utility function to show the progress overlay and disable buttons
 function showProgressOverlay() {
     const progressOverlay = document.getElementById('progress-overlay');
     const buttons = document.querySelectorAll('.button');
@@ -831,16 +817,11 @@ function showProgressOverlay() {
     buttons.forEach(button => {
         button.disabled = true;
     });
-
-    // Reset the message cycle to start from the beginning
     messageIndex = 0;
     isFinalLoop = false;
-
-    // Start the message cycling animation
     cycleMessages();
 }
 
-// Utility function to hide the progress overlay and enable buttons
 function hideProgressOverlay() {
     const progressOverlay = document.getElementById('progress-overlay');
     const buttons = document.querySelectorAll('.button');
@@ -848,22 +829,18 @@ function hideProgressOverlay() {
     buttons.forEach(button => {
         button.disabled = false;
     });
-
-    // Stop any ongoing intervals (typing, clearing, cycling)
     clearTimeout(messageInterval);
     clearInterval(typingInterval);
     clearInterval(clearingInterval);
-    
-    // Reset the message content and clear the typing state
-    messageIndex = 0; // Reset to the first message
-    isFinalLoop = false; // Reset the final loop flag
-    progressMessage.textContent = ''; // Clear the message text
+
+    messageIndex = 0; 
+    isFinalLoop = false; 
+    progressMessage.textContent = ''; 
 }
 
 function toggleElements(disable) {
     const formElements = document.querySelectorAll("input, button, select");
     formElements.forEach((element) => {
-        // Only disable elements without 'connect-button' or 'switchx' class
         if (!element.classList.contains('connect-button') && !element.closest('.switchx')) {
             element.disabled = disable;
         }
@@ -873,22 +850,19 @@ function toggleElements(disable) {
 function clearFormElements() {
     const formElements = document.querySelectorAll("input, button, select, textarea");
 
-    // Store the current selected value of the rboot-flash-partition select
     let rbootPartitionSelect = document.querySelector('.rboot-flash-partition');
     let previousSelectedValue = rbootPartitionSelect ? rbootPartitionSelect.value : null;
 
     formElements.forEach((element) => {
-        // Clear relevant form fields
         if (element.tagName === "INPUT" && (element.type === "text" || element.type === "file")) {
-            element.value = ""; // Clear text and file inputs
+            element.value = "";
         } else if (element.tagName === "SELECT") {
-            element.selectedIndex = 0; // Reset selects to the first option
+            element.selectedIndex = 0;
         } else if (element.tagName === "TEXTAREA") {
-            element.value = ""; // Clear text areas
+            element.value = ""; 
         }
     });
 
-    // After clearing, restore the previously selected value of the rboot-flash-partition select
     if (rbootPartitionSelect && previousSelectedValue !== null) {
         rbootPartitionSelect.value = previousSelectedValue;
     }
@@ -903,7 +877,7 @@ function clearFormElements() {
             await device.connect();
         } catch (error) {
             statusField.textContent = `Failed to connect to device: ${error.message}`;
-            toggleElements(true); // Enable all elements when connected
+            toggleElements(true); 
             return;
         }
 
@@ -928,29 +902,27 @@ function clearFormElements() {
         status += `<br />Bootloader status: ${bootloaderStatusText}`;
         statusField.innerHTML = status;
 
-        toggleElements(false); // Enable all elements when connected
+        toggleElements(false); 
     }
 
-    toggleElements(true); // Initially disable all features
+    toggleElements(true); 
 
     function handleDisconnect() {
         let statusField = document.querySelector(".status-field");
         statusField.textContent = "Not connected in Fastboot";
-        toggleElements(true); // Disable all elements on disconnect
+        toggleElements(true); 
     }
 
-       // Function to check if the device is still connected after operations
 async function checkDeviceConnection() {
     let statusField = document.querySelector(".status-field");
 
     try {
         let product = await device.getVariable("product");
         if (product) {
-            //statusField.textContent = "Device is still connected in Fastboot mode.";
         }
     } catch (error) {
         statusField.textContent = "Device disconnected!";
-        toggleElements(true); // Disable all elements on disconnect
+        toggleElements(true);
     }
     clearFormElements();
 }
@@ -965,11 +937,8 @@ async function checkDeviceConnection() {
     }
 
     let result = (await device.runCommand(command)).text;
-    //let resultField = document.querySelector(".result-field");
-    //resultField.textContent = result;
-    //resultField.style.display = 'block'; // Show the result field
     inputField.value = "";
-        await checkDeviceConnection(); // Check if device is still connected after reboot
+        await checkDeviceConnection();
 }
 
 
@@ -993,21 +962,14 @@ async function checkDeviceConnection() {
         await runRebootCommand("oem edl", "Rebooted to EDL successfully!");
     }
 
-   //async function runRebootCommand(command, successMessage) {
-       // let result = (await device.runCommand(command)).text;
-       // document.querySelector(".result-field").textContent = result;
-   // } 
-
-       // After rebooting
 async function runRebootCommand(command, successMessage) {
     try {
         let result = (await device.runCommand(command)).text;
-       // document.querySelector(".result-field").textContent = result;
         alert(successMessage);
     } catch (error) {
         alert(`Error during reboot: ${error.message}`);
     } finally {
-        await checkDeviceConnection(); // Check if device is still connected after reboot
+        await checkDeviceConnection();
     }
 }
 
@@ -1042,10 +1004,10 @@ async function runRebootCommand(command, successMessage) {
             console.error("Error booting image:", error);
             alert("Error booting image. Please try again.");
         } finally {
-            fileField.value = ""; // Reset file input after use
-            bootTypeSelect.selectedIndex = 0; // Reset selection
+            fileField.value = ""; 
+            bootTypeSelect.selectedIndex = 0; 
             hideProgressOverlay();
-            await checkDeviceConnection(); // Check if device is still connected
+            await checkDeviceConnection(); 
         }
     }
     
@@ -1070,7 +1032,7 @@ async function runRebootCommand(command, successMessage) {
     async function downloadBootImage(imagePath) {
         const progressBarContainer = document.querySelector('.progress-container');
         const progressBar = document.querySelector('.progress-bar');
-        progressBarContainer.style.display = 'block'; // Show the progress bar
+        progressBarContainer.style.display = 'block';
 
         try {
             const response = await fetch(imagePath);
@@ -1097,7 +1059,7 @@ async function runRebootCommand(command, successMessage) {
             console.error("Download error:", error);
             alert("Error downloading boot image. Please try again.");
         } finally {
-            progressBarContainer.style.display = 'none'; // Hide the progress bar
+            progressBarContainer.style.display = 'none';
             progressBar.style.width = `0%`;
         }
     }
@@ -1130,7 +1092,7 @@ async function runRebootCommand(command, successMessage) {
             fileField.value = "";
             partField.value = "";
             hideProgressOverlay();
-            await checkDeviceConnection(); // Check if device is still connected
+            await checkDeviceConnection();
         }
     }
 
@@ -1141,16 +1103,14 @@ async function runRebootCommand(command, successMessage) {
            showProgressOverlay();
 
     let fileField = document.querySelector(".rboot-flash-file");
-    let partField = document.querySelector(".rboot-flash-partition");  // Updated to use dropdown
+    let partField = document.querySelector(".rboot-flash-partition"); 
     let selectedImage = document.querySelector(".rboot-flash-image").value;
 
     let file;
-
-    // Check if a file is uploaded or a predefined image is selected
     if (fileField.files.length > 0) {
         file = fileField.files[0];
     } else if (selectedImage) {
-        file = await rbootDownloadFlashImage(rbootGetImagePath(selectedImage)); // Predefined image
+        file = await rbootDownloadFlashImage(rbootGetImagePath(selectedImage));
     } else {
         alert("Please select a file to flash or choose a predefined image!");
         rbootHideProgressOverlay();
@@ -1174,7 +1134,7 @@ async function runRebootCommand(command, successMessage) {
         fileField.value = "";
         rbootHideProgressOverlay();
         hideProgressOverlay();
-        await checkDeviceConnection(); // Check if device is still connected
+        await checkDeviceConnection();
     }
 }
 
@@ -1451,14 +1411,13 @@ function rbootShowProgressOverlay() {
     const progressBarContainer = document.querySelector('.rboot-progress-container');
     const progressBar = document.querySelector('.rboot-progress-bar');
     progressBarContainer.style.display = 'block';
-    progressBar.style.width = '0%'; // Reset progress bar
+    progressBar.style.width = '0%';
 }
 
 function rbootHideProgressOverlay() {
     const progressBarContainer = document.querySelector('.rboot-progress-container');
     progressBarContainer.style.display = 'none';
 }
-
 
     document.querySelector(".connect-button").addEventListener("click", connectDevice);
     document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
