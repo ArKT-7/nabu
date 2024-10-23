@@ -16,31 +16,30 @@
     <link rel="icon" href="https://img.icons8.com/fluency/48/android.png" type="image/png">
     <style>
         body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
- background: linear-gradient(135deg, #1c1f24, #18191A);    
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1c1f24, #18191A);    
             color: #e8eaed;
-    margin: 0;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    min-height: 100vh;
-    background-color: #1c1f24;
-}
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            min-height: 100vh;
+            background-color: #1c1f24;
+        }
 
+        h1 {
+            color: #4a4a4a; /* Fallback color for browsers that don't support the gradient */
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 38px;
+            text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+        }
 
-h1 {
-    color: #4a4a4a; /* Fallback color for browsers that don't support the gradient */
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 38px;
-    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
-}
-
-	    h2 {
+        h2 {
             color: #f8f9fa;
-			margin-top: 0px;
+            margin-top: 0;
             margin-bottom: 5px;
             font-size: 24px;
             letter-spacing: 2px;
@@ -50,489 +49,445 @@ h1 {
             animation: textGlow 4s ease-in-out infinite;
         }
 
-.title {
-    text-align: center;
-    font-size: 32px;
-    letter-spacing: 0.5px;
-}
+        .title {
+            text-align: center;
+            font-size: 32px;
+            letter-spacing: 0.5px;
+        }
 
-.text-gradient {
-    background: linear-gradient(135deg, #00d1ff, #0052cc);
-    -webkit-background-clip: text;
-    color: transparent;
-    text-shadow: 
-        0 0 5px rgba(0, 209, 255, 0.7), 
-        0 0 10px rgba(0, 209, 255, 0.5), 
-        0 0 15px rgba(0, 209, 255, 0.3), 
-        0 0 20px rgba(0, 209, 255, 0.2);
-    animation: textGlow 2s ease-in-out infinite;
-}
+        .text-gradient {
+            background: linear-gradient(135deg, #00d1ff, #0052cc);
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 
+                0 0 5px rgba(0, 209, 255, 0.7), 
+                0 0 10px rgba(0, 209, 255, 0.5), 
+                0 0 15px rgba(0, 209, 255, 0.3), 
+                0 0 20px rgba(0, 209, 255, 0.2);
+            animation: textGlow 2s ease-in-out infinite;
+        }
 
-.subtitle {
-    color: #f8f9fa;
-    text-align: center;
-    font-size: 24px;
-    margin-top: -5px;
-}
+        .subtitle {
+            color: #f8f9fa;
+            text-align: center;
+            font-size: 24px;
+            margin-top: -5px;
+        }
 
-@keyframes textGlow {
-    0%, 100% {
-        text-shadow: 
-            0 0 8px rgba(0, 82, 204, 0.8), 
-            0 0 20px rgba(0, 209, 255, 0.5);
-    }
-    50% {
-        text-shadow: 
-            0 0 16px rgba(0, 82, 204, 0.8), 
-            0 0 30px rgba(0, 209, 255, 0.5);
-    }
-}
+        @keyframes textGlow {
+            0%, 100% {
+                text-shadow: 
+                    0 0 8px rgba(0, 82, 204, 0.8), 
+                    0 0 20px rgba(0, 209, 255, 0.5);
+            }
+            50% {
+                text-shadow: 
+                    0 0 16px rgba(0, 82, 204, 0.8), 
+                    0 0 30px rgba(0, 209, 255, 0.5);
+            }
+        }
 
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* Center contents vertically */
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            margin: 30px 0;
+            background: linear-gradient(135deg, #1c1f24, #3a3f44); /* Original gradient */
+            background-size: 200% 200%; /* Increase size for smoother movement */
+            border-radius: 20px;
+            position: relative;
+            text-align: center;
+            overflow: hidden;
+            animation: backgroundMove 20s linear infinite; /* Linear for smooth infinite animation */
+        }
 
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: linear-gradient(45deg, #ff6ec4, #7873f5, #3a1c71, #ff6ec4); /* Glowing gradient for border */
+            background-size: 400% 400%;
+            border-radius: 20px;
+            z-index: -1;
+            filter: blur(10px); /* Glowing effect */
+            opacity: 0.8;
+            animation: glow 10s ease infinite; /* Glowing border animation */
+            box-shadow: 
+                0 0 20px 10px rgba(255, 110, 196, 0.5),   /* General glow */
+                0 0 40px 10px rgba(255, 110, 196, 0.3) inset, /* Inner glow */
+                -10px -10px 30px rgba(255, 110, 196, 0.8), /* Top-left corner */
+                10px -10px 30px rgba(255, 110, 196, 0.8),  /* Top-right corner */
+                -10px 10px 30px rgba(255, 110, 196, 0.8),  /* Bottom-left corner */
+                10px 10px 30px rgba(255, 110, 196, 0.8);   /* Bottom-right corner */
+        }
 
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center; /* Center contents vertically */
-    padding: 30px;
-    width: 90%;
-    max-width: 600px;
-    margin: 30px 0;
-    background: linear-gradient(135deg, #1c1f24, #3a3f44); /* Original gradient */
-    background-size: 200% 200%; /* Increase size for smoother movement */
-    border-radius: 20px;
-    position: relative;
-    text-align: center;
-    overflow: hidden;
-    animation: backgroundMove 20s linear infinite; /* Linear for smooth infinite animation */
-}
+        @keyframes glow {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
 
-.container::before {
-    content: '';
-    position: absolute;
-    top: -3px;
-    left: -3px;
-    right: -3px;
-    bottom: -3px;
-    background: linear-gradient(45deg, #ff6ec4, #7873f5, #3a1c71, #ff6ec4); /* Glowing gradient for border */
-    background-size: 400% 400%;
-    border-radius: 20px;
-    z-index: -1;
-    filter: blur(10px); /* Glowing effect */
-    opacity: 0.8;
-    animation: glow 10s ease infinite; /* Glowing border animation */
-    box-shadow: 
-        0 0 20px 10px rgba(255, 110, 196, 0.5),   /* General glow */
-        0 0 40px 10px rgba(255, 110, 196, 0.3) inset, /* Inner glow */
-        -10px -10px 30px rgba(255, 110, 196, 0.8), /* Top-left corner */
-        10px -10px 30px rgba(255, 110, 196, 0.8),  /* Top-right corner */
-        -10px 10px 30px rgba(255, 110, 196, 0.8),  /* Bottom-left corner */
-        10px 10px 30px rgba(255, 110, 196, 0.8);   /* Bottom-right corner */
-}
+        @keyframes backgroundMove {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
 
-@keyframes glow {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
-}
+        form {
+            display: flex;
+            flex-direction: column; /* Align form elements vertically */
+            width: 100%;
+            align-items: center; /* Center form elements */
+        }
 
-@keyframes backgroundMove {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
-}
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-        
-
-
-
-form {
-    display: flex;
-    flex-direction: column; /* Align form elements vertically */
-    width: 100%;
-    align-items: center; /* Center form elements */
-}
-
-@keyframes fadeInUp {
-    0% {
-        opacity: 0;
-        transform: translateY(50px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.button {
-	background-color: #ffffff;
-    background: linear-gradient(135deg, #007bff, #00d4ff);
-    border: none;
-    border-radius: 20px;
-    color: white;
-    padding: 15px 20px;
-    font-size: 18px;
-    font-weight: bold;
-    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    transition: background 0.3s ease, transform 0.3s ease;
-    margin: 10px 0;
-    width: 100%;
-    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
-            color: #fff;
-            cursor: pointer;
-            animation: buttonGlow 3s ease-in-out infinite alternate;
-
+	.button {
+	    background-color: #ffffff;
+	    background: linear-gradient(135deg, #007bff, #00d4ff);
+	    border: none;
+	    border-radius: 20px;
+	    color: white;
+	    padding: 15px 20px;
+	    font-size: 18px;
+	    font-weight: bold;
+	    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+	    cursor: pointer;
+	    transition: background 0.3s ease, transform 0.3s ease;
+	    margin: 10px 0;
+	    width: 100%;
+	    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+	    animation: buttonGlow 3s ease-in-out infinite alternate;
+	}
 	
-	box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-		transition: all 0.3s ease;
-}
+	.button:hover {
+	    background: linear-gradient(135deg, #0056b3, #0094c6);
+	    transform: scale(1.05);
+	}
+	
+	.button:disabled {
+	    background: linear-gradient(135deg, #b0b0b0, #d4d4d4);
+	    color: #888; /* Dull text color to emphasize the disabled state */
+	    cursor: not-allowed;
+	    box-shadow: none;
+	    transform: none;
+	}
+	
+	/* .flash-form, .boot-form, .rboot-flash-form, .command-form { */
+	/*     display: flex; */
+	/*     flex-direction: column; */
+	/*     align-items: center; /* Center the form horizontally */
+	/*     width: 100%; /* Full width for the form */
+	/* } */
+	
+	input[type="file"],
+	input[type="text"], 
+	select {
+	    text-align: center; /* Center align text inside input fields */
+	    width: 100%; /* Use full width of the container */
+	    max-width: 600px; /* Set a max width for better appearance */
+	    padding: 15px 20px;
+	    margin: 10px 0; /* Vertical spacing between inputs */
+	    border-radius: 20px;
+	    border: none;
+	    box-sizing: border-box; /* Ensure padding and borders are included in the width */
+	    background-color: #ffffff;
+	    background: linear-gradient(135deg, #333, #444); /* Gradient background */
+	    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+	    transition: all 0.3s ease;
+	    -webkit-appearance: none; /* Remove default styling */
+	    -moz-appearance: none; /* Remove default styling */
+	    appearance: none; /* Remove default styling */
+	    background-color: #444;
+	    font-size: 14px;
+	    font-weight: bold;
+	    color: white;
+	}
+	
+	input[type="file"] {
+	    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
+	    transition: all 0.3s ease;
+	    -webkit-appearance: none; /* Remove default styling */
+	    -moz-appearance: none; /* Remove default styling */
+	    appearance: none; /* Remove default styling */
+	}
+	
+	/* select { */
+	/*     text-align: center; /* Center align text inside select fields */
+	/*     width: 100%; */
+	/*     padding: 15px 20px; */
+	/*     margin: 10px 0; */
+	/*     border-radius: 20px; */
+	/*     border: none; */
+	/*     background-color: #ffffff; */
+	/*     background: linear-gradient(135deg, #333, #444); /* Gradient background */
+	/*     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2); */
+	/*     transition: all 0.3s ease; */
+	/*     -webkit-appearance: none; /* Remove default styling */
+	/*     -moz-appearance: none; /* Remove default styling */
+	/*     appearance: none; /* Remove default styling */
+	/*     background-color: #444; */
+	/*     font-size: 14px; */
+	/*     font-weight: bold; */
+	/*     color: white; */
+	/* } */
+	
+	label {
+	    font-weight: bold;
+	    display: block;
+	    margin-bottom: 12px;
+	    font-size: 19px;
+	    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+	}
+	
+	label2 {
+	    font-weight: bold;
+	    display: block;
+	    margin-bottom: 6px;
+	    margin-top: 8px;
+	    font-size: 18px;
+	    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+	}
+	
+	.progress-container {
+	    width: 100%;
+	    height: 30px;
+	    background-color: #f3f3f3;
+	    border-radius: 15px;
+	    overflow: hidden;
+	    margin-top: 10px;
+	    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+	    display: none; /* Initially hidden */
+	}
+	
+	.progress-bar {
+	    height: 100%;
+	    width: 0%;
+	    background-color: #4caf50;
+	    transition: width 0.5s ease;
+	    border-radius: 15px;
+	}
+	
+	.status-field {
+	    font-weight: bold;
+	    display: block;
+	    margin-bottom: 10px;
+	    margin-top: 1px;
+	    font-size: 20px;
+	    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+	}
+	
+	/* pre.result-field { */
+	/*     background-color: rgba(255, 255, 255, 0.9); */
+	/*     padding: 15px; */
+	/*     border-radius: 15px; */
+	/*     overflow-x: auto; */
+	/*     white-space: pre-wrap; */
+	/*     max-height: 250px; */
+	/*     border: 1px solid #ccc; */
+	/*     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
+	/* } */
+	
+	#progress-overlay {
+	    position: fixed;
+	    top: 0;
+	    left: 0;
+	    right: 0;
+	    bottom: 0;
+	    background-color: rgba(0, 0, 0, 0.7);
+	    display: none; /* Hidden initially */
+	    justify-content: center;
+	    align-items: center;
+	    z-index: 1000; /* Bring it above everything */
+	}
+	
+	#progress-overlay.active {
+	    display: flex;
+	}
+	
+	#progress-message {
+	    color: white;
+	    font-size: 24px;
+	    text-align: center;
+	    padding: 20px;
+	    background-color: rgba(0, 0, 0, 0.8);
+	    border-radius: 10px;
+	    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+	    animation: pulse 1.5s infinite;
+	}
+	
+	@keyframes pulse {
+	    0% {
+	        transform: scale(1);
+	    }
+	    50% {
+	        transform: scale(1.05);
+	    }
+	    100% {
+	        transform: scale(1);
+	    }
+	}
+	
+	/* Neumorphic Buttons */
+	.rboot-button {
+	    background-color: #007bff;
+	    color: white;
+	    border: none;
+	    padding: 15px 25px;
+	    cursor: pointer;
+	    border-radius: 20px;
+	    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.15), -4px -4px 10px rgba(255, 255, 255, 0.7);
+	    transition: box-shadow 0.3s, transform 0.2s;
+	}
+	
+	.rboot-button:hover {
+	    background-color: #0056b3;
+	    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15), -2px -2px 6px rgba(255, 255, 255, 0.7);
+	    transform: translateY(-3px);
+	}
+	
+	/* Progress Bar */
+	.rboot-progress-container {
+	    width: 100%;
+	    height: 30px;
+	    background-color: #f3f3f3;
+	    border-radius: 15px;
+	    overflow: hidden;
+	    margin-top: 10px;
+	    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+	    display: none; /* Initially hidden */
+	}
+	
+	.rboot-progress-bar {
+	    height: 100%;
+	    width: 0%;
+	    background-color: #4caf50;
+	    transition: width 0.5s ease;
+	    border-radius: 15px;
+	}
+	
+	.switchx {
+	    font-size: 17px;
+	    position: absolute;
+	    top: 7px;
+	    right: 7px;
+	    display: inline-block;
+	    width: 40px;
+	    height: 22px;
+	}
+	
+	.switchx input {
+	    opacity: 0;
+	    width: 0;
+	    height: 0;
+	}
 
-.button:hover {
-    background: linear-gradient(135deg, #0056b3, #0094c6);
-    transform: scale(1.05);
-}
-        
-.button:disabled {
-    background: linear-gradient(135deg, #b0b0b0, #d4d4d4);
-    color: #888; /* Dull text color to emphasize the disabled state */
-    cursor: not-allowed;
-    box-shadow: none;
-    transform: none;
-}
+	.slider {
+	    position: absolute;
+	    cursor: pointer;
+	    top: 0;
+	    left: 0;
+	    right: 0;
+	    bottom: 0;
+	    background: linear-gradient(135deg, #3a3f44, #50575d); /* Dark mode background */
+	    transition: 0.4s;
+	    border-radius: 15px;
+	    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 0.2);
+	}
+	
+	.slider:before {
+	    position: absolute;
+	    content: "";
+	    height: 18px;
+	    width: 18px;
+	    border-radius: 50%;
+	    left: 2px;
+	    bottom: 2px;
+	    z-index: 2;
+	    background-color: #e8e8e8; /* White knob */
+	    transition: 0.4s;
+	    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.3);
+	}
+	
+	/* Adjusted sun icon for smaller size */
+	.sun svg {
+	    position: absolute;
+	    top: 4px; /* Adjusted position */
+	    left: 4px; /* Move sun to the left */
+	    z-index: 1;
+	    width: 14px; /* Smaller size */
+	    height: 14px; /* Smaller size */
+	}
+	
+	/* Adjusted moon icon for smaller size */
+	.moon svg {
+	    fill: #73C0FC;
+	    position: absolute;
+	    top: 4px; /* Adjusted position */
+	    left: 24px; /* Adjusted to fit smaller toggle */
+	    z-index: 1;
+	    width: 14px; /* Smaller size */
+	    height: 14px; /* Smaller size */
+	}
+	
+	/* Light mode when the switch is checked */
+	input:checked + .slider {
+	    background: linear-gradient(135deg, #e0e6ed, #c8d0d8); /* Light mode gradient */
+	    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.1);
+	}
+	
+	input:checked + .slider:before {
+	    background-color: #ffffff; /* Knob in light mode */
+	    transform: translateX(18px);
+	    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.2);
+	}
+	
+	.inputx:focus + .slider {
+	    box-shadow: 0 0 1px #183153;
+	}
 
-/*.flash-form, .boot-form, .rboot-flash-form, .command-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Center the form horizontally 
-    width: 100%; /* Full width for the form 
-} */
-
-
-input[type="file"],
-input[type="text"], 
-	    select {
-    text-align: center; /* Center align text inside input fields */
-    width: 100%; /* Use full width of the container */
-    max-width: 600px; /* Set a max width for better appearance */
-    padding: 15px 20px;
-    margin: 10px 0; /* Vertical spacing between inputs */
-    border-radius: 20px;
-    border: none;
-    box-sizing: border-box; /* Ensure padding and borders are included in the width */
-   background-color: #ffffff;
-    background: linear-gradient(135deg, #333, #444); /* Gradient background */
-	box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-		transition: all 0.3s ease;
-	-webkit-appearance: none; /* Remove default styling */
-		-moz-appearance: none; /* Remove default styling */
-		appearance: none; /* Remove default styling */
-	background-color: #444;
-	font-size: 14px;
-	font-weight: bold;
-	color: white;
-}
-
-
-	    input[type="file"] {
-	box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
-		transition: all 0.3s ease;
-	-webkit-appearance: none; /* Remove default styling */
-		-moz-appearance: none; /* Remove default styling */
-		appearance: none; /* Remove default styling */
-}
-
-/*select {
-    text-align: center; /* Center align text inside select fields 
-    width: 100%;
-    padding: 15px 20px;
-    margin: 10px 0;
-    border-radius: 20px;
-	border: none;
-	background-color: #ffffff;
-    background: linear-gradient(135deg, #333, #444); /* Gradient background 
-	box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-		transition: all 0.3s ease;
-	-webkit-appearance: none; /* Remove default styling 
-		-moz-appearance: none; /* Remove default styling 
-		appearance: none; /* Remove default styling 
-	background-color: #444;
-	font-size: 14px;
-	font-weight: bold;
-	color: white;
-}*/
-
-
-
-label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 12px;
-    font-size: 19px;
-    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
-}
-
-        label2 {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 6px;
-    margin-top: 8px;
-    font-size: 18px;
-    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
-}
-
-
-
-        
-.progress-container {
-    width: 100%;
-    height: 30px;
-    background-color: #f3f3f3;
-    border-radius: 15px;
-    overflow: hidden;
-    margin-top: 10px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-    display: none; /* Initially hidden */
-}
-
-.progress-bar {
-    height: 100%;
-    width: 0%;
-    background-color: #4caf50;
-    transition: width 0.5s ease;
-    border-radius: 15px;
-}
-
-.status-field {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 10px;
-    margin-top: 1px;
-    font-size: 20px;
-    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
-}
-
-/*pre.result-field {
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 15px;
-    border-radius: 15px;
-    overflow-x: auto;
-    white-space: pre-wrap;
-    max-height: 250px;
-    border: 1px solid #ccc;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}*/
-        
-#progress-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: none; /* Hidden initially */
-    justify-content: center;
-    align-items: center;
-    z-index: 1000; /* Bring it above everything */
-}
-
-#progress-overlay.active {
-    display: flex;
-}
-
-#progress-message {
-    color: white;
-    font-size: 24px;
-    text-align: center;
-    padding: 20px;
-    background-color: rgba(0, 0, 0, 0.8);
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-    animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.05);
-    }
-    100% {
-        transform: scale(1);
-    }
-}
-
-/* Neumorphic Buttons */
-.rboot-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 15px 25px;
-    cursor: pointer;
-    border-radius: 20px;
-    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.15), -4px -4px 10px rgba(255, 255, 255, 0.7);
-    transition: box-shadow 0.3s, transform 0.2s;
-}
-
-.rboot-button:hover {
-    background-color: #0056b3;
-    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15), -2px -2px 6px rgba(255, 255, 255, 0.7);
-    transform: translateY(-3px);
-}
-
-/* Progress Bar
-.rboot-progress-container {
-    width: 100%;
-    background-color: #f3f3f3;
-    border-radius: 20px;
-    margin: 20px 0;
-    height: 30px;
-    overflow: hidden;
-    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.rboot-progress-bar {
-    width: 0%;
-    height: 100%;
-    background-color: #4caf50;
-    border-radius: 20px;
-    transition: width 0.4s ease;
-} */
-
-.rboot-progress-container {
-    width: 100%;
-    height: 30px;
-    background-color: #f3f3f3;
-    border-radius: 15px;
-    overflow: hidden;
-    margin-top: 10px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-    display: none; /* Initially hidden */
-}
-
-.rboot-progress-bar  {
-    height: 100%;
-    width: 0%;
-    background-color: #4caf50;
-    transition: width 0.5s ease;
-    border-radius: 15px;
-}
-
-
-	    
-
-.switchx {
-    font-size: 17px;
-    position: absolute;
-    top: 7px;
-    right: 7px;
-    display: inline-block;
-    width: 40px;
-    height: 22px;
-}
-
-.switchx input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, #3a3f44, #50575d); /* Dark mode background */
-    transition: 0.4s;
-    border-radius: 15px;
-    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 0.2);
-}
-
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 18px;
-    width: 18px;
-    border-radius: 50%;
-    left: 2px;
-    bottom: 2px;
-    z-index: 2;
-    background-color: #e8e8e8; /* White knob */
-    transition: 0.4s;
-    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.3);
-}
-
-/* Adjusted sun icon for smaller size */
-.sun svg {
-    position: absolute;
-    top: 4px; /* Adjusted position */
-    left: 4px; /* Move sun to the left */
-    z-index: 1;
-    width: 14px; /* Smaller size */
-    height: 14px; /* Smaller size */
-}
-
-/* Adjusted moon icon for smaller size */
-.moon svg {
-    fill: #73C0FC;
-    position: absolute;
-    top: 4px; /* Adjusted position */
-    left: 24px; /* Adjusted to fit smaller toggle */
-    z-index: 1;
-    width: 14px; /* Smaller size */
-    height: 14px; /* Smaller size */
-}
-
-/* Light mode when the switch is checked */
-input:checked + .slider {
-    background: linear-gradient(135deg, #e0e6ed, #c8d0d8); /* Light mode gradient */
-    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.1);
-}
-
-input:checked + .slider:before {
-    background-color: #ffffff; /* Knob in light mode */
-    transform: translateX(18px);
-    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.2);
-}
-
-.inputx:focus + .slider {
-    box-shadow: 0 0 1px #183153;
-}
-
-
-
-
-    </style>
+</style>
 </head>
 <body>
-  <h1 class="title">
-  <span class="text-gradient">Nabu Fastboot Tool</span>
-</h1>
-<h2 class="subtitle">By ArKT :)</h2>
+    <h1 class="title">
+        <span class="text-gradient">Nabu Fastboot Tool</span>
+    </h1>
+    <h2 class="subtitle">By ArKT :)</h2>
 
+    <!-- Add a progress overlay for the "Processing... Please wait" message -->
+    <div id="progress-overlay">
+        <div id="progress-message">Processing... Please wait</div>
+    </div>
 
-<!-- Add a progress overlay for the "Processing... Please wait" message -->
-<div id="progress-overlay">
-    <div id="progress-message">Processing... Please wait</div>
-</div>
-
- <div class="container">
+    <div class="container">
         <label class="switchx">
             <span class="sun">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -555,154 +510,140 @@ input:checked + .slider:before {
         <button class="button connect-button">Connect device Fastboot</button>
     </div>
 
-
-<div class="container">
-    <form class="command-form">
-        <label for="command">Fastboot Commands</label>
-        <input type="text" name="command" class="command-input" placeholder="Enter fastboot command here without 'fastboot' " />
-        <input type="submit" value="Send" class="button" />
-    </form>
-    <button class="button reboot-button">Reboot Device</button>
-    <button class="button reboot-bootloader-button">Reboot to Bootloader</button>
-    <button class="button reboot-recovery-button">Reboot to Recovery</button>
-    <button class="button reboot-fastbootd-button">Reboot to FastbootD</button>
-    <button class="button reboot-edl-button">Reboot to EDL</button>
-    <!-- Result field to display command outputs 
-<p>Result:</p>
-            <pre class="result-field"></pre> -->
-        </div>
-
-</div>
-
-   <!-- New Container for Downloading and Flashing Images -->
     <div class="container">
-    <form class="rboot-flash-form">
-        <label for="rboot-flash-file">Flash any rooted or normal boot image</label>
-        <input type="file" name="rboot-flash-file" class="rboot-flash-file" accept=".img" />
-        <!-- New dropdown for partition selection -->
-        <label2 for="rboot-flash-partition">Select Flash boot partition</label2>
-        <select name="rboot-flash-partition" class="rboot-flash-partition" required>
-            <option value="">Select boot partition</option>
-            <option value="boot_ab" selected>Flash to Boot ab (both slots)</option>
-            <option value="boot">Flash to Boot (current slot)</option>
-            <option value="boot_a">Flash to Boot A only</option>
-            <option value="boot_b">Flash to Boot B only</option>
-        </select>
-        <!-- New dropdown for selecting predefined images -->
-       <label2 for="rboot-flash-image">Magisk V27 Rooted Boot Images</label2>
-<select name="rboot-flash-image" class="rboot-flash-image">
-    <option value="">Select rooted HyperOS/MIUI 14 boot</option>
-    <option value="magisk-1-0-5-global">HyperOS 1.0.5 (Global)</option>
-    <option value="magisk-1-0-4-global">HyperOS 1.0.4 (Global)</option>
-    <option value="magisk-1-0-1-global">HyperOS 1.0.1 (Global)</option>
-    <option value="magisk-1-0-8-india">HyperOS 1.0.8 (India)</option>
-    <option value="magisk-1-0-7-india">HyperOS 1.0.7 (India)</option>
-    <option value="magisk-1-0-4-india">HyperOS 1.0.4 (India)</option>
-    <option value="magisk-1-0-5-eea">HyperOS 1.0.5 (EEA)</option>
-    <option value="magisk-1-0-2-eea">HyperOS 1.0.2 (EEA)</option>
-    <option value="magisk-1-0-1-eea">HyperOS 1.0.1 (EEA)</option>
-    <option value="magisk-1-0-4-russia">HyperOS 1.0.4 (Russia)</option>
-    <option value="magisk-1-0-3-russia">HyperOS 1.0.3 (Russia)</option>
-    <option value="magisk-1-0-1-russia">HyperOS 1.0.1 (Russia)</option>
-    <option value="magisk-1-0-3-china">HyperOS 1.0.3 (China)</option>
-    <option value="magisk-1-0-2-china">HyperOS 1.0.2 (China)</option>
-    <option value="magisk-1-0-5-turkey">HyperOS 1.0.5 (Turkey)</option>
-    <option value="magisk-1-0-4-turkey">HyperOS 1.0.4 (Turkey)</option>
-    <option value="magisk-1-0-2-turkey">HyperOS 1.0.2 (Turkey)</option>
-    <option value="magisk-1-0-5-taiwan">HyperOS 1.0.5 (Taiwan)</option>
-    <option value="magisk-1-0-4-taiwan">HyperOS 1.0.4 (Taiwan)</option>
-    <option value="magisk-1-0-2-taiwan">HyperOS 1.0.2 (Taiwan)</option>
-
-    <!-- Global Versions -->
-    <option value="magisk-14-0-8-global">MIUI 14.0.8 (Global)</option>
-    <option value="magisk-14-0-7-global">MIUI 14.0.7 (Global)</option>
-    <option value="magisk-14-0-6-global">MIUI 14.0.6 (Global)</option>
-    <option value="magisk-14-0-5-global">MIUI 14.0.5 (Global)</option>
-    <option value="magisk-14-0-4-global">MIUI 14.0.4 (Global)</option>
-    <option value="magisk-14-0-3-global">MIUI 14.0.3 (Global)</option>
-    
-    <!-- India Versions -->
-    <option value="magisk-14-0-7-india">MIUI 14.0.7 (India)</option>
-    <option value="magisk-14-0-4-india">MIUI 14.0.4 (India)</option>
-    <option value="magisk-14-0-3-india">MIUI 14.0.3 (India)</option>
-    <option value="magisk-14-0-1-india">MIUI 14.0.1 (India)</option>
-    
-    <!-- EEA Versions -->
-    <option value="magisk-14-0-9-eea">MIUI 14.0.9 (EEA)</option>
-    <option value="magisk-14-0-8-eea">MIUI 14.0.8 (EEA)</option>
-    <option value="magisk-14-0-7-eea">MIUI 14.0.7 (EEA)</option>
-    <option value="magisk-14-0-6-eea">MIUI 14.0.6 (EEA)</option>
-    <option value="magisk-14-0-5-eea">MIUI 14.0.5 (EEA)</option>
-    <option value="magisk-14-0-4-eea">MIUI 14.0.4 (EEA)</option>
-    <option value="magisk-14-0-2-eea">MIUI 14.0.2 (EEA)</option>
-    
-    <!-- Russia Versions -->
-    <option value="magisk-14-0-7-russia">MIUI 14.0.7 (Russia)</option>
-    <option value="magisk-14-0-6-russia">MIUI 14.0.6 (Russia)</option>
-    <option value="magisk-14-0-5-russia">MIUI 14.0.5 (Russia)</option>
-    <option value="magisk-14-0-4-russia">MIUI 14.0.4 (Russia)</option>
-    <option value="magisk-14-0-3-russia">MIUI 14.0.3 (Russia)</option>
-    <option value="magisk-14-0-2-russia">MIUI 14.0.2 (Russia)</option>
-    
-    <!-- China Versions -->
-    <option value="magisk-14-0-7-china">MIUI 14.0.7 (China)</option>
-    <option value="magisk-14-0-6-china">MIUI 14.0.6 (China)</option>
-    <option value="magisk-14-0-5-china">MIUI 14.0.5 (China)</option>
-    <option value="magisk-14-0-4-china">MIUI 14.0.4 (China)</option>
-    
-    <!-- Turkey Versions -->
-    <option value="magisk-14-0-5-turkey">MIUI 14.0.5 (Turkey)</option>
-    <option value="magisk-14-0-4-turkey">MIUI 14.0.4 (Turkey)</option>
-    <option value="magisk-14-0-2-turkey">MIUI 14.0.2 (Turkey)</option>
-    <option value="magisk-14-0-1-turkey">MIUI 14.0.1 (Turkey)</option>
-    
-    <!-- Taiwan Versions -->
-    <option value="magisk-14-0-3-taiwan">MIUI 14.0.3 (Taiwan)</option>
-    <option value="magisk-14-0-2-taiwan">MIUI 14.0.2 (Taiwan)</option>
-    <option value="magisk-14-0-1-taiwan">MIUI 14.0.1 (Taiwan)</option>
-</select>
-
-        
-        <input type="submit" value="Flash" class="button" />
-           <!-- Progress bar for feedback -->
-    <div class="rboot-progress-container" style="display:none;">
-        <div class="rboot-progress-bar" style="width:0%;"></div>
+        <form class="command-form">
+            <label for="command">Fastboot Commands</label>
+            <input type="text" name="command" class="command-input" placeholder="Enter fastboot command here without 'fastboot'" />
+            <input type="submit" value="Send" class="button" />
+        </form>
+        <button class="button reboot-button">Reboot Device</button>
+        <button class="button reboot-bootloader-button">Reboot to Bootloader</button>
+        <button class="button reboot-recovery-button">Reboot to Recovery</button>
+        <button class="button reboot-fastbootd-button">Reboot to FastbootD</button>
+        <button class="button reboot-edl-button">Reboot to EDL</button>
     </div>
-    </form>
-</div>
 
+ <!-- New Container for Downloading and Flashing Images -->
+    <div class="container">
+        <form class="rboot-flash-form">
+            <label for="rboot-flash-file">Flash any rooted or normal boot image</label>
+            <input type="file" name="rboot-flash-file" class="rboot-flash-file" accept=".img" />
+            <label for="rboot-flash-partition">Select Flash boot partition</label>
+            <select name="rboot-flash-partition" class="rboot-flash-partition" required>
+                <option value="">Select boot partition</option>
+                <option value="boot_ab" selected>Flash to Boot ab (both slots)</option>
+                <option value="boot">Flash to Boot (current slot)</option>
+                <option value="boot_a">Flash to Boot A only</option>
+                <option value="boot_b">Flash to Boot B only</option>
+            </select>
+            <label for="rboot-flash-image">Magisk V27 Rooted Boot Images</label>
+            <select name="rboot-flash-image" class="rboot-flash-image">
+                <option value="">Select rooted HyperOS/MIUI 14 boot</option>
+                <option value="magisk-1-0-5-global">HyperOS 1.0.5 (Global)</option>
+                <option value="magisk-1-0-4-global">HyperOS 1.0.4 (Global)</option>
+	    	<option value="magisk-1-0-1-global">HyperOS 1.0.1 (Global)</option>
+	    	<option value="magisk-1-0-8-india">HyperOS 1.0.8 (India)</option>
+	    	<option value="magisk-1-0-7-india">HyperOS 1.0.7 (India)</option>
+	    	<option value="magisk-1-0-4-india">HyperOS 1.0.4 (India)</option>
+	    	<option value="magisk-1-0-5-eea">HyperOS 1.0.5 (EEA)</option>
+	    	<option value="magisk-1-0-2-eea">HyperOS 1.0.2 (EEA)</option>
+	   	<option value="magisk-1-0-1-eea">HyperOS 1.0.1 (EEA)</option>
+	    	<option value="magisk-1-0-4-russia">HyperOS 1.0.4 (Russia)</option>
+	    	<option value="magisk-1-0-3-russia">HyperOS 1.0.3 (Russia)</option>
+	    	<option value="magisk-1-0-1-russia">HyperOS 1.0.1 (Russia)</option>
+	    	<option value="magisk-1-0-3-china">HyperOS 1.0.3 (China)</option>
+	    	<option value="magisk-1-0-2-china">HyperOS 1.0.2 (China)</option>
+	    	<option value="magisk-1-0-5-turkey">HyperOS 1.0.5 (Turkey)</option>
+	    	<option value="magisk-1-0-4-turkey">HyperOS 1.0.4 (Turkey)</option>
+	    	<option value="magisk-1-0-2-turkey">HyperOS 1.0.2 (Turkey)</option>
+	    	<option value="magisk-1-0-5-taiwan">HyperOS 1.0.5 (Taiwan)</option>
+	    	<option value="magisk-1-0-4-taiwan">HyperOS 1.0.4 (Taiwan)</option>
+	    	<option value="magisk-1-0-2-taiwan">HyperOS 1.0.2 (Taiwan)</option>
+	
+	    	<!-- Global Versions -->
+	    	<option value="magisk-14-0-8-global">MIUI 14.0.8 (Global)</option>
+	    	<option value="magisk-14-0-7-global">MIUI 14.0.7 (Global)</option>
+	    	<option value="magisk-14-0-6-global">MIUI 14.0.6 (Global)</option>
+	    	<option value="magisk-14-0-5-global">MIUI 14.0.5 (Global)</option>
+	    	<option value="magisk-14-0-4-global">MIUI 14.0.4 (Global)</option>
+	    	<option value="magisk-14-0-3-global">MIUI 14.0.3 (Global)</option>
+	    
+	    	<!-- India Versions -->
+	    	<option value="magisk-14-0-7-india">MIUI 14.0.7 (India)</option>
+	    	<option value="magisk-14-0-4-india">MIUI 14.0.4 (India)</option>
+	    	<option value="magisk-14-0-3-india">MIUI 14.0.3 (India)</option>
+	    	<option value="magisk-14-0-1-india">MIUI 14.0.1 (India)</option>
+	    
+	    	<!-- EEA Versions -->
+	    	<option value="magisk-14-0-9-eea">MIUI 14.0.9 (EEA)</option>
+	    	<option value="magisk-14-0-8-eea">MIUI 14.0.8 (EEA)</option>
+	    	<option value="magisk-14-0-7-eea">MIUI 14.0.7 (EEA)</option>
+	    	<option value="magisk-14-0-6-eea">MIUI 14.0.6 (EEA)</option>
+	    	<option value="magisk-14-0-5-eea">MIUI 14.0.5 (EEA)</option>
+	    	<option value="magisk-14-0-4-eea">MIUI 14.0.4 (EEA)</option>
+	    	<option value="magisk-14-0-2-eea">MIUI 14.0.2 (EEA)</option>
+	    
+	    	<!-- Russia Versions -->
+	    	<option value="magisk-14-0-7-russia">MIUI 14.0.7 (Russia)</option>
+	    	<option value="magisk-14-0-6-russia">MIUI 14.0.6 (Russia)</option>
+	    	<option value="magisk-14-0-5-russia">MIUI 14.0.5 (Russia)</option>
+	    	<option value="magisk-14-0-4-russia">MIUI 14.0.4 (Russia)</option>
+	    	<option value="magisk-14-0-3-russia">MIUI 14.0.3 (Russia)</option>
+	    	<option value="magisk-14-0-2-russia">MIUI 14.0.2 (Russia)</option>
+	    
+	    	<!-- China Versions -->
+	    	<option value="magisk-14-0-7-china">MIUI 14.0.7 (China)</option>
+	    	<option value="magisk-14-0-6-china">MIUI 14.0.6 (China)</option>
+	    	<option value="magisk-14-0-5-china">MIUI 14.0.5 (China)</option>
+	    	<option value="magisk-14-0-4-china">MIUI 14.0.4 (China)</option>
+	    
+	    	<!-- Turkey Versions -->
+	    	<option value="magisk-14-0-5-turkey">MIUI 14.0.5 (Turkey)</option>
+	    	<option value="magisk-14-0-4-turkey">MIUI 14.0.4 (Turkey)</option>
+	    	<option value="magisk-14-0-2-turkey">MIUI 14.0.2 (Turkey)</option>
+	    	<option value="magisk-14-0-1-turkey">MIUI 14.0.1 (Turkey)</option>
+	    
+	    	<!-- Taiwan Versions -->
+	    	<option value="magisk-14-0-3-taiwan">MIUI 14.0.3 (Taiwan)</option>
+	    	<option value="magisk-14-0-2-taiwan">MIUI 14.0.2 (Taiwan)</option>
+	    	<option value="magisk-14-0-1-taiwan">MIUI 14.0.1 (Taiwan)</option>
+	    </select>
+		<input type="submit" value="Flash" class="button" />
+		<!-- Progress bar for feedback -->
+		<div class="rboot-progress-container" style="display:none;">
+			<div class="rboot-progress-bar" style="width:0%;"></div>
+		</div>
+	</form>
+    </div>
 
-<div class="container">
-    <form class="boot-form">
-        <label for="boot-file">Boot any images</label>
-        <input type="file" name="boot-file" id="boot-file" accept=".img" />
-        <select name="boot-type" class="boot-type">
-            <option value="">Select Images to boot on Nabu directly</option>
-            <option value="twrp-nabu">Twrp Recovery Nabu</option>
-            <option value="pbrp-nabu">Pitch Black Recovery Nabu</option>
-            <option value="win-uefi-nabu">Windows UEFI Boot Nabu</option>
-            <option value="twrp-mod-nabu">Twrp Modded Recovery Nabu</option>
-            <option value="orangefox-mod-nabu">OrangeFox Modded Recovery Nabu</option>
-        </select>
-        <input type="submit" value="Boot" class="button" />
-        <div class="progress-container" style="display: none;">
-            <div class="progress-bar" style="width:0%;"></div>
-        </div>
-    </form>
-</div>
-
-
-<div class="container">
-    <form class="flash-form">
-        <label for="flash-file">Flash any images</label>
-        <input type="file" name="flash-file" id="flash-file" accept=".img" />
-        <label2 for="flash-partition">Enter Partition</label2>
-        <input type="text" name="flash-partition" class="flash-partition" placeholder="Partition like - boot, dtbo, cust, recovery, etc." />
-        <input type="submit" value="Flash" class="button" />
-    </form>
-</div>
-
-
+    <div class="container">
+        <form class="boot-form">
+            <label for="boot-file">Boot any images</label>
+            <input type="file" name="boot-file" id="boot-file" accept=".img" />
+            <select name="boot-type" class="boot-type">
+                <option value="">Select Images to boot on Nabu directly</option>
+            	<option value="twrp-nabu">Twrp Recovery Nabu</option>
+            	<option value="pbrp-nabu">Pitch Black Recovery Nabu</option>
+            	<option value="win-uefi-nabu">Windows UEFI Boot Nabu</option>
+            	<option value="twrp-mod-nabu">Twrp Modded Recovery Nabu</option>
+            	<option value="orangefox-mod-nabu">OrangeFox Modded Recovery Nabu</option>
+            </select>
+		<input type="submit" value="Boot" class="button" />
+		<div class="progress-container" style="display: none;">
+			<div class="progress-bar" style="width:0%;"></div>
+		</div>
+	</form>
+    </div>
+	
+    <div class="container">
+        <form class="flash-form">
+            <label for="flash-file">Flash any images</label>
+            <input type="file" name="flash-file" id="flash-file" accept=".img" />
+            <label2 for="flash-partition">Enter Partition</label2>
+            <input type="text" name="flash-partition" class="flash-partition" placeholder="Partition like - boot, dtbo, cust, recovery, etc." />
+            <input type="submit" value="Flash" class="button" />
+	</form>
+    </div>
 
 
    <script type="module">
