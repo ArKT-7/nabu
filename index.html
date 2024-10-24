@@ -911,11 +911,21 @@ async function connectDevice() {
     let isNabu = false;
     if (product === "nabu") {
         deviceName = "Device name - Xiaomi Pad 5";
+	let rbootFlashPartitionSelect = document.querySelector('.rboot-flash-partition');
+        if (rbootFlashPartitionSelect) {
+            rbootFlashPartitionSelect.value = "boot_ab"; // Select the "Flash to Boot ab (both slots)"
+        }
     } else if (product === "dm3q") {
         deviceName = "Device name - Samsung S23 Ultra";
+	isNabu = true; // Device is not nabu
+	// Select the current slot in the rboot-flash-partition select
+        let rbootFlashPartitionSelect = document.querySelector('.rboot-flash-partition');
+        if (rbootFlashPartitionSelect) {
+            rbootFlashPartitionSelect.value = "boot"; // Select the "Flash to Boot (current slot)" option
+        }
     } else  if (product !== "nabu") {
         isNabu = true; // Device is not nabu
-	deviceName = "Device name - IDK LoL 😂";
+	deviceName = "Device name - IDK LoL 🤣";
 	// Select the current slot in the rboot-flash-partition select
         let rbootFlashPartitionSelect = document.querySelector('.rboot-flash-partition');
         if (rbootFlashPartitionSelect) {
