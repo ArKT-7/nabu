@@ -915,6 +915,11 @@ async function connectDevice() {
         deviceName = "Device name - Samsung S23 Ultra";
     } else  if (product !== "nabu") {
         isNabu = true; // Device is not nabu
+	// Select the current slot in the rboot-flash-partition select
+        let rbootFlashPartitionSelect = document.querySelector('.rboot-flash-partition');
+        if (rbootFlashPartitionSelect) {
+            rbootFlashPartitionSelect.value = "boot"; // Select the "Flash to Boot (current slot)" option
+        }
     }
 
     let status = `Connected to - ${product} <br /> Current slot - ${slot} <br /> (serial: ${serial})`;
