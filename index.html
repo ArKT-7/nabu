@@ -536,26 +536,30 @@
                 <option value="boot_a">Flash to Boot A only</option>
                 <option value="boot_b">Flash to Boot B only</option>
             </select>
-            <label for="rboot-flash-image">Magisk V27 Rooted Boot Images</label>
+            <label for="rboot-flash-image">Magisk V28 Rooted Boot Images</label>
             <select name="rboot-flash-image" class="rboot-flash-image">
                 <option value="">Select rooted HyperOS/MIUI 13/14 boot</option>
 
 		<!-- Global Versions HyperOS-->
+		<option value="magisk-1-0-6-global">HyperOS 1.0.6 (Global)</option>
                 <option value="magisk-1-0-5-global">HyperOS 1.0.5 (Global)</option>
                 <option value="magisk-1-0-4-global">HyperOS 1.0.4 (Global)</option>
 	    	<option value="magisk-1-0-1-global">HyperOS 1.0.1 (Global)</option>
 
 		<!-- India Versions -->
+		<option value="magisk-1-0-9-india">HyperOS 1.0.9 (India)</option>    
 	    	<option value="magisk-1-0-8-india">HyperOS 1.0.8 (India)</option>
 	    	<option value="magisk-1-0-7-india">HyperOS 1.0.7 (India)</option>
 	    	<option value="magisk-1-0-4-india">HyperOS 1.0.4 (India)</option>
 
-		<!-- Russia Versions -->
+		<!-- EEA Versions -->
+		<option value="magisk-1-0-6-eea">HyperOS 1.0.6 (EEA)</option>
 	    	<option value="magisk-1-0-5-eea">HyperOS 1.0.5 (EEA)</option>
 	    	<option value="magisk-1-0-2-eea">HyperOS 1.0.2 (EEA)</option>
 	   	<option value="magisk-1-0-1-eea">HyperOS 1.0.1 (EEA)</option>
 
 		<!-- Russia Versions -->
+		<option value="magisk-1-0-5-russia">HyperOS 1.0.5 (Russia)</option>
 	    	<option value="magisk-1-0-4-russia">HyperOS 1.0.4 (Russia)</option>
 	    	<option value="magisk-1-0-3-russia">HyperOS 1.0.3 (Russia)</option>
 	    	<option value="magisk-1-0-1-russia">HyperOS 1.0.1 (Russia)</option>
@@ -565,11 +569,13 @@
 	    	<option value="magisk-1-0-2-china">HyperOS 1.0.2 (China)</option>
 
 		<!-- Turkey Versions -->
+		<option value="magisk-1-0-6-turkey">HyperOS 1.0.6 (Turkey)</option>
 	    	<option value="magisk-1-0-5-turkey">HyperOS 1.0.5 (Turkey)</option>
 	    	<option value="magisk-1-0-4-turkey">HyperOS 1.0.4 (Turkey)</option>
 	    	<option value="magisk-1-0-2-turkey">HyperOS 1.0.2 (Turkey)</option>
 
 		<!-- Taiwan Versions -->
+		<option value="magisk-1-0-6-taiwan">HyperOS 1.0.6 (Taiwan)</option>
 	    	<option value="magisk-1-0-5-taiwan">HyperOS 1.0.5 (Taiwan)</option>
 	    	<option value="magisk-1-0-4-taiwan">HyperOS 1.0.4 (Taiwan)</option>
 	    	<option value="magisk-1-0-2-taiwan">HyperOS 1.0.2 (Taiwan)</option>
@@ -1183,58 +1189,70 @@ async function runRebootCommand(command, successMessage) {
 function rbootGetImagePath(selectedImage) {
     switch (selectedImage) {
         // HyperOS GLOBAL Versions
+	case "magisk-1-0-6-global":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.6.0.TKXMIXM.GLOBAL.boot.img";
 	case "magisk-1-0-5-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.5.0.TKXMIXM.GLOBAL.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.5.0.TKXMIXM.GLOBAL.boot.img";
         case "magisk-1-0-4-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.4.0.TKXMIXM.GLOBAL.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.4.0.TKXMIXM.GLOBAL.boot.img";
         case "magisk-1-0-1-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.1.0.TKXMIXM.GLOBAL.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.1.0.TKXMIXM.GLOBAL.boot.img";
         
 	// India Versions    
+	case "magisk-1-0-9-india":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.9.0.TKXINXM.INDIA.boot.img";
 	case "magisk-1-0-8-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.8.0.TKXINXM.INDIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.8.0.TKXINXM.INDIA.boot.img";
         case "magisk-1-0-7-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.7.0.TKXINXM.INDIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.7.0.TKXINXM.INDIA.boot.img";
         case "magisk-1-0-4-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.4.0.TKXINXM.INDIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.4.0.TKXINXM.INDIA.boot.img";
         
-	// EEA Versions    
+	// EEA Versions  
+	case "magisk-1-0-6-eea":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.6.0.TKXEUXM.EEA.boot.img";
 	case "magisk-1-0-5-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.5.0.TKXEUXM.EEA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.5.0.TKXEUXM.EEA.boot.img";
         case "magisk-1-0-2-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.2.0.TKXEUXM.EEA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.2.0.TKXEUXM.EEA.boot.img";
         case "magisk-1-0-1-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.1.0.TKXEUXM.EEA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.1.0.TKXEUXM.EEA.boot.img";
         
 	// Russia Versions    
+	case "magisk-1-0-5-russia":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.5.0.TKXRUXM.RUSSIA.boot.img";
 	case "magisk-1-0-4-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.4.0.TKXRUXM.RUSSIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.4.0.TKXRUXM.RUSSIA.boot.img";
         case "magisk-1-0-3-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.3.0.TKXRUXM.RUSSIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.3.0.TKXRUXM.RUSSIA.boot.img";
         case "magisk-1-0-1-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.1.0.TKXRUXM.RUSSIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.1.0.TKXRUXM.RUSSIA.boot.img";
         
 	// China Versions    
 	case "magisk-1-0-3-china":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.3.0.TKXCNXM.CHINA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.3.0.TKXCNXM.CHINA.boot.img";
         case "magisk-1-0-2-china":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.2.0.TKXCNXM.CHINA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.2.0.TKXCNXM.CHINA.boot.img";
         
 	// Turkey Versions
+	case "magisk-1-0-6-turkey":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.6.0.TKXTRXM.TURKEY.boot.img";
 	case "magisk-1-0-5-turkey":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.5.0.TKXTRXM.TURKEY.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.5.0.TKXTRXM.TURKEY.boot.img";
         case "magisk-1-0-4-turkey":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.4.0.TKXTRXM.TURKEY.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.4.0.TKXTRXM.TURKEY.boot.img";
         case "magisk-1-0-2-turkey":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.2.0.TKXTRXM.TURKEY.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.2.0.TKXTRXM.TURKEY.boot.img";
         
 	// taiwan Versions
+	case "magisk-1-0-6-taiwan":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.6.0.TKXTWXM.TAIWAN.boot.img";
 	case "magisk-1-0-5-taiwan":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.5.0.TKXTWXM.TAIWAN.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.5.0.TKXTWXM.TAIWAN.boot.img";
         case "magisk-1-0-4-taiwan":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.4.0.TKXTWXM.TAIWAN.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.4.0.TKXTWXM.TAIWAN.boot.img";
         case "magisk-1-0-2-taiwan":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.27.NABU.OS1.0.2.0.TKXTWXM.TAIWAN.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.2.0.TKXTWXM.TAIWAN.boot.img";
         
 	// MIUI 14 GLOBAL Versions
         case "magisk-14-0-8-global":
