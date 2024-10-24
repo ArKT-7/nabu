@@ -841,31 +841,29 @@ function hideProgressOverlay() {
     progressMessage.textContent = ''; 
 }
 
-function toggleElements(disable, isNabu = false) {
+function toggleElements(isNabu = false) {
     const formElements = document.querySelectorAll("input, button, select");
     
     formElements.forEach((element) => {
         if (!element.classList.contains('connect-button') && !element.closest('.switchx')) {
-            element.disabled = disable; // General enable/disable logic
+            element.disabled = !isNabu; // Disable all elements unless nabu
         }
     });
 
-    // Specifically disable the select elements if nabu device is detected
-    if (isNabu) {
-        const rbootFlashSelect = document.querySelector(".rboot-flash-image");
-        const bootTypeSelect = document.querySelector(".boot-type");
+    // Specifically enable the select elements if nabu device is detected
+    const rbootFlashSelect = document.querySelector(".rboot-flash-image");
+    const bootTypeSelect = document.querySelector(".boot-type");
 
-        if (rbootFlashSelect) {
-            rbootFlashSelect.disabled = true; // Disable rboot-flash-image select
-        }
-        
-        if (bootTypeSelect) {
-            bootTypeSelect.disabled = true; // Disable boot-type select
-        }
+    if (rbootFlashSelect) {
+        rbootFlashSelect.disabled = !isNabu; // Enable rboot-flash-image select if nabu
+    }
+    
+    if (bootTypeSelect) {
+        bootTypeSelect.disabled = !isNabu; // Enable boot-type select if nabu
     }
 }
-	
 
+// Clear form elements
 function clearFormElements() {
     const formElements = document.querySelectorAll("input, button, select, textarea");
 
@@ -896,7 +894,7 @@ async function connectDevice() {
         await device.connect();
     } catch (error) {
         statusField.textContent = `Failed to connect to device: ${error.message}`;
-        toggleElements(true); 
+        toggleElements(false); // Ensure all are enabled on failure
         return;
     }
 
@@ -924,17 +922,20 @@ async function connectDevice() {
     statusField.innerHTML = status;
 
     // Call toggleElements with the isNabu flag
-    toggleElements(false, isNabu); 
+    toggleElements(isNabu);
 }
 
-    toggleElements(true); 
+// Initially disable elements
+toggleElements(true);
 
+function handleDisconnect() {
+    let statusField = document.querySelector(".status-field");
+    statusField.textContent = "Not connected in Fastboot";
 
-    function handleDisconnect() {
-        let statusField = document.querySelector(".status-field");
-        statusField.textContent = "Not connected in Fastboot";
-        toggleElements(true); 
-    }
+    // Clear form elements and reset status
+    clearFormElements();
+    toggleElements(true); // Disable all elements on disconnect
+}
 
 async function checkDeviceConnection() {
     let statusField = document.querySelector(".status-field");
@@ -942,12 +943,13 @@ async function checkDeviceConnection() {
     try {
         let product = await device.getVariable("product");
         if (product) {
+            // Device is still connected, no need to clear
+            return; 
         }
     } catch (error) {
-        statusField.textContent = "Device disconnected!";
-        toggleElements(true);
+        // Device is disconnected
+        handleDisconnect(); // Handle disconnection
     }
-    clearFormElements();
 }
 
     async function sendFormCommand(event) {
