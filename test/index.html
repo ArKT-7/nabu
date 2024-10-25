@@ -474,6 +474,15 @@
 	    box-shadow: 0 0 1px #183153;
 	}
 
+	.animated-button img {
+	    transition: transform 0.3s ease, opacity 0.3s ease;
+	}
+	
+	.animated-button:hover img {
+	    transform: scale(1.1);
+	    opacity: 0.9; 
+	}
+
 </style>
 </head>
 <body>
@@ -718,19 +727,19 @@
 	</form>
     </div>
 
-	<div class="container">
+	
+    <div class="container">
     <h2 style="text-align: center;">Support My Journey</h2>
     <p style="text-align: center; font-style: italic;">"Your support fuels my passion for creating!"</p>
-    
-    <div class="button-container" style="text-align: center; margin-top: 20px;">
-        <a href="https://www.buymeacoffee.com/ArKT" target="_blank">
-            <img src="https://raw.githubusercontent.com/ArKT-7/WIN-ARM-DOWNLOADER/master/assets/buymecoffee.png" alt="Buy Me a Coffee" style="height: 60px; width: 217px; margin-right: 20px; animation: bounce 1s infinite;">
+    <div class="button-container" style="text-align: center;">
+        <a href="https://www.buymeacoffee.com/ArKT" target="_blank" class="animated-button">
+            <img src="https://raw.githubusercontent.com/ArKT-7/WIN-ARM-DOWNLOADER/master/assets/buymecoffee.png" alt="Buy Me a Coffee" style="height: 60px; width: 217px; margin-right: 20px;">
         </a>
-        <a href="https://www.paypal.me/arkt7" target="_blank">
-            <img src="https://raw.githubusercontent.com/ArKT-7/WIN-ARM-DOWNLOADER/master/assets/Paypal.png" alt="Donate via PayPal" style="height: 60px; width: 217px; animation: bounce 1s infinite;">
-        </a>
+        <a href="https://www.paypal.me/arkt7" target="_blank" class="animated-button">
+            <img src="https://raw.githubusercontent.com/ArKT-7/WIN-ARM-DOWNLOADER/master/assets/Paypal.png" alt="Donate via PayPal" style="height: 60px; width: 217px;">
+         </a>
+      </div>
     </div>
-</div>
 
 <script type="module">
     import * as fastboot from "./dist/fastboot.mjs";
