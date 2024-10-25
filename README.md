@@ -1,7 +1,7 @@
 # 🚀 [FASTBOOT FLASHING TOOL ONLINE IN ANY NEW BROWSER ANY DEVICE](https://arkt-7.github.io/nabu/)
 
 ### Welcome GUYSSZZZ WILL UPADTE THIS README SOON! 😁😁
-### Till then just open the site and enjoy onle click root, one click boot, and flash any image -https://arkt-7.github.io/nabu/
+### Till then just open the site and enjoy one click root, one click boot, and flash any image -https://arkt-7.github.io/nabu/
 
 
 
