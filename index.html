@@ -704,11 +704,13 @@
             <input type="file" name="boot-file" id="boot-file" accept=".img" />
             <select name="boot-type" class="boot-type">
                 <option value="">Select Images to boot on Nabu directly</option>
-            	<option value="twrp-nabu">Twrp Recovery Nabu</option>
-            	<option value="pbrp-nabu">Pitch Black Recovery Nabu</option>
-            	<option value="win-uefi-nabu">Windows UEFI Boot Nabu</option>
-            	<option value="twrp-mod-nabu">Twrp Modded Recovery Nabu</option>
-            	<option value="orangefox-mod-nabu">OrangeFox Modded Recovery Nabu</option>
+            	<option value="twrp-portrait">Twrp Recovery Portrait</option>
+		<option value="twrp-landscape">Twrp Recovery landscape</option>
+            	<option value="pbrp-pitchblack">Pitch Black Recovery</option>
+            	<option value="win-uefi">Windows UEFI Boot</option>
+            	<option value="twrp-mod-portrait">Modded Twrp Recovery Portrait</option>
+		<option value="twrp-mod-landscape">Modded Twrp Recovery landscape</option>
+            	<option value="orangefox-mod">Modded OrangeFox Recovery</option>
             </select>
 		<input type="submit" value="Boot" class="button" />
 		<div class="progress-container" style="display: none;">
@@ -1083,16 +1085,20 @@ async function runRebootCommand(command, successMessage) {
 
     function getImagePath(selectedBootType) {
         switch (selectedBootType) {
-            case "twrp-nabu":
-                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/twrp-nabu.img";
-            case "win-uefi-nabu":
-                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/uefi-windows.img";
-            case "twrp-mod-nabu":
-                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/twrp-modded.img";
-            case "orangefox-mod-nabu":
-                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/orangefox-modded.img";
-            case "pbrp-nabu":
-                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/pitchblack-pbrp.img";
+            case "twrp-portrait":
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/twrp-portrait-nabu.img";
+	    case "twrp-landscape":
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/twrp-landscape-nabu.img";
+	    case "pbrp-pitchblack":
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/pitchblack-nabu.img";
+            case "win-uefi":
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/uefi-windows-nabu.img";
+            case "twrp-mod-portrait":
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/modded-twrp-portrait-nabu.img";
+	    case "twrp-mod-landscape":
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/modded-twrp-landscape-nabu.img";
+            case "orangefox-mod":
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/modded-orangefox-nabu.img";
             default:
                 return null;
         }
