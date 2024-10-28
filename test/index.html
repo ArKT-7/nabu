@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
-    <script src="dist/fastboot.mjs" type="module"></script>
-    <script src="download.js" type="module"></script>
+    <script src="../dist/fastboot.mjs" type="module"></script>
+    <script src="../download.js" type="module"></script>
     <meta property="og:title" content="Fastboot Tool by ArKT" />
     <meta property="og:description" content="It can boot Images like recovery and can flash images in any partition" />
     <meta property="og:url" content="https://arkt-7.github.io/nabu/" />
@@ -14,11 +14,12 @@
     <meta name="title" content="Fastboot Tool for flashing/booting/rooting" />
     <title>Fastboot Tool by ArKT</title>
     <link rel="icon" href="https://img.icons8.com/fluency/48/android.png" type="image/png">
+    
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1c1f24, #18191A);    
-            color: #e8eaed;
+            background: linear-gradient(135deg, #f0f0f0, #d4e0e5);
+            color: #333;
             margin: 0;
             padding: 20px;
             display: flex;
@@ -26,24 +27,23 @@
             align-items: center;
             position: relative;
             min-height: 100vh;
-            background-color: #1c1f24;
         }
 
         h1 {
-            color: #4a4a4a; /* Fallback color for browsers that don't support the gradient */
+            color: #333333;
             text-align: center;
             margin-bottom: 20px;
             font-size: 38px;
-            text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
         }
 
         h2 {
-            color: #f8f9fa;
+            color: #333333;
             margin-top: 0;
             margin-bottom: 5px;
             font-size: 24px;
             letter-spacing: 2px;
-            background: linear-gradient(135deg, #00d1ff, #0052cc);
+            background: linear-gradient(135deg, #007bff, #003b80);
             -webkit-background-clip: text;
             color: transparent;
             animation: textGlow 4s ease-in-out infinite;
@@ -53,22 +53,21 @@
             text-align: center;
             font-size: 32px;
             letter-spacing: 0.5px;
+            color: #333333;
         }
 
         .text-gradient {
-            background: linear-gradient(135deg, #00d1ff, #0052cc);
+            background: linear-gradient(135deg, #007bff, #003b80);
             -webkit-background-clip: text;
             color: transparent;
             text-shadow: 
-                0 0 5px rgba(0, 209, 255, 0.7), 
-                0 0 10px rgba(0, 209, 255, 0.5), 
-                0 0 15px rgba(0, 209, 255, 0.3), 
-                0 0 20px rgba(0, 209, 255, 0.2);
+                0 0 3px rgba(0, 123, 255, 0.5),
+                0 0 8px rgba(0, 123, 255, 0.3);
             animation: textGlow 2s ease-in-out infinite;
         }
 
         .subtitle {
-            color: #f8f9fa;
+            color: #333333;
             text-align: center;
             font-size: 24px;
             margin-top: -5px;
@@ -77,13 +76,13 @@
         @keyframes textGlow {
             0%, 100% {
                 text-shadow: 
-                    0 0 8px rgba(0, 82, 204, 0.8), 
-                    0 0 20px rgba(0, 209, 255, 0.5);
+                    0 0 8px rgba(0, 123, 255, 0.6),
+                    0 0 16px rgba(0, 123, 255, 0.4);
             }
             50% {
                 text-shadow: 
-                    0 0 16px rgba(0, 82, 204, 0.8), 
-                    0 0 30px rgba(0, 209, 255, 0.5);
+                    0 0 12px rgba(0, 123, 255, 0.6),
+                    0 0 20px rgba(0, 123, 255, 0.4);
             }
         }
 
@@ -91,18 +90,19 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center; /* Center contents vertically */
+            justify-content: center;
             padding: 30px;
             width: 90%;
             max-width: 600px;
             margin: 30px 0;
-            background: linear-gradient(135deg, #1c1f24, #3a3f44); /* Original gradient */
-            background-size: 200% 200%; /* Increase size for smoother movement */
+            background: linear-gradient(135deg, #e0e6ed, #c8d0d8);
+            background-size: 200% 200%;
             border-radius: 20px;
             position: relative;
             text-align: center;
             overflow: hidden;
-            animation: backgroundMove 20s linear infinite; /* Linear for smooth infinite animation */
+            animation: backgroundMove 20s linear infinite;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
         .container::before {
@@ -112,20 +112,20 @@
             left: -3px;
             right: -3px;
             bottom: -3px;
-            background: linear-gradient(45deg, #ff6ec4, #7873f5, #3a1c71, #ff6ec4); /* Glowing gradient for border */
+            background: linear-gradient(45deg, #ff9ecf, #a0b9ff, #d1e3ff, #ff9ecf);
             background-size: 400% 400%;
             border-radius: 20px;
             z-index: -1;
-            filter: blur(10px); /* Glowing effect */
+            filter: blur(10px);
             opacity: 0.8;
-            animation: glow 10s ease infinite; /* Glowing border animation */
+            animation: glow 10s ease infinite;
             box-shadow: 
-                0 0 20px 10px rgba(255, 110, 196, 0.5),   /* General glow */
-                0 0 40px 10px rgba(255, 110, 196, 0.3) inset, /* Inner glow */
-                -10px -10px 30px rgba(255, 110, 196, 0.8), /* Top-left corner */
-                10px -10px 30px rgba(255, 110, 196, 0.8),  /* Top-right corner */
-                -10px 10px 30px rgba(255, 110, 196, 0.8),  /* Bottom-left corner */
-                10px 10px 30px rgba(255, 110, 196, 0.8);   /* Bottom-right corner */
+                0 0 20px 10px rgba(255, 158, 207, 0.3),
+                0 0 40px 10px rgba(255, 158, 207, 0.2) inset,
+                -10px -10px 30px rgba(255, 158, 207, 0.5),
+                10px -10px 30px rgba(255, 158, 207, 0.5),
+                -10px 10px 30px rgba(255, 158, 207, 0.5),
+                10px 10px 30px rgba(255, 158, 207, 0.5);
         }
 
         @keyframes glow {
@@ -154,9 +154,9 @@
 
         form {
             display: flex;
-            flex-direction: column; /* Align form elements vertically */
+            flex-direction: column;
             width: 100%;
-            align-items: center; /* Center form elements */
+            align-items: center;
         }
 
         @keyframes fadeInUp {
@@ -170,46 +170,44 @@
             }
         }
 
-	.button {
-	    background-color: #ffffff;
-	    background: linear-gradient(135deg, #007bff, #00d4ff);
-	    border: none;
-	    border-radius: 20px;
-	    color: white;
-	    padding: 15px 20px;
-	    font-size: 18px;
-	    font-weight: bold;
-	    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
-	    cursor: pointer;
-	    transition: background 0.3s ease, transform 0.3s ease;
-	    margin: 10px 0;
-	    width: 100%;
-	    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
-	    animation: buttonGlow 3s ease-in-out infinite alternate;
-	}
-	
-	.button:hover {
-	    background: linear-gradient(135deg, #0056b3, #0094c6);
-	    transform: scale(1.05);
-	}
-	
-	.button:disabled {
-	    background: linear-gradient(135deg, #b0b0b0, #d4d4d4);
-	    color: #888; /* Dull text color to emphasize the disabled state */
-	    cursor: not-allowed;
-	    box-shadow: none;
-	    transform: none;
-	}
-	
-	/* .flash-form, .boot-form, .rboot-flash-form, .command-form { */
-	/*     display: flex; */
-	/*     flex-direction: column; */
-	/*     align-items: center; /* Center the form horizontally */
-	/*     width: 100%; /* Full width for the form */
-	/* } */
+        .button {
+            background: linear-gradient(135deg, #007bff, #00d4ff);
+            border: none;
+            border-radius: 20px;
+            color: white;
+            padding: 15px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+            margin: 10px 0;
+            width: 100%;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+            animation: buttonGlow 3s ease-in-out infinite alternate;
+        }
+
+        .button:hover {
+            background: linear-gradient(135deg, #0056b3, #0094c6);
+            transform: scale(1.05);
+        }
+        
+        .button:disabled {
+            background: linear-gradient(135deg, #b0b0b0, #d4d4d4);
+            color: #888;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+	/* .flash-form, .boot-form, .rboot-flash-form, .command-form {
+	    display: flex;
+	    flex-direction: column;
+	    align-items: center; /* Center the form horizontally
+	    width: 100%; /* Full width for the form
+	} */
 	
 	input[type="file"],
-	input[type="text"], 
+	input[type="text"],
 	select {
 	    text-align: center; /* Center align text inside input fields */
 	    width: 100%; /* Use full width of the container */
@@ -217,48 +215,28 @@
 	    padding: 15px 20px;
 	    margin: 10px 0; /* Vertical spacing between inputs */
 	    border-radius: 20px;
-	    border: none;
+	    border: 1px solid #ccc; /* Light border for input fields */
 	    box-sizing: border-box; /* Ensure padding and borders are included in the width */
-	    background-color: #ffffff;
-	    background: linear-gradient(135deg, #333, #444); /* Gradient background */
-	    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+	    background: linear-gradient(135deg, #f0f4f8, #e2e8f0); /* Light gradient background */
+	    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.08); /* Subtle shadow */
 	    transition: all 0.3s ease;
 	    -webkit-appearance: none; /* Remove default styling */
 	    -moz-appearance: none; /* Remove default styling */
 	    appearance: none; /* Remove default styling */
-	    background-color: #444;
 	    font-size: 14px;
 	    font-weight: bold;
-	    color: white;
+	    color: #333; /* Dark text color for light mode */
 	}
 	
 	input[type="file"] {
-	    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
+	    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05); /* Minimal shadow */
 	    transition: all 0.3s ease;
 	    -webkit-appearance: none; /* Remove default styling */
 	    -moz-appearance: none; /* Remove default styling */
 	    appearance: none; /* Remove default styling */
+	    background: linear-gradient(135deg, #f0f4f8, #e2e8f0); /* Match gradient to other inputs */
+	    color: #333; /* Text color for light mode */
 	}
-	
-	/* select { */
-	/*     text-align: center; /* Center align text inside select fields */
-	/*     width: 100%; */
-	/*     padding: 15px 20px; */
-	/*     margin: 10px 0; */
-	/*     border-radius: 20px; */
-	/*     border: none; */
-	/*     background-color: #ffffff; */
-	/*     background: linear-gradient(135deg, #333, #444); /* Gradient background */
-	/*     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2); */
-	/*     transition: all 0.3s ease; */
-	/*     -webkit-appearance: none; /* Remove default styling */
-	/*     -moz-appearance: none; /* Remove default styling */
-	/*     appearance: none; /* Remove default styling */
-	/*     background-color: #444; */
-	/*     font-size: 14px; */
-	/*     font-weight: bold; */
-	/*     color: white; */
-	/* } */
 	
 	label {
 	    font-weight: bold;
@@ -305,16 +283,16 @@
 	    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
 	}
 	
-	/* pre.result-field { */
-	/*     background-color: rgba(255, 255, 255, 0.9); */
-	/*     padding: 15px; */
-	/*     border-radius: 15px; */
-	/*     overflow-x: auto; */
-	/*     white-space: pre-wrap; */
-	/*     max-height: 250px; */
-	/*     border: 1px solid #ccc; */
-	/*     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
-	/* } */
+	/* pre.result-field {
+	    background-color: rgba(255, 255, 255, 0.9);
+	    padding: 15px;
+	    border-radius: 15px;
+	    overflow-x: auto;
+	    white-space: pre-wrap;
+	    max-height: 250px;
+	    border: 1px solid #ccc;
+	    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	} */
 	
 	#progress-overlay {
 	    position: fixed;
@@ -375,6 +353,24 @@
 	}
 	
 	/* Progress Bar */
+	/* .rboot-progress-container {
+	    width: 100%;
+	    background-color: #f3f3f3;
+	    border-radius: 20px;
+	    margin: 20px 0;
+	    height: 30px;
+	    overflow: hidden;
+	    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
+	}
+	
+	.rboot-progress-bar {
+	    width: 0%;
+	    height: 100%;
+	    background-color: #4caf50;
+	    border-radius: 20px;
+	    transition: width 0.4s ease;
+	} */
+	
 	.rboot-progress-container {
 	    width: 100%;
 	    height: 30px;
@@ -397,11 +393,11 @@
 	.switchx {
 	    font-size: 17px;
 	    position: absolute;
-	    top: 7px;
-	    right: 7px;
+	    top: 7px; /* Adjust for positioning */
+	    right: 7px; /* Adjust for positioning */
 	    display: inline-block;
-	    width: 40px;
-	    height: 22px;
+	    width: 40px; /* Reduced width */
+	    height: 22px; /* Reduced height */
 	}
 	
 	.switchx input {
@@ -409,7 +405,7 @@
 	    width: 0;
 	    height: 0;
 	}
-
+	
 	.slider {
 	    position: absolute;
 	    cursor: pointer;
@@ -417,31 +413,31 @@
 	    left: 0;
 	    right: 0;
 	    bottom: 0;
-	    background: linear-gradient(135deg, #3a3f44, #50575d); /* Dark mode background */
+	    background: linear-gradient(135deg, #e0e6ed, #c8d0d8); /* Light mode gradient */
 	    transition: 0.4s;
-	    border-radius: 15px;
-	    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 0.2);
+	    border-radius: 15px; /* Smaller border radius */
+	    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.1); /* Adjusted depth effect */
 	}
 	
 	.slider:before {
 	    position: absolute;
 	    content: "";
-	    height: 18px;
-	    width: 18px;
-	    border-radius: 50%;
+	    height: 18px; /* Smaller knob */
+	    width: 18px; /* Smaller knob */
+	    border-radius: 50%; /* Circular knob */
 	    left: 2px;
 	    bottom: 2px;
 	    z-index: 2;
-	    background-color: #e8e8e8; /* White knob */
+	    background-color: #e8e8e8;
 	    transition: 0.4s;
-	    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.3);
+	    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.2); /* Adjusted shadow for the smaller knob */
 	}
 	
 	/* Adjusted sun icon for smaller size */
 	.sun svg {
 	    position: absolute;
 	    top: 4px; /* Adjusted position */
-	    left: 4px; /* Move sun to the left */
+	    left: 24px; /* Adjusted to fit smaller toggle */
 	    z-index: 1;
 	    width: 14px; /* Smaller size */
 	    height: 14px; /* Smaller size */
@@ -452,22 +448,22 @@
 	    fill: #73C0FC;
 	    position: absolute;
 	    top: 4px; /* Adjusted position */
-	    left: 24px; /* Adjusted to fit smaller toggle */
+	    left: 4px; /* Adjusted to fit smaller toggle */
 	    z-index: 1;
 	    width: 14px; /* Smaller size */
 	    height: 14px; /* Smaller size */
 	}
 	
-	/* Light mode when the switch is checked */
+	/* When slider is checked (dark mode) */
 	input:checked + .slider {
-	    background: linear-gradient(135deg, #e0e6ed, #c8d0d8); /* Light mode gradient */
-	    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.1);
+	    background: linear-gradient(135deg, #3a3f44, #50575d); /* Dark mode gradient with better contrast */
+	    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 0.2); /* Dark mode depth */
 	}
 	
 	input:checked + .slider:before {
-	    background-color: #ffffff; /* Knob in light mode */
-	    transform: translateX(18px);
-	    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.2);
+	    background-color: #ffffff; /* Keep the knob white in dark mode */
+	    transform: translateX(18px); /* Adjust translation for smaller slider */
+	    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.3); /* Knob shadow in dark mode */
 	}
 	
 	.inputx:focus + .slider {
@@ -482,6 +478,7 @@
 	    transform: scale(1.1);
 	    opacity: 0.9; 
 	}
+
 
 </style>
 </head>
@@ -704,11 +701,13 @@
             <input type="file" name="boot-file" id="boot-file" accept=".img" />
             <select name="boot-type" class="boot-type">
                 <option value="">Select Images to boot on Nabu directly</option>
-            	<option value="twrp-nabu">Twrp Recovery Nabu</option>
-            	<option value="pbrp-nabu">Pitch Black Recovery Nabu</option>
-            	<option value="win-uefi-nabu">Windows UEFI Boot Nabu</option>
-            	<option value="twrp-mod-nabu">Twrp Modded Recovery Nabu</option>
-            	<option value="orangefox-mod-nabu">OrangeFox Modded Recovery Nabu</option>
+            	<option value="twrp-portrait">Twrp Recovery Portrait</option>
+		<option value="twrp-landscape">Twrp Recovery landscape</option>
+            	<option value="pbrp-pitchblack">Pitch Black Recovery</option>
+            	<option value="win-uefi">Windows UEFI Boot</option>
+            	<option value="twrp-mod-portrait">Modded Twrp Recovery Portrait</option>
+		<option value="twrp-mod-landscape">Modded Twrp Recovery landscape</option>
+            	<option value="orangefox-mod">Modded OrangeFox Recovery</option>
             </select>
 		<input type="submit" value="Boot" class="button" />
 		<div class="progress-container" style="display: none;">
@@ -727,24 +726,23 @@
 	</form>
     </div>
 
-	
     <div class="container">
     <h2 style="text-align: center;">Support My Journey</h2>
-    <p style="text-align: center; font-style: italic; margin-bottom: 8px; margin-top: 8px;">"Your support fuels my passion for creating!"</p>
+    <p style="text-align: center; font-style: italic; margin-bottom: 10px; margin-top: 10px;">"Your support fuels my passion for creating!"</p>
     <div class="button-container" style="text-align: center;">
         <a href="https://www.buymeacoffee.com/ArKT" target="_blank" class="animated-button">
-            <img src="https://raw.githubusercontent.com/ArKT-7/WIN-ARM-DOWNLOADER/master/assets/buymecoffee.png" alt="Buy Me a Coffee" style="height: 60px; width: 217px; margin-top: 10px; margin-left: 15px; margin-right: 15px;">
+            <img src="https://raw.githubusercontent.com/ArKT-7/WIN-ARM-DOWNLOADER/master/assets/buymecoffee.png" alt="Buy Me a Coffee" style="height: 60px; width: 217px; margin-top: 10px; margin-left: 10px; margin-right: 10px;">
         </a>
         <a href="https://www.paypal.me/arkt7" target="_blank" class="animated-button">
-            <img src="https://raw.githubusercontent.com/ArKT-7/WIN-ARM-DOWNLOADER/master/assets/Paypal.png" alt="Donate via PayPal" style="height: 63px; width: 220px; margin-top: 10px; margin-right: 15px; margin-left: 15px;">
+            <img src="https://raw.githubusercontent.com/ArKT-7/WIN-ARM-DOWNLOADER/master/assets/Paypal.png" alt="Donate via PayPal" style="height: 63px; width: 220px; margin-top: 10px; margin-right: 10px; margin-left: 10px;">
          </a>
       </div>
     </div>
 
-<script type="module">
-    import * as fastboot from "./dist/fastboot.mjs";
-    import { BlobStore } from "./download.js";
 
+<script type="module">
+    import * as fastboot from "../dist/fastboot.mjs";
+    import { BlobStore } from "../download.js";
     let device = new fastboot.FastbootDevice();
     window.device = device;
     let blobStore = new BlobStore();
@@ -761,7 +759,7 @@
             const toggleInput = document.getElementById('toggle-input');
 
             setTimeout(() => {
-                window.location.href = "https://arkt-7.github.io/nabu/light/"; 
+                window.location.href = "https://arkt-7.github.io/nabu/"; 
             }, 400);
         }
 
@@ -1084,16 +1082,20 @@ async function runRebootCommand(command, successMessage) {
 
     function getImagePath(selectedBootType) {
         switch (selectedBootType) {
-            case "twrp-nabu":
-                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/twrp-nabu.img";
-            case "win-uefi-nabu":
-                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/uefi-windows.img";
-            case "twrp-mod-nabu":
-                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/twrp-modded.img";
-            case "orangefox-mod-nabu":
-                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/orangefox-modded.img";
-            case "pbrp-nabu":
-                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/pitchblack-pbrp.img";
+            case "twrp-portrait":
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/twrp-portrait-nabu.img";
+	    case "twrp-landscape":
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/twrp-landscape-nabu.img";
+	    case "pbrp-pitchblack":
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/pitchblack-nabu.img";
+            case "win-uefi":
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/uefi-windows-nabu.img";
+            case "twrp-mod-portrait":
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/modded-twrp-portrait-nabu.img";
+	    case "twrp-mod-landscape":
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/modded-twrp-landscape-nabu.img";
+            case "orangefox-mod":
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/modded-orangefox-nabu.img";
             default:
                 return null;
         }
@@ -1211,7 +1213,7 @@ async function runRebootCommand(command, successMessage) {
 
 function rbootGetImagePath(selectedImage) {
     switch (selectedImage) {
-        // HyperOS GLOBAL Versions
+         // HyperOS GLOBAL Versions
 	case "magisk-1-0-6-global":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.6.0.TKXMIXM.GLOBAL.boot.img";
 	case "magisk-1-0-5-global":
