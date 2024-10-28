@@ -1531,21 +1531,15 @@ function handleWipeInput(event) {
     const wipeButton = document.querySelector(".rboot-wipe-button");
     if (event.target.value.toUpperCase() === "FORMAT") {
         wipeButton.disabled = false;
-        wipeButton.style.background = "linear-gradient(135deg, #ff0000, #ff6666)"; // Red gradient when enabled
     } else {
         wipeButton.disabled = true;
-        wipeButton.style.background = ""; // Reset to default when disabled
     }
 }
 
-
 async function rbootWipe() {
     const wipeButton = document.querySelector(".rboot-wipe-button");
-    const progressBarContainer = document.querySelector('.rboot-progress-container');
-    const progressBar = document.querySelector('.rboot-progress-bar');
-
     wipeButton.disabled = true;
-    progressBarContainer.style.display = 'block';
+    rbootShowProgressOverlay(); // Show overlay
 
     try {
         // Step 1: Download and flash GPT file to partition "partition:0"
@@ -1562,32 +1556,42 @@ async function rbootWipe() {
         alert(`Failed to complete wipe: ${error.message}`);
     } finally {
         document.querySelector(".rboot-wipe-input").value = "";
-        progressBarContainer.style.display = 'none';
-        progressBar.style.width = `0%`;
+        rbootHideProgressOverlay(); // Hide overlay
         await checkDeviceConnection();
     }
 }
 
 async function rbootDownloadFile(url) {
     const progressBar = document.querySelector('.rboot-progress-bar');
-    const response = await fetch(url);
-    if (!response.ok) throw new Error("Failed to download file");
+    const progressBarContainer = document.querySelector('.rboot-progress-container');
+    progressBarContainer.style.display = 'block';
 
-    const contentLength = response.headers.get('Content-Length');
-    const total = parseInt(contentLength, 10);
-    let loaded = 0;
-    const reader = response.body.getReader();
-    const chunks = [];
+    try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("Failed to download file");
 
-    while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        chunks.push(value);
-        loaded += value.length;
-        progressBar.style.width = `${(loaded / total) * 100}%`;
+        const contentLength = response.headers.get('Content-Length');
+        const total = parseInt(contentLength, 10);
+        let loaded = 0;
+        const reader = response.body.getReader();
+        const chunks = [];
+
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            chunks.push(value);
+            loaded += value.length;
+            progressBar.style.width = `${(loaded / total) * 100}%`;
+        }
+
+        return new Blob(chunks);
+    } catch (error) {
+        console.error("Download error:", error);
+        alert("Error downloading file. Please try again.");
+    } finally {
+        progressBarContainer.style.display = 'none';
+        progressBar.style.width = '0%';
     }
-
-    return new Blob(chunks);
 }
 
 
