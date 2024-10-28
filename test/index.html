@@ -1550,20 +1550,13 @@ async function rbootWipe() {
     wipeButton.disabled = true;
 	showProgressOverlay();
 
-    // Here you can add a confirmation prompt before proceeding with the wipe
-    const confirmation = confirm("⚠️ This will wipe all data. Do you want to continue?");
-    if (!confirmation) {
-        document.querySelector(".rboot-wipe-input").value = "";
-        wipeButton.disabled = true; // Disable button again after process
-        warningMessage.style.color = ""; // Reset warning message color
-        return; // Exit the function
-    }
 
     try {
-        // Proceed with the wiping process (your existing code for downloading and flashing)
+        // Step 1: Download and flash GPT file to partition "partition:0"
         let gptBlob = await rbootDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/uninstall/gpt_both0.bin");
         await device.flashBlob("partition:0", gptBlob);
 
+        // Step 2: Download and flash userdata to partition "userdata"
         let userdataBlob = await rbootDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/uninstall/userdata.img");
         await device.flashBlob("userdata", userdataBlob);
         alert("gpt_both0.bin and Userdata flash successful!");
@@ -1572,10 +1565,8 @@ async function rbootWipe() {
         alert(`Failed to complete wipe: ${error.message}`);
     } finally {
         document.querySelector(".rboot-wipe-input").value = "";
-        wipeButton.disabled = true; // Disable button again after process
-        warningMessage.style.color = ""; // Reset warning message color
-	    hideProgressOverlay();
-	    await checkDeviceConnection();
+         hideProgressOverlay();
+        await checkDeviceConnection();
     }
 }
 
