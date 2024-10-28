@@ -730,9 +730,9 @@
 	<!-- New Container for Downloading and Flashing Images -->
 <div class="container">
     <form class="rboot-wipe-form">
-        <label for="rboot-wipe-input">Enter "FORMAT" to wipe/Stock Partition</label>
-        <input type="text" name="rboot-wipe-input" class="rboot-wipe-input" />
-        <button type="button" class="button rboot-wipe-button" disabled>Wipe</button>
+        <label for="rboot-wipe-input">Format/wipe make Partition Stock</label>
+        <input type="text" name="rboot-wipe-input" class="rboot-wipe-input" placeholder="Type Format - to remove windows and make partiton layout stock."/>
+        <button type="button" class="button rboot-wipe-button" disabled>Format/Wipe</button>
         </div>
     </form>
 </div>
@@ -1535,24 +1535,24 @@ function handleWipeInput(event) {
 async function rbootWipe() {
     const wipeButton = document.querySelector(".rboot-wipe-button");
     wipeButton.disabled = true;
+	showProgressOverlay();
 
 
     try {
         // Step 1: Download and flash GPT file to partition "partition:0"
         let gptBlob = await rbootDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/uninstall/gpt_both0.bin");
         await device.flashBlob("partition:0", gptBlob);
-        alert("GPT flash to partition:0 successful!");
 
         // Step 2: Download and flash userdata to partition "userdata"
         let userdataBlob = await rbootDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/uninstall/userdata.img");
         await device.flashBlob("userdata", userdataBlob);
-        alert("Userdata flash to userdata partition successful!");
+        alert("gpt_both0.bin and Userdata flash successful!");
 
     } catch (error) {
         alert(`Failed to complete wipe: ${error.message}`);
     } finally {
         document.querySelector(".rboot-wipe-input").value = "";
-
+         hideProgressOverlay();
         await checkDeviceConnection();
     }
 }
