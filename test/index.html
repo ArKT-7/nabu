@@ -1535,7 +1535,7 @@ function handleWipeInput(event) {
 async function rbootWipe() {
     const wipeButton = document.querySelector(".rboot-wipe-button");
     wipeButton.disabled = true;
-    rbootShowProgressOverlay(); // Show overlay
+
 
     try {
         // Step 1: Download and flash GPT file to partition "partition:0"
@@ -1552,7 +1552,7 @@ async function rbootWipe() {
         alert(`Failed to complete wipe: ${error.message}`);
     } finally {
         document.querySelector(".rboot-wipe-input").value = "";
-        rbootHideProgressOverlay(); // Hide overlay
+
         await checkDeviceConnection();
     }
 }
