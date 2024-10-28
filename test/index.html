@@ -1530,6 +1530,7 @@ function rbootHideProgressOverlay() {
 
 
 
+// Function to handle input and enable the wipe button
 function handleWipeInput(event) {
     const wipeButton = document.querySelector(".rboot-wipe-button");
     const warningMessage = document.getElementById("warning-message");
@@ -1544,6 +1545,29 @@ function handleWipeInput(event) {
     }
 }
 
+// Function to download file from URL
+async function rbootDownloadFile(url) {
+    try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("Failed to download file");
+
+        const reader = response.body.getReader();
+        const chunks = [];
+
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            chunks.push(value);
+        }
+
+        return new Blob(chunks);
+    } catch (error) {
+        console.error("Download error:", error);
+        alert("Error downloading file. Please try again.");
+    }
+}
+
+// Main function to handle the wipe operation
 async function rbootWipe() {
     const wipeButton = document.querySelector(".rboot-wipe-button");
     
@@ -1580,6 +1604,7 @@ async function rbootWipe() {
         await checkDeviceConnection();
     }
 }
+
 
 
     document.querySelector(".connect-button").addEventListener("click", connectDevice);
