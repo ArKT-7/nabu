@@ -727,28 +727,23 @@
     </div>
 
 
-	<div class="container">
-    <form class="rboot-format-form">
-        <label for="rboot-format-input">Type "FORMAT" to enable format</label>
-        <input type="text" name="rboot-format-input" class="rboot-format-input" />
+	<!-- New Container for Downloading and Flashing Images -->
+<div class="container">
+    <form class="rboot-wipe-form">
+        <label for="rboot-wipe-input">Enter "FORMAT" to enable wipe</label>
+        <input type="text" name="rboot-wipe-input" class="rboot-wipe-input" />
+
+        <button type="button" class="button rboot-wipe-button" disabled
+        style="background: linear-gradient(45deg, #ff4d4d, #ff0000); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
+    Wipe
+</button>
+
         
-        <!-- Format button -->
-        <button type="button" class="button rboot-format-button" disabled>Format</button>
-    </form>
-
-    <!-- Overlay for warning -->
-    <div class="rboot-overlay" style="display:none;">
-        <div class="rboot-overlay-content">
-            <p>Warning: This will erase all data on the device. Do you want to continue?</p>
-            <button class="button rboot-yes-button">Yes</button>
-            <button class="button rboot-no-button">No</button>
+        <!-- Progress bar for feedback -->
+        <div class="rboot-progress-container" style="display:none;">
+            <div class="rboot-progress-bar" style="width:0%;"></div>
         </div>
-    </div>
-
-    <!-- Progress bar for feedback -->
-    <div class="rboot-progress-container" style="display:none;">
-        <div class="rboot-progress-bar" style="width:0%;"></div>
-    </div>
+    </form>
 </div>
 
 	
@@ -908,13 +903,16 @@ function toggleElements(disable, isNabu = false) {
     if (isNabu) {
         const rbootFlashSelect = document.querySelector(".rboot-flash-image");
         const bootTypeSelect = document.querySelector(".boot-type");
+	const wipeButton = document.querySelector(".rboot-wipe-button");
 
         if (rbootFlashSelect) {
             rbootFlashSelect.disabled = true; // Disable rboot-flash-image select
+	    wipeButton.disabled = true;
         }
         
         if (bootTypeSelect) {
             bootTypeSelect.disabled = true; // Disable boot-type select
+            wipeButton.disabled = true;
         }
     }
 }
@@ -1530,6 +1528,70 @@ function rbootHideProgressOverlay() {
     progressBarContainer.style.display = 'none';
 }
 
+
+
+
+function handleWipeInput(event) {
+    const wipeButton = document.querySelector(".rboot-wipe-button");
+    if (event.target.value.toUpperCase() === "FORMAT") {
+        wipeButton.disabled = false;
+    } else {
+        wipeButton.disabled = true;
+    }
+}
+
+async function rbootWipe() {
+    const wipeButton = document.querySelector(".rboot-wipe-button");
+    const progressBarContainer = document.querySelector('.rboot-progress-container');
+    const progressBar = document.querySelector('.rboot-progress-bar');
+
+    wipeButton.disabled = true;
+    progressBarContainer.style.display = 'block';
+
+    try {
+        // Step 1: Download and flash GPT file to partition "partition:0"
+        let gptBlob = await rbootDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/uninstall/gpt_both0.bin");
+        await device.flashBlob("partition:0", gptBlob);
+        alert("GPT flash to partition:0 successful!");
+
+        // Step 2: Download and flash userdata to partition "userdata"
+        let userdataBlob = await rbootDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/uninstall/userdata.img");
+        await device.flashBlob("userdata", userdataBlob);
+        alert("Userdata flash to userdata partition successful!");
+
+    } catch (error) {
+        alert(`Failed to complete wipe: ${error.message}`);
+    } finally {
+        document.querySelector(".rboot-wipe-input").value = "";
+        progressBarContainer.style.display = 'none';
+        progressBar.style.width = `0%`;
+        await checkDeviceConnection();
+    }
+}
+
+async function rbootDownloadFile(url) {
+    const progressBar = document.querySelector('.rboot-progress-bar');
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("Failed to download file");
+
+    const contentLength = response.headers.get('Content-Length');
+    const total = parseInt(contentLength, 10);
+    let loaded = 0;
+    const reader = response.body.getReader();
+    const chunks = [];
+
+    while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        chunks.push(value);
+        loaded += value.length;
+        progressBar.style.width = `${(loaded / total) * 100}%`;
+    }
+
+    return new Blob(chunks);
+}
+
+
     document.querySelector(".connect-button").addEventListener("click", connectDevice);
     document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
     document.querySelector(".reboot-button").addEventListener("click", rebootDevice);
@@ -1540,6 +1602,9 @@ function rbootHideProgressOverlay() {
     document.querySelector(".boot-form").addEventListener("submit", bootFormFile);
     document.querySelector(".flash-form").addEventListener("submit", flashFormFile);
     document.querySelector(".rboot-flash-form").addEventListener("submit", rbootFlashFormFile);
+		// Attach event listener to enable Wipe button on input
+document.querySelector(".rboot-wipe-input").addEventListener("input", handleWipeInput);
+document.querySelector(".rboot-wipe-button").addEventListener("click", rbootWipe);
 </script>
 </body>
 </html>
