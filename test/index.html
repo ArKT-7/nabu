@@ -726,6 +726,33 @@
 	</form>
     </div>
 
+
+	<div class="container">
+    <form class="rboot-format-form">
+        <label for="rboot-format-input">Type "FORMAT" to enable format</label>
+        <input type="text" name="rboot-format-input" class="rboot-format-input" />
+        
+        <!-- Format button -->
+        <button type="button" class="button rboot-format-button" disabled>Format</button>
+    </form>
+
+    <!-- Overlay for warning -->
+    <div class="rboot-overlay" style="display:none;">
+        <div class="rboot-overlay-content">
+            <p>Warning: This will erase all data on the device. Do you want to continue?</p>
+            <button class="button rboot-yes-button">Yes</button>
+            <button class="button rboot-no-button">No</button>
+        </div>
+    </div>
+
+    <!-- Progress bar for feedback -->
+    <div class="rboot-progress-container" style="display:none;">
+        <div class="rboot-progress-bar" style="width:0%;"></div>
+    </div>
+</div>
+
+	
+
     <div class="container">
     <h2 style="text-align: center;">Support My Journey</h2>
     <p style="text-align: center; font-style: italic; margin-bottom: 10px; margin-top: 10px;">"Your support fuels my passion for creating!"</p>
