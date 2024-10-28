@@ -1565,6 +1565,7 @@ async function rbootWipe() {
         alert(`Failed to complete wipe: ${error.message}`);
     } finally {
         document.querySelector(".rboot-wipe-input").value = "";
+	    warningMessage.style.color = ""; // Reset warning message color
          hideProgressOverlay();
         await checkDeviceConnection();
     }
