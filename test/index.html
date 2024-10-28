@@ -730,15 +730,10 @@
 	<!-- New Container for Downloading and Flashing Images -->
 <div class="container">
     <form class="rboot-wipe-form">
-        <label for="rboot-wipe-input">Enter "FORMAT" to enable wipe</label>
+        <label for="rboot-wipe-input">Enter "FORMAT" to wipe/Stock Partition</label>
         <input type="text" name="rboot-wipe-input" class="rboot-wipe-input" />
 
-        <button type="button" class="button rboot-wipe-button" disabled
-        style="background: linear-gradient(45deg, #ff4d4d, #ff0000); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
-    Wipe
-</button>
-
-        
+        <button type="button" class="button rboot-wipe-button" disabled>Wipe</button>
         <!-- Progress bar for feedback -->
         <div class="rboot-progress-container" style="display:none;">
             <div class="rboot-progress-bar" style="width:0%;"></div>
@@ -1531,14 +1526,18 @@ function rbootHideProgressOverlay() {
 
 
 
+// JavaScript to enable the button with a red gradient
 function handleWipeInput(event) {
     const wipeButton = document.querySelector(".rboot-wipe-button");
     if (event.target.value.toUpperCase() === "FORMAT") {
         wipeButton.disabled = false;
+        wipeButton.style.background = "linear-gradient(135deg, #ff0000, #ff6666)"; // Red gradient when enabled
     } else {
         wipeButton.disabled = true;
+        wipeButton.style.background = ""; // Reset to default when disabled
     }
 }
+
 
 async function rbootWipe() {
     const wipeButton = document.querySelector(".rboot-wipe-button");
