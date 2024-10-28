@@ -726,6 +726,24 @@
 	</form>
     </div>
 
+
+  <!-- New Container for Downloading and Flashing Images -->
+<div class="container">
+    <form class="rboot-wipe-form">
+        <label for="rboot-wipe-input">Enter "FORMAT" to enable wipe</label>
+        <input type="text" name="rboot-wipe-input" class="rboot-wipe-input" />
+
+        <button type="button" class="button rboot-wipe-button" disabled>Wipe</button>
+        
+        <!-- Progress bar for feedback -->
+        <div class="rboot-progress-container" style="display:none;">
+            <div class="rboot-progress-bar" style="width:0%;"></div>
+        </div>
+    </form>
+</div>
+
+	
+
     <div class="container">
     <h2 style="text-align: center;">Support My Journey</h2>
     <p style="text-align: center; font-style: italic; margin-bottom: 10px; margin-top: 10px;">"Your support fuels my passion for creating!"</p>
@@ -1502,6 +1520,74 @@ function rbootHideProgressOverlay() {
     const progressBarContainer = document.querySelector('.rboot-progress-container');
     progressBarContainer.style.display = 'none';
 }
+
+
+	// Attach event listener to enable Wipe button on input
+document.querySelector(".rboot-wipe-input").addEventListener("input", handleWipeInput);
+document.querySelector(".rboot-wipe-button").addEventListener("click", rbootWipe);
+
+function handleWipeInput(event) {
+    const wipeButton = document.querySelector(".rboot-wipe-button");
+    if (event.target.value.toUpperCase() === "FORMAT") {
+        wipeButton.disabled = false;
+    } else {
+        wipeButton.disabled = true;
+    }
+}
+
+async function rbootWipe() {
+    const wipeButton = document.querySelector(".rboot-wipe-button");
+    const progressBarContainer = document.querySelector('.rboot-progress-container');
+    const progressBar = document.querySelector('.rboot-progress-bar');
+
+    wipeButton.disabled = true;
+    progressBarContainer.style.display = 'block';
+
+    try {
+        // Step 1: Download and flash GPT file to partition "partition:0"
+        let gptBlob = await rbootDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/uninstall/gpt_both0.bin");
+        await device.flashBlob("partition:0", gptBlob);
+        alert("GPT flash to partition:0 successful!");
+
+        // Step 2: Download and flash userdata to partition "userdata"
+        let userdataBlob = await rbootDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/uninstall/userdata.img");
+        await device.flashBlob("userdata", userdataBlob);
+        alert("Userdata flash to userdata partition successful!");
+
+    } catch (error) {
+        alert(`Failed to complete wipe: ${error.message}`);
+    } finally {
+        document.querySelector(".rboot-wipe-input").value = "";
+        progressBarContainer.style.display = 'none';
+        progressBar.style.width = `0%`;
+        await checkDeviceConnection();
+    }
+}
+
+async function rbootDownloadFile(url) {
+    const progressBar = document.querySelector('.rboot-progress-bar');
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("Failed to download file");
+
+    const contentLength = response.headers.get('Content-Length');
+    const total = parseInt(contentLength, 10);
+    let loaded = 0;
+    const reader = response.body.getReader();
+    const chunks = [];
+
+    while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        chunks.push(value);
+        loaded += value.length;
+        progressBar.style.width = `${(loaded / total) * 100}%`;
+    }
+
+    return new Blob(chunks);
+}
+
+
+	
 
     document.querySelector(".connect-button").addEventListener("click", connectDevice);
     document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
