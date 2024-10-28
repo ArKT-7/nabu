@@ -998,6 +998,8 @@ async function connectDevice() {
     }
 
 async function checkDeviceConnection() {
+	const wipeButton = document.querySelector(".rboot-wipe-button");
+	wipeButton.disabled = true;
     let statusField = document.querySelector(".status-field");
 
     try {
