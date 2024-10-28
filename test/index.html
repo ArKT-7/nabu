@@ -1530,7 +1530,6 @@ function rbootHideProgressOverlay() {
 
 
 
-// JavaScript to enable the button with a red gradient
 function handleWipeInput(event) {
     const wipeButton = document.querySelector(".rboot-wipe-button");
     const warningMessage = document.getElementById("warning-message");
@@ -1547,9 +1546,19 @@ function handleWipeInput(event) {
 
 async function rbootWipe() {
     const wipeButton = document.querySelector(".rboot-wipe-button");
-    wipeButton.disabled = true;
-	showProgressOverlay();
-
+    
+    // Show confirmation dialog
+    const userConfirmed = confirm("⚠️ This will format all data, including Android and Windows (if installed). Do you want to continue?");
+    
+    if (!userConfirmed) {
+        // User canceled, reset the input and button
+        document.querySelector(".rboot-wipe-input").value = ""; 
+        handleWipeInput({ target: { value: "" } }); // Reset wipe button state
+        return; // Exit the function
+    }
+    
+    wipeButton.disabled = true; // Disable the button to prevent multiple clicks
+    showProgressOverlay();
 
     try {
         // Step 1: Download and flash GPT file to partition "partition:0"
@@ -1565,30 +1574,10 @@ async function rbootWipe() {
         alert(`Failed to complete wipe: ${error.message}`);
     } finally {
         document.querySelector(".rboot-wipe-input").value = "";
-	    warningMessage.style.color = ""; // Reset warning message color
-         hideProgressOverlay();
+        const warningMessage = document.getElementById("warning-message");
+        warningMessage.style.color = ""; // Reset warning message color
+        hideProgressOverlay();
         await checkDeviceConnection();
-    }
-}
-
-async function rbootDownloadFile(url) {
-    try {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error("Failed to download file");
-
-        const reader = response.body.getReader();
-        const chunks = [];
-
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            chunks.push(value);
-        }
-
-        return new Blob(chunks);
-    } catch (error) {
-        console.error("Download error:", error);
-        alert("Error downloading file. Please try again.");
     }
 }
 
