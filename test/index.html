@@ -731,14 +731,14 @@
 <div class="container">
     <form class="rboot-wipe-form">
         <label for="rboot-wipe-input">Format/wipe make Partition Stock</label>
-	     <p style="color: red; font-weight: bold;">
-                Warning: This will wipe all data, including Android and Windows(if there is). So think twice?
-            </p>
-        <input type="text" name="rboot-wipe-input" class="rboot-wipe-input" placeholder="Type Format - to remove windows and make partiton layout stock."/>
+        <p id="warning-message" style="text-align: center; font-style: italic; margin-bottom: 10px; margin-top: 10px;">
+            ⚠️ This will Format all data, including Android and Windows (if installed). So think twice.
+        </p>
+        <input type="text" name="rboot-wipe-input" class="rboot-wipe-input" placeholder="Type FORMAT - to remove Windows and make partition layout stock." />
         <button type="button" class="button rboot-wipe-button" disabled>Format/Wipe</button>
-        </div>
     </form>
 </div>
+
 
 	
 
@@ -1530,25 +1530,34 @@ function rbootHideProgressOverlay() {
 // JavaScript to enable the button with a red gradient
 function handleWipeInput(event) {
     const wipeButton = document.querySelector(".rboot-wipe-button");
+    const warningMessage = document.getElementById("warning-message");
+
+    // Enable button and change warning message color
     if (event.target.value.toUpperCase() === "FORMAT") {
         wipeButton.disabled = false;
+        warningMessage.style.color = "red"; // Change warning text color to red
     } else {
         wipeButton.disabled = true;
+        warningMessage.style.color = ""; // Reset to default color
     }
 }
 
 async function rbootWipe() {
     const wipeButton = document.querySelector(".rboot-wipe-button");
     wipeButton.disabled = true;
-	showProgressOverlay();
 
+    // Here you can add a confirmation prompt before proceeding with the wipe
+    const confirmation = confirm("⚠️ This will wipe all data. Do you want to continue?");
+    if (!confirmation) {
+        wipeButton.disabled = false; // Re-enable the button if the user cancels
+        return; // Exit the function
+    }
 
     try {
-        // Step 1: Download and flash GPT file to partition "partition:0"
+        // Proceed with the wiping process (your existing code for downloading and flashing)
         let gptBlob = await rbootDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/uninstall/gpt_both0.bin");
         await device.flashBlob("partition:0", gptBlob);
 
-        // Step 2: Download and flash userdata to partition "userdata"
         let userdataBlob = await rbootDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/uninstall/userdata.img");
         await device.flashBlob("userdata", userdataBlob);
         alert("gpt_both0.bin and Userdata flash successful!");
@@ -1557,8 +1566,8 @@ async function rbootWipe() {
         alert(`Failed to complete wipe: ${error.message}`);
     } finally {
         document.querySelector(".rboot-wipe-input").value = "";
-         hideProgressOverlay();
-        await checkDeviceConnection();
+        wipeButton.disabled = true; // Disable button again after process
+        warningMessage.style.color = ""; // Reset warning message color
     }
 }
 
