@@ -731,11 +731,21 @@
 <div class="container">
     <form class="rboot-wipe-form">
         <label for="rboot-wipe-input">Format/wipe make Partition Stock</label>
-        <input type="text" name="rboot-wipe-input" class="rboot-wipe-input" placeholder="Type Format - to remove windows and make partiton layout stock."/>
+        <input type="text" name="rboot-wipe-input" class="rboot-wipe-input" placeholder="Type FORMAT - to remove Windows and make partition layout stock." />
+        
         <button type="button" class="button rboot-wipe-button" disabled>Format/Wipe</button>
+
+        <!-- Warning message and confirmation buttons, hidden by default -->
+        <div id="confirmation-section" style="display: none; margin-top: 20px;">
+            <p style="color: red; font-weight: bold;">
+                Warning: This will wipe all data, including Android and Windows. Do you want to continue?
+            </p>
+            <button type="button" class="button confirm-button">Confirm</button>
+            <button type="button" class="button cancel-button">It Was a Mistake</button>
         </div>
     </form>
 </div>
+
 
 	
 
@@ -1525,6 +1535,8 @@ function rbootHideProgressOverlay() {
 
 
 // JavaScript to enable the button with a red gradient
+
+
 function handleWipeInput(event) {
     const wipeButton = document.querySelector(".rboot-wipe-button");
     if (event.target.value.toUpperCase() === "FORMAT") {
@@ -1534,11 +1546,33 @@ function handleWipeInput(event) {
     }
 }
 
-async function rbootWipe() {
+function showConfirmationSection() {
     const wipeButton = document.querySelector(".rboot-wipe-button");
-    wipeButton.disabled = true;
-	showProgressOverlay();
+    const confirmationSection = document.getElementById("confirmation-section");
 
+    // Hide the initial wipe button and show the confirmation section
+    wipeButton.style.display = "none";
+    confirmationSection.style.display = "block";
+}
+
+function hideConfirmationSection() {
+    const wipeButton = document.querySelector(".rboot-wipe-button");
+    const confirmationSection = document.getElementById("confirmation-section");
+    const wipeInput = document.querySelector(".rboot-wipe-input");
+
+    // Clear the input field, hide the confirmation section, and re-enable the initial wipe button
+    wipeInput.value = "";
+    wipeButton.disabled = true;
+    wipeButton.style.display = "inline-block";
+    confirmationSection.style.display = "none";
+}
+
+async function rbootWipe() {
+    const confirmationSection = document.getElementById("confirmation-section");
+
+    // Hide the confirmation section and start the wipe process
+    confirmationSection.style.display = "none";
+    showProgressOverlay();
 
     try {
         // Step 1: Download and flash GPT file to partition "partition:0"
@@ -1554,7 +1588,7 @@ async function rbootWipe() {
         alert(`Failed to complete wipe: ${error.message}`);
     } finally {
         document.querySelector(".rboot-wipe-input").value = "";
-         hideProgressOverlay();
+        hideProgressOverlay();
         await checkDeviceConnection();
     }
 }
@@ -1581,6 +1615,7 @@ async function rbootDownloadFile(url) {
 }
 
 
+
     document.querySelector(".connect-button").addEventListener("click", connectDevice);
     document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
     document.querySelector(".reboot-button").addEventListener("click", rebootDevice);
@@ -1592,8 +1627,11 @@ async function rbootDownloadFile(url) {
     document.querySelector(".flash-form").addEventListener("submit", flashFormFile);
     document.querySelector(".rboot-flash-form").addEventListener("submit", rbootFlashFormFile);
 		// Attach event listener to enable Wipe button on input
+    // Attach event listeners
 document.querySelector(".rboot-wipe-input").addEventListener("input", handleWipeInput);
-document.querySelector(".rboot-wipe-button").addEventListener("click", rbootWipe);
+document.querySelector(".rboot-wipe-button").addEventListener("click", showConfirmationSection);
+document.querySelector(".confirm-button").addEventListener("click", rbootWipe);
+document.querySelector(".cancel-button").addEventListener("click", hideConfirmationSection);
 </script>
 </body>
 </html>
