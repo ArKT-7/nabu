@@ -732,12 +732,13 @@
     <form class="rboot-wipe-form">
         <label for="rboot-wipe-input">Format/wipe make Partition Stock</label>
         <p id="warning-message" style="text-align: center; font-style: italic; margin-bottom: 10px; margin-top: 10px;">
-            ⚠️ This will Format all data, including Android and Windows (if installed). So think twice.
+            ⚠️ <strong>This will Format all data, including Android and Windows (if installed). So think twice.</strong>
         </p>
         <input type="text" name="rboot-wipe-input" class="rboot-wipe-input" placeholder="Type FORMAT - to remove Windows and make partition layout stock." />
         <button type="button" class="button rboot-wipe-button" disabled>Format/Wipe</button>
     </form>
 </div>
+
 
 
 	
@@ -1545,11 +1546,14 @@ function handleWipeInput(event) {
 async function rbootWipe() {
     const wipeButton = document.querySelector(".rboot-wipe-button");
     wipeButton.disabled = true;
+	showProgressOverlay();
 
     // Here you can add a confirmation prompt before proceeding with the wipe
     const confirmation = confirm("⚠️ This will wipe all data. Do you want to continue?");
     if (!confirmation) {
-        wipeButton.disabled = false; // Re-enable the button if the user cancels
+        document.querySelector(".rboot-wipe-input").value = "";
+        wipeButton.disabled = true; // Disable button again after process
+        warningMessage.style.color = ""; // Reset warning message color
         return; // Exit the function
     }
 
@@ -1568,6 +1572,8 @@ async function rbootWipe() {
         document.querySelector(".rboot-wipe-input").value = "";
         wipeButton.disabled = true; // Disable button again after process
         warningMessage.style.color = ""; // Reset warning message color
+	    hideProgressOverlay();
+	    await checkDeviceConnection();
     }
 }
 
