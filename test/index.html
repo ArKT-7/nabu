@@ -730,11 +730,19 @@
 	<!-- New Container for Downloading and Flashing Images -->
 <div class="container">
     <form class="rboot-wipe-form">
-        <label for="rboot-wipe-input">Format/wipe make Partition Stock</label>
-        <input type="text" name="rboot-wipe-input" class="rboot-wipe-input" placeholder="Type Format - to remove windows and make partiton layout stock."/>
-        <button type="button" class="button rboot-wipe-button" disabled>Format/Wipe</button>
-        </div>
+        <label for="rboot-wipe-input">Format/Wipe - Make Partition Stock</label>
+        <input type="text" name="rboot-wipe-input" class="rboot-wipe-input" placeholder="Type FORMAT to remove Windows and make partition layout stock." />
+        <button type="button" class="button rboot-wipe-button" disabled onclick="showWarning()">Format/Wipe</button>
     </form>
+
+    <!-- Warning Modal -->
+    <div id="warning-modal" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); color: white; display: flex; justify-content: center; align-items: center;">
+        <div style="background: #333; padding: 20px; border-radius: 10px; max-width: 400px; text-align: center;">
+            <p>Warning: This will wipe all data, including both Android and Windows. Do you want to continue?</p>
+            <button type="button" onclick="confirmWipe()">Yes</button>
+            <button type="button" onclick="hideWarning()">No</button>
+        </div>
+    </div>
 </div>
 
 	
@@ -1532,11 +1540,26 @@ function handleWipeInput(event) {
     }
 }
 
+// Function to show warning modal
+function showWarning() {
+    document.getElementById("warning-modal").style.display = "flex";
+}
+
+// Function to hide warning modal
+function hideWarning() {
+    document.getElementById("warning-modal").style.display = "none";
+}
+
+// Confirm Wipe function, called if "Yes" is clicked in the modal
+async function confirmWipe() {
+    hideWarning(); // Hide the modal before starting the wipe
+    await rbootWipe(); // Call the wipe function
+}
+
 async function rbootWipe() {
     const wipeButton = document.querySelector(".rboot-wipe-button");
     wipeButton.disabled = true;
-	showProgressOverlay();
-
+    showProgressOverlay();
 
     try {
         // Step 1: Download and flash GPT file to partition "partition:0"
@@ -1552,9 +1575,10 @@ async function rbootWipe() {
         alert(`Failed to complete wipe: ${error.message}`);
     } finally {
         document.querySelector(".rboot-wipe-input").value = "";
-         hideProgressOverlay();
+        hideProgressOverlay();
         await checkDeviceConnection();
     }
+    wipeButton.disabled = true;
 }
 
 async function rbootDownloadFile(url) {
@@ -1577,6 +1601,7 @@ async function rbootDownloadFile(url) {
         alert("Error downloading file. Please try again.");
     }
 }
+
 
 
     document.querySelector(".connect-button").addEventListener("click", connectDevice);
