@@ -314,16 +314,29 @@
 	
 	pre.result-field {
 	    background-color: rgba(255, 255, 255, 0.9);
-	    padding: 20px; /* Adjusted padding for better appearance */
+	    padding: 20px;
 	    border-radius: 15px;
-	    overflow-y: auto; /* Allow vertical scrolling */
-	    overflow-x: auto; /* Allow horizontal scrolling */
-	    max-height: 300px; /* Increase max height for better visibility */
+	    overflow-y: auto; 
+	    overflow-x: auto; 
+	    max-height: 300px; 
 	    border: 1px solid #ccc;
 	    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-	    width: 100%; /* Ensure it takes full width */
-	    margin-top: 20px; /* Add margin to separate from other elements */
+	    width: 90%; 
+	    margin-top: 20px; 
+	    position: relative; /* Position relative for the ::before element */
 	}
+	
+	pre.result-field::before {
+	    content: "Here all logs will be shown..."; /* Placeholder text */
+	    position: absolute; /* Position it inside the field */
+	    top: 10px; /* Adjust vertical position */
+	    left: 20px; /* Adjust horizontal position */
+	    color: gray; /* Placeholder text color */
+	    font-style: italic; /* Italicize for distinction */
+	    font-size: 14px; /* Size of the placeholder text */
+	    pointer-events: none; /* Prevent interactions with the placeholder */
+	}
+
 	
 	#progress-overlay {
 	    position: fixed;
@@ -559,8 +572,8 @@
         <button class="button reboot-fastbootd-button">Reboot to FastbootD</button>
         <button class="button reboot-edl-button">Reboot to EDL</button>
 	<button class="button switchslot-button">Switch slot to other</button>
-	    <p id="warning-message" style="text-align: center; margin-bottom: 10px; margin-top: 10px;">
-	            <strong>command output log</strong>
+	    <p id="warning-message" style="text-align: center; margin-top: 10px;">
+	            <strong>command output logs</strong>
 	        </p>
             <pre class="result-field"></pre>
     </div>
