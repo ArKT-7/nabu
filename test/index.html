@@ -199,7 +199,7 @@
             transform: none;
         }
 
-	.red-gradient {
+	.red-button {
 	    background: linear-gradient(135deg, #ff3b3b, #ff6666); /* Brighter red shades */
 	    border: none;
 	    border-radius: 20px;
@@ -214,12 +214,12 @@
 	    box-shadow: 0 4px 10px rgba(255, 59, 59, 0.5); /* Adjusted shadow for a more vibrant look */
 	}
 	
-	.red-gradient:hover {
+	.red-button:hover {
 	    background: linear-gradient(135deg, #ff0000, #ff4d4d); /* More intense color on hover */
 	}
 
 	
-	.red-gradient:disabled {
+	.red-button:disabled {
 	    background: linear-gradient(135deg, #b0b0b0, #d4d4d4);
             color: #888;
             cursor: not-allowed;
@@ -758,14 +758,14 @@
 
 
 	<div class="container">
-	    <form class="rboot-wipe-form">
-	        <label for="rboot-wipe-input">Format/wipe make Partition Stock</label>
+	    <form class="wipe-form">
+	        <label for="wipe-input">Format/wipe make Partition Stock</label>
 	        <p id="warning-message" style="text-align: center; font-style: italic; margin-bottom: 10px; margin-top: 10px;">
 	            ⚠️ <strong>This will Format all data, including Android and Windows (if installed).</strong><br>
 	            <strong>So think twice.</strong>
 	        </p>
-	        <input type="text" name="rboot-wipe-input" class="rboot-wipe-input" placeholder="Type FORMAT - to remove Windows and make partition layout stock." />
-	        <button type="button" class="button rboot-wipe-button red-gradient" disabled>Format/Wipe</button>
+	        <input type="text" name="wipe-input" class="wipe-input" placeholder="Type FORMAT - to remove Windows and make partition layout stock." />
+	        <button type="button" class="button wipe-button red-button" disabled>Format/Wipe</button>
 	    </form>
 	</div>
 	
@@ -914,7 +914,7 @@ function hideProgressOverlay() {
 
 function toggleElements(disable, isNabu = false) {
     const formElements = document.querySelectorAll("input, button, select");
-    const wipeButton = document.querySelector(".rboot-wipe-button");
+    const wipeButton = document.querySelector(".wipe-button");
 	wipeButton.disabled = true;
     formElements.forEach((element) => {
         if (!element.classList.contains('connect-button') && !element.closest('.switchx')) {
@@ -1029,7 +1029,7 @@ async function connectDevice() {
     }
 
 async function checkDeviceConnection() {
-	const wipeButton = document.querySelector(".rboot-wipe-button");
+	const wipeButton = document.querySelector(".wipe-button");
 	wipeButton.disabled = true;
     let statusField = document.querySelector(".status-field");
 
@@ -1553,26 +1553,21 @@ function rbootHideProgressOverlay() {
 }
 
 
-
-
-// Function to handle input and enable the wipe button
 // Function to handle input and enable the wipe button
 function handleWipeInput(event) {
-    const wipeButton = document.querySelector(".rboot-wipe-button");
+    const wipeButton = document.querySelector(".wipe-button");
     const warningMessage = document.getElementById("warning-message");
 
-    // Enable button and change warning message color
     if (event.target.value.toUpperCase() === "FORMAT") {
         wipeButton.disabled = false;
-        warningMessage.style.color = "red"; // Change warning text color to red
+        warningMessage.style.color = "red"; 
     } else {
         wipeButton.disabled = true;
-        warningMessage.style.color = ""; // Reset to default color
+        warningMessage.style.color = ""; 
     }
 }
 
-// Function to download file from URL
-async function rbootDownloadFile(url) {
+async function wipeDownloadFile(url) {
     try {
         const response = await fetch(url);
         if (!response.ok) throw new Error("Failed to download file");
@@ -1594,15 +1589,15 @@ async function rbootDownloadFile(url) {
 }
 
 // Main function to handle the wipe operation
-async function rbootWipe() {
-    const wipeButton = document.querySelector(".rboot-wipe-button");
+async function wipepart() {
+    const wipeButton = document.querySelector(".wipe-button");
     
     // Show confirmation dialog
     const userConfirmed = confirm("⚠️ This will format all data, including Android and Windows (if installed). Do you want to continue?");
     
     if (!userConfirmed) {
         // User canceled, reset the input and button
-        document.querySelector(".rboot-wipe-input").value = ""; 
+        document.querySelector(".wipe-input").value = ""; 
         handleWipeInput({ target: { value: "" } }); // Reset wipe button state
         return; // Exit the function
     }
@@ -1612,11 +1607,11 @@ async function rbootWipe() {
 
     try {
         // Step 1: Download and flash GPT file to partition "partition:0"
-        let gptBlob = await rbootDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/uninstall/gpt_both0.bin");
+        let gptBlob = await wipeDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/uninstall/gpt_both0.bin");
         await device.flashBlob("partition:0", gptBlob);
 
         // Step 2: Download and flash userdata to partition "userdata"
-        let userdataBlob = await rbootDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/uninstall/userdata.img");
+        let userdataBlob = await wipeDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/uninstall/userdata.img");
         await device.flashBlob("userdata", userdataBlob);
 
         // Step 3: Execute additional erase commands
@@ -1628,26 +1623,20 @@ async function rbootWipe() {
     } catch (error) {
         alert(`Failed to complete wipe: ${error.message}`);
     } finally {
-        document.querySelector(".rboot-wipe-input").value = "";
+        document.querySelector(".wipe-input").value = "";
         const warningMessage = document.getElementById("warning-message");
-        warningMessage.style.color = ""; // Reset warning message color
+        warningMessage.style.color = ""; 
         hideProgressOverlay();
         await checkDeviceConnection();
     }
 }
 
 
-// Attach event listener to enable Wipe button on input
-document.querySelector(".rboot-wipe-input").addEventListener("input", handleWipeInput);
-document.querySelector(".rboot-wipe-button").addEventListener("click", rbootWipe);
-
-// Prevent the form from submitting when Enter is pressed
-document.querySelector(".rboot-wipe-form").addEventListener("submit", function(event) {
-    event.preventDefault(); // Prevent the default form submission
-});
-
-
-
+    document.querySelector(".wipe-input").addEventListener("input", handleWipeInput);
+    document.querySelector(".wipe-button").addEventListener("click", wipepart);
+    document.querySelector(".wipe-form").addEventListener("submit", function(event) {
+	event.preventDefault(); 
+    });
 
     document.querySelector(".connect-button").addEventListener("click", connectDevice);
     document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
