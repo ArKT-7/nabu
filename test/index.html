@@ -1049,7 +1049,7 @@ async function connectDevice() {
         status += `<br />${deviceName}`;
     }
 
-    status += `<br />Bootloader status: ${bootloaderStatusText}`;
+    status += `<br />Bootloader status: ${bootloaderStatusText}<br />`; // Added a line break for spacing
 
     // Check partitions availability and sizes
     let sizeInfo = ''; // Initialize a variable to collect size info
