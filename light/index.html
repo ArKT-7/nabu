@@ -1678,9 +1678,11 @@ function handleWipeInput(event) {
     if (event.target.value.toUpperCase() === "FORMAT") {
         wipeButton.disabled = false;
         warningMessage.style.color = "red"; 
+	warningMessage.style.fontStyle = "normal"; 
     } else {
         wipeButton.disabled = true;
         warningMessage.style.color = ""; 
+	warningMessage.style.fontStyle = "italic"; 
     }
 }
 
