@@ -1159,6 +1159,12 @@ async function runRebootCommand(command, successMessage) {
     }
 }
 
+	//resultField.textContent = `\n${successMessage}\n` + resultField.textContent;
+        //alert(successMessage);
+
+        //resultField.textContent = `\nError during reboot: ${error.message}\n` + resultField.textContent;
+        //alert(`Error during reboot: ${error.message}`);
+
     async function bootFormFile(event) {
         event.preventDefault();
         showProgressOverlay();
