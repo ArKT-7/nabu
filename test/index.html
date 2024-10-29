@@ -1049,26 +1049,26 @@ async function connectDevice() {
         status += `<br />${deviceName}`;
     }
 
-    status += `<br />Bootloader status: ${bootloaderStatusText}<span style="margin-bottom: 5px;"></span>`; // Adding a small space using a span
+    status += `<br />Bootloader status: ${bootloaderStatusText}`; // Keep Bootloader status without extra spacing
 
+// Check partitions availability and sizes
+let sizeInfo = ''; // Initialize a variable to collect size info
+if (await checkPartition("userdata", userdata_chk, userdata_size)) {
+    sizeInfo += `<p style="margin: 0; margin-bottom: 5px;">Android Partition : ${getSizeString(userdata_size)}</p>`;
+}
+if (await checkPartition("win", win_chk, win_size)) {
+    sizeInfo += `<p style="margin: 0; margin-bottom: 5px;">Windows Partition : ${getSizeString(win_size)}</p>`;
+}
+if (await checkPartition("esp", esp_chk, esp_size)) {
+    sizeInfo += `<p style="margin: 0; margin-bottom: 5px;">ESP Partition : ${getSizeString(esp_size)}</p>`;
+}
 
-    // Check partitions availability and sizes
-    let sizeInfo = ''; // Initialize a variable to collect size info
-    if (await checkPartition("userdata", userdata_chk, userdata_size)) {
-        sizeInfo += `Android Partiton : ${getSizeString(userdata_size)}<br />`;
-    }
-    if (await checkPartition("win", win_chk, win_size)) {
-        sizeInfo += `Windows Partiton : ${getSizeString(win_size)}<br />`;
-    }
-    if (await checkPartition("esp", esp_chk, esp_size)) {
-        sizeInfo += `ESP Partiton : ${getSizeString(esp_size)}<br />`;
-    }
+if (sizeInfo) {
+    status += `<br />${sizeInfo}`; // Add size info to status only if available
+}
 
-    if (sizeInfo) {
-        status += `<br />${sizeInfo}`; // Add size info to status only if available
-    }
+statusField.innerHTML = status;
 
-    statusField.innerHTML = status;
 
     // Call toggleElements with the isNabu flag
     toggleElements(false, isNabu); 
