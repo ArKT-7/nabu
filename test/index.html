@@ -1081,7 +1081,7 @@ async function sendFormCommand(event) {
     let resultField = document.querySelector(".result-field");
 
     if (!command) {
-        resultField.textContent = "Please enter a command!\n" + resultField.textContent; // Prepend error message
+        resultField.textContent = "\nPlease enter a command!\n" + resultField.textContent; // Prepend error message
         alert("Please enter a command!");
         return;
     }
@@ -1089,11 +1089,11 @@ async function sendFormCommand(event) {
     try {
         let result = (await device.runCommand(command)).text;
         // Use backticks for string interpolation
-        resultField.textContent = `Command executed successfully: ${result}\n` + resultField.textContent; 
+        resultField.textContent = `\nCommand executed successfully: ${result}\n` + resultField.textContent; 
         alert(`Command executed successfully: ${result}`);
     } catch (error) {
         // Use backticks for error message as well
-        resultField.textContent = `Error executing command: ${error.message}\n` + resultField.textContent; 
+        resultField.textContent = `\nError executing command: ${error.message}\n` + resultField.textContent; 
         alert(`Error executing command: ${error.message}`);
     } finally {
         inputField.value = ""; // Clear the input field after execution
@@ -1149,10 +1149,10 @@ async function runRebootCommand(command, successMessage) {
     let resultField = document.querySelector(".result-field");
     try {
         let result = (await device.runCommand(command)).text;
-        resultField.textContent += `${successMessage}\n`;
+        resultField.textContent = `\n${successMessage}\n` + resultField.textContent;
         alert(successMessage);
     } catch (error) {
-        resultField.textContent += `Error during reboot: ${error.message}\n`;
+        resultField.textContent = `\nError during reboot: ${error.message}\n` + resultField.textContent;
         alert(`Error during reboot: ${error.message}`);
     } finally {
         await checkDeviceConnection();
