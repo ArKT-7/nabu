@@ -996,6 +996,7 @@ function clearFormElements() {
 
 async function connectDevice() {
     let statusField = document.querySelector(".status-field");
+    // let resultField = document.querySelector(".result-field"); // Commenting out result field reference
     statusField.textContent = "Connecting...";
 
     try {
@@ -1009,48 +1010,97 @@ async function connectDevice() {
     let product = await device.getVariable("product");
     let slot = await device.getVariable("current-slot");
     let serial = await device.getVariable("serialno");
-    let bootloaderStatus = await device.getVariable("unlocked");
+    let bootloaderStatus = await device.getVariable("unlocked"); 
+    let userdata_chk = await device.getVariable("partition-type:userdata");
+    let win_chk = await device.getVariable("partition-type:win");
+    let esp_chk = await device.getVariable("partition-type:esp"); 
+    let userdata_size = await device.getVariable("partition-size:userdata");
+    let win_size = await device.getVariable("partition-size:win");
+    let esp_size = await device.getVariable("partition-size:esp");
     let bootloaderStatusText = bootloaderStatus === "yes" ? "unlocked" : "locked";
 
     let deviceName = "";
     let isNabu = false;
     if (product === "nabu") {
-        deviceName = "Device name - Xiaomi Pad 5";
-	let rbootFlashPartitionSelect = document.querySelector('.rboot-flash-partition');
+        deviceName = "Device name : Xiaomi Pad 5";
+        let rbootFlashPartitionSelect = document.querySelector('.rboot-flash-partition');
         if (rbootFlashPartitionSelect) {
             rbootFlashPartitionSelect.value = "boot_ab"; // Select the "Flash to Boot ab (both slots)"
         }
     } else if (product === "dm3q") {
-        deviceName = "Device name - Samsung S23 Ultra";
-	isNabu = true; // Device is not nabu
-	// Select the current slot in the rboot-flash-partition select
+        deviceName = "Device name : Samsung S23 Ultra";
+        isNabu = true; // Device is not nabu
+        // Select the current slot in the rboot-flash-partition select
         let rbootFlashPartitionSelect = document.querySelector('.rboot-flash-partition');
         if (rbootFlashPartitionSelect) {
             rbootFlashPartitionSelect.value = "boot"; // Select the "Flash to Boot (current slot)" option
         }
-    } else  if (product !== "nabu") {
+    } else if (product !== "nabu") {
         isNabu = true; // Device is not nabu
-	deviceName = "Device name - IDK LoL 😂";
-	// Select the current slot in the rboot-flash-partition select
+        deviceName = "Device name : IDK LoL 😂";
+        // Select the current slot in the rboot-flash-partition select
         let rbootFlashPartitionSelect = document.querySelector('.rboot-flash-partition');
         if (rbootFlashPartitionSelect) {
             rbootFlashPartitionSelect.value = "boot"; // Select the "Flash to Boot (current slot)" option
         }
     }
 
-    let status = `Connected to - ${product} <br /> Current slot - ${slot} <br /> (serial: ${serial})`;
+    let status = `Connected to : ${product} <br /> Current slot : ${slot} <br /> (serial : ${serial})`;
     if (deviceName) {
         status += `<br />${deviceName}`;
     }
 
-    status += `<br />Bootloader status: ${bootloaderStatusText}`;
-    statusField.innerHTML = status;
+    status += `<br />Bootloader status: ${bootloaderStatusText}`; // Keep Bootloader status without extra spacing
+	
+	// Check partitions availability and sizes
+	let sizeInfo = ''; // Initialize a variable to collect size info
+	if (await checkPartition("userdata", userdata_chk, userdata_size)) {
+	    sizeInfo += `<p style="margin: 0; margin-top: 5px;">Android Partition : ${getSizeString(userdata_size)}</p>`;
+	}
+	if (await checkPartition("win", win_chk, win_size)) {
+	    sizeInfo += `<p style="margin: 0; margin-bottom: 0px;">Windows Partition : ${getSizeString(win_size)}</p>`;
+	}
+	if (await checkPartition("esp", esp_chk, esp_size)) {
+	    sizeInfo += `<p style="margin: 0; margin-bottom: 0px;">ESP Partition : ${getSizeString(esp_size)}</p>`;
+	}
+	
+	if (sizeInfo) {
+	    status += `<br />${sizeInfo}`; // Add size info to status only if available
+	}
+	
+	statusField.innerHTML = status;
+	
+	
+	    // Call toggleElements with the isNabu flag
+	    toggleElements(false, isNabu); 
+	}
+	
+	// Function to check a partition's availability
+	async function checkPartition(partitionName, partitionChk, partitionSize) {
+	    return partitionChk; // Return true if the partition is available
+	}
+	
+	// Function to get size string based on the size value
+	function getSizeString(hex) {
+	    const size = parseInt(hex, 16); // Convert hex to integer
+	    const sizeInGB = size / (1024 ** 3);
+	    const sizeInMB = size / (1024 ** 2);
+	
+	    // Return the size in appropriate format
+	    if (sizeInGB < 1) {
+	        return `${sizeInMB.toFixed(2)} MB`; // Show in MB if under 1 GB
+	    }
+	    return `${sizeInGB.toFixed(2)} GB`; // Show in GB otherwise
+	}
+	
+	// Function to write messages to the result field
+	// function writeToResultField(message, resultField) {
+	//     resultField.innerHTML = `${message}<br />` + resultField.innerHTML; // Prepend new message
+	// }
+	
+	toggleElements(true); 
+	
 
-    // Call toggleElements with the isNabu flag
-    toggleElements(false, isNabu); 
-}
-
-    toggleElements(true); 
 
 
     function handleDisconnect() {
