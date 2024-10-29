@@ -915,7 +915,7 @@ function hideProgressOverlay() {
 function toggleElements(disable, isNabu = false) {
     const formElements = document.querySelectorAll("input, button, select");
     const wipeButton = document.querySelector(".wipe-button");
-	wipeButton.disabled = true;
+    wipeButton.disabled = true;
     formElements.forEach((element) => {
         if (!element.classList.contains('connect-button') && !element.closest('.switchx')) {
             element.disabled = disable; // General enable/disable logic
@@ -1029,8 +1029,8 @@ async function connectDevice() {
     }
 
 async function checkDeviceConnection() {
-	const wipeButton = document.querySelector(".wipe-button");
-	wipeButton.disabled = true;
+    const wipeButton = document.querySelector(".wipe-button");
+     wipeButton.disabled = true;
     let statusField = document.querySelector(".status-field");
 
     try {
