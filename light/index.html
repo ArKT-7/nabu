@@ -1137,12 +1137,12 @@ async function sendFormCommand(event) {
     try {
         let result = (await device.runCommand(command)).text;
         // Use backticks for string interpolation
-        resultField.textContent = \nCommand executed successfully: ${result}\n + resultField.textContent; 
-        alert(Command executed successfully: ${result});
+        resultField.textContent = `\nCommand executed successfully: ${result}\n` + resultField.textContent; 
+        alert(`Command executed successfully: ${result}`);
     } catch (error) {
         // Use backticks for error message as well
-        resultField.textContent = \nError executing command: ${error.message}\n + resultField.textContent; 
-        alert(Error executing command: ${error.message});
+        resultField.textContent = `\nError executing command: ${error.message}\n` + resultField.textContent; 
+        alert(`Error executing command: ${error.message}`);
     } finally {
         inputField.value = ""; // Clear the input field after execution
         await checkDeviceConnection(); // Check device connection after the command
