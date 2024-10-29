@@ -917,10 +917,13 @@ function cycleMessages() {
 function showProgressOverlay() {
     const progressOverlay = document.getElementById('progress-overlay');
     const buttons = document.querySelectorAll('.button');
+    const wipeButton = document.querySelector(".wipe-button");
+    wipeButton.disabled = true;
     progressOverlay.classList.add('active');
     buttons.forEach(button => {
         button.disabled = true;
     });
+    wipeButton.disabled = true;
     messageIndex = 0;
     isFinalLoop = false;
     cycleMessages();
@@ -929,10 +932,13 @@ function showProgressOverlay() {
 function hideProgressOverlay() {
     const progressOverlay = document.getElementById('progress-overlay');
     const buttons = document.querySelectorAll('.button');
+    const wipeButton = document.querySelector(".wipe-button");
+    wipeButton.disabled = true;
     progressOverlay.classList.remove('active');
     buttons.forEach(button => {
         button.disabled = false;
     });
+    wipeButton.disabled = true;
     clearTimeout(messageInterval);
     clearInterval(typingInterval);
     clearInterval(clearingInterval);
@@ -941,6 +947,7 @@ function hideProgressOverlay() {
     isFinalLoop = false; 
     progressMessage.textContent = ''; 
 }
+
 
 function toggleElements(disable, isNabu = false) {
     const formElements = document.querySelectorAll("input, button, select");
@@ -1050,57 +1057,54 @@ async function connectDevice() {
     }
 
     status += `<br />Bootloader status: ${bootloaderStatusText}`; // Keep Bootloader status without extra spacing
-
-// Check partitions availability and sizes
-let sizeInfo = ''; // Initialize a variable to collect size info
-if (await checkPartition("userdata", userdata_chk, userdata_size)) {
-    sizeInfo += `<p style="margin: 0; margin-top: 5px;">Android Partition : ${getSizeString(userdata_size)}</p>`;
-}
-if (await checkPartition("win", win_chk, win_size)) {
-    sizeInfo += `<p style="margin: 0; margin-bottom: 0px;">Windows Partition : ${getSizeString(win_size)}</p>`;
-}
-if (await checkPartition("esp", esp_chk, esp_size)) {
-    sizeInfo += `<p style="margin: 0; margin-bottom: 0px;">ESP Partition : ${getSizeString(esp_size)}</p>`;
-}
-
-if (sizeInfo) {
-    status += `<br />${sizeInfo}`; // Add size info to status only if available
-}
-
-statusField.innerHTML = status;
-
-
-    // Call toggleElements with the isNabu flag
-    toggleElements(false, isNabu); 
-}
-
-// Function to check a partition's availability
-async function checkPartition(partitionName, partitionChk, partitionSize) {
-    return partitionChk; // Return true if the partition is available
-}
-
-// Function to get size string based on the size value
-function getSizeString(hex) {
-    const size = parseInt(hex, 16); // Convert hex to integer
-    const sizeInGB = size / (1024 ** 3);
-    const sizeInMB = size / (1024 ** 2);
-
-    // Return the size in appropriate format
-    if (sizeInGB < 1) {
-        return `${sizeInMB.toFixed(2)} MB`; // Show in MB if under 1 GB
-    }
-    return `${sizeInGB.toFixed(2)} GB`; // Show in GB otherwise
-}
-
-// Function to write messages to the result field
-// function writeToResultField(message, resultField) {
-//     resultField.innerHTML = `${message}<br />` + resultField.innerHTML; // Prepend new message
-// }
-
-toggleElements(true); 
 	
-
-    
+	// Check partitions availability and sizes
+	let sizeInfo = ''; // Initialize a variable to collect size info
+	if (await checkPartition("userdata", userdata_chk, userdata_size)) {
+	    sizeInfo += `<p style="margin: 0; margin-top: 5px;">Android Partition : ${getSizeString(userdata_size)}</p>`;
+	}
+	if (await checkPartition("win", win_chk, win_size)) {
+	    sizeInfo += `<p style="margin: 0; margin-bottom: 0px;">Windows Partition : ${getSizeString(win_size)}</p>`;
+	}
+	if (await checkPartition("esp", esp_chk, esp_size)) {
+	    sizeInfo += `<p style="margin: 0; margin-bottom: 0px;">ESP Partition : ${getSizeString(esp_size)}</p>`;
+	}
+	
+	if (sizeInfo) {
+	    status += `<br />${sizeInfo}`; // Add size info to status only if available
+	}
+	
+	statusField.innerHTML = status;
+	
+	
+	    // Call toggleElements with the isNabu flag
+	    toggleElements(false, isNabu); 
+	}
+	
+	// Function to check a partition's availability
+	async function checkPartition(partitionName, partitionChk, partitionSize) {
+	    return partitionChk; // Return true if the partition is available
+	}
+	
+	// Function to get size string based on the size value
+	function getSizeString(hex) {
+	    const size = parseInt(hex, 16); // Convert hex to integer
+	    const sizeInGB = size / (1024 ** 3);
+	    const sizeInMB = size / (1024 ** 2);
+	
+	    // Return the size in appropriate format
+	    if (sizeInGB < 1) {
+	        return `${sizeInMB.toFixed(2)} MB`; // Show in MB if under 1 GB
+	    }
+	    return `${sizeInGB.toFixed(2)} GB`; // Show in GB otherwise
+	}
+	
+	// Function to write messages to the result field
+	// function writeToResultField(message, resultField) {
+	//     resultField.innerHTML = `${message}<br />` + resultField.innerHTML; // Prepend new message
+	// }
+	
+	toggleElements(true); 
 
 
     function handleDisconnect() {
@@ -1209,12 +1213,6 @@ async function runRebootCommand(command, successMessage) {
         await checkDeviceConnection();
     }
 }
-
-	//resultField.textContent = `\n${successMessage}\n` + resultField.textContent;
-        //alert(successMessage);
-
-        //resultField.textContent = `\nError during reboot: ${error.message}\n` + resultField.textContent;
-        //alert(`Error during reboot: ${error.message}`);
 
     async function bootFormFile(event) {
         event.preventDefault();
@@ -1678,6 +1676,7 @@ function rbootHideProgressOverlay() {
     progressBarContainer.style.display = 'none';
 }
 
+
 // Function to handle input and enable the wipe button
 function handleWipeInput(event) {
     const wipeButton = document.querySelector(".wipe-button");
@@ -1753,6 +1752,7 @@ async function wipepart() {
         document.querySelector(".wipe-input").value = "";
         const warningMessage = document.getElementById("warning-message");
         warningMessage.style.color = ""; 
+	warningMessage.style.fontStyle = "italic"; 
         hideProgressOverlay();
         await checkDeviceConnection();
     }
