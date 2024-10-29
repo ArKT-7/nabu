@@ -995,6 +995,7 @@ function clearFormElements() {
 
 async function connectDevice() {
     let statusField = document.querySelector(".status-field");
+    let resultField = document.querySelector(".result-field"); // Add reference to result field
     statusField.textContent = "Connecting...";
 
     try {
@@ -1008,29 +1009,35 @@ async function connectDevice() {
     let product = await device.getVariable("product");
     let slot = await device.getVariable("current-slot");
     let serial = await device.getVariable("serialno");
-    let bootloaderStatus = await device.getVariable("unlocked");
+    let bootloaderStatus = await device.getVariable("unlocked"); 
+    let userdata_chk = await device.getVariable("partition-type:userdata");
+    let win_chk = await device.getVariable("partition-type:win");
+    let esp_chk = await device.getVariable("partition-type:esp"); 
+    let userdata_size = await device.getVariable("partition-size:userdata");
+    let win_size = await device.getVariable("partition-size:win");
+    let esp_size = await device.getVariable("partition-size:esp");
     let bootloaderStatusText = bootloaderStatus === "yes" ? "unlocked" : "locked";
 
     let deviceName = "";
     let isNabu = false;
     if (product === "nabu") {
         deviceName = "Device name - Xiaomi Pad 5";
-	let rbootFlashPartitionSelect = document.querySelector('.rboot-flash-partition');
+        let rbootFlashPartitionSelect = document.querySelector('.rboot-flash-partition');
         if (rbootFlashPartitionSelect) {
             rbootFlashPartitionSelect.value = "boot_ab"; // Select the "Flash to Boot ab (both slots)"
         }
     } else if (product === "dm3q") {
         deviceName = "Device name - Samsung S23 Ultra";
-	isNabu = true; // Device is not nabu
-	// Select the current slot in the rboot-flash-partition select
+        isNabu = true; // Device is not nabu
+        // Select the current slot in the rboot-flash-partition select
         let rbootFlashPartitionSelect = document.querySelector('.rboot-flash-partition');
         if (rbootFlashPartitionSelect) {
             rbootFlashPartitionSelect.value = "boot"; // Select the "Flash to Boot (current slot)" option
         }
-    } else  if (product !== "nabu") {
+    } else if (product !== "nabu") {
         isNabu = true; // Device is not nabu
-	deviceName = "Device name - IDK LoL 😂";
-	// Select the current slot in the rboot-flash-partition select
+        deviceName = "Device name - IDK LoL 😂";
+        // Select the current slot in the rboot-flash-partition select
         let rbootFlashPartitionSelect = document.querySelector('.rboot-flash-partition');
         if (rbootFlashPartitionSelect) {
             rbootFlashPartitionSelect.value = "boot"; // Select the "Flash to Boot (current slot)" option
@@ -1045,8 +1052,44 @@ async function connectDevice() {
     status += `<br />Bootloader status: ${bootloaderStatusText}`;
     statusField.innerHTML = status;
 
+    // Check partitions availability and sizes
+    await checkPartition("userdata", userdata_chk, userdata_size, resultField);
+    await checkPartition("win", win_chk, win_size, resultField);
+    await checkPartition("esp", esp_chk, esp_size, resultField);
+
     // Call toggleElements with the isNabu flag
     toggleElements(false, isNabu); 
+}
+
+// Function to check a partition's availability and size
+async function checkPartition(partitionName, partitionChk, partitionSize, resultField) {
+    if (partitionChk) {
+        writeToResultField(`${partitionName} partition is available.`, resultField);
+        
+        let sizeInGB = hexToGB(partitionSize);
+        let sizeInMB = hexToMB(partitionSize);
+        
+        writeToResultField(`${partitionName} size: ${sizeInGB} GB (${sizeInMB} MB)`, resultField);
+    } else {
+        writeToResultField(`${partitionName} partition is not available.`, resultField);
+    }
+}
+
+// Function to convert hex size to GB
+function hexToGB(hex) {
+    const size = parseInt(hex, 16); // Convert hex to integer
+    return (size / (1024 ** 3)).toFixed(2); // Convert bytes to GB
+}
+
+// Function to convert hex size to MB
+function hexToMB(hex) {
+    const size = parseInt(hex, 16); // Convert hex to integer
+    return (size / (1024 ** 2)).toFixed(2); // Convert bytes to MB
+}
+
+// Function to write messages to the result field
+function writeToResultField(message, resultField) {
+    resultField.innerHTML = `${message}<br />` + resultField.innerHTML; // Prepend new message
 }
 
     toggleElements(true); 
