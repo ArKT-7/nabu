@@ -1134,11 +1134,11 @@ async function switchSlot() {
         let result = (await device.runCommand(`set_active:${otherSlot}`)).text;
 
         // Confirm the slot switch
-        resultField.textContent = `Switched to slot ${otherSlot}: ${result}\n` + resultField.textContent;
+        resultField.textContent = `\nSwitched to slot ${otherSlot}: ${result}\n` + resultField.textContent;
         alert(`Switched to slot ${otherSlot}: ${result} Successfully`);
         document.querySelector(".connect-button").click();
     } catch (error) {
-        resultField.textContent = `Error switching slots: ${error.message}\n` + resultField.textContent;
+        resultField.textContent = `\nError switching slots: ${error.message}\n` + resultField.textContent;
         alert(`Error switching slots: ${error.message}`);
     } finally {
         await checkDeviceConnection();
