@@ -313,7 +313,7 @@
 	}
 	
 	pre.result-field {
-            background: linear-gradient(135deg, #f0f4f8, #e2e8f0); /* Light gradient background */
+            background: linear-gradient(135deg, #f0f4f8, #e2e8f0); 
             padding: 20px;
             border-radius: 15px;
             overflow-y: auto; 
@@ -323,27 +323,25 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             width: 90%; 
             margin-top: 0; 
-            position: relative; /* Position relative for the ::before element */
-            color: black; /* Set text color to black */
-            white-space: pre-wrap; /* Preserve whitespace */
+            position: relative; 
+            color: black;
+            white-space: pre-wrap;
         }
 
-        /* Scrollbar styling */
         pre.result-field::-webkit-scrollbar {
-            width: 12px; /* Width of the scrollbar */
-            background: transparent; /* Background color for the scrollbar */
+            width: 12px; 
+            background: transparent; 
         }
 
         pre.result-field::-webkit-scrollbar-thumb {
-            background: rgba(0, 0, 0, 0.5); /* Darker color for better visibility */
-            border-radius: 12px; /* Round corners for the scrollbar thumb */
-            border: 5px solid transparent; /* Add space around the thumb */
-            background-clip: padding-box; /* Prevents background from spilling outside the border */
+            background: rgba(0, 0, 0, 0.5); 
+            border-radius: 10px; 
+            border: 3px solid transparent; 
+            background-clip: padding-box; 
         }
 
-        /* Optional: Style for scrollbar when hovered */
         pre.result-field::-webkit-scrollbar-thumb:hover {
-            background: rgba(0, 0, 0, 0.7); /* Darker thumb on hover for depth */
+            background: rgba(0, 0, 0, 0.7);
         }
 		
 	#progress-overlay {
