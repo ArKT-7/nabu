@@ -1054,13 +1054,13 @@ async function connectDevice() {
     // Check partitions availability and sizes
     let sizeInfo = ''; // Initialize a variable to collect size info
     if (await checkPartition("userdata", userdata_chk, userdata_size)) {
-        sizeInfo += `Userdata size: ${getSizeString(userdata_size)}<br />`;
+        sizeInfo += `Android Partiton: ${getSizeString(userdata_size)}<br />`;
     }
     if (await checkPartition("win", win_chk, win_size)) {
-        sizeInfo += `Win size: ${getSizeString(win_size)}<br />`;
+        sizeInfo += `Windows Partiton: ${getSizeString(win_size)}<br />`;
     }
     if (await checkPartition("esp", esp_chk, esp_size)) {
-        sizeInfo += `ESP size: ${getSizeString(esp_size)}<br />`;
+        sizeInfo += `ESP Partiton: ${getSizeString(esp_size)}<br />`;
     }
 
     if (sizeInfo) {
