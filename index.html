@@ -558,6 +558,7 @@
         <button class="button reboot-recovery-button">Reboot to Recovery</button>
         <button class="button reboot-fastbootd-button">Reboot to FastbootD</button>
         <button class="button reboot-edl-button">Reboot to EDL</button>
+	<button class="button switchslot-button">Switch slot to other</button>
     </div>
 
  <!-- New Container for Downloading and Flashing Images -->
@@ -1047,37 +1048,64 @@ async function checkDeviceConnection() {
     async function sendFormCommand(event) {
     event.preventDefault();
     let inputField = document.querySelector(".command-input");
-    let command = inputField.value;
-    if (!command.trim()) {
+    let command = inputField.value.trim();
+    
+    if (!command) {
         alert("Please enter a command!");
         return;
     }
 
-    let result = (await device.runCommand(command)).text;
-    inputField.value = "";
+    try {
+        let result = (await device.runCommand(command)).text;
+        alert(`Command executed successfully: ${result}`);
+    } catch (error) {
+        alert(`Error executing command: ${error.message}`);
+    } finally {
+        inputField.value = "";
         await checkDeviceConnection();
+    }
 }
 
+async function rebootDevice() {
+    await runRebootCommand("reboot", "Device rebooted successfully!");
+}
 
-    async function rebootDevice() {
-        await runRebootCommand("reboot", "Device rebooted successfully!");
-    }
+async function rebootToBootloader() {
+    await runRebootCommand("reboot-bootloader", "Rebooted to Bootloader successfully!");
+}
 
-    async function rebootToBootloader() {
-        await runRebootCommand("reboot-bootloader", "Rebooted to Bootloader successfully!");
-    }
+async function rebootToRecovery() {
+    await runRebootCommand("reboot-recovery", "Rebooted to Recovery successfully!");
+}
 
-    async function rebootToRecovery() {
-        await runRebootCommand("reboot-recovery", "Rebooted to Recovery successfully!");
-    }
+async function rebootToFastbootD() {
+    await runRebootCommand("reboot-fastboot", "Rebooted to FastbootD successfully!");
+}
 
-    async function rebootToFastbootD() {
-        await runRebootCommand("reboot-fastboot", "Rebooted to FastbootD successfully!");
-    }
+async function rebootToEDL() {
+    await runRebootCommand("oem edl", "Rebooted to EDL successfully!");
+}
 
-    async function rebootToEDL() {
-        await runRebootCommand("oem edl", "Rebooted to EDL successfully!");
+async function switchSlot() {
+    try {
+        // Get the current slot
+        let activeSlot = (await device.runCommand("getvar:current-slot")).text.trim();
+        let otherSlot = activeSlot === "a" ? "b" : "a";
+
+        // Switch to the other slot
+        let result = (await device.runCommand(`set_active:${otherSlot}`)).text;
+        
+        // Confirm the slot switch
+        if (confirm(`Switched to slot ${otherSlot}. Click "OK" to reconnect the device.`)) {
+            document.querySelector(".connect-button").click();
+        }
+    } catch (error) {
+        alert(`Error switching slots: ${error.message}`);
+    } finally {
+        await checkDeviceConnection();
     }
+}
+
 
 async function runRebootCommand(command, successMessage) {
     try {
