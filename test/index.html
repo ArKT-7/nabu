@@ -1081,25 +1081,26 @@ async function sendFormCommand(event) {
     let resultField = document.querySelector(".result-field");
 
     if (!command) {
-        resultField.textContent += "Please enter a command!\n" + resultField.textContent;
+        resultField.textContent = "Please enter a command!\n" + resultField.textContent; // Prepend error message
         alert("Please enter a command!");
         return;
     }
 
     try {
         let result = (await device.runCommand(command)).text;
-        // Prepend the new result to the top
-        resultField.textContent = "Command executed successfully: ${result}\n" + resultField.textContent;
+        // Use backticks for string interpolation
+        resultField.textContent = `Command executed successfully: ${result}\n` + resultField.textContent; 
         alert(`Command executed successfully: ${result}`);
     } catch (error) {
-        // Prepend the error message to the top
-        resultField.textContent = "Error executing command: ${error.message}\n" + resultField.textContent;
+        // Use backticks for error message as well
+        resultField.textContent = `Error executing command: ${error.message}\n` + resultField.textContent; 
         alert(`Error executing command: ${error.message}`);
     } finally {
-        inputField.value = "";
-        await checkDeviceConnection();
+        inputField.value = ""; // Clear the input field after execution
+        await checkDeviceConnection(); // Check device connection after the command
     }
 }
+
 
 
 async function rebootDevice() {
@@ -1133,11 +1134,11 @@ async function switchSlot() {
         let result = (await device.runCommand(`set_active:${otherSlot}`)).text;
 
         // Confirm the slot switch
-        resultField.textContent += "Switched to slot ${otherSlot}: ${result}\n" + resultField.textContent;
+        resultField.textContent = `Switched to slot ${otherSlot}: ${result}\n` + resultField.textContent;
         alert(`Switched to slot ${otherSlot}: ${result} Successfully`);
         document.querySelector(".connect-button").click();
     } catch (error) {
-        resultField.textContent += "Error switching slots: ${error.message}\n" + resultField.textContent;
+        resultField.textContent = `Error switching slots: ${error.message}\n` + resultField.textContent;
         alert(`Error switching slots: ${error.message}`);
     } finally {
         await checkDeviceConnection();
