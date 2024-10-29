@@ -995,7 +995,7 @@ function clearFormElements() {
 
 async function connectDevice() {
     let statusField = document.querySelector(".status-field");
-    let resultField = document.querySelector(".result-field"); // Add reference to result field
+    // let resultField = document.querySelector(".result-field"); // Commenting out result field reference
     statusField.textContent = "Connecting...";
 
     try {
@@ -1050,29 +1050,34 @@ async function connectDevice() {
     }
 
     status += `<br />Bootloader status: ${bootloaderStatusText}`;
-    statusField.innerHTML = status;
 
     // Check partitions availability and sizes
-    await checkPartition("userdata", userdata_chk, userdata_size, resultField);
-    await checkPartition("win", win_chk, win_size, resultField);
-    await checkPartition("esp", esp_chk, esp_size, resultField);
+    let sizeInfo = ''; // Initialize a variable to collect size info
+    if (await checkPartition("userdata", userdata_chk, userdata_size)) {
+        sizeInfo += `Userdata size: ${hexToGB(userdata_size)} GB (${hexToMB(userdata_size)} MB)<br />`;
+    }
+    if (await checkPartition("win", win_chk, win_size)) {
+        sizeInfo += `Win size: ${hexToGB(win_size)} GB (${hexToMB(win_size)} MB)<br />`;
+    }
+    if (await checkPartition("esp", esp_chk, esp_size)) {
+        sizeInfo += `ESP size: ${hexToGB(esp_size)} GB (${hexToMB(esp_size)} MB)<br />`;
+    }
+
+    if (sizeInfo) {
+        status += `<br />${sizeInfo}`; // Add size info to status only if available
+    }
+
+    statusField.innerHTML = status;
 
     // Call toggleElements with the isNabu flag
     toggleElements(false, isNabu); 
 }
 
-// Function to check a partition's availability and size
-async function checkPartition(partitionName, partitionChk, partitionSize, resultField) {
-    if (partitionChk) {
-        writeToResultField(`${partitionName} partition is available.`, resultField);
-        
-        let sizeInGB = hexToGB(partitionSize);
-        let sizeInMB = hexToMB(partitionSize);
-        
-        writeToResultField(`${partitionName} size: ${sizeInGB} GB (${sizeInMB} MB)`, resultField);
-    } else {
-        writeToResultField(`${partitionName} partition is not available.`, resultField);
-    }
+	toggleElements(true); 
+	
+// Function to check a partition's availability
+async function checkPartition(partitionName, partitionChk, partitionSize) {
+    return partitionChk; // Return true if the partition is available
 }
 
 // Function to convert hex size to GB
@@ -1088,11 +1093,12 @@ function hexToMB(hex) {
 }
 
 // Function to write messages to the result field
-function writeToResultField(message, resultField) {
-    resultField.innerHTML = `${message}<br />` + resultField.innerHTML; // Prepend new message
-}
+// function writeToResultField(message, resultField) {
+//     resultField.innerHTML = `${message}<br />` + resultField.innerHTML; // Prepend new message
+// }
 
-    toggleElements(true); 
+
+    
 
 
     function handleDisconnect() {
