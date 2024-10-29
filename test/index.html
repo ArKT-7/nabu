@@ -314,11 +314,11 @@
 	
 	pre.result-field {
 	    background-color: rgba(255, 255, 255, 0.9);
-	    padding: 15px;
+	    padding: 55px;
 	    border-radius: 15px;
 	    overflow-x: auto;
 	    white-space: pre-wrap;
-	    max-height: 250px;
+	    max-height: 200px;
 	    border: 1px solid #ccc;
 	    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 	}
@@ -557,7 +557,10 @@
         <button class="button reboot-fastbootd-button">Reboot to FastbootD</button>
         <button class="button reboot-edl-button">Reboot to EDL</button>
 	<button class="button switchslot-button">Switch slot to other</button>
-	    <p>Result:</p>
+	    <p id="warning-message" style="text-align: center; font-style: italic; margin-bottom: 10px; margin-top: 10px;">
+	            ⚠️ <strong>This will Format all data, including Android and Windows (if installed).</strong><br>
+	            <strong>So think twice before doing.</strong>
+	        </p>
             <pre class="result-field"></pre>
     </div>
 
@@ -1052,17 +1055,20 @@ async function sendFormCommand(event) {
     let inputField = document.querySelector(".command-input");
     let command = inputField.value.trim();
     let resultField = document.querySelector(".result-field");
-    
+
     if (!command) {
         resultField.textContent += "Please enter a command!\n";
+        alert("Please enter a command!");
         return;
     }
 
     try {
         let result = (await device.runCommand(command)).text;
         resultField.textContent += `Command executed successfully: ${result}\n`;
+        alert(`Command executed successfully: ${result}`);
     } catch (error) {
         resultField.textContent += `Error executing command: ${error.message}\n`;
+        alert(`Error executing command: ${error.message}`);
     } finally {
         inputField.value = "";
         await checkDeviceConnection();
@@ -1101,11 +1107,14 @@ async function switchSlot() {
 
         // Confirm the slot switch
         resultField.textContent += `Switched to slot ${otherSlot}: ${result}\n`;
-        if (confirm(`Switched to slot ${otherSlot}. Successfully.`)) {
+        alert(`Switched to slot ${otherSlot}: ${result}`);
+        
+        if (confirm(`Switched to slot ${otherSlot}. Click "OK" to reconnect the device.`)) {
             document.querySelector(".connect-button").click();
         }
     } catch (error) {
         resultField.textContent += `Error switching slots: ${error.message}\n`;
+        alert(`Error switching slots: ${error.message}`);
     } finally {
         await checkDeviceConnection();
     }
@@ -1116,13 +1125,14 @@ async function runRebootCommand(command, successMessage) {
     try {
         let result = (await device.runCommand(command)).text;
         resultField.textContent += `${successMessage}\n`;
+        alert(successMessage);
     } catch (error) {
         resultField.textContent += `Error during reboot: ${error.message}\n`;
+        alert(`Error during reboot: ${error.message}`);
     } finally {
         await checkDeviceConnection();
     }
 }
-
 
     async function bootFormFile(event) {
         event.preventDefault();
