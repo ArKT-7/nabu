@@ -199,6 +199,34 @@
             transform: none;
         }
 
+	.red-gradient {
+	    background: linear-gradient(135deg, #ff4d4d, #ff9999); /* Adjust colors as needed */
+	    border: none;
+	    border-radius: 20px;
+	    color: white;
+	    padding: 15px 20px;
+	    font-size: 18px;
+	    font-weight: bold;
+	    cursor: pointer;
+	    transition: background 0.3s ease, transform 0.3s ease;
+	    margin: 10px 0;
+	    width: 100%;
+	    box-shadow: 0 4px 10px rgba(255, 77, 77, 0.3);
+	}
+	
+	.red-gradient:hover {
+	    background: linear-gradient(135deg, #cc0000, #ff4d4d); /* Darker shade on hover */
+	}
+	
+	.red-gradient:disabled {
+	    background: linear-gradient(135deg, #d4d4d4, #b0b0b0);
+	    color: #888;
+	    cursor: not-allowed;
+	    box-shadow: none;
+	    transform: none;
+	}
+
+
 	/* .flash-form, .boot-form, .rboot-flash-form, .command-form {
 	    display: flex;
 	    flex-direction: column;
@@ -727,24 +755,20 @@
     </div>
 
 
-	<!-- New Container for Downloading and Flashing Images -->
-<div class="container">
-    <form class="rboot-wipe-form">
-        <label for="rboot-wipe-input">Format/wipe make Partition Stock</label>
-        <p id="warning-message" style="text-align: center; font-style: italic; margin-bottom: 10px; margin-top: 10px;">
-            ⚠️ <strong>This will Format all data, including Android and Windows (if installed).</strong><br>
-            <strong>So think twice.</strong>
-        </p>
-        <input type="text" name="rboot-wipe-input" class="rboot-wipe-input" placeholder="Type FORMAT - to remove Windows and make partition layout stock." />
-        <button type="button" class="button rboot-wipe-button" disabled>Format/Wipe</button>
-    </form>
-</div>
 
-
-
-
+	<div class="container">
+	    <form class="rboot-wipe-form">
+	        <label for="rboot-wipe-input">Format/wipe make Partition Stock</label>
+	        <p id="warning-message" style="text-align: center; font-style: italic; margin-bottom: 10px; margin-top: 10px;">
+	            ⚠️ <strong>This will Format all data, including Android and Windows (if installed).</strong><br>
+	            <strong>So think twice.</strong>
+	        </p>
+	        <input type="text" name="rboot-wipe-input" class="rboot-wipe-input" placeholder="Type FORMAT - to remove Windows and make partition layout stock." />
+	        <button type="button" class="button rboot-wipe-button red-gradient" disabled>Format/Wipe</button>
+	    </form>
+	</div>
 	
-
+	
     <div class="container">
     <h2 style="text-align: center;">Support My Journey</h2>
     <p style="text-align: center; font-style: italic; margin-bottom: 10px; margin-top: 10px;">"Your support fuels my passion for creating!"</p>
