@@ -1054,13 +1054,13 @@ async function connectDevice() {
     // Check partitions availability and sizes
     let sizeInfo = ''; // Initialize a variable to collect size info
     if (await checkPartition("userdata", userdata_chk, userdata_size)) {
-        sizeInfo += `Userdata size: ${hexToGB(userdata_size)} GB (${hexToMB(userdata_size)} MB)<br />`;
+        sizeInfo += `Userdata size: ${getSizeString(userdata_size)}<br />`;
     }
     if (await checkPartition("win", win_chk, win_size)) {
-        sizeInfo += `Win size: ${hexToGB(win_size)} GB (${hexToMB(win_size)} MB)<br />`;
+        sizeInfo += `Win size: ${getSizeString(win_size)}<br />`;
     }
     if (await checkPartition("esp", esp_chk, esp_size)) {
-        sizeInfo += `ESP size: ${hexToGB(esp_size)} GB (${hexToMB(esp_size)} MB)<br />`;
+        sizeInfo += `ESP size: ${getSizeString(esp_size)}<br />`;
     }
 
     if (sizeInfo) {
@@ -1073,23 +1073,22 @@ async function connectDevice() {
     toggleElements(false, isNabu); 
 }
 
-	toggleElements(true); 
-	
 // Function to check a partition's availability
 async function checkPartition(partitionName, partitionChk, partitionSize) {
     return partitionChk; // Return true if the partition is available
 }
 
-// Function to convert hex size to GB
-function hexToGB(hex) {
+// Function to get size string based on the size value
+function getSizeString(hex) {
     const size = parseInt(hex, 16); // Convert hex to integer
-    return (size / (1024 ** 3)).toFixed(2); // Convert bytes to GB
-}
+    const sizeInGB = size / (1024 ** 3);
+    const sizeInMB = size / (1024 ** 2);
 
-// Function to convert hex size to MB
-function hexToMB(hex) {
-    const size = parseInt(hex, 16); // Convert hex to integer
-    return (size / (1024 ** 2)).toFixed(2); // Convert bytes to MB
+    // Return the size in appropriate format
+    if (sizeInGB < 1) {
+        return `${sizeInMB.toFixed(2)} MB`; // Show in MB if under 1 GB
+    }
+    return `${sizeInGB.toFixed(2)} GB`; // Show in GB otherwise
 }
 
 // Function to write messages to the result field
@@ -1097,6 +1096,8 @@ function hexToMB(hex) {
 //     resultField.innerHTML = `${message}<br />` + resultField.innerHTML; // Prepend new message
 // }
 
+toggleElements(true); 
+	
 
     
 
