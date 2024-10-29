@@ -200,7 +200,7 @@
         }
 
 	.red-gradient {
-	    background: linear-gradient(135deg, #ff4d4d, #ff9999); /* Adjust colors as needed */
+	    background: linear-gradient(135deg, #ff3b3b, #ff6666); /* Brighter red shades */
 	    border: none;
 	    border-radius: 20px;
 	    color: white;
@@ -211,20 +211,21 @@
 	    transition: background 0.3s ease, transform 0.3s ease;
 	    margin: 10px 0;
 	    width: 100%;
-	    box-shadow: 0 4px 10px rgba(255, 77, 77, 0.3);
+	    box-shadow: 0 4px 10px rgba(255, 59, 59, 0.5); /* Adjusted shadow for a more vibrant look */
 	}
 	
 	.red-gradient:hover {
-	    background: linear-gradient(135deg, #cc0000, #ff4d4d); /* Darker shade on hover */
+	    background: linear-gradient(135deg, #ff0000, #ff4d4d); /* More intense color on hover */
 	}
+
 	
 	.red-gradient:disabled {
-	    background: linear-gradient(135deg, #d4d4d4, #b0b0b0);
-	    color: #888;
-	    cursor: not-allowed;
-	    box-shadow: none;
-	    transform: none;
-	}
+	    background: linear-gradient(135deg, #b0b0b0, #d4d4d4);
+            color: #888;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
 
 
 	/* .flash-form, .boot-form, .rboot-flash-form, .command-form {
