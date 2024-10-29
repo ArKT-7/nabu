@@ -313,7 +313,7 @@
 	}
 	
 	pre.result-field {
-	    background-color: rgba(255, 255, 255, 0.9);
+	    background: linear-gradient(135deg, #f0f4f8, #e2e8f0); /* Light gradient background */
 	    padding: 20px;
 	    border-radius: 15px;
 	    overflow-y: auto; 
@@ -322,37 +322,12 @@
 	    border: 1px solid #ccc;
 	    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 	    width: 90%; 
-	    margin-top: 0px; 
+	    margin-top: 0; 
 	    position: relative; /* Position relative for the ::before element */
 	    color: black; /* Set text color to black */
 	    white-space: pre-wrap; /* Preserve whitespace */
 	}
-	
-	pre.result-field::before {
-	    content: "Here all logs will be shown..."; /* Placeholder text */
-	    position: absolute; /* Position it inside the field */
-	    top: 10px; /* Adjust vertical position */
-	    left: 20px; /* Adjust horizontal position */
-	    color: gray; /* Placeholder text color */
-	    font-style: italic; /* Italicize for distinction */
-	    font-size: 14px; /* Size of the placeholder text */
-	    pointer-events: none; /* Prevent interactions with the placeholder */
-	    opacity: 0.5; /* Slightly visible */
-	}
-	
-	/* Hide the placeholder when there is content */
-	pre.result-field:empty::before {
-	    content: ""; /* Remove placeholder */
-	}
-	
-	/* Show content normally */
-	pre.result-field:not(:empty) {
-	    color: black; /* Show text in black when there is content */
-	}
-
-
-
-	
+		
 	#progress-overlay {
 	    position: fixed;
 	    top: 0;
