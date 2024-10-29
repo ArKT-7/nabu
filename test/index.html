@@ -1084,7 +1084,7 @@ async function sendFormCommand(event) {
     let resultField = document.querySelector(".result-field");
 
     if (!command) {
-        resultField.textContent += "Please enter a command!\n";
+        resultField.textContent = `Please enter a command!\n` + resultField.textContent;
         alert("Please enter a command!");
         return;
     }
@@ -1099,10 +1099,13 @@ async function sendFormCommand(event) {
         resultField.textContent = `Error executing command: ${error.message}\n` + resultField.textContent;
         alert(`Error executing command: ${error.message}`);
     } finally {
+        // Scroll to the top
+        resultField.scrollTop = 0; // Ensure it scrolls to the top after updating content
         inputField.value = "";
         await checkDeviceConnection();
     }
 }
+
 
 
 async function rebootDevice() {
