@@ -919,10 +919,13 @@ function cycleMessages() {
 function showProgressOverlay() {
     const progressOverlay = document.getElementById('progress-overlay');
     const buttons = document.querySelectorAll('.button');
+    const wipeButton = document.querySelector(".wipe-button");
+    wipeButton.disabled = true;
     progressOverlay.classList.add('active');
     buttons.forEach(button => {
         button.disabled = true;
     });
+    wipeButton.disabled = true;
     messageIndex = 0;
     isFinalLoop = false;
     cycleMessages();
@@ -931,10 +934,13 @@ function showProgressOverlay() {
 function hideProgressOverlay() {
     const progressOverlay = document.getElementById('progress-overlay');
     const buttons = document.querySelectorAll('.button');
+    const wipeButton = document.querySelector(".wipe-button");
+    wipeButton.disabled = true;
     progressOverlay.classList.remove('active');
     buttons.forEach(button => {
         button.disabled = false;
     });
+    wipeButton.disabled = true;
     clearTimeout(messageInterval);
     clearInterval(typingInterval);
     clearInterval(clearingInterval);
