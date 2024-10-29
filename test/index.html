@@ -1094,13 +1094,18 @@ async function switchSlot() {
 
         // Switch to the other slot
         let result = (await device.runCommand(`set_active:${otherSlot}`)).text;
-        alert(`Switched to slot ${otherSlot}: ${result}`);
+        
+        // Confirm the slot switch
+        if (confirm(`Switched to slot ${otherSlot}. Click "OK" to reconnect the device.`)) {
+            document.querySelector(".connect-button").click();
+        }
     } catch (error) {
         alert(`Error switching slots: ${error.message}`);
     } finally {
         await checkDeviceConnection();
     }
 }
+
 
 async function runRebootCommand(command, successMessage) {
     try {
