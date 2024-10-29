@@ -915,7 +915,8 @@ function hideProgressOverlay() {
 
 function toggleElements(disable, isNabu = false) {
     const formElements = document.querySelectorAll("input, button, select");
-    
+    const wipeButton = document.querySelector(".wipe-button");
+    wipeButton.disabled = true;
     formElements.forEach((element) => {
         if (!element.classList.contains('connect-button') && !element.closest('.switchx')) {
             element.disabled = disable; // General enable/disable logic
@@ -935,6 +936,7 @@ function toggleElements(disable, isNabu = false) {
             bootTypeSelect.disabled = true; // Disable boot-type select
         }
     }
+	wipeButton.disabled = true;
 }
 	
 	
@@ -1027,6 +1029,8 @@ async function connectDevice() {
     }
 
 async function checkDeviceConnection() {
+    const wipeButton = document.querySelector(".wipe-button");
+     wipeButton.disabled = true;
     let statusField = document.querySelector(".status-field");
 
     try {
