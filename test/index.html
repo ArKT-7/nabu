@@ -1020,9 +1020,11 @@ async function connectDevice() {
     let userdata_chk = await device.getVariable("partition-type:userdata");
     let win_chk = await device.getVariable("partition-type:win");
     let esp_chk = await device.getVariable("partition-type:esp"); 
+    let linux_chk = await device.getVariable("partition-type:linux"); 
     let userdata_size = await device.getVariable("partition-size:userdata");
     let win_size = await device.getVariable("partition-size:win");
     let esp_size = await device.getVariable("partition-size:esp");
+    let linux_size = await device.getVariable("partition-size:linux"); 
     let bootloaderStatusText = bootloaderStatus === "yes" ? "unlocked" : "locked";
 
     let deviceName = "";
@@ -1062,6 +1064,9 @@ async function connectDevice() {
 	let sizeInfo = ''; // Initialize a variable to collect size info
 	if (await checkPartition("userdata", userdata_chk, userdata_size)) {
 	    sizeInfo += `<p style="margin: 0; margin-top: 5px;">Android Partition : ${getSizeString(userdata_size)}</p>`;
+	}
+	if (await checkPartition("linux", linux_chk, linux_size)) {
+	    sizeInfo += `<p style="margin: 0; margin-bottom: 0px;">Linux Partition : ${getSizeString(linux_size)}</p>`;
 	}
 	if (await checkPartition("win", win_chk, win_size)) {
 	    sizeInfo += `<p style="margin: 0; margin-bottom: 0px;">Windows Partition : ${getSizeString(win_size)}</p>`;
