@@ -1021,13 +1021,13 @@ async function connectDevice() {
     let deviceName = "";
     let isNabu = false;
     if (product === "nabu") {
-        deviceName = "Device name - Xiaomi Pad 5";
+        deviceName = "Device name : Xiaomi Pad 5";
         let rbootFlashPartitionSelect = document.querySelector('.rboot-flash-partition');
         if (rbootFlashPartitionSelect) {
             rbootFlashPartitionSelect.value = "boot_ab"; // Select the "Flash to Boot ab (both slots)"
         }
     } else if (product === "dm3q") {
-        deviceName = "Device name - Samsung S23 Ultra";
+        deviceName = "Device name : Samsung S23 Ultra";
         isNabu = true; // Device is not nabu
         // Select the current slot in the rboot-flash-partition select
         let rbootFlashPartitionSelect = document.querySelector('.rboot-flash-partition');
@@ -1036,7 +1036,7 @@ async function connectDevice() {
         }
     } else if (product !== "nabu") {
         isNabu = true; // Device is not nabu
-        deviceName = "Device name - IDK LoL 😂";
+        deviceName = "Device name : IDK LoL 😂";
         // Select the current slot in the rboot-flash-partition select
         let rbootFlashPartitionSelect = document.querySelector('.rboot-flash-partition');
         if (rbootFlashPartitionSelect) {
@@ -1044,7 +1044,7 @@ async function connectDevice() {
         }
     }
 
-    let status = `Connected to - ${product} <br /> Current slot - ${slot} <br /> (serial: ${serial})`;
+    let status = `Connected to : ${product} <br /> Current slot : ${slot} <br /> (serial : ${serial})`;
     if (deviceName) {
         status += `<br />${deviceName}`;
     }
@@ -1054,13 +1054,13 @@ async function connectDevice() {
     // Check partitions availability and sizes
     let sizeInfo = ''; // Initialize a variable to collect size info
     if (await checkPartition("userdata", userdata_chk, userdata_size)) {
-        sizeInfo += `Android Partiton: ${getSizeString(userdata_size)}<br />`;
+        sizeInfo += `Android Partiton : ${getSizeString(userdata_size)}<br />`;
     }
     if (await checkPartition("win", win_chk, win_size)) {
-        sizeInfo += `Windows Partiton: ${getSizeString(win_size)}<br />`;
+        sizeInfo += `Windows Partiton : ${getSizeString(win_size)}<br />`;
     }
     if (await checkPartition("esp", esp_chk, esp_size)) {
-        sizeInfo += `ESP Partiton: ${getSizeString(esp_size)}<br />`;
+        sizeInfo += `ESP Partiton : ${getSizeString(esp_size)}<br />`;
     }
 
     if (sizeInfo) {
