@@ -1078,40 +1078,31 @@ async function checkDeviceConnection() {
 }
 
 async function sendFormCommand(event) {
-            event.preventDefault();
-            let command = inputField.value.trim();
+    event.preventDefault();
+    let inputField = document.querySelector(".command-input");
+    let command = inputField.value.trim();
+    let resultField = document.querySelector(".result-field");
 
-            if (!command) {
-                resultField.textContent = `Please enter a command!\n` + resultField.textContent;
-                alert("Please enter a command!");
-                return;
-            }
+    if (!command) {
+        resultField.textContent += "Please enter a command!\n";
+        alert("Please enter a command!");
+        return;
+    }
 
-            try {
-                // Simulate running a command (replace with your actual command execution logic)
-                let result = await fakeRunCommand(command); // Replace with your actual command execution
-                resultField.textContent = `Command executed successfully: ${result}\n` + resultField.textContent;
-                alert(`Command executed successfully: ${result}`);
-            } catch (error) {
-                resultField.textContent = `Error executing command: ${error.message}\n` + resultField.textContent;
-                alert(`Error executing command: ${error.message}`);
-            } finally {
-                // Scroll to the top
-                resultField.scrollTop = 0; // Ensure it scrolls to the top after updating content
-                inputField.value = "";
-                await checkDeviceConnection();
-            }
-        }
-
-        // Simulate running a command (for demonstration purposes)
-        async function fakeRunCommand(command) {
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve(`Result for "${command}"`);
-                }, 1000);
-            });
-        }
-
+    try {
+        let result = (await device.runCommand(command)).text;
+        // Prepend the new result to the top
+        resultField.textContent = `Command executed successfully: ${result}\n` + resultField.textContent;
+        alert(`Command executed successfully: ${result}`);
+    } catch (error) {
+        // Prepend the error message to the top
+        resultField.textContent = `Error executing command: ${error.message}\n` + resultField.textContent;
+        alert(`Error executing command: ${error.message}`);
+    } finally {
+        inputField.value = "";
+        await checkDeviceConnection();
+    }
+}
 
 
 async function rebootDevice() {
