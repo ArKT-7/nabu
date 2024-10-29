@@ -1593,7 +1593,12 @@ async function rbootWipe() {
         // Step 2: Download and flash userdata to partition "userdata"
         let userdataBlob = await rbootDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/uninstall/userdata.img");
         await device.flashBlob("userdata", userdataBlob);
-        alert("gpt_both0.bin and Userdata flash successful!");
+
+        // Step 3: Execute additional erase commands
+        await device.runCommand("erase:metadata");
+        await device.runCommand("erase:userdata");
+
+        alert("gpt_both0.bin flashed successfully, and userdata has been erased.");
 
     } catch (error) {
         alert(`Failed to complete wipe: ${error.message}`);
@@ -1605,6 +1610,7 @@ async function rbootWipe() {
         await checkDeviceConnection();
     }
 }
+
 
 // Attach event listener to enable Wipe button on input
 document.querySelector(".rboot-wipe-input").addEventListener("input", handleWipeInput);
