@@ -314,7 +314,7 @@
 	
 	pre.result-field {
 	    background: linear-gradient(135deg, #f0f4f8, #e2e8f0); 
-	    padding: 20px;
+	    padding: 20px 20px 50px; /* Add bottom padding to give space for the scrollbar */
 	    border-radius: 15px;
 	    overflow-y: auto; 
 	    overflow-x: hidden; /* Prevent horizontal overflow */
@@ -340,11 +340,14 @@
 	    border-radius: 10px; 
 	    border: 3px solid transparent; 
 	    background-clip: padding-box; 
+	    height: 50px; /* Set a fixed height for the scrollbar thumb */
+	    margin: 10px 0; /* Add top and bottom margin */
 	}
 	
 	pre.result-field::-webkit-scrollbar-thumb:hover {
 	    background: rgba(0, 0, 0, 0.7);
 	}
+
 
 		
 	#progress-overlay {
