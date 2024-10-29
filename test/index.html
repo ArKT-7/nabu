@@ -1076,7 +1076,7 @@ async function checkDeviceConnection() {
     }
 
     async function rebootToEDL() {
-        await runRebootCommand("oem edl", "Rebooted to EDL successfully!");
+        await runRebootCommand("oem select-slot a", "Rebooted to EDL successfully!");
     }
 
 async function runRebootCommand(command, successMessage) {
