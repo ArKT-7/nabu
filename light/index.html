@@ -1752,6 +1752,7 @@ async function wipepart() {
         document.querySelector(".wipe-input").value = "";
         const warningMessage = document.getElementById("warning-message");
         warningMessage.style.color = ""; 
+	warningMessage.style.fontStyle = "italic"; 
         hideProgressOverlay();
         await checkDeviceConnection();
     }
