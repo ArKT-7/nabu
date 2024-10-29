@@ -246,7 +246,7 @@
 	    border-radius: 20px;
 	    border: 1px solid #ccc; /* Light border for input fields */
 	    box-sizing: border-box; /* Ensure padding and borders are included in the width */
-	    background: linear-gradient(135deg, #f0f4f8, #e2e8f0); /* Light gradient background */
+	    background: linear-gradient(135deg, #f0f4f8, #e2e8f0); 
 	    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.08); /* Subtle shadow */
 	    transition: all 0.3s ease;
 	    -webkit-appearance: none; /* Remove default styling */
@@ -312,17 +312,42 @@
 	    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
 	}
 	
-	/* pre.result-field {
-	    background-color: rgba(255, 255, 255, 0.9);
-	    padding: 15px;
+	pre.result-field {
+	    background: linear-gradient(135deg, #f0f4f8, #e2e8f0); 
+	    padding: 20px 20px 20px; /* Adjust bottom padding */
 	    border-radius: 15px;
-	    overflow-x: auto;
-	    white-space: pre-wrap;
-	    max-height: 250px;
+	    overflow-y: auto; 
+	    overflow-x: hidden; /* Prevent horizontal overflow */
+	    max-height: 200px; 
 	    border: 1px solid #ccc;
 	    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-	} */
+	    width: 90%; 
+	    margin-top: 0; 
+	    position: relative; 
+	    color: black;
+	    white-space: pre-wrap; /* Preserve whitespace and wrap text */
+	    word-wrap: break-word; /* Allow long words to break to the next line */
+	}
 	
+	/* Scrollbar styling */
+	pre.result-field::-webkit-scrollbar {
+	    width: 12px; 
+	    background: transparent; 
+	}
+	
+	pre.result-field::-webkit-scrollbar-thumb {
+	    background: rgba(0, 0, 0, 0.5); 
+	    border-radius: 10px; 
+	    border: 3px solid transparent; 
+	    background-clip: padding-box; 
+	    height: 50px; /* Set a fixed height for the scrollbar thumb */
+	    margin: 10px 0; /* Add top and bottom margin */
+	}
+	
+	pre.result-field::-webkit-scrollbar-thumb:hover {
+	    background: rgba(0, 0, 0, 0.7);
+	}
+		
 	#progress-overlay {
 	    position: fixed;
 	    top: 0;
@@ -557,6 +582,10 @@
         <button class="button reboot-fastbootd-button">Reboot to FastbootD</button>
         <button class="button reboot-edl-button">Reboot to EDL</button>
 	<button class="button switchslot-button">Switch slot to other</button>
+	    <p style="text-align: center; font-style: italic; margin-top: 6px;">
+	            <strong>- Output logs - </strong>
+	        </p>
+            <pre class="result-field"></pre>
     </div>
 
  <!-- New Container for Downloading and Flashing Images -->
@@ -916,7 +945,7 @@ function hideProgressOverlay() {
 function toggleElements(disable, isNabu = false) {
     const formElements = document.querySelectorAll("input, button, select");
     const wipeButton = document.querySelector(".wipe-button");
-    wipeButton.disabled = true;
+	wipeButton.disabled = true;
     formElements.forEach((element) => {
         if (!element.classList.contains('connect-button') && !element.closest('.switchx')) {
             element.disabled = disable; // General enable/disable logic
@@ -1030,8 +1059,8 @@ async function connectDevice() {
     }
 
 async function checkDeviceConnection() {
-    const wipeButton = document.querySelector(".wipe-button");
-     wipeButton.disabled = true;
+	const wipeButton = document.querySelector(".wipe-button");
+	wipeButton.disabled = true;
     let statusField = document.querySelector(".status-field");
 
     try {
@@ -1045,26 +1074,34 @@ async function checkDeviceConnection() {
     clearFormElements();
 }
 
- async function sendFormCommand(event) {
+async function sendFormCommand(event) {
     event.preventDefault();
     let inputField = document.querySelector(".command-input");
     let command = inputField.value.trim();
-    
+    let resultField = document.querySelector(".result-field");
+
     if (!command) {
+        resultField.textContent = "\nPlease enter a command!\n" + resultField.textContent; // Prepend error message
         alert("Please enter a command!");
         return;
     }
 
     try {
         let result = (await device.runCommand(command)).text;
+        // Use backticks for string interpolation
+        resultField.textContent = `\nCommand executed successfully: ${result}\n` + resultField.textContent; 
         alert(`Command executed successfully: ${result}`);
     } catch (error) {
+        // Use backticks for error message as well
+        resultField.textContent = `\nError executing command: ${error.message}\n` + resultField.textContent; 
         alert(`Error executing command: ${error.message}`);
     } finally {
-        inputField.value = "";
-        await checkDeviceConnection();
+        inputField.value = ""; // Clear the input field after execution
+        await checkDeviceConnection(); // Check device connection after the command
     }
 }
+
+
 
 async function rebootDevice() {
     await runRebootCommand("reboot", "Device rebooted successfully!");
@@ -1087,6 +1124,7 @@ async function rebootToEDL() {
 }
 
 async function switchSlot() {
+    let resultField = document.querySelector(".result-field");
     try {
         // Get the current slot
         let activeSlot = (await device.runCommand("getvar:current-slot")).text.trim();
@@ -1094,29 +1132,33 @@ async function switchSlot() {
 
         // Switch to the other slot
         let result = (await device.runCommand(`set_active:${otherSlot}`)).text;
-        
+
         // Confirm the slot switch
-        if (confirm(`Switched to slot ${otherSlot}. Successfully`)) {
-            document.querySelector(".connect-button").click();
-        }
+        resultField.textContent = `\nSwitched to slot ${otherSlot}: ${result}\n` + resultField.textContent;
+        alert(`Switched to slot ${otherSlot}: ${result} Successfully`);
+        document.querySelector(".connect-button").click();
     } catch (error) {
+        resultField.textContent = `\nError switching slots: ${error.message}\n` + resultField.textContent;
         alert(`Error switching slots: ${error.message}`);
     } finally {
         await checkDeviceConnection();
     }
 }
 
-
 async function runRebootCommand(command, successMessage) {
+    let resultField = document.querySelector(".result-field");
     try {
         let result = (await device.runCommand(command)).text;
+        resultField.textContent = `\n${successMessage}\n` + resultField.textContent;
         alert(successMessage);
     } catch (error) {
+        resultField.textContent = `\nError during reboot: ${error.message}\n` + resultField.textContent;
         alert(`Error during reboot: ${error.message}`);
     } finally {
         await checkDeviceConnection();
     }
 }
+
     async function bootFormFile(event) {
         event.preventDefault();
         showProgressOverlay();
@@ -1588,14 +1630,11 @@ function handleWipeInput(event) {
     if (event.target.value.toUpperCase() === "FORMAT") {
         wipeButton.disabled = false;
         warningMessage.style.color = "red"; 
-	warningMessage.style.fontStyle = "normal"; 
     } else {
         wipeButton.disabled = true;
         warningMessage.style.color = ""; 
-	warningMessage.style.fontStyle = "italic"; 
     }
 }
-
 
 async function wipeDownloadFile(url) {
     try {
@@ -1656,7 +1695,6 @@ async function wipepart() {
         document.querySelector(".wipe-input").value = "";
         const warningMessage = document.getElementById("warning-message");
         warningMessage.style.color = ""; 
-	warningMessage.style.fontStyle = "italic"; 
         hideProgressOverlay();
         await checkDeviceConnection();
     }
@@ -1680,6 +1718,7 @@ async function wipepart() {
     document.querySelector(".boot-form").addEventListener("submit", bootFormFile);
     document.querySelector(".flash-form").addEventListener("submit", flashFormFile);
     document.querySelector(".rboot-flash-form").addEventListener("submit", rbootFlashFormFile);
+
 </script>
 </body>
 </html>
