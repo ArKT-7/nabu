@@ -1,4 +1,4 @@
-TEST SAVE BEFORE WIPE ADDED <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -198,6 +198,35 @@ TEST SAVE BEFORE WIPE ADDED <!DOCTYPE html>
             box-shadow: none;
             transform: none;
         }
+
+	.red-button {
+	    background: linear-gradient(135deg, #ff3b3b, #ff6666); /* Brighter red shades */
+	    border: none;
+	    border-radius: 20px;
+	    color: white;
+	    padding: 15px 20px;
+	    font-size: 18px;
+	    font-weight: bold;
+	    cursor: pointer;
+	    transition: background 0.3s ease, transform 0.3s ease;
+	    margin: 10px 0;
+	    width: 100%;
+	    box-shadow: 0 4px 10px rgba(255, 59, 59, 0.5); /* Adjusted shadow for a more vibrant look */
+	}
+	
+	.red-button:hover {
+	    background: linear-gradient(135deg, #ff0000, #ff4d4d); /* More intense color on hover */
+	}
+
+	
+	.red-button:disabled {
+	    background: linear-gradient(135deg, #b0b0b0, #d4d4d4);
+            color: #888;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
 
 	/* .flash-form, .boot-form, .rboot-flash-form, .command-form {
 	    display: flex;
@@ -726,6 +755,21 @@ TEST SAVE BEFORE WIPE ADDED <!DOCTYPE html>
 	</form>
     </div>
 
+
+
+	<div class="container">
+	    <form class="wipe-form">
+	        <label for="wipe-input">Format/wipe make Partition Stock</label>
+	        <p id="warning-message" style="text-align: center; font-style: italic; margin-bottom: 10px; margin-top: 10px;">
+	            ⚠️ <strong>This will Format all data, including Android and Windows (if installed).</strong><br>
+	            <strong>So think twice before doing.</strong>
+	        </p>
+	        <input type="text" name="wipe-input" class="wipe-input" placeholder="Type FORMAT - to remove Windows and make partition layout stock." />
+	        <button type="button" class="button wipe-button red-button" disabled>Format/Wipe</button>
+	    </form>
+	</div>
+	
+	
     <div class="container">
     <h2 style="text-align: center;">Support My Journey</h2>
     <p style="text-align: center; font-style: italic; margin-bottom: 10px; margin-top: 10px;">"Your support fuels my passion for creating!"</p>
@@ -870,17 +914,19 @@ function hideProgressOverlay() {
 
 function toggleElements(disable, isNabu = false) {
     const formElements = document.querySelectorAll("input, button, select");
-    
+    const wipeButton = document.querySelector(".wipe-button");
+	wipeButton.disabled = true;
     formElements.forEach((element) => {
         if (!element.classList.contains('connect-button') && !element.closest('.switchx')) {
             element.disabled = disable; // General enable/disable logic
         }
     });
-
+     
     // Specifically disable the select elements if nabu device is detected
     if (isNabu) {
         const rbootFlashSelect = document.querySelector(".rboot-flash-image");
         const bootTypeSelect = document.querySelector(".boot-type");
+	
 
         if (rbootFlashSelect) {
             rbootFlashSelect.disabled = true; // Disable rboot-flash-image select
@@ -890,6 +936,7 @@ function toggleElements(disable, isNabu = false) {
             bootTypeSelect.disabled = true; // Disable boot-type select
         }
     }
+	wipeButton.disabled = true;
 }
 	
 	
@@ -982,6 +1029,8 @@ async function connectDevice() {
     }
 
 async function checkDeviceConnection() {
+	const wipeButton = document.querySelector(".wipe-button");
+	wipeButton.disabled = true;
     let statusField = document.querySelector(".status-field");
 
     try {
@@ -1503,6 +1552,92 @@ function rbootHideProgressOverlay() {
     progressBarContainer.style.display = 'none';
 }
 
+
+// Function to handle input and enable the wipe button
+function handleWipeInput(event) {
+    const wipeButton = document.querySelector(".wipe-button");
+    const warningMessage = document.getElementById("warning-message");
+
+    if (event.target.value.toUpperCase() === "FORMAT") {
+        wipeButton.disabled = false;
+        warningMessage.style.color = "red"; 
+    } else {
+        wipeButton.disabled = true;
+        warningMessage.style.color = ""; 
+    }
+}
+
+async function wipeDownloadFile(url) {
+    try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("Failed to download file");
+
+        const reader = response.body.getReader();
+        const chunks = [];
+
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            chunks.push(value);
+        }
+
+        return new Blob(chunks);
+    } catch (error) {
+        console.error("Download error:", error);
+        alert("Error downloading file. Please try again.");
+    }
+}
+
+// Main function to handle the wipe operation
+async function wipepart() {
+    const wipeButton = document.querySelector(".wipe-button");
+    
+    // Show confirmation dialog
+    const userConfirmed = confirm("⚠️ This will format all data, including Android and Windows (if installed). Do you want to continue?");
+    
+    if (!userConfirmed) {
+        // User canceled, reset the input and button
+        document.querySelector(".wipe-input").value = ""; 
+        handleWipeInput({ target: { value: "" } }); // Reset wipe button state
+        return; // Exit the function
+    }
+    
+    wipeButton.disabled = true; // Disable the button to prevent multiple clicks
+    showProgressOverlay();
+
+    try {
+        // Step 1: Download and flash GPT file to partition "partition:0"
+        let gptBlob = await wipeDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/uninstall/gpt_both0.bin");
+        await device.flashBlob("partition:0", gptBlob);
+
+        // Step 2: Download and flash userdata to partition "userdata"
+        let userdataBlob = await wipeDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/uninstall/userdata.img");
+        await device.flashBlob("userdata", userdataBlob);
+
+        // Step 3: Execute additional erase commands
+        await device.runCommand("erase:metadata");
+        await device.runCommand("erase:userdata");
+
+        alert("gpt_both0.bin flashed successfully, and userdata has been erased.");
+
+    } catch (error) {
+        alert(`Failed to complete wipe: ${error.message}`);
+    } finally {
+        document.querySelector(".wipe-input").value = "";
+        const warningMessage = document.getElementById("warning-message");
+        warningMessage.style.color = ""; 
+        hideProgressOverlay();
+        await checkDeviceConnection();
+    }
+}
+
+
+    document.querySelector(".wipe-input").addEventListener("input", handleWipeInput);
+    document.querySelector(".wipe-button").addEventListener("click", wipepart);
+    document.querySelector(".wipe-form").addEventListener("submit", function(event) {
+	event.preventDefault(); 
+    });
+
     document.querySelector(".connect-button").addEventListener("click", connectDevice);
     document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
     document.querySelector(".reboot-button").addEventListener("click", rebootDevice);
@@ -1513,6 +1648,7 @@ function rbootHideProgressOverlay() {
     document.querySelector(".boot-form").addEventListener("submit", bootFormFile);
     document.querySelector(".flash-form").addEventListener("submit", flashFormFile);
     document.querySelector(".rboot-flash-form").addEventListener("submit", rbootFlashFormFile);
+
 </script>
 </body>
 </html>
