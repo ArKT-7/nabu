@@ -312,7 +312,7 @@
 	    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
 	}
 	
-	/* pre.result-field {
+	pre.result-field {
 	    background-color: rgba(255, 255, 255, 0.9);
 	    padding: 15px;
 	    border-radius: 15px;
@@ -321,7 +321,7 @@
 	    max-height: 250px;
 	    border: 1px solid #ccc;
 	    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-	} */
+	}
 	
 	#progress-overlay {
 	    position: fixed;
@@ -557,6 +557,8 @@
         <button class="button reboot-fastbootd-button">Reboot to FastbootD</button>
         <button class="button reboot-edl-button">Reboot to EDL</button>
 	<button class="button switchslot-button">Switch slot to other</button>
+	    <p>Result:</p>
+            <pre class="result-field"></pre>
     </div>
 
  <!-- New Container for Downloading and Flashing Images -->
@@ -1045,21 +1047,22 @@ async function checkDeviceConnection() {
     clearFormElements();
 }
 
-   async function sendFormCommand(event) {
+async function sendFormCommand(event) {
     event.preventDefault();
     let inputField = document.querySelector(".command-input");
     let command = inputField.value.trim();
+    let resultField = document.querySelector(".result-field");
     
     if (!command) {
-        alert("Please enter a command!");
+        resultField.textContent += "Please enter a command!\n";
         return;
     }
 
     try {
         let result = (await device.runCommand(command)).text;
-        alert(`Command executed successfully: ${result}`);
+        resultField.textContent += `Command executed successfully: ${result}\n`;
     } catch (error) {
-        alert(`Error executing command: ${error.message}`);
+        resultField.textContent += `Error executing command: ${error.message}\n`;
     } finally {
         inputField.value = "";
         await checkDeviceConnection();
@@ -1087,6 +1090,7 @@ async function rebootToEDL() {
 }
 
 async function switchSlot() {
+    let resultField = document.querySelector(".result-field");
     try {
         // Get the current slot
         let activeSlot = (await device.runCommand("getvar:current-slot")).text.trim();
@@ -1094,29 +1098,31 @@ async function switchSlot() {
 
         // Switch to the other slot
         let result = (await device.runCommand(`set_active:${otherSlot}`)).text;
-        
+
         // Confirm the slot switch
-        if (confirm(`Switched to slot ${otherSlot}. Click "OK" to reconnect the device.`)) {
+        resultField.textContent += `Switched to slot ${otherSlot}: ${result}\n`;
+        if (confirm(`Switched to slot ${otherSlot}. Successfully.`)) {
             document.querySelector(".connect-button").click();
         }
     } catch (error) {
-        alert(`Error switching slots: ${error.message}`);
+        resultField.textContent += `Error switching slots: ${error.message}\n`;
     } finally {
         await checkDeviceConnection();
     }
 }
-
 
 async function runRebootCommand(command, successMessage) {
+    let resultField = document.querySelector(".result-field");
     try {
         let result = (await device.runCommand(command)).text;
-        alert(successMessage);
+        resultField.textContent += `${successMessage}\n`;
     } catch (error) {
-        alert(`Error during reboot: ${error.message}`);
+        resultField.textContent += `Error during reboot: ${error.message}\n`;
     } finally {
         await checkDeviceConnection();
     }
 }
+
 
     async function bootFormFile(event) {
         event.preventDefault();
