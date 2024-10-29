@@ -1197,6 +1197,7 @@ async function switchSlot() {
         resultField.textContent = `\nSwitched to slot ${otherSlot}: ${result}\n` + resultField.textContent;
         alert(`Switched to slot ${otherSlot}: ${result} Successfully`);
         document.querySelector(".connect-button").click();
+	document.querySelector(".connect-button").click();
     } catch (error) {
         resultField.textContent = `\nError switching slots: ${error.message}\n` + resultField.textContent;
         alert(`Error switching slots: ${error.message}`);
