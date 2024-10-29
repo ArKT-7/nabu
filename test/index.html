@@ -314,13 +314,15 @@
 	
 	pre.result-field {
 	    background-color: rgba(255, 255, 255, 0.9);
-	    padding: 55px;
+	    padding: 20px; /* Adjusted padding for better appearance */
 	    border-radius: 15px;
-	    overflow-x: auto;
-	    white-space: pre-wrap;
-	    max-height: 200px;
+	    overflow-y: auto; /* Allow vertical scrolling */
+	    overflow-x: auto; /* Allow horizontal scrolling */
+	    max-height: 300px; /* Increase max height for better visibility */
 	    border: 1px solid #ccc;
 	    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	    width: 100%; /* Ensure it takes full width */
+	    margin-top: 20px; /* Add margin to separate from other elements */
 	}
 	
 	#progress-overlay {
