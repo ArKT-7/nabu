@@ -1531,6 +1531,7 @@ function rbootHideProgressOverlay() {
 
 
 // Function to handle input and enable the wipe button
+// Function to handle input and enable the wipe button
 function handleWipeInput(event) {
     const wipeButton = document.querySelector(".rboot-wipe-button");
     const warningMessage = document.getElementById("warning-message");
@@ -1605,6 +1606,16 @@ async function rbootWipe() {
     }
 }
 
+// Attach event listener to enable Wipe button on input
+document.querySelector(".rboot-wipe-input").addEventListener("input", handleWipeInput);
+document.querySelector(".rboot-wipe-button").addEventListener("click", rbootWipe);
+
+// Prevent the form from submitting when Enter is pressed
+document.querySelector(".rboot-wipe-form").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent the default form submission
+});
+
+
 
 
     document.querySelector(".connect-button").addEventListener("click", connectDevice);
@@ -1617,9 +1628,7 @@ async function rbootWipe() {
     document.querySelector(".boot-form").addEventListener("submit", bootFormFile);
     document.querySelector(".flash-form").addEventListener("submit", flashFormFile);
     document.querySelector(".rboot-flash-form").addEventListener("submit", rbootFlashFormFile);
-		// Attach event listener to enable Wipe button on input
-document.querySelector(".rboot-wipe-input").addEventListener("input", handleWipeInput);
-document.querySelector(".rboot-wipe-button").addEventListener("click", rbootWipe);
+
 </script>
 </body>
 </html>
