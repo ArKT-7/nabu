@@ -1091,16 +1091,19 @@ async function sendFormCommand(event) {
 
     try {
         let result = (await device.runCommand(command)).text;
-        resultField.textContent += `Command executed successfully: ${result}\n`;
+        // Prepend the new result to the top
+        resultField.textContent = `Command executed successfully: ${result}\n` + resultField.textContent;
         alert(`Command executed successfully: ${result}`);
     } catch (error) {
-        resultField.textContent += `Error executing command: ${error.message}\n`;
+        // Prepend the error message to the top
+        resultField.textContent = `Error executing command: ${error.message}\n` + resultField.textContent;
         alert(`Error executing command: ${error.message}`);
     } finally {
         inputField.value = "";
         await checkDeviceConnection();
     }
 }
+
 
 async function rebootDevice() {
     await runRebootCommand("reboot", "Device rebooted successfully!");
