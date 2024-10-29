@@ -1096,7 +1096,7 @@ async function switchSlot() {
         let result = (await device.runCommand(`set_active:${otherSlot}`)).text;
         
         // Confirm the slot switch
-        if (confirm(`Switched to slot ${otherSlot}. Click "OK" to reconnect the device.`)) {
+        if (confirm(`Switched to slot ${otherSlot}. Successfully`)) {
             document.querySelector(".connect-button").click();
         }
     } catch (error) {
