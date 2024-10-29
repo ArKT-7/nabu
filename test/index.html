@@ -1130,11 +1130,8 @@ async function switchSlot() {
 
         // Confirm the slot switch
         resultField.textContent += `Switched to slot ${otherSlot}: ${result}\n`;
-        alert(`Switched to slot ${otherSlot}: ${result}`);
-        
-        if (confirm(`Switched to slot ${otherSlot}. Click "OK" to reconnect the device.`)) {
-            document.querySelector(".connect-button").click();
-        }
+        alert(`Switched to slot ${otherSlot}: ${result} Successfully`);
+        document.querySelector(".connect-button").click();
     } catch (error) {
         resultField.textContent += `Error switching slots: ${error.message}\n`;
         alert(`Error switching slots: ${error.message}`);
