@@ -1,7 +1,7 @@
 # 🚀 [FASTBOOT FLASHING TOOL ONLINE IN ANY NEW BROWSER ANY DEVICE](https://arkt-7.github.io/nabu/)
 
 ### Welcome GUYSSZZZ WILL UPADTE THIS README SOON! 😁😁
-### Till then just open the site and enjoy one click root, boot recovery, and flash any image, also added wipe/format option which also helps removes windows partition and fixes partition to stock -https://arkt-7.github.io/nabu/
+### Till then just open the site and enjoy one click root, boot recovery, and flash any image, also added wipe/format option which also helps removes windows partition and fix partition make it to stock -https://arkt-7.github.io/nabu/
 
 
 
