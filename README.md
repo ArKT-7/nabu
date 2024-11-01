@@ -17,3 +17,7 @@ If you find my projects helpful, consider supporting my work! Your contributions
     <img src="https://github.com/ArKT-7/WIN-ARM-DOWNLOADER/blob/main/assets/Paypal.png" alt="Donate with PayPal" style="height: 60px !important; width: 217px !important;">
   </a>
 </p>
+
+## Used open-source projects
+
+-   [fastboot.js](https://github.com/kdrag0n/fastboot.js/) from kdrag0n
