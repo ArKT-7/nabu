@@ -1736,13 +1736,13 @@ async function wipepart() {
         let gptBlob = await wipeDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/uninstall/gpt_both0.bin");
         await device.flashBlob("partition:0", gptBlob);
 
-        // Step 2: Download and flash userdata to partition "userdata"
-        let userdataBlob = await wipeDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/uninstall/userdata.img");
-        await device.flashBlob("userdata", userdataBlob);
-
-        // Step 3: Execute additional erase commands
+	// Step 2: Execute additional erase commands
         await device.runCommand("erase:metadata");
         await device.runCommand("erase:userdata");
+
+        // Step 3: Download and flash userdata to partition "userdata"
+        let userdataBlob = await wipeDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/uninstall/userdata.img");
+        await device.flashBlob("userdata", userdataBlob);
 
         alert("gpt_both0.bin flashed successfully, and userdata has been erased.");
 
