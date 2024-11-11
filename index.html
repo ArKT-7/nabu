@@ -1754,6 +1754,10 @@ async function wipepart() {
         let userdataBlob = await wipeDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/uninstall/userdata.img");
         await device.flashBlob("userdata", userdataBlob);
 
+	// Step 2.1 LOL: Execute additional erase commands
+        await device.runCommand("erase:metadata");
+        await device.runCommand("erase:userdata");
+
         alert("gpt_both0.bin flashed successfully, and userdata has been erased.");
 
     } catch (error) {
