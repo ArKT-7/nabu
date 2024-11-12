@@ -8162,7 +8162,15 @@ const BULK_TRANSFER_SIZE = 16384;
 const DEFAULT_DOWNLOAD_SIZE = 512 * 1024 * 1024; // 512 MiB
 // To conserve RAM and work around Chromium's ~2 GiB size limit, we limit the
 // max download size even if the bootloader can accept more data.
-const MAX_DOWNLOAD_SIZE = 1024 * 1024 * 1024; // 1 GiB
+
+
+// const MAX_DOWNLOAD_SIZE = 1024 * 1024 * 1024; // 1 GiB
+
+
+const MAX_DOWNLOAD_SIZE = 8 * 1024 * 1024 * 1024; // 8 GiB
+
+
+
 const GETVAR_TIMEOUT = 10000; // ms
 /**
  * Exception class for USB errors not directly thrown by WebUSB.
