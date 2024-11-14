@@ -1770,11 +1770,71 @@ async function wipepart() {
 }
 
 
+	// Main function to handle vbmeta disable
+async function vbmeta_disable() {  
+    // Show confirmation dialog
+    const userConfirmedvb = confirm("⚠️ This will disable you vbmeta verificationa and only for Xiaomi pad 5, Do you want to continue?");
+    
+    if (!userConfirmedvb) {
+        // User canceled, reset the input and button
+        return; // Exit the function
+    }
+    
+    showProgressOverlay();
+
+    try {
+        // Step 1: Download and flash GPT file to partition "partition:0"
+        let vbmeta = await wipeDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/other/vbmeta.img");
+        await device.flashBlob("vbmeta_a", vbmeta);
+	await device.flashBlob("vbmeta_b", vbmeta);
+
+        alert("vbmeta disabled successfully, enjoy! flashing gsi/other stuff 😁.");
+
+    } catch (error) {
+        alert(`Failed to disable vbmeta: ${error.message}`);
+    } finally {
+        hideProgressOverlay();
+        await checkDeviceConnection();
+    }
+}
+
+
+	// Main function to handle vbmeta disable
+async function vbmeta_system_disable() {  
+    // Show confirmation dialog
+    const userConfirmedvbs = confirm("⚠️ This will disable you vbmeta_system verificationa and only for Xiaomi pad 5, Do you want to continue?");
+    
+    if (!userConfirmedvbs) {
+        // User canceled, reset the input and button
+        return; // Exit the function
+    }
+    
+    showProgressOverlay();
+
+    try {
+        // Step 1: Download and flash GPT file to partition "partition:0"
+        let vbmeta_system = await wipeDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/other/vbmeta_system.img");
+        await device.flashBlob("vbmeta_system_a", vbmeta_system);
+	await device.flashBlob("vbmeta_system_b", vbmeta_system);
+
+        alert("vbmeta_system disabled successfully, enjoy! flashing gsi/other stuff 😁.");
+
+    } catch (error) {
+        alert(`Failed to disable vbmeta_system: ${error.message}`);
+    } finally {
+        hideProgressOverlay();
+        await checkDeviceConnection();
+    }
+}
+
     document.querySelector(".wipe-input").addEventListener("input", handleWipeInput);
     document.querySelector(".wipe-button").addEventListener("click", wipepart);
     document.querySelector(".wipe-form").addEventListener("submit", function(event) {
 	event.preventDefault(); 
     });
+	
+    document.querySelector(".vbmeta-button").addEventListener("click", vbmeta_disable);
+    document.querySelector(".vbmeta-system-button").addEventListener("click", vbmeta_system_disable);
 
     document.querySelector(".connect-button").addEventListener("click", connectDevice);
     document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
