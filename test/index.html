@@ -533,7 +533,7 @@
 	    opacity: 0.9; 
 	}
 
-	 .chicken {
+	.chicken {
             position: absolute;
             width: 80px;
             border-radius: 50%;
@@ -1847,7 +1847,7 @@ async function vbmeta_system_disable() {
 
 
 
-	 const chickens = [];
+	const chickens = [];
         let animationRequestIds = [];
 
         function playMusic() {
@@ -1887,8 +1887,8 @@ async function vbmeta_system_disable() {
             chicken.className = "chicken";
 
             // Initial random position, speed, and rotation
-            let x = Math.random() * (window.innerWidth - 160); // Avoid chicken getting too close to edges (padding)
-            let y = Math.random() * (window.innerHeight - 160); // Avoid chicken getting too close to edges (padding)
+            let x = Math.random() * (window.innerWidth - 80); // Keep chickens within the viewport
+            let y = Math.random() * (window.innerHeight - 80); // Keep chickens within the viewport
             let dx = (Math.random() - 0.5) * 5;
             let dy = (Math.random() - 0.5) * 5;
             let rotation = 0;
@@ -1907,19 +1907,20 @@ async function vbmeta_system_disable() {
 
                 let bounced = false;
 
-                if (x <= 20 || x >= window.innerWidth - 100) { // Keep chickens inside with padding
-                    dx = -dx;
+                // Allow chickens to move freely, no boundary check
+                if (x <= 0 || x >= window.innerWidth - 80) {
+                    dx = -dx; // Reverse direction on the X-axis
                     bounced = true;
                 }
-                if (y <= 20 || y >= window.innerHeight - 100) { // Keep chickens inside with padding
-                    dy = -dy;
+                if (y <= 0 || y >= window.innerHeight - 80) {
+                    dy = -dy; // Reverse direction on the Y-axis
                     bounced = true;
                 }
 
                 if (bounced) {
-                    rotationSpeed = Math.min(rotationSpeed + 2, 10);
+                    rotationSpeed = Math.min(rotationSpeed + 2, 10); // Increase rotation speed on bounce
                 } else {
-                    rotationSpeed = Math.max(rotationSpeed - 0.05, 2);
+                    rotationSpeed = Math.max(rotationSpeed - 0.05, 2); // Slow down rotation speed
                 }
 
                 chicken.style.left = `${x}px`;
