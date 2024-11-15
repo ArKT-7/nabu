@@ -533,7 +533,7 @@
 	    opacity: 0.9; 
 	}
 
-	.chicken {
+        .chicken {
             position: absolute;
             width: 80px;
             height: 80px;
@@ -809,9 +809,9 @@
         <form class="other-form">
         <label for="other">other stuffs for Nabu Only :)</label>
         </form>
-        <button class="button vbmeta-button">Disable Vbmeta</button>
-        <button class="button vbmeta-system-button">Disable Vbmeta System</button>
-	<button class="button rickroll-button">Fix Ram/Ram health</button>
+        <button class="button vbmeta-button">Disable Vbmeta verification</button>
+        <button class="button vbmeta-system-button">Disable Vbmeta System verification</button>
+	<button class="button rickroll-button">😅 Ram health check 😁</button>
     </div>
     
 	<audio id="audioPlayer" src="https://raw.githubusercontent.com/arkt-7/nabu-files/main/other/rickroll.mp3"></audio>
@@ -1848,7 +1848,7 @@ async function vbmeta_system_disable() {
 
 
 
-	const chickens = [];
+	 const chickens = [];
         let animationRequestIds = [];
 
         function playMusic() {
@@ -1887,9 +1887,9 @@ async function vbmeta_system_disable() {
             chicken.src = "https://raw.githubusercontent.com/arkt-7/nabu-files/main/other/chicken.png";
             chicken.className = "chicken";
 
-            // Generate random initial position within the entire page
-            let x = Math.random() * (window.innerWidth); // Full width
-            let y = Math.random() * (document.body.scrollHeight); // Full height of the page
+            // Generate random initial position within the entire page, ensuring it stays within visible area
+            let x = Math.random() * (window.innerWidth - 80); // Full width minus chicken width
+            let y = Math.random() * (document.body.scrollHeight - 80); // Full height of the page minus chicken height
 
             chicken.style.left = `${x}px`;
             chicken.style.top = `${y}px`;
@@ -1897,8 +1897,8 @@ async function vbmeta_system_disable() {
 
             // Function to move chicken to a random position within screen bounds
             function moveChicken() {
-                const maxX = window.innerWidth - chicken.width;
-                const maxY = document.body.scrollHeight - chicken.height;
+                const maxX = window.innerWidth - chicken.width; // Keep within window bounds
+                const maxY = document.body.scrollHeight - chicken.height; // Keep within page height
 
                 let newX = Math.random() * maxX;
                 let newY = Math.random() * maxY;
