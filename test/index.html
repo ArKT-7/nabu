@@ -804,8 +804,10 @@
         </form>
         <button class="button vbmeta-button">Disable Vbmeta</button>
         <button class="button vbmeta-system-button">Disable Vbmeta System</button>
+	<button class="button rickroll-button">Fix Ram/Ram health</button>
     </div>
-
+    
+	<audio id="audioPlayer" src="https://raw.githubusercontent.com/arkt-7/nabu-files/main/other/rickroll.mp3"></audio>
 	
     <div class="container">
     <h2 style="text-align: center;">Support My Journey</h2>
@@ -1835,6 +1837,99 @@ async function vbmeta_system_disable() {
 	
     document.querySelector(".vbmeta-button").addEventListener("click", vbmeta_disable);
     document.querySelector(".vbmeta-system-button").addEventListener("click", vbmeta_system_disable);
+
+
+
+
+	const chickens = [];
+        let animationRequestIds = [];
+
+        function playMusic() {
+            const audio = document.getElementById('audioPlayer');
+            audio.play();
+
+            // Clear previous chickens if they exist
+            chickens.forEach(chicken => chicken.remove());
+            chickens.length = 0;
+            animationRequestIds.forEach(id => cancelAnimationFrame(id));
+            animationRequestIds = [];
+
+            // Create chickens and add bouncing behavior
+            for (let i = 0; i < 27; i++) { // number of chickens 
+                chickens.push(createBouncingChicken());
+            }
+
+            // When the music ends, initiate fade-out for all chickens
+            audio.onended = fadeOutChickens;
+        }
+
+        function fadeOutChickens() {
+            chickens.forEach(chicken => {
+                // Fade-out effect and shrink the chickens
+                chicken.style.opacity = '0'; // Start fade-out
+                chicken.style.transform = 'scale(0)'; // Shrink the chicken
+
+                setTimeout(() => chicken.remove(), 2000); // Remove after fade-out
+            });
+            animationRequestIds.forEach(id => cancelAnimationFrame(id)); // Stop all animations
+        }
+
+        function createBouncingChicken() {
+            let chicken = document.createElement("img");
+            chicken.src = "https://raw.githubusercontent.com/arkt-7/nabu-files/main/other/chicken.png";
+            chicken.className = "chicken";
+
+            // Initial random position, speed, and rotation
+            let x = Math.random() * (window.innerWidth - 80);
+            let y = Math.random() * (window.innerHeight - 80);
+            let dx = (Math.random() - 0.5) * 5;
+            let dy = (Math.random() - 0.5) * 5;
+            let rotation = 0;
+            let rotationSpeed = 2;
+
+            chicken.style.left = `${x}px`;
+            chicken.style.top = `${y}px`;
+            document.body.appendChild(chicken);
+
+            // Move chicken with bounce effect
+            function moveChicken() {
+                x += dx;
+                y += dy;
+                rotation += rotationSpeed;
+                chicken.style.transform = `rotate(${rotation}deg)`;
+
+                let bounced = false;
+
+                if (x <= 0 || x >= window.innerWidth - 80) {
+                    dx = -dx;
+                    bounced = true;
+                }
+                if (y <= 0 || y >= window.innerHeight - 80) {
+                    dy = -dy;
+                    bounced = true;
+                }
+
+                if (bounced) {
+                    rotationSpeed = Math.min(rotationSpeed + 2, 10);
+                } else {
+                    rotationSpeed = Math.max(rotationSpeed - 0.05, 2);
+                }
+
+                chicken.style.left = `${x}px`;
+                chicken.style.top = `${y}px`;
+
+                // Save the request ID to stop animation on reset
+                const requestId = requestAnimationFrame(moveChicken);
+                animationRequestIds.push(requestId);
+            }
+
+            moveChicken();
+            return chicken;
+        }
+
+	document.querySelector(".rickroll-button").addEventListener("click", playMusic);
+
+	
 
     document.querySelector(".connect-button").addEventListener("click", connectDevice);
     document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
