@@ -533,13 +533,12 @@
 	    opacity: 0.9; 
 	}
 
-	    .chicken {
+	 .chicken {
             position: absolute;
             width: 80px;
             border-radius: 50%;
             transition: transform 0.2s ease, opacity 2s ease, transform 2s ease; /* Smooth rotation and fade-out */
         }
-
 
 </style>
 </head>
@@ -1848,7 +1847,7 @@ async function vbmeta_system_disable() {
 
 
 
-	const chickens = [];
+	 const chickens = [];
         let animationRequestIds = [];
 
         function playMusic() {
@@ -1862,7 +1861,7 @@ async function vbmeta_system_disable() {
             animationRequestIds = [];
 
             // Create chickens and add bouncing behavior
-            for (let i = 0; i < 27; i++) { // number of chickens 
+            for (let i = 0; i < 27; i++) { // Adjust number as needed
                 chickens.push(createBouncingChicken());
             }
 
@@ -1883,12 +1882,13 @@ async function vbmeta_system_disable() {
 
         function createBouncingChicken() {
             let chicken = document.createElement("img");
+            // Use the external URL for the chicken image
             chicken.src = "https://raw.githubusercontent.com/arkt-7/nabu-files/main/other/chicken.png";
             chicken.className = "chicken";
 
             // Initial random position, speed, and rotation
-            let x = Math.random() * (window.innerWidth - 80);
-            let y = Math.random() * (window.innerHeight - 80);
+            let x = Math.random() * (window.innerWidth - 160); // Avoid chicken getting too close to edges (padding)
+            let y = Math.random() * (window.innerHeight - 160); // Avoid chicken getting too close to edges (padding)
             let dx = (Math.random() - 0.5) * 5;
             let dy = (Math.random() - 0.5) * 5;
             let rotation = 0;
@@ -1907,11 +1907,11 @@ async function vbmeta_system_disable() {
 
                 let bounced = false;
 
-                if (x <= 0 || x >= window.innerWidth - 80) {
+                if (x <= 20 || x >= window.innerWidth - 100) { // Keep chickens inside with padding
                     dx = -dx;
                     bounced = true;
                 }
-                if (y <= 0 || y >= window.innerHeight - 80) {
+                if (y <= 20 || y >= window.innerHeight - 100) { // Keep chickens inside with padding
                     dy = -dy;
                     bounced = true;
                 }
