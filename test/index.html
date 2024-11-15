@@ -541,11 +541,6 @@
             transition: transform 0.2s ease, opacity 2s ease;
         }
 
-        /* Make sure the chickens appear over the scrolling content */
-        .chicken {
-            z-index: 5;
-        }
-
 </style>
 </head>
 <body>
@@ -1892,9 +1887,9 @@ async function vbmeta_system_disable() {
             chicken.src = "https://raw.githubusercontent.com/arkt-7/nabu-files/main/other/chicken.png";
             chicken.className = "chicken";
 
-            // Generate random initial position
-            let x = Math.random() * window.innerWidth;
-            let y = Math.random() * window.innerHeight;
+            // Generate random initial position within the entire page
+            let x = Math.random() * (window.innerWidth); // Full width
+            let y = Math.random() * (document.body.scrollHeight); // Full height of the page
 
             chicken.style.left = `${x}px`;
             chicken.style.top = `${y}px`;
@@ -1903,7 +1898,7 @@ async function vbmeta_system_disable() {
             // Function to move chicken to a random position within screen bounds
             function moveChicken() {
                 const maxX = window.innerWidth - chicken.width;
-                const maxY = window.innerHeight - chicken.height;
+                const maxY = document.body.scrollHeight - chicken.height;
 
                 let newX = Math.random() * maxX;
                 let newY = Math.random() * maxY;
@@ -1918,6 +1913,7 @@ async function vbmeta_system_disable() {
 
             return chicken;
         }
+	
 	document.querySelector(".rickroll-button").addEventListener("click", playMusic);
 
 	
