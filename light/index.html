@@ -533,6 +533,13 @@
 	    opacity: 0.9; 
 	}
 
+        .chicken {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            transition: transform 0.2s ease, opacity 2s ease;
+        }
 
 </style>
 </head>
@@ -785,8 +792,6 @@
 	</form>
     </div>
 
-
-
 	<div class="container">
 	    <form class="wipe-form">
 	        <label for="wipe-input">Format/wipe make Partition Stock</label>
@@ -798,7 +803,18 @@
 	        <button type="button" class="button wipe-button red-button" disabled>Format/Wipe</button>
 	    </form>
 	</div>
+
 	
+    <div class="container">
+        <form class="other-form">
+        <label for="other">other stuffs for Nabu Only :)</label>
+        </form>
+        <button class="button vbmeta-button">Disable Vbmeta verification</button>
+        <button class="button vbmeta-system-button">Disable Vbmeta System verification</button>
+	<button class="button rickroll-button">😅 Ram health check 😁</button>
+    </div>
+    
+	<audio id="audioPlayer" src="https://raw.githubusercontent.com/arkt-7/nabu-files/main/other/rickroll.mp3"></audio>
 	
     <div class="container">
     <h2 style="text-align: center;">Support My Journey</h2>
@@ -1763,11 +1779,144 @@ async function wipepart() {
 }
 
 
+	// Main function to handle vbmeta disable
+async function vbmeta_disable() {  
+    // Show confirmation dialog
+    const userConfirmedvb = confirm("⚠️ This will disable you vbmeta verificationa and only for Xiaomi pad 5, Do you want to continue?");
+    
+    if (!userConfirmedvb) {
+        // User canceled, reset the input and button
+        return; // Exit the function
+    }
+    
+    showProgressOverlay();
+
+    try {
+        // Step 1: Download and flash GPT file to partition "partition:0"
+        let vbmeta = await wipeDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/other/vbmeta.img");
+        await device.flashBlob("vbmeta_a", vbmeta);
+	await device.flashBlob("vbmeta_b", vbmeta);
+
+        alert("vbmeta disabled successfully, enjoy! flashing gsi/other stuff 😁.");
+
+    } catch (error) {
+        alert(`Failed to disable vbmeta: ${error.message}`);
+    } finally {
+        hideProgressOverlay();
+        await checkDeviceConnection();
+    }
+}
+
+
+	// Main function to handle vbmeta disable
+async function vbmeta_system_disable() {  
+    // Show confirmation dialog
+    const userConfirmedvbs = confirm("⚠️ This will disable you vbmeta_system verificationa and only for Xiaomi pad 5, Do you want to continue?");
+    
+    if (!userConfirmedvbs) {
+        // User canceled, reset the input and button
+        return; // Exit the function
+    }
+    
+    showProgressOverlay();
+
+    try {
+        // Step 1: Download and flash GPT file to partition "partition:0"
+        let vbmeta_system = await wipeDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/other/vbmeta_system.img");
+        await device.flashBlob("vbmeta_system_a", vbmeta_system);
+	await device.flashBlob("vbmeta_system_b", vbmeta_system);
+
+        alert("vbmeta_system disabled successfully, enjoy! flashing gsi/other stuff 😁.");
+
+    } catch (error) {
+        alert(`Failed to disable vbmeta_system: ${error.message}`);
+    } finally {
+        hideProgressOverlay();
+        await checkDeviceConnection();
+    }
+}
+
     document.querySelector(".wipe-input").addEventListener("input", handleWipeInput);
     document.querySelector(".wipe-button").addEventListener("click", wipepart);
     document.querySelector(".wipe-form").addEventListener("submit", function(event) {
 	event.preventDefault(); 
     });
+	
+    document.querySelector(".vbmeta-button").addEventListener("click", vbmeta_disable);
+    document.querySelector(".vbmeta-system-button").addEventListener("click", vbmeta_system_disable);
+
+
+
+
+	 const chickens = [];
+        let animationRequestIds = [];
+
+        function playMusic() {
+            const audio = document.getElementById('audioPlayer');
+            audio.play();
+
+            // Clear previous chickens if they exist
+            chickens.forEach(chicken => chicken.remove());
+            chickens.length = 0;
+            animationRequestIds.forEach(id => cancelAnimationFrame(id));
+            animationRequestIds = [];
+
+            // Create chickens and add dancing behavior
+            for (let i = 0; i < 60; i++) { // Number of chickens
+                chickens.push(createDancingChicken());
+            }
+
+            // When the music ends, initiate fade-out for all chickens
+            audio.onended = fadeOutChickens;
+        }
+
+        function fadeOutChickens() {
+            chickens.forEach(chicken => {
+                // Fade-out effect and shrink the chickens
+                chicken.style.opacity = '0'; // Start fade-out
+                chicken.style.transform = 'scale(0)'; // Shrink the chicken
+
+                setTimeout(() => chicken.remove(), 2000); // Remove after fade-out
+            });
+            animationRequestIds.forEach(id => cancelAnimationFrame(id)); // Stop all animations
+        }
+
+        function createDancingChicken() {
+            let chicken = document.createElement("img");
+            // Use the external URL for the chicken image
+            chicken.src = "https://raw.githubusercontent.com/arkt-7/nabu-files/main/other/chicken.png";
+            chicken.className = "chicken";
+
+            // Generate random initial position within the entire page, ensuring it stays within visible area
+            let x = Math.random() * (window.innerWidth - 80); // Full width minus chicken width
+            let y = Math.random() * (document.body.scrollHeight - 80); // Full height of the page minus chicken height
+
+            chicken.style.left = `${x}px`;
+            chicken.style.top = `${y}px`;
+            document.body.appendChild(chicken);
+
+            // Function to move chicken to a random position within screen bounds
+            function moveChicken() {
+                const maxX = window.innerWidth - chicken.width; // Keep within window bounds
+                const maxY = document.body.scrollHeight - chicken.height; // Keep within page height
+
+                let newX = Math.random() * maxX;
+                let newY = Math.random() * maxY;
+
+                // Move chicken to new random position
+                chicken.style.left = `${newX}px`;
+                chicken.style.top = `${newY}px`;
+            }
+
+            // Set an interval for each chicken to move randomly every second
+            setInterval(() => moveChicken(chicken), 1000);
+
+            return chicken;
+        }
+	
+	document.querySelector(".rickroll-button").addEventListener("click", playMusic);
+
+	
 
     document.querySelector(".connect-button").addEventListener("click", connectDevice);
     document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
