@@ -536,8 +536,9 @@
 	.chicken {
             position: absolute;
             width: 80px;
+            height: 80px;
             border-radius: 50%;
-            transition: transform 0.2s ease, opacity 2s ease, transform 2s ease; /* Smooth rotation and fade-out */
+            transition: transform 0.2s ease, opacity 2s ease; /* Smooth rotation and fade-out */
         }
 
 </style>
@@ -1847,7 +1848,7 @@ async function vbmeta_system_disable() {
 
 
 
-	const chickens = [];
+	 const chickens = [];
         let animationRequestIds = [];
 
         function playMusic() {
@@ -1860,9 +1861,9 @@ async function vbmeta_system_disable() {
             animationRequestIds.forEach(id => cancelAnimationFrame(id));
             animationRequestIds = [];
 
-            // Create chickens and add bouncing behavior
+            // Create chickens and add floating behavior
             for (let i = 0; i < 27; i++) { // Adjust number as needed
-                chickens.push(createBouncingChicken());
+                chickens.push(createFloatingChicken());
             }
 
             // When the music ends, initiate fade-out for all chickens
@@ -1880,7 +1881,7 @@ async function vbmeta_system_disable() {
             animationRequestIds.forEach(id => cancelAnimationFrame(id)); // Stop all animations
         }
 
-        function createBouncingChicken() {
+        function createFloatingChicken() {
             let chicken = document.createElement("img");
             // Use the external URL for the chicken image
             chicken.src = "https://raw.githubusercontent.com/arkt-7/nabu-files/main/other/chicken.png";
@@ -1889,8 +1890,8 @@ async function vbmeta_system_disable() {
             // Initial random position, speed, and rotation
             let x = Math.random() * (window.innerWidth - 80); // Keep chickens within the viewport
             let y = Math.random() * (window.innerHeight - 80); // Keep chickens within the viewport
-            let dx = (Math.random() - 0.5) * 5;
-            let dy = (Math.random() - 0.5) * 5;
+            let dx = (Math.random() - 0.5) * 2; // Horizontal movement speed
+            let dy = (Math.random() - 0.5) * 2; // Vertical movement speed
             let rotation = 0;
             let rotationSpeed = 2;
 
@@ -1898,35 +1899,25 @@ async function vbmeta_system_disable() {
             chicken.style.top = `${y}px`;
             document.body.appendChild(chicken);
 
-            // Move chicken with bounce effect
+            // Move chicken freely
             function moveChicken() {
                 x += dx;
                 y += dy;
                 rotation += rotationSpeed;
+
+                // Apply rotation and position
                 chicken.style.transform = `rotate(${rotation}deg)`;
-
-                let bounced = false;
-
-                // Allow chickens to move freely, no boundary check
-                if (x <= 0 || x >= window.innerWidth - 80) {
-                    dx = -dx; // Reverse direction on the X-axis
-                    bounced = true;
-                }
-                if (y <= 0 || y >= window.innerHeight - 80) {
-                    dy = -dy; // Reverse direction on the Y-axis
-                    bounced = true;
-                }
-
-                if (bounced) {
-                    rotationSpeed = Math.min(rotationSpeed + 2, 10); // Increase rotation speed on bounce
-                } else {
-                    rotationSpeed = Math.max(rotationSpeed - 0.05, 2); // Slow down rotation speed
-                }
-
                 chicken.style.left = `${x}px`;
                 chicken.style.top = `${y}px`;
 
-                // Save the request ID to stop animation on reset
+                // Apply rotation speed logic
+                rotationSpeed = Math.max(rotationSpeed - 0.05, 2); // Gradually slow down the rotation
+
+                // Randomize movement speed slightly over time
+                dx += (Math.random() - 0.5) * 0.1;
+                dy += (Math.random() - 0.5) * 0.1;
+
+                // Continue moving the chicken with a smooth animation
                 const requestId = requestAnimationFrame(moveChicken);
                 animationRequestIds.push(requestId);
             }
