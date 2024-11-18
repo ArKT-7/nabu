@@ -8163,6 +8163,7 @@ const FASTBOOT_USB_PROTOCOL = 0x03;
 // Set initial and bulk transfer sizes (64 MiB chunk size)
 const BULK_TRANSFER_SIZE = 32 * 1024 * 1024; // 32 MiB
 
+
 // Set default and maximum download sizes (5 GB default, 10 GB max)
 const DEFAULT_DOWNLOAD_SIZE = 5 * 1024 * 1024 * 1024; // 5 GiB
 const MAX_DOWNLOAD_SIZE = 10 * 1024 * 1024 * 1024; // 10 GiB
@@ -8482,22 +8483,26 @@ class FastbootDevice {
      * @private
      */
     async _sendRawPayload(buffer, onProgress) {
-        let i = 0;
-        let remainingBytes = buffer.byteLength;
-        while (remainingBytes > 0) {
-            let chunk = buffer.slice(i * BULK_TRANSFER_SIZE, (i + 1) * BULK_TRANSFER_SIZE);
-            if (i % 1000 === 0) {
-                logVerbose(`  Sending ${chunk.byteLength} bytes to endpoint, ${remainingBytes} remaining, i=${i}`);
-            }
-            if (i % 10 === 0) {
-                onProgress((buffer.byteLength - remainingBytes) / buffer.byteLength);
-            }
-            await this.device.transferOut(this.epOut, chunk);
-            remainingBytes -= chunk.byteLength;
-            i += 1;
+    let i = 0;
+    let remainingBytes = buffer.byteLength;
+    while (remainingBytes > 0) {
+        // Direct slice instead of relying on i*BULK_TRANSFER_SIZE
+        let chunkSize = Math.min(remainingBytes, BULK_TRANSFER_SIZE);
+        let chunk = buffer.slice(i * BULK_TRANSFER_SIZE, i * BULK_TRANSFER_SIZE + chunkSize);
+        
+        if (i % 1000 === 0) {
+            logVerbose(`  Sending ${chunk.byteLength} bytes to endpoint, ${remainingBytes} remaining, i=${i}`);
         }
-        onProgress(1.0);
+        if (i % 10 === 0) {
+            onProgress((buffer.byteLength - remainingBytes) / buffer.byteLength);
+        }
+        await this.device.transferOut(this.epOut, chunk);
+        
+        remainingBytes -= chunkSize;
+        i += 1;
     }
+    onProgress(1.0);
+}
     /**
      * Upload a payload to the bootloader for later use, e.g. flashing.
      * Does not handle raw images, flashing, or splitting.
