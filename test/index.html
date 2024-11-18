@@ -783,23 +783,17 @@
     </div>
 	
     <div class="container">
-    <form class="flash-form" onsubmit="flashFormFiles(event)">
-        <label for="flash-file">Flash multiple images</label>
-        <input type="file" name="flash-file" id="flash-file" accept=".img,.bin" multiple />
+    <form class="flash-form" onsubmit="flashFormFile(event)">
+        <label for="flash-file">Flash any images</label>
+        <input type="file" name="flash-file" id="flash-file" accept=".img,.bin" />
         
         <label for="flash-partition">Enter Partition</label>
         <input type="text" name="flash-partition" class="flash-partition" 
-               placeholder="Partitions will be auto-filled for matching files" readonly />
+               placeholder="Partition like - boot, dtbo, super, vendor_boot, recovery, etc." />
         
-        <input type="submit" value="Flash All" class="button" />
+        <input type="submit" value="Flash" class="button" />
     </form>
-    
-    <div class="flashing-status">
-        <h3>Flashing Status:</h3>
-        <ul id="flashing-list"></ul>
-    </div>
 </div>
-
 
 
 	<div class="container">
@@ -1342,63 +1336,41 @@ async function runRebootCommand(command, successMessage) {
         }
     }
 
-    async function flashFormFiles(event) {
+    async function flashFormFile(event) {
     event.preventDefault();
     showProgressOverlay();
 
-    const fileField = document.querySelector("#flash-file");
-    const partField = document.querySelector(".flash-partition");
-    const flashingList = document.querySelector("#flashing-list");
+    let fileField = document.querySelector("#flash-file");
+    let partField = document.querySelector(".flash-partition");
+    let file = fileField.files[0];
 
-    const files = fileField.files;
-    if (!files.length) {
-        alert("Please select files to flash!");
+    if (!file) {
+        alert("Please select a file to flash!");
         hideProgressOverlay();
         return;
     }
 
-    flashingList.innerHTML = ""; // Clear the status list
-
-    const fileMapping = {
-        "boot.img": "boot",
-        "dtbo.img": "dtbo",
-        "vbmeta.img": "vbmeta",
-        "vbmeta_system.img": "vbmeta_system",
-        "vendor_boot.img": "vendor_boot",
-        "super.img": "super"
-    };
-
-    for (const file of files) {
-        const fileName = file.name.toLowerCase();
-        const matchedPartition = fileMapping[fileName] || fileName.replace(/\.[^/.]+$/, ""); // Default to filename without extension
-
-        // Animate the typing of the partition name
-        await new Promise((resolve) => {
-            typeAnimation(partField, matchedPartition, 33);
-            setTimeout(resolve, matchedPartition.length * 33 + 300); // Wait for typing animation
-        });
-
-        const listItem = document.createElement("li");
-        listItem.textContent = `Flashing ${matchedPartition}...`;
-        flashingList.appendChild(listItem);
-
-        try {
-            await device.flashBlob(matchedPartition, file);
-            listItem.textContent = `Successfully flashed ${matchedPartition}`;
-        } catch (error) {
-            listItem.textContent = `Failed to flash ${matchedPartition}: ${error.message}`;
-        }
+    if (!partField.value) {
+        alert("Please specify a partition to flash!");
+        hideProgressOverlay();
+        return;
     }
 
-    alert("All files processed!");
-    fileField.value = "";
-    partField.value = "";
-    hideProgressOverlay();
-    await checkDeviceConnection();
+    try {
+        await device.flashBlob(partField.value, file);
+        alert(`Successfully flashed ${partField.value}`);
+    } catch (error) {
+        alert(`Failed to flash: ${error.message}`);
+    } finally {
+        fileField.value = "";
+        partField.value = "";
+        hideProgressOverlay();
+        await checkDeviceConnection();
+    }
 }
 
 // Function for typing animation
-function typeAnimation(element, text, delay = 50) { // 33ms for faster typing
+function typeAnimation(element, text, delay = 50) {
     element.value = ""; // Clear the input box
     let i = 0;
 
@@ -1410,6 +1382,36 @@ function typeAnimation(element, text, delay = 50) { // 33ms for faster typing
         }
     }, delay);
 }
+
+// Add event listener for file selection
+document.querySelector("#flash-file").addEventListener("change", function () {
+    const fileField = document.querySelector("#flash-file");
+    const partField = document.querySelector(".flash-partition");
+
+    if (!fileField.files.length) return;
+
+    const file = fileField.files[0];
+    const fileName = file.name;
+
+    // Mapping of file names to partition names
+    const fileMapping = {
+        "boot.img": "boot",
+        "dtbo.img": "dtbo",
+        "vbmeta.img": "vbmeta",
+        "vbmeta_system.img": "vbmeta_system",
+        "vendor_boot.img": "vendor_boot",
+        "super.img": "super"
+    };
+
+    // Check if the file matches a known partition
+    const matchedPartition = fileMapping[fileName.toLowerCase()];
+    if (matchedPartition) {
+        // Animate the typing of the partition name
+        typeAnimation(partField, matchedPartition);
+    }
+});
+
+
 
        async function rbootFlashFormFile(event) {
     event.preventDefault();
