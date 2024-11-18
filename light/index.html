@@ -783,14 +783,18 @@
     </div>
 	
     <div class="container">
-        <form class="flash-form">
-            <label for="flash-file">Flash any images</label>
-            <input type="file" name="flash-file" id="flash-file" accept=".img" />
-            <label2 for="flash-partition">Enter Partition</label2>
-            <input type="text" name="flash-partition" class="flash-partition" placeholder="Partition like - boot, dtbo, cust, recovery, etc." />
-            <input type="submit" value="Flash" class="button" />
-	</form>
-    </div>
+    <form class="flash-form" onsubmit="flashFormFile(event)">
+        <label for="flash-file">Flash any images</label>
+        <input type="file" name="flash-file" id="flash-file" accept=".img,.bin" />
+        
+        <label for="flash-partition">Enter Partition</label>
+        <input type="text" name="flash-partition" class="flash-partition" 
+               placeholder="Partition like - boot, dtbo, super, vendor_boot, recovery, etc." />
+        
+        <input type="submit" value="Flash" class="button" />
+    </form>
+</div>
+
 
 	<div class="container">
 	    <form class="wipe-form">
@@ -1333,36 +1337,80 @@ async function runRebootCommand(command, successMessage) {
     }
 
     async function flashFormFile(event) {
-        event.preventDefault();
-        showProgressOverlay();
-        let fileField = document.querySelector("#flash-file");
-        let partField = document.querySelector(".flash-partition");
-        let file = fileField.files[0];
+    event.preventDefault();
+    showProgressOverlay();
 
-        if (!file) {
-            alert("Please select a file to flash!");
-            hideProgressOverlay();
-            return;
-        }
+    let fileField = document.querySelector("#flash-file");
+    let partField = document.querySelector(".flash-partition");
+    let file = fileField.files[0];
 
-        if (!partField.value) {
-            alert("Please specify a partition to flash!");
-            hideProgressOverlay();
-            return;
-        }
-
-        try {
-            await device.flashBlob(partField.value, file);
-            alert(`Successfully flashed ${partField.value}`);
-        } catch (error) {
-            alert(`Failed to flash: ${error.message}`);
-        } finally {
-            fileField.value = "";
-            partField.value = "";
-            hideProgressOverlay();
-            await checkDeviceConnection();
-        }
+    if (!file) {
+        alert("Please select a file to flash!");
+        hideProgressOverlay();
+        return;
     }
+
+    if (!partField.value) {
+        alert("Please specify a partition to flash!");
+        hideProgressOverlay();
+        return;
+    }
+
+    try {
+        await device.flashBlob(partField.value, file);
+        alert(`Successfully flashed ${partField.value}`);
+    } catch (error) {
+        alert(`Failed to flash: ${error.message}`);
+    } finally {
+        fileField.value = "";
+        partField.value = "";
+        hideProgressOverlay();
+        await checkDeviceConnection();
+    }
+}
+
+// Function for typing animation
+function typeAnimation(element, text, delay = 50) {
+    element.value = ""; // Clear the input box
+    let i = 0;
+
+    const typeInterval = setInterval(() => {
+        element.value += text[i];
+        i++;
+        if (i === text.length) {
+            clearInterval(typeInterval);
+        }
+    }, delay);
+}
+
+// Add event listener for file selection
+document.querySelector("#flash-file").addEventListener("change", function () {
+    const fileField = document.querySelector("#flash-file");
+    const partField = document.querySelector(".flash-partition");
+
+    if (!fileField.files.length) return;
+
+    const file = fileField.files[0];
+    const fileName = file.name;
+
+    // Mapping of file names to partition names
+    const fileMapping = {
+        "boot.img": "boot",
+        "dtbo.img": "dtbo",
+        "vbmeta.img": "vbmeta",
+        "vbmeta_system.img": "vbmeta_system",
+        "vendor_boot.img": "vendor_boot",
+        "super.img": "super"
+    };
+
+    // Check if the file matches a known partition
+    const matchedPartition = fileMapping[fileName.toLowerCase()];
+    if (matchedPartition) {
+        // Animate the typing of the partition name
+        typeAnimation(partField, matchedPartition);
+    }
+});
+
 
 
        async function rbootFlashFormFile(event) {
