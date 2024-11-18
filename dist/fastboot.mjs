@@ -8158,7 +8158,7 @@ async function flashZip(device, blob, wipe, onReconnect, onProgress = (_action, 
 const FASTBOOT_USB_CLASS = 0xff;
 const FASTBOOT_USB_SUBCLASS = 0x42;
 const FASTBOOT_USB_PROTOCOL = 0x03;
-const BULK_TRANSFER_SIZE = 1048576;
+const BULK_TRANSFER_SIZE = 10048576;
 
 //max support = 33554432 
 
