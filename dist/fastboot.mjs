@@ -8458,17 +8458,17 @@ class FastbootDevice {
      * @returns {Promise<number>}
      * @throws {FastbootError}
      */
-async _getDownloadSize() {
-    try {
-        const resp = (await this.getVariable("max-download-size")).toLowerCase();
-        if (resp) {
-            return Math.min(parseInt(resp, 16), MAX_DOWNLOAD_SIZE);
-        }
-    } catch {
-        /* Use a default size if the device doesn't report max-download-size */
-    }
-    return DEFAULT_DOWNLOAD_SIZE;
-}
+	async _getDownloadSize() {
+	    try {
+	        const resp = (await this.getVariable("max-download-size")).toLowerCase();
+	        if (resp) {
+	            return Math.min(parseInt(resp, 16), MAX_DOWNLOAD_SIZE);
+	        }
+	    } catch {
+	        /* Use a default size if the device doesn't report max-download-size */
+	    }
+	    return DEFAULT_DOWNLOAD_SIZE;
+	}
 
     /**
      * Send a raw data payload to the bootloader.
@@ -8554,73 +8554,73 @@ async _getDownloadSize() {
      * @throws {FastbootError}
      */
 
-async function* splitBlob(blob, chunkSize) {
-    const totalSize = blob.size;
-    let offset = 0;
-
-    while (offset < totalSize) {
-        const chunkEnd = Math.min(offset + chunkSize, totalSize);
-        const chunk = await blob.slice(offset, chunkEnd).arrayBuffer();
-        yield {
-            data: chunk,
-            bytes: chunkEnd - offset,
-        };
-        offset = chunkEnd;
-    }
-}
-
-
+	async function* splitBlob(blob, chunkSize) {
+	    const totalSize = blob.size;
+	    let offset = 0;
 	
-async flashBlob(partition, blob, onProgress = (_progress) => {}) {
-    // Check if partition has a slot
-    if ((await this.getVariable(`has-slot:${partition}`)) === "yes") {
-        partition += "_" + (await this.getVariable("current-slot"));
-    }
-
-    // Get max-download-size from the device
-    const maxDlSize = await this._getDownloadSize();
-
-    // Read the file header and check for sparse format
-    const fileHeader = await blob.slice(0, 28).arrayBuffer(); // Assuming 28-byte header for sparse
-    let totalBytes = blob.size;
-    let isSparse = false;
-
-    try {
-        const sparseHeader = parseFileHeader(fileHeader); // Implement or import parseFileHeader
-        if (sparseHeader !== null) {
-            totalBytes = sparseHeader.blocks * sparseHeader.blockSize;
-            isSparse = true;
-        }
-    } catch {
-        /* Assume it's not sparse if parse fails */
-    }
-
-    // Resize logical partition if necessary
-    if ((await this.getVariable(`is-logical:${partition}`)) === "yes") {
-        await this.runCommand(`resize-logical-partition:${partition}:0`);
-        await this.runCommand(`resize-logical-partition:${partition}:${totalBytes}`);
-    }
-
-    // Convert raw to sparse if the blob is too large and not already sparse
-    if (!isSparse && blob.size > maxDlSize) {
-        blob = await fromRaw(blob); // Implement or import fromRaw for raw-to-sparse conversion
-    }
-
-    // Flash the image in chunks
-    let sentBytes = 0;
-    for await (let split of splitBlob(blob, maxDlSize)) {
-        // Upload the current chunk
-        await this.upload(partition, split.data, (progress) => {
-            onProgress((sentBytes + progress * split.bytes) / totalBytes);
-        });
-
-        // Flash the uploaded chunk
-        await this.runCommand(`flash:${partition}`);
-        sentBytes += split.bytes;
-    }
-
-    logDebug(`Flashed ${partition} in chunks, total bytes: ${sentBytes}`);
-}
+	    while (offset < totalSize) {
+	        const chunkEnd = Math.min(offset + chunkSize, totalSize);
+	        const chunk = await blob.slice(offset, chunkEnd).arrayBuffer();
+	        yield {
+	            data: chunk,
+	            bytes: chunkEnd - offset,
+	        };
+	        offset = chunkEnd;
+	    }
+	}
+	
+	
+		
+	async flashBlob(partition, blob, onProgress = (_progress) => {}) {
+	    // Check if partition has a slot
+	    if ((await this.getVariable(`has-slot:${partition}`)) === "yes") {
+	        partition += "_" + (await this.getVariable("current-slot"));
+	    }
+	
+	    // Get max-download-size from the device
+	    const maxDlSize = await this._getDownloadSize();
+	
+	    // Read the file header and check for sparse format
+	    const fileHeader = await blob.slice(0, 28).arrayBuffer(); // Assuming 28-byte header for sparse
+	    let totalBytes = blob.size;
+	    let isSparse = false;
+	
+	    try {
+	        const sparseHeader = parseFileHeader(fileHeader); // Implement or import parseFileHeader
+	        if (sparseHeader !== null) {
+	            totalBytes = sparseHeader.blocks * sparseHeader.blockSize;
+	            isSparse = true;
+	        }
+	    } catch {
+	        /* Assume it's not sparse if parse fails */
+	    }
+	
+	    // Resize logical partition if necessary
+	    if ((await this.getVariable(`is-logical:${partition}`)) === "yes") {
+	        await this.runCommand(`resize-logical-partition:${partition}:0`);
+	        await this.runCommand(`resize-logical-partition:${partition}:${totalBytes}`);
+	    }
+	
+	    // Convert raw to sparse if the blob is too large and not already sparse
+	    if (!isSparse && blob.size > maxDlSize) {
+	        blob = await fromRaw(blob); // Implement or import fromRaw for raw-to-sparse conversion
+	    }
+	
+	    // Flash the image in chunks
+	    let sentBytes = 0;
+	    for await (let split of splitBlob(blob, maxDlSize)) {
+	        // Upload the current chunk
+	        await this.upload(partition, split.data, (progress) => {
+	            onProgress((sentBytes + progress * split.bytes) / totalBytes);
+	        });
+	
+	        // Flash the uploaded chunk
+	        await this.runCommand(`flash:${partition}`);
+	        sentBytes += split.bytes;
+	    }
+	
+	    logDebug(`Flashed ${partition} in chunks, total bytes: ${sentBytes}`);
+	}
 
 
     /**
