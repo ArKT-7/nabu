@@ -1337,36 +1337,43 @@ async function runRebootCommand(command, successMessage) {
     }
 
     async function flashFormFile(event) {
-        event.preventDefault();
-        showProgressOverlay();
-        let fileField = document.querySelector("#flash-file");
-        let partField = document.querySelector(".flash-partition");
-        let file = fileField.files[0];
+    event.preventDefault();
+    showProgressOverlay();
+    const fileField = document.querySelector("#flash-file");
+    const partField = document.querySelector(".flash-partition");
 
-        if (!file) {
-            alert("Please select a file to flash!");
-            hideProgressOverlay();
-            return;
-        }
+    const file = fileField.files[0];
+    const partition = partField.value;
 
-        if (!partField.value) {
-            alert("Please specify a partition to flash!");
-            hideProgressOverlay();
-            return;
-        }
-
-        try {
-            await device.flashBlob(partField.value, file);
-            alert(`Successfully flashed ${partField.value}`);
-        } catch (error) {
-            alert(`Failed to flash: ${error.message}`);
-        } finally {
-            fileField.value = "";
-            partField.value = "";
-            hideProgressOverlay();
-            await checkDeviceConnection();
-        }
+    if (!file) {
+        alert("Please select a file to flash!");
+        hideProgressOverlay();
+        return;
     }
+
+    if (!partition) {
+        alert("Please specify a partition to flash!");
+        hideProgressOverlay();
+        return;
+    }
+
+    try {
+	resultField.textContent = `\nFlashing ${file.name} to ${partition}\n` + resultField.textContent;
+        await device.flashBlob(partition, file, (progress) => {
+	    resultField.textContent = `\nFlashing progress: ${(progress * 100).toFixed(2)}%\n` + resultField.textContent;
+        });
+        alert(`Successfully flashed ${partition}`);
+    } catch (error) {
+	resultField.textContent = `\nFailed to flash ${partition}:\n` + resultField.textContent;
+        alert(`Failed to flash: ${error.message}`);
+    } finally {
+        fileField.value = "";
+        partField.value = "";
+        hideProgressOverlay();
+        await checkDeviceConnection();
+    }
+}
+
 
 
        async function rbootFlashFormFile(event) {
