@@ -8158,17 +8158,14 @@ async function flashZip(device, blob, wipe, onReconnect, onProgress = (_action, 
 const FASTBOOT_USB_CLASS = 0xff;
 const FASTBOOT_USB_SUBCLASS = 0x42;
 const FASTBOOT_USB_PROTOCOL = 0x03;
-const BULK_TRANSFER_SIZE = 30048576;
+const BULK_TRANSFER_SIZE = 32768; // Increase to 32 KB or higher
 
-//max support = 33554432 
-
-
-//const DEFAULT_DOWNLOAD_SIZE = 512 * 1024 * 1024; // 512 MiB
+const DEFAULT_DOWNLOAD_SIZE = 512 * 1024 * 1024; // 512 MiB
 // To conserve RAM and work around Chromium's ~2 GiB size limit, we limit the
 // max download size even if the bootloader can accept more data.
 //const MAX_DOWNLOAD_SIZE = 1024 * 1024 * 1024; // 1 GiB
 
-const DEFAULT_DOWNLOAD_SIZE = 5 * 1024 * 1024 * 1024; // 5 GiB
+//const DEFAULT_DOWNLOAD_SIZE = 5 * 1024 * 1024 * 1024; // 5 GiB
 const MAX_DOWNLOAD_SIZE = 10 * 1024 * 1024 * 1024; // 10 GiB
 
 const GETVAR_TIMEOUT = 10000; // ms
