@@ -8155,19 +8155,23 @@ async function flashZip(device, blob, wipe, onReconnect, onProgress = (_action, 
     }
 }
 
-
 const FASTBOOT_USB_CLASS = 0xff;
 const FASTBOOT_USB_SUBCLASS = 0x42;
 const FASTBOOT_USB_PROTOCOL = 0x03;
+const BULK_TRANSFER_SIZE = 1048576;
 
-// Set initial and bulk transfer sizes (64 MiB chunk size)
-const BULK_TRANSFER_SIZE = 16 * 1024 * 1024; // 16 MiB (smaller than 32 MiB to ensure compatibility)
+//max support = 33554432 
 
-// Set default and maximum download sizes (5 GB default, 10 GB max)
+
+//const DEFAULT_DOWNLOAD_SIZE = 512 * 1024 * 1024; // 512 MiB
+// To conserve RAM and work around Chromium's ~2 GiB size limit, we limit the
+// max download size even if the bootloader can accept more data.
+//const MAX_DOWNLOAD_SIZE = 1024 * 1024 * 1024; // 1 GiB
+
 const DEFAULT_DOWNLOAD_SIZE = 5 * 1024 * 1024 * 1024; // 5 GiB
 const MAX_DOWNLOAD_SIZE = 10 * 1024 * 1024 * 1024; // 10 GiB
 
-const GETVAR_TIMEOUT = 10000; // Timeout for fetching variables in ms
+const GETVAR_TIMEOUT = 10000; // ms
 /**
  * Exception class for USB errors not directly thrown by WebUSB.
  */
@@ -8482,32 +8486,22 @@ class FastbootDevice {
      * @private
      */
     async _sendRawPayload(buffer, onProgress) {
-    let offset = 0;
-    const totalBytes = buffer.byteLength;
-
-    while (offset < totalBytes) {
-        // Slice a chunk of BULK_TRANSFER_SIZE or less
-        const chunkSize = Math.min(BULK_TRANSFER_SIZE, totalBytes - offset);
-        const chunk = buffer.slice(offset, offset + chunkSize);
-
-        // Log progress for debugging
-        logVerbose(`Sending chunk: ${chunkSize} bytes, offset: ${offset}, remaining: ${totalBytes - offset - chunkSize}`);
-        
-        // Transfer the chunk to the USB device
-        await this.device.transferOut(this.epOut, chunk);
-
-        // Update progress
-        offset += chunkSize;
-        if (onProgress) {
-            onProgress(offset / totalBytes);
+        let i = 0;
+        let remainingBytes = buffer.byteLength;
+        while (remainingBytes > 0) {
+            let chunk = buffer.slice(i * BULK_TRANSFER_SIZE, (i + 1) * BULK_TRANSFER_SIZE);
+            if (i % 1000 === 0) {
+                logVerbose(`  Sending ${chunk.byteLength} bytes to endpoint, ${remainingBytes} remaining, i=${i}`);
+            }
+            if (i % 10 === 0) {
+                onProgress((buffer.byteLength - remainingBytes) / buffer.byteLength);
+            }
+            await this.device.transferOut(this.epOut, chunk);
+            remainingBytes -= chunk.byteLength;
+            i += 1;
         }
-    }
-
-    // Ensure progress shows 100% at the end
-    if (onProgress) {
         onProgress(1.0);
     }
-}
     /**
      * Upload a payload to the bootloader for later use, e.g. flashing.
      * Does not handle raw images, flashing, or splitting.
