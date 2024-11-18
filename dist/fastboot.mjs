@@ -8161,8 +8161,7 @@ const FASTBOOT_USB_SUBCLASS = 0x42;
 const FASTBOOT_USB_PROTOCOL = 0x03;
 
 // Set initial and bulk transfer sizes (64 MiB chunk size)
-const BULK_TRANSFER_SIZE = 32 * 1024 * 1024; // 32 MiB
-
+const BULK_TRANSFER_SIZE = 16 * 1024 * 1024; // 16 MiB (smaller than 32 MiB to ensure compatibility)
 
 // Set default and maximum download sizes (5 GB default, 10 GB max)
 const DEFAULT_DOWNLOAD_SIZE = 5 * 1024 * 1024 * 1024; // 5 GiB
@@ -8483,25 +8482,31 @@ class FastbootDevice {
      * @private
      */
     async _sendRawPayload(buffer, onProgress) {
-    let i = 0;
-    let remainingBytes = buffer.byteLength;
-    while (remainingBytes > 0) {
-        // Direct slice instead of relying on i*BULK_TRANSFER_SIZE
-        let chunkSize = Math.min(remainingBytes, BULK_TRANSFER_SIZE);
-        let chunk = buffer.slice(i * BULK_TRANSFER_SIZE, i * BULK_TRANSFER_SIZE + chunkSize);
+    let offset = 0;
+    const totalBytes = buffer.byteLength;
+
+    while (offset < totalBytes) {
+        // Slice a chunk of BULK_TRANSFER_SIZE or less
+        const chunkSize = Math.min(BULK_TRANSFER_SIZE, totalBytes - offset);
+        const chunk = buffer.slice(offset, offset + chunkSize);
+
+        // Log progress for debugging
+        logVerbose(`Sending chunk: ${chunkSize} bytes, offset: ${offset}, remaining: ${totalBytes - offset - chunkSize}`);
         
-        if (i % 1000 === 0) {
-            logVerbose(`  Sending ${chunk.byteLength} bytes to endpoint, ${remainingBytes} remaining, i=${i}`);
-        }
-        if (i % 10 === 0) {
-            onProgress((buffer.byteLength - remainingBytes) / buffer.byteLength);
-        }
+        // Transfer the chunk to the USB device
         await this.device.transferOut(this.epOut, chunk);
-        
-        remainingBytes -= chunkSize;
-        i += 1;
+
+        // Update progress
+        offset += chunkSize;
+        if (onProgress) {
+            onProgress(offset / totalBytes);
+        }
     }
-    onProgress(1.0);
+
+    // Ensure progress shows 100% at the end
+    if (onProgress) {
+        onProgress(1.0);
+    }
 }
     /**
      * Upload a payload to the bootloader for later use, e.g. flashing.
