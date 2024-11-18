@@ -8158,11 +8158,11 @@ async function flashZip(device, blob, wipe, onReconnect, onProgress = (_action, 
 const FASTBOOT_USB_CLASS = 0xff;
 const FASTBOOT_USB_SUBCLASS = 0x42;
 const FASTBOOT_USB_PROTOCOL = 0x03;
-const BULK_TRANSFER_SIZE = 16384;
+const BULK_TRANSFER_SIZE = 32768; // Increase to 32 KB or higher
 const DEFAULT_DOWNLOAD_SIZE = 512 * 1024 * 1024; // 512 MiB
 // To conserve RAM and work around Chromium's ~2 GiB size limit, we limit the
 // max download size even if the bootloader can accept more data.
-const MAX_DOWNLOAD_SIZE = 1024 * 1024 * 1024; // 1 GiB
+const MAX_DOWNLOAD_SIZE = 10 * 1024 * 1024 * 1024; // 10 GB
 const GETVAR_TIMEOUT = 10000; // ms
 /**
  * Exception class for USB errors not directly thrown by WebUSB.
@@ -8555,53 +8555,64 @@ class FastbootDevice {
      * @param {FlashProgressCallback} onProgress - Callback for flashing progress updates.
      * @throws {FastbootError}
      */
-    async flashBlob(partition, blob, onProgress = (_progress) => { }) {
-        // Use current slot if partition is A/B
-        if ((await this.getVariable(`has-slot:${partition}`)) === "yes") {
-            partition += "_" + (await this.getVariable("current-slot"));
-        }
-        let maxDlSize = await this._getDownloadSize();
-        let fileHeader = await readBlobAsBuffer(blob.slice(0, FILE_HEADER_SIZE));
-        let totalBytes = blob.size;
-        let isSparse = false;
-        try {
-            let sparseHeader = parseFileHeader(fileHeader);
-            if (sparseHeader !== null) {
-                totalBytes = sparseHeader.blocks * sparseHeader.blockSize;
-                isSparse = true;
-            }
-        }
-        catch (error) {
-            // ImageError = invalid, so keep blob.size
-        }
-        // Logical partitions need to be resized before flashing because they're
-        // sized perfectly to the payload.
-        if ((await this.getVariable(`is-logical:${partition}`)) === "yes") {
-            // As per AOSP fastboot, we reset the partition to 0 bytes first
-            // to optimize extent allocation.
-            await this.runCommand(`resize-logical-partition:${partition}:0`);
-            // Set the actual size
-            await this.runCommand(`resize-logical-partition:${partition}:${totalBytes}`);
-        }
-        // Convert image to sparse (for splitting) if it exceeds the size limit
-        if (blob.size > maxDlSize && !isSparse) {
-            logDebug(`${partition} image is raw, converting to sparse`);
-            blob = await fromRaw(blob);
-        }
-        logDebug(`Flashing ${blob.size} bytes to ${partition}, ${maxDlSize} bytes per split`);
-        let splits = 0;
-        let sentBytes = 0;
-        for await (let split of splitBlob(blob, maxDlSize)) {
-            await this.upload(partition, split.data, (progress) => {
-                onProgress((sentBytes + progress * split.bytes) / totalBytes);
-            });
-            logDebug("Flashing payload...");
-            await this.runCommand(`flash:${partition}`);
-            splits += 1;
-            sentBytes += split.bytes;
-        }
-        logDebug(`Flashed ${partition} with ${splits} split(s)`);
+    async flashBlob(partition, blob, onProgress = (_progress) => {}) {
+    // Use current slot if partition is A/B
+    if ((await this.getVariable(`has-slot:${partition}`)) === "yes") {
+        partition += "_" + (await this.getVariable("current-slot"));
     }
+
+    // Determine the maximum allowed download size
+    let maxDlSize = await this._getDownloadSize();
+    let fileHeader = await readBlobAsBuffer(blob.slice(0, FILE_HEADER_SIZE));
+    let totalBytes = blob.size;
+    let isSparse = false;
+
+    try {
+        // Check if the file is sparse by parsing the header
+        let sparseHeader = parseFileHeader(fileHeader);
+        if (sparseHeader !== null) {
+            totalBytes = sparseHeader.blocks * sparseHeader.blockSize;
+            isSparse = true;
+        }
+    } catch (error) {
+        // ImageError = invalid, so keep blob.size
+    }
+
+    // Logical partitions need to be resized before flashing because they're
+    // sized perfectly to the payload.
+    if ((await this.getVariable(`is-logical:${partition}`)) === "yes") {
+        await this.runCommand(`resize-logical-partition:${partition}:${totalBytes}`);
+    }
+
+    // Convert image to sparse if it exceeds the size limit
+    if (blob.size > maxDlSize && !isSparse) {
+        logDebug(`${partition} image is raw, converting to sparse`);
+        blob = await fromRaw(blob);
+    }
+
+    logDebug(`Flashing ${blob.size} bytes to ${partition}, ${maxDlSize} bytes per split`);
+
+    let splits = 0;
+    let sentBytes = 0;
+
+    // Split the blob into chunks and flash each part
+    for await (let split of splitBlob(blob, maxDlSize)) {
+        // Upload each chunk
+        await this.upload(partition, split.data, (progress) => {
+            onProgress((sentBytes + progress * split.bytes) / totalBytes);
+        });
+
+        // Flash the chunk
+        logDebug("Flashing payload...");
+        await this.runCommand(`flash:${partition}`);
+
+        splits += 1;
+        sentBytes += split.bytes;
+    }
+
+    logDebug(`Flashed ${partition} with ${splits} split(s)`);
+}
+
     /**
      * Boot the given Blob on the device.
      * Equivalent to `fastboot boot boot.img`.
