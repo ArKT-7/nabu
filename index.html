@@ -1376,20 +1376,29 @@ async function runRebootCommand(command, successMessage) {
 
 
 
-       async function rbootFlashFormFile(event) {
-    event.preventDefault();
+  async function rbootFlashFormFile(event) {
+    event.preventDefault(); // Prevent form submission
     rbootShowProgressOverlay();
-           showProgressOverlay();
+    showProgressOverlay(); // Display progress overlay
 
-    let fileField = document.querySelector(".rboot-flash-file");
-    let partField = document.querySelector(".rboot-flash-partition"); 
-    let selectedImage = document.querySelector(".rboot-flash-image").value;
+    const fileField = document.querySelector(".rboot-flash-file");
+    const partField = document.querySelector(".rboot-flash-partition");
+    const selectedImage = document.querySelector(".rboot-flash-image").value;
 
     let file;
+
+    // Determine if a file is selected or needs to be downloaded
     if (fileField.files.length > 0) {
         file = fileField.files[0];
     } else if (selectedImage) {
-        file = await rbootDownloadFlashImage(rbootGetImagePath(selectedImage));
+        try {
+            file = await rbootDownloadFlashImage(rbootGetImagePath(selectedImage));
+        } catch (error) {
+            alert(`Error downloading image: ${error.message}`);
+            rbootHideProgressOverlay();
+            hideProgressOverlay();
+            return;
+        }
     } else {
         alert("Please select a file to flash or choose a predefined image!");
         rbootHideProgressOverlay();
@@ -1397,7 +1406,8 @@ async function runRebootCommand(command, successMessage) {
         return;
     }
 
-    if (!file || !partField.value) {
+    // Validate file and partition inputs
+    if (!file || !partField.value.trim()) {
         alert("Please select a valid file and partition!");
         rbootHideProgressOverlay();
         hideProgressOverlay();
@@ -1405,17 +1415,28 @@ async function runRebootCommand(command, successMessage) {
     }
 
     try {
-        await device.flashBlob(partField.value, file);
+        // Notify user of ongoing process
+        alert(`Flashing to ${partField.value}. Please do not disconnect the device.`);
+
+        // Flash the file to the specified partition
+        await device.flashBlob(partField.value, file, (progress) => {
+            const percentage = Math.round(progress * 100);
+            updateProgressOverlay(`Flashing... ${percentage}% complete`); // Update progress UI
+        });
+
         alert(`Successfully flashed to ${partField.value}`);
     } catch (error) {
+        console.error("Flashing error:", error); // Log the error for debugging
         alert(`Failed to flash: ${error.message}`);
     } finally {
+        // Clean up the UI and reset fields
         fileField.value = "";
         rbootHideProgressOverlay();
         hideProgressOverlay();
-        await checkDeviceConnection();
+        await checkDeviceConnection(); // Check if the device is still connected
     }
 }
+
 
 
 function rbootGetImagePath(selectedImage) {
