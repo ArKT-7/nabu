@@ -833,6 +833,7 @@
 <script type="module">
     import * as fastboot from "../dist/fastboot.mjs";
     import { BlobStore } from "../download.js";
+
     let device = new fastboot.FastbootDevice();
     window.device = device;
     let blobStore = new BlobStore();
@@ -964,22 +965,20 @@ function hideProgressOverlay() {
     progressMessage.textContent = ''; 
 }
 
-
 function toggleElements(disable, isNabu = false) {
     const formElements = document.querySelectorAll("input, button, select");
     const wipeButton = document.querySelector(".wipe-button");
-	wipeButton.disabled = true;
+    wipeButton.disabled = true;
     formElements.forEach((element) => {
         if (!element.classList.contains('connect-button') && !element.closest('.switchx')) {
             element.disabled = disable; // General enable/disable logic
         }
     });
-     
+
     // Specifically disable the select elements if nabu device is detected
     if (isNabu) {
         const rbootFlashSelect = document.querySelector(".rboot-flash-image");
         const bootTypeSelect = document.querySelector(".boot-type");
-	
 
         if (rbootFlashSelect) {
             rbootFlashSelect.disabled = true; // Disable rboot-flash-image select
@@ -1036,9 +1035,11 @@ async function connectDevice() {
     let userdata_chk = await device.getVariable("partition-type:userdata");
     let win_chk = await device.getVariable("partition-type:win");
     let esp_chk = await device.getVariable("partition-type:esp"); 
+    let linux_chk = await device.getVariable("partition-type:linux"); 
     let userdata_size = await device.getVariable("partition-size:userdata");
     let win_size = await device.getVariable("partition-size:win");
     let esp_size = await device.getVariable("partition-size:esp");
+    let linux_size = await device.getVariable("partition-size:linux"); 
     let bootloaderStatusText = bootloaderStatus === "yes" ? "unlocked" : "locked";
 
     let deviceName = "";
@@ -1078,6 +1079,9 @@ async function connectDevice() {
 	let sizeInfo = ''; // Initialize a variable to collect size info
 	if (await checkPartition("userdata", userdata_chk, userdata_size)) {
 	    sizeInfo += `<p style="margin: 0; margin-top: 5px;">Android Partition : ${getSizeString(userdata_size)}</p>`;
+	}
+	if (await checkPartition("linux", linux_chk, linux_size)) {
+	    sizeInfo += `<p style="margin: 0; margin-bottom: 0px;">Linux Partition : ${getSizeString(linux_size)}</p>`;
 	}
 	if (await checkPartition("win", win_chk, win_size)) {
 	    sizeInfo += `<p style="margin: 0; margin-bottom: 0px;">Windows Partition : ${getSizeString(win_size)}</p>`;
@@ -1121,6 +1125,8 @@ async function connectDevice() {
 	// }
 	
 	toggleElements(true); 
+	
+
 
 
     function handleDisconnect() {
@@ -1130,8 +1136,8 @@ async function connectDevice() {
     }
 
 async function checkDeviceConnection() {
-	const wipeButton = document.querySelector(".wipe-button");
-	wipeButton.disabled = true;
+    const wipeButton = document.querySelector(".wipe-button");
+     wipeButton.disabled = true;
     let statusField = document.querySelector(".status-field");
 
     try {
@@ -1145,7 +1151,7 @@ async function checkDeviceConnection() {
     clearFormElements();
 }
 
-async function sendFormCommand(event) {
+   async function sendFormCommand(event) {
     event.preventDefault();
     let inputField = document.querySelector(".command-input");
     let command = inputField.value.trim();
@@ -1229,6 +1235,7 @@ async function runRebootCommand(command, successMessage) {
         await checkDeviceConnection();
     }
 }
+
 
     async function bootFormFile(event) {
         event.preventDefault();
@@ -1402,7 +1409,7 @@ async function runRebootCommand(command, successMessage) {
 
 function rbootGetImagePath(selectedImage) {
     switch (selectedImage) {
-         // HyperOS GLOBAL Versions
+        // HyperOS GLOBAL Versions
 	case "magisk-1-0-6-global":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.6.0.TKXMIXM.GLOBAL.boot.img";
 	case "magisk-1-0-5-global":
@@ -1693,6 +1700,7 @@ function rbootHideProgressOverlay() {
 }
 
 
+
 // Function to handle input and enable the wipe button
 function handleWipeInput(event) {
     const wipeButton = document.querySelector(".wipe-button");
@@ -1708,6 +1716,7 @@ function handleWipeInput(event) {
 	warningMessage.style.fontStyle = "italic"; 
     }
 }
+
 
 async function wipeDownloadFile(url) {
     try {
@@ -1779,7 +1788,7 @@ async function wipepart() {
 }
 
 
-	// Main function to handle vbmeta disable
+		// Main function to handle vbmeta disable
 async function vbmeta_disable() {  
     // Show confirmation dialog
     const userConfirmedvb = confirm("⚠️ This will disable you vbmeta verificationa and only for Xiaomi pad 5, Do you want to continue?");
@@ -1836,12 +1845,13 @@ async function vbmeta_system_disable() {
     }
 }
 
+
     document.querySelector(".wipe-input").addEventListener("input", handleWipeInput);
     document.querySelector(".wipe-button").addEventListener("click", wipepart);
     document.querySelector(".wipe-form").addEventListener("submit", function(event) {
 	event.preventDefault(); 
     });
-	
+
     document.querySelector(".vbmeta-button").addEventListener("click", vbmeta_disable);
     document.querySelector(".vbmeta-system-button").addEventListener("click", vbmeta_system_disable);
 
@@ -1915,7 +1925,6 @@ async function vbmeta_system_disable() {
         }
 	
 	document.querySelector(".rickroll-button").addEventListener("click", playMusic);
-
 	
 
     document.querySelector(".connect-button").addEventListener("click", connectDevice);
@@ -1929,7 +1938,6 @@ async function vbmeta_system_disable() {
     document.querySelector(".boot-form").addEventListener("submit", bootFormFile);
     document.querySelector(".flash-form").addEventListener("submit", flashFormFile);
     document.querySelector(".rboot-flash-form").addEventListener("submit", rbootFlashFormFile);
-
 </script>
 </body>
 </html>
