@@ -8611,7 +8611,7 @@ class FastbootDevice {
     }
 
     logDebug(`Flashed ${partition} with ${splits} split(s)`);
-}
+    }
 
     /**
      * Boot the given Blob on the device.
