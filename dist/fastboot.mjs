@@ -8158,7 +8158,7 @@ async function flashZip(device, blob, wipe, onReconnect, onProgress = (_action, 
 const FASTBOOT_USB_CLASS = 0xff;
 const FASTBOOT_USB_SUBCLASS = 0x42;
 const FASTBOOT_USB_PROTOCOL = 0x03;
-const BULK_TRANSFER_SIZE = 16384;
+const BULK_TRANSFER_SIZE = 1638400;
 const DEFAULT_DOWNLOAD_SIZE = 512 * 1024 * 1024; // 512 MiB
 // To conserve RAM and work around Chromium's ~2 GiB size limit, we limit the
 // max download size even if the bootloader can accept more data.
@@ -8458,20 +8458,32 @@ class FastbootDevice {
      * @returns {Promise<number>}
      * @throws {FastbootError}
      */
-    async _getDownloadSize() {
-        try {
-            let resp = (await this.getVariable("max-download-size")).toLowerCase();
-            if (resp) {
-                // AOSP fastboot requires hex
-                return Math.min(parseInt(resp, 16), MAX_DOWNLOAD_SIZE);
-            }
-        }
-        catch (error) {
-            /* Failed = no value, fallthrough */
-        }
-        // FAIL or empty variable means no max, set a reasonable limit to conserve memory
-        return DEFAULT_DOWNLOAD_SIZE;
-    }
+	async _getDownloadSize() {
+	    try {
+	        let resp = (await this.getVariable("max-download-size")).toLowerCase();
+	        if (resp) {
+	            let downloadSize;
+	
+	            // Check if the response is a valid hexadecimal
+	            if (/^0x[0-9a-f]+$/i.test(resp)) {
+	                downloadSize = parseInt(resp, 16); // Parse as hexadecimal
+	            } else if (/^\d+$/.test(resp)) {
+	                downloadSize = parseInt(resp, 10); // Parse as decimal (bytes)
+	            } else {
+	                throw new Error("Invalid max-download-size format");
+	            }
+	
+	            // Ensure the download size doesn't exceed the maximum allowed size
+	            return Math.min(downloadSize, MAX_DOWNLOAD_SIZE);
+	        }
+	    } catch (error) {
+	        console.warn("Failed to get download size, using default:", error);
+	    }
+	
+	    // Fallback to a default size if parsing fails or the value is unavailable
+	    return DEFAULT_DOWNLOAD_SIZE;
+	}
+
     /**
      * Send a raw data payload to the bootloader.
      *
