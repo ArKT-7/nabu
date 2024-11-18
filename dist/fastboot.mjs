@@ -8459,19 +8459,20 @@ class FastbootDevice {
      * @throws {FastbootError}
      */
     async _getDownloadSize() {
-        try {
-            let resp = (await this.getVariable("max-download-size")).toLowerCase();
-            if (resp) {
-                // AOSP fastboot requires hex
-                return Math.min(parseInt(resp, 16), MAX_DOWNLOAD_SIZE);
-            }
+    try {
+        let resp = (await this.getVariable("max-download-size")).toLowerCase();
+        if (resp) {
+            // Detect if the response is in hexadecimal format
+            let isHex = /^[0-9a-f]+$/i.test(resp); 
+            let size = isHex ? parseInt(resp, 16) : parseInt(resp, 10);
+            return Math.min(size, MAX_DOWNLOAD_SIZE);
         }
-        catch (error) {
-            /* Failed = no value, fallthrough */
-        }
-        // FAIL or empty variable means no max, set a reasonable limit to conserve memory
-        return DEFAULT_DOWNLOAD_SIZE;
+    } catch (error) {
+        /* Failed = no value, fallthrough */
     }
+    // FAIL or empty variable means no max, set a reasonable limit to conserve memory
+    return DEFAULT_DOWNLOAD_SIZE;
+}
     /**
      * Send a raw data payload to the bootloader.
      *
