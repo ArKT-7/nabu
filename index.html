@@ -837,6 +837,9 @@
 <script type="module">
     import * as fastboot from "./dist/fastboot.mjs";
     import { BlobStore } from "./download.js";
+<script type="module">
+    import * as fastboot from "../dist/fastboot.mjs";
+    import { BlobStore } from "../download.js";
 
     let device = new fastboot.FastbootDevice();
     window.device = device;
@@ -854,7 +857,7 @@
             const toggleInput = document.getElementById('toggle-input');
 
             setTimeout(() => {
-                window.location.href = "https://arkt-7.github.io/nabu/light/"; 
+                window.location.href = "https://arkt-7.github.io/nabu/"; 
             }, 400);
         }
 
@@ -1337,68 +1340,52 @@ async function runRebootCommand(command, successMessage) {
     }
 
     async function flashFormFile(event) {
-    event.preventDefault();
-    showProgressOverlay();
-    const fileField = document.querySelector("#flash-file");
-    const partField = document.querySelector(".flash-partition");
+        event.preventDefault();
+        showProgressOverlay();
+        let fileField = document.querySelector("#flash-file");
+        let partField = document.querySelector(".flash-partition");
+        let file = fileField.files[0];
 
-    const file = fileField.files[0];
-    const partition = partField.value;
-
-    if (!file) {
-        alert("Please select a file to flash!");
-        hideProgressOverlay();
-        return;
-    }
-
-    if (!partition) {
-        alert("Please specify a partition to flash!");
-        hideProgressOverlay();
-        return;
-    }
-
-    try {
-	resultField.textContent = `\nFlashing ${file.name} to ${partition}\n` + resultField.textContent;
-        await device.flashBlob(partition, file, (progress) => {
-	    resultField.textContent = `\nFlashing progress: ${(progress * 100).toFixed(2)}%\n` + resultField.textContent;
-        });
-        alert(`Successfully flashed ${partition}`);
-    } catch (error) {
-	resultField.textContent = `\nFailed to flash ${partition}:\n` + resultField.textContent;
-        alert(`Failed to flash: ${error.message}`);
-    } finally {
-        fileField.value = "";
-        partField.value = "";
-        hideProgressOverlay();
-        await checkDeviceConnection();
-    }
-}
-
-
-
-  async function rbootFlashFormFile(event) {
-    event.preventDefault(); // Prevent form submission
-    rbootShowProgressOverlay();
-    showProgressOverlay(); // Display progress overlay
-
-    const fileField = document.querySelector(".rboot-flash-file");
-    const partField = document.querySelector(".rboot-flash-partition");
-    const selectedImage = document.querySelector(".rboot-flash-image").value;
-
-    let file;
-
-    // Determine if a file is selected or needs to be downloaded
-    if (fileField.files.length > 0) {
-        file = fileField.files[0];
-    } else if (selectedImage) {
-        try {
-            file = await rbootDownloadFlashImage(rbootGetImagePath(selectedImage));
-        } catch (error) {
-            alert(`Error downloading image: ${error.message}`);
-            rbootHideProgressOverlay();
+        if (!file) {
+            alert("Please select a file to flash!");
             hideProgressOverlay();
             return;
         }
+
+        if (!partField.value) {
+            alert("Please specify a partition to flash!");
+            hideProgressOverlay();
+            return;
+        }
+
+        try {
+            await device.flashBlob(partField.value, file);
+            alert(`Successfully flashed ${partField.value}`);
+        } catch (error) {
+            alert(`Failed to flash: ${error.message}`);
+        } finally {
+            fileField.value = "";
+            partField.value = "";
+            hideProgressOverlay();
+            await checkDeviceConnection();
+        }
+    }
+
+
+       async function rbootFlashFormFile(event) {
+    event.preventDefault();
+    rbootShowProgressOverlay();
+           showProgressOverlay();
+
+    let fileField = document.querySelector(".rboot-flash-file");
+    let partField = document.querySelector(".rboot-flash-partition"); 
+    let selectedImage = document.querySelector(".rboot-flash-image").value;
+
+    let file;
+    if (fileField.files.length > 0) {
+        file = fileField.files[0];
+    } else if (selectedImage) {
+        file = await rbootDownloadFlashImage(rbootGetImagePath(selectedImage));
     } else {
         alert("Please select a file to flash or choose a predefined image!");
         rbootHideProgressOverlay();
@@ -1406,8 +1393,7 @@ async function runRebootCommand(command, successMessage) {
         return;
     }
 
-    // Validate file and partition inputs
-    if (!file || !partField.value.trim()) {
+    if (!file || !partField.value) {
         alert("Please select a valid file and partition!");
         rbootHideProgressOverlay();
         hideProgressOverlay();
@@ -1415,28 +1401,17 @@ async function runRebootCommand(command, successMessage) {
     }
 
     try {
-        // Notify user of ongoing process
-        alert(`Flashing to ${partField.value}. Please do not disconnect the device.`);
-
-        // Flash the file to the specified partition
-        await device.flashBlob(partField.value, file, (progress) => {
-            const percentage = Math.round(progress * 100);
-            updateProgressOverlay(`Flashing... ${percentage}% complete`); // Update progress UI
-        });
-
+        await device.flashBlob(partField.value, file);
         alert(`Successfully flashed to ${partField.value}`);
     } catch (error) {
-        console.error("Flashing error:", error); // Log the error for debugging
         alert(`Failed to flash: ${error.message}`);
     } finally {
-        // Clean up the UI and reset fields
         fileField.value = "";
         rbootHideProgressOverlay();
         hideProgressOverlay();
-        await checkDeviceConnection(); // Check if the device is still connected
+        await checkDeviceConnection();
     }
 }
-
 
 
 function rbootGetImagePath(selectedImage) {
