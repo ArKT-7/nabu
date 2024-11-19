@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
     <script src="../dist/fastboot.mjs" type="module"></script>
     <script src="../download.js" type="module"></script>
     <meta property="og:title" content="Fastboot Tool by ArKT" />
@@ -347,6 +346,8 @@
 	pre.result-field::-webkit-scrollbar-thumb:hover {
 	    background: rgba(0, 0, 0, 0.7);
 	}
+
+
 		
 	#progress-overlay {
 	    position: fixed;
@@ -540,6 +541,7 @@
             border-radius: 50%;
             transition: transform 0.2s ease, opacity 2s ease;
         }
+
 
 </style>
 </head>
@@ -782,18 +784,22 @@
 	</form>
     </div>
 	
-    <div class="container">
-    <form class="flash-form" onsubmit="flashFormFile(event)">
-        <label for="flash-file">Flash any images</label>
-        <input type="file" name="flash-file" id="flash-file" accept=".img,.bin" />
-        
-        <label for="flash-partition">Enter Partition</label>
-        <input type="text" name="flash-partition" class="flash-partition" 
-               placeholder="Partition like - boot, dtbo, super, vendor_boot, recovery, etc." />
-        
-        <input type="submit" value="Flash" class="button" />
-    </form>
-</div>
+	<div class="container">
+	    <form class="flash-form" onsubmit="flashFormFile(event)">
+	        <label for="flash-file">Flash any images</label>
+	        <input type="file" name="flash-file" id="flash-file" accept=".img,.bin" />
+	        
+	        <label for="flash-partition">Enter Partition</label>
+	        <input type="text" name="flash-partition" class="flash-partition" 
+	               placeholder="Partition like - boot, dtbo, super, vendor_boot, recovery, etc." />
+	        
+	        <input type="submit" value="Flash" class="button" />
+	    </form>
+	    
+	    <label for="log-output">Logs:</label>
+	    <!-- Replace <textarea> with <pre> -->
+	    <pre id="log-output" class="result-field"></pre>
+	</div>
 
 
 	<div class="container">
@@ -872,6 +878,7 @@
             toggleInput.checked = false;
         };
 
+	
 	   
 let messageInterval;
 let typingInterval; 
@@ -1336,7 +1343,22 @@ async function runRebootCommand(command, successMessage) {
         }
     }
 
-    async function flashFormFile(event) {
+		// Function for typing animation
+function typeAnimation(element, text, delay = 50) {
+    element.value = ""; // Clear the input box
+    let i = 0;
+
+    const typeInterval = setInterval(() => {
+        element.value += text[i];
+        i++;
+        if (i === text.length) {
+            clearInterval(typeInterval);
+        }
+    }, delay);
+}
+
+// Update `flashFormFile` to include logging
+async function flashFormFile(event) {
     event.preventDefault();
     showProgressOverlay();
 
@@ -1357,7 +1379,8 @@ async function runRebootCommand(command, successMessage) {
     }
 
     try {
-        await device.flashBlob(partField.value, file);
+        await device.flashBlob(partField.value, file, (progress) => {
+        });
         alert(`Successfully flashed ${partField.value}`);
     } catch (error) {
         alert(`Failed to flash: ${error.message}`);
@@ -1367,20 +1390,6 @@ async function runRebootCommand(command, successMessage) {
         hideProgressOverlay();
         await checkDeviceConnection();
     }
-}
-
-// Function for typing animation
-function typeAnimation(element, text, delay = 50) {
-    element.value = ""; // Clear the input box
-    let i = 0;
-
-    const typeInterval = setInterval(() => {
-        element.value += text[i];
-        i++;
-        if (i === text.length) {
-            clearInterval(typeInterval);
-        }
-    }, delay);
 }
 
 // Add event listener for file selection
@@ -1397,8 +1406,13 @@ document.querySelector("#flash-file").addEventListener("change", function () {
     const fileMapping = {
         "boot.img": "boot",
         "dtbo.img": "dtbo",
+	"odm.img": "odm",
+	"product.img": "product",
+	"system.img": "system",
+	"system_ext.img": "system_ext",
         "vbmeta.img": "vbmeta",
         "vbmeta_system.img": "vbmeta_system",
+	"vendor.img": "vendor",
         "vendor_boot.img": "vendor_boot",
         "super.img": "super"
     };
