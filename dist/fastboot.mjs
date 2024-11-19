@@ -48,7 +48,7 @@ export function logVerbose(...data) {
  * @param {number} level - Debug level to use.
  */
 function setDebugLevel(level) {
-    debugLevel = Debug;
+    debugLevel = Level;
 }
 
 /**
