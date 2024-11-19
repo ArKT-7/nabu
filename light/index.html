@@ -1427,10 +1427,10 @@ document.querySelector("#flash-file").addEventListener("change", function () {
 
 
 
-       async function rbootFlashFormFile(event) {
+ async function rbootFlashFormFile(event) {
     event.preventDefault();
     rbootShowProgressOverlay();
-           showProgressOverlay();
+    showProgressOverlay();
 
     let fileField = document.querySelector(".rboot-flash-file");
     let partField = document.querySelector(".rboot-flash-partition"); 
@@ -1456,8 +1456,21 @@ document.querySelector("#flash-file").addEventListener("change", function () {
     }
 
     try {
-        await device.flashBlob(partField.value, file);
-        alert(`Successfully flashed to ${partField.value}`);
+        const selectedPartition = partField.value;
+
+        if (selectedPartition === "boot_ab") {
+            // Flash to Boot_A
+            await device.flashBlob("boot_a", file);
+            alert("Successfully flashed to Boot A");
+
+            // Flash to Boot_B
+            await device.flashBlob("boot_b", file);
+            alert("Successfully flashed to Boot B");
+        } else {
+            // Flash to selected partition
+            await device.flashBlob(selectedPartition, file);
+            alert(`Successfully flashed to ${selectedPartition}`);
+        }
     } catch (error) {
         alert(`Failed to flash: ${error.message}`);
     } finally {
@@ -1467,6 +1480,7 @@ document.querySelector("#flash-file").addEventListener("change", function () {
         await checkDeviceConnection();
     }
 }
+
 
 
 function rbootGetImagePath(selectedImage) {
