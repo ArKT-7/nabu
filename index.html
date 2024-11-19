@@ -981,7 +981,7 @@ function toggleElements(disable, isNabu = false) {
     const wipeButton = document.querySelector(".wipe-button");
     wipeButton.disabled = true;
     formElements.forEach((element) => {
-        if (!element.classList.contains('connect-button') && !element.classList.contains('download-log-button') && !element.closest('.switchx')) {
+        if (!element.classList.contains('connect-button') && !element.classList.contains('.download-log-button') && !element.closest('.switchx')) {
             element.disabled = disable; // General enable/disable logic
         }
     });
