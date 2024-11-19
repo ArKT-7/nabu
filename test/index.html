@@ -1403,34 +1403,6 @@ async function flashFormFile(event) {
     }
 }
 
-// Extend logging in other functions if needed
-async function checkDeviceConnection() {
-    try {
-        logMessage("Checking device connection...");
-        if (await device.isConnected) {
-            logMessage("Device is connected.");
-        } else {
-            logMessage("Device not connected.");
-        }
-    } catch (error) {
-        logMessage(`Error checking connection: ${error.message}`);
-    }
-}
-
-// Function for typing animation
-function typeAnimation(element, text, delay = 50) {
-    element.value = ""; // Clear the input box
-    let i = 0;
-
-    const typeInterval = setInterval(() => {
-        element.value += text[i];
-        i++;
-        if (i === text.length) {
-            clearInterval(typeInterval);
-        }
-    }, delay);
-}
-
 // Add event listener for file selection
 document.querySelector("#flash-file").addEventListener("change", function () {
     const fileField = document.querySelector("#flash-file");
