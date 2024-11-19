@@ -12,8 +12,8 @@ let debugLevel = DebugLevel.Silent; // Default debug level
 function logToHtml(message) {
     const logOutput = document.querySelector("#log-output");
     if (logOutput) {
-        logOutput.textContent += message + "\n";
-        logOutput.scrollTop = logOutput.scrollHeight;
+        logOutput.value += message + "\n"; // Append message
+        logOutput.scrollTop = logOutput.scrollHeight; // Auto-scroll
     }
 }
 
@@ -47,7 +47,6 @@ export function logVerbose(...data) {
 function setDebugLevel(level) {
     debugLevel = level;
 }
-
 /**
  * Reads all of the data in the given blob and returns it as an ArrayBuffer.
  *
