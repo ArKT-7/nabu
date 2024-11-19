@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
     <script src="dist/fastboot.mjs" type="module"></script>
     <script src="download.js" type="module"></script>
     <meta property="og:title" content="Fastboot Tool by ArKT" />
@@ -982,7 +981,7 @@ function toggleElements(disable, isNabu = false) {
     const wipeButton = document.querySelector(".wipe-button");
     wipeButton.disabled = true;
     formElements.forEach((element) => {
-        if (!element.classList.contains('connect-button') && !element.closest('.switchx')) {
+        if (!element.classList.contains('connect-button') && !element.classList.contains('download-log-button') && !element.closest('.switchx')) {
             element.disabled = disable; // General enable/disable logic
         }
     });
