@@ -1,38 +1,39 @@
+// Debug level enum
 var DebugLevel;
 (function (DebugLevel) {
     DebugLevel[DebugLevel["Silent"] = 0] = "Silent";
     DebugLevel[DebugLevel["Debug"] = 1] = "Debug";
     DebugLevel[DebugLevel["Verbose"] = 2] = "Verbose";
 })(DebugLevel || (DebugLevel = {}));
-let debugLevel = DebugLevel.Silent;
 
-// Append logs to the HTML textarea
+let debugLevel = DebugLevel.Silent; // Default debug level
+
+// Function to log messages to the HTML textarea
 function logToHtml(message) {
     const logOutput = document.querySelector("#log-output");
     if (logOutput) {
-        logOutput.value += message + "\n"; // Append the message
-        logOutput.scrollTop = logOutput.scrollHeight; // Auto-scroll to the bottom
+        logOutput.value += message + "\n"; // Append message
+        logOutput.scrollTop = logOutput.scrollHeight; // Auto-scroll
     }
 }
 
 // Debug-level logging
 export function logDebug(...data) {
-    if (debugLevel >= 1) {
+    if (debugLevel >= DebugLevel.Debug) {
         const message = data.join(" ");
-        console.log(message); // Log to the browser console
-        logToHtml(message);   // Log to the HTML textarea
+        console.log(message); // Console log
+        logToHtml(message);   // HTML log
     }
 }
 
 // Verbose-level logging
 export function logVerbose(...data) {
-    if (debugLevel >= 2) {
+    if (debugLevel >= DebugLevel.Verbose) {
         const message = data.join(" ");
-        console.log(message); // Log to the browser console
-        logToHtml(message);   // Log to the HTML textarea
+        console.log(message); // Console log
+        logToHtml(message);   // HTML log
     }
 }
-
 
 /**
  * Change the debug level for the fastboot client:
