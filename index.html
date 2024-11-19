@@ -799,9 +799,9 @@
 	    </form>
 	    
 	    <label for="log-output">Logs:</label>
-	    <!-- Replace <textarea> with <pre> -->
 	    <pre id="log-output" class="result-field"></pre>
-	</div>
+    <button class="button" id="download-log-button">Download Logs</button>
+</div>
 
 
 	<div class="container">
@@ -879,7 +879,8 @@
         };
 
 	
-	   
+
+	
 let messageInterval;
 let typingInterval; 
 let clearingInterval; 
@@ -1401,9 +1402,9 @@ document.querySelector("#flash-file").addEventListener("change", function () {
 
     const file = fileField.files[0];
     const fileName = file.name;
-
-    // Mapping of file names to partition names
-   	 const fileMapping = {
+	
+	// Mapping of file names to partition names
+	const fileMapping = {
 	    "boot.img": "boot_ab",
 	    "ksu_boot.img": "boot_ab",
 	    "magisk_boot.img": "boot_ab",
@@ -1443,6 +1444,7 @@ document.querySelector("#flash-file").addEventListener("change", function () {
 	    "misc.img": "misc"
 	};
 
+
     // Check if the file matches a known partition
     const matchedPartition = fileMapping[fileName.toLowerCase()];
     if (matchedPartition) {
@@ -1453,7 +1455,7 @@ document.querySelector("#flash-file").addEventListener("change", function () {
 
 
 
-     async function rbootFlashFormFile(event) {
+ async function rbootFlashFormFile(event) {
     event.preventDefault();
     rbootShowProgressOverlay();
     showProgressOverlay();
@@ -1506,6 +1508,7 @@ document.querySelector("#flash-file").addEventListener("change", function () {
         await checkDeviceConnection();
     }
 }
+
 
 
 function rbootGetImagePath(selectedImage) {
@@ -2027,7 +2030,24 @@ async function vbmeta_system_disable() {
 	
 	document.querySelector(".rickroll-button").addEventListener("click", playMusic);
 	
+	document.getElementById('download-log-button').addEventListener('click', function () {
+        const logOutput = document.getElementById('log-output').textContent.trim(); // Get log content
+        if (logOutput === "") {
+            alert("Log is empty LOL. Nothing to download! 😂");
+            return;
+        }
+        const blob = new Blob([logOutput], { type: 'text/plain' }); // Create a Blob object
+        const url = URL.createObjectURL(blob); // Create a URL for the Blob
+        const a = document.createElement('a'); // Create an anchor element
+        a.href = url;
+        a.download = 'arkt_fastboot_tool.txt'; // Set the file name
+        document.body.appendChild(a); // Append the anchor to the body
+        a.click(); // Trigger the download
+        document.body.removeChild(a); // Remove the anchor
+        URL.revokeObjectURL(url); // Revoke the URL to free resources
+    });
 
+	
     document.querySelector(".connect-button").addEventListener("click", connectDevice);
     document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
     document.querySelector(".reboot-button").addEventListener("click", rebootDevice);
