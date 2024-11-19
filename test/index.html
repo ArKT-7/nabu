@@ -785,21 +785,38 @@
     </div>
 	
 	<div class="container">
-	    <form class="flash-form" onsubmit="flashFormFile(event)">
-	        <label for="flash-file">Flash any images/Complete ROM 💀</label>
-	        <input type="file" name="flash-file" id="flash-file" accept=".img,.bin,.elf,.mbn" />
-	        
-	        <label for="flash-partition">Enter Partition</label>
-	        <input type="text" name="flash-partition" class="flash-partition" 
-	               placeholder="Partition like - boot, dtbo, super, vendor_boot, recovery, etc." />
-	        
-	        <input type="submit" value="Flash" class="button" />
-	    </form>
-	    
-	    <label for="log-output">Logs:</label>
-	    <pre id="log-output" class="result-field"></pre>
-    <button class="button download-log-button">Download Logs</button>
+    <!-- File Selection Form -->
+    <form class="flash-form" onsubmit="event.preventDefault();">
+        <label for="flash-file">Select Images to Flash</label>
+        <input type="file" name="flash-file" id="flash-file" accept=".img,.bin,.elf,.mbn" multiple />
+        <button type="button" class="button" onclick="processSelectedFiles()">Process Selected Files</button>
+    </form>
+    
+    <!-- File Display Table -->
+    <div id="file-table-container">
+        <table id="file-table" border="1">
+            <thead>
+                <tr>
+                    <th>File Name</th>
+                    <th>Partition</th>
+                    <th>Size (KB)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Rows will be dynamically added here -->
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Flash All Button -->
+    <button class="button" id="flash-all" onclick="flashAllFiles()">Flash All Matched Files</button>
+    
+    <!-- Logs Section -->
+    <label for="log-output">Logs:</label>
+    <pre id="log-output" class="result-field"></pre>
+    <button class="button download-log-button" onclick="downloadLogs()">Download Logs</button>
 </div>
+
 
 	<div class="container">
 	    <form class="wipe-form">
@@ -1343,114 +1360,129 @@ async function runRebootCommand(command, successMessage) {
         }
     }
 
-		// Function for typing animation
-function typeAnimation(element, text, delay = 50) {
-    element.value = ""; // Clear the input box
-    let i = 0;
+// Mapping of file names to partitions
+const fileMapping = {
+    "boot.img": "boot_ab",
+    "ksu_boot.img": "boot_ab",
+    "magisk_boot.img": "boot_ab",
+    "dtbo.img": "dtbo_ab",
+    "ksu_dtbo.img": "dtbo_ab",
+    "odm.img": "odm",
+    "product.img": "product",
+    "system.img": "system",
+    "system_ext.img": "system_ext",
+    "vbmeta.img": "vbmeta_ab",
+    "vbmeta_system.img": "vbmeta_system_ab",
+    "vendor.img": "vendor",
+    "vendor_boot.img": "vendor_boot_ab",
+    "super.img": "super",
+    "xbl.elf": "xbl_ab",
+    "xbl_config.elf": "xbl_config_ab",
+    "abl.elf": "abl_ab",
+    "tz.mbn": "tz_ab",
+    "hyp.mbn": "hyp_ab",
+    "devcfg.mbn": "devcfg_ab",
+    "storsec.mbn": "storsec",
+    "BTFM.bin": "bluetooth_ab",
+    "cmnlib.mbn": "cmnlib_ab",
+    "cmnlib64.mbn": "cmnlib64_ab",
+    "NON-HLOS.bin": "modem_ab",
+    "dspso.bin": "dsp_ab",
+    "km41.mbn": "keymaster_ab",
+    "aop.mbn": "aop_ab",
+    "qupv3fw.elf": "qupfw_ab",
+    "imagefv.elf": "imagefv_ab",
+    "uefi_sec.mbn": "uefisecapp_ab",
+    "multi_image.mbn": "multiimgoem_ab",
+    "metadata.img": "metadata",
+    "userdata.img": "userdata",
+    "rescue.img": "rescue",
+    "cust.img": "cust",
+    "misc.img": "misc"
+};
 
-    const typeInterval = setInterval(() => {
-        element.value += text[i];
-        i++;
-        if (i === text.length) {
-            clearInterval(typeInterval);
+let matchedFiles = []; // Store matched files and partitions
+
+// Process Selected Files
+function processSelectedFiles() {
+    const fileInput = document.querySelector("#flash-file");
+    const files = fileInput.files;
+    const tableBody = document.querySelector("#file-table tbody");
+    tableBody.innerHTML = ""; // Clear existing table rows
+
+    matchedFiles = []; // Reset matched files list
+
+    // Check each file against the fileMapping
+    Array.from(files).forEach(file => {
+        const fileName = file.name.toLowerCase();
+        const matchedPartition = fileMapping[fileName];
+
+        if (matchedPartition) {
+            const fileSize = (file.size / 1024).toFixed(2); // Convert bytes to KB
+            matchedFiles.push({ file, partition: matchedPartition, size: fileSize });
+
+            // Add a new row to the table
+            const row = `
+                <tr>
+                    <td>${file.name}</td>
+                    <td>${matchedPartition}</td>
+                    <td>${fileSize}</td>
+                </tr>
+            `;
+            tableBody.insertAdjacentHTML("beforeend", row);
         }
-    }, delay);
+    });
+
+    if (matchedFiles.length === 0) {
+        alert("No matching files found!");
+    }
 }
 
-// Update `flashFormFile` to include logging
-async function flashFormFile(event) {
-    event.preventDefault();
-    showProgressOverlay();
-
-    let fileField = document.querySelector("#flash-file");
-    let partField = document.querySelector(".flash-partition");
-    let file = fileField.files[0];
-
-    if (!file) {
-        alert("Please select a file to flash!");
-        hideProgressOverlay();
-        return;
-    }
-
-    if (!partField.value) {
-        alert("Please specify a partition to flash!");
-        hideProgressOverlay();
-        return;
-    }
-
+// Flash a Single File
+async function flashFile(file, partition) {
     try {
-        await device.flashBlob(partField.value, file, (progress) => {
+        await device.flashBlob(partition, file, progress => {
+            console.log(`Flashing ${file.name} - Progress: ${progress}%`);
         });
-        alert(`Successfully flashed ${partField.value}`);
+        logOutput(`Successfully flashed ${file.name} to ${partition}`);
     } catch (error) {
-        alert(`Failed to flash: ${error.message}`);
-    } finally {
-        fileField.value = "";
-        partField.value = "";
-        hideProgressOverlay();
-        await checkDeviceConnection();
+        logOutput(`Failed to flash ${file.name}: ${error.message}`);
     }
 }
 
-// Add event listener for file selection
-document.querySelector("#flash-file").addEventListener("change", function () {
-    const fileField = document.querySelector("#flash-file");
-    const partField = document.querySelector(".flash-partition");
-
-    if (!fileField.files.length) return;
-
-    const file = fileField.files[0];
-    const fileName = file.name;
-	
-	// Mapping of file names to partition names
-	const fileMapping = {
-	    "boot.img": "boot_ab",
-	    "ksu_boot.img": "boot_ab",
-	    "magisk_boot.img": "boot_ab",
-	    "dtbo.img": "dtbo_ab",
-	    "ksu_dtbo.img": "dtbo_ab",
-	    "odm.img": "odm",
-	    "product.img": "product",
-	    "system.img": "system",
-	    "system_ext.img": "system_ext",
-	    "vbmeta.img": "vbmeta_ab",
-	    "vbmeta_system.img": "vbmeta_system_ab",
-	    "vendor.img": "vendor",
-	    "vendor_boot.img": "vendor_boot_ab",
-	    "super.img": "super",
-	    "xbl.elf": "xbl_ab",
-	    "xbl_config.elf": "xbl_config_ab",
-	    "abl.elf": "abl_ab",
-	    "tz.mbn": "tz_ab",
-	    "hyp.mbn": "hyp_ab",
-	    "devcfg.mbn": "devcfg_ab",
-	    "storsec.mbn": "storsec",
-	    "BTFM.bin": "bluetooth_ab",
-	    "cmnlib.mbn": "cmnlib_ab",
-	    "cmnlib64.mbn": "cmnlib64_ab",
-	    "NON-HLOS.bin": "modem_ab",
-	    "dspso.bin": "dsp_ab",
-	    "km41.mbn": "keymaster_ab",
-	    "aop.mbn": "aop_ab",
-	    "qupv3fw.elf": "qupfw_ab",
-	    "imagefv.elf": "imagefv_ab",
-	    "uefi_sec.mbn": "uefisecapp_ab",
-	    "multi_image.mbn": "multiimgoem_ab",
-	    "metadata.img": "metadata",
-	    "userdata.img": "userdata",
-	    "rescue.img": "rescue",
-	    "cust.img": "cust",
-	    "misc.img": "misc"
-	};
-
-
-    // Check if the file matches a known partition
-    const matchedPartition = fileMapping[fileName.toLowerCase()];
-    if (matchedPartition) {
-        // Animate the typing of the partition name
-        typeAnimation(partField, matchedPartition);
+// Flash All Files Sequentially
+async function flashAllFiles() {
+    if (matchedFiles.length === 0) {
+        alert("No files to flash!");
+        return;
     }
-});
+
+    for (const { file, partition } of matchedFiles) {
+        await flashFile(file, partition);
+    }
+
+    alert("Flashing process completed!");
+}
+
+// Log Output Utility
+function logOutput(message) {
+    const logOutput = document.querySelector("#log-output");
+    logOutput.textContent += `${message}\n`;
+}
+
+// Download Logs
+function downloadLogs() {
+    const logOutput = document.querySelector("#log-output").textContent;
+    const blob = new Blob([logOutput], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "flash_logs.txt";
+    a.click();
+
+    URL.revokeObjectURL(url);
+}
 
 
 
@@ -2057,7 +2089,7 @@ async function vbmeta_system_disable() {
     document.querySelector(".switchslot-button").addEventListener("click", switchSlot);
     document.querySelector(".boot-form").addEventListener("submit", bootFormFile);
     document.querySelector(".flash-form").addEventListener("submit", flashFormFile);
-    document.querySelector(".rboot-flash-form").addEventListener("submit", rbootFlashFormFile);
+//    document.querySelector(".rboot-flash-form").addEventListener("submit", rbootFlashFormFile);
     document.querySelector(".download-log-button").addEventListener("click", logdownload);
 </script>
 </body>
