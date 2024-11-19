@@ -5,16 +5,23 @@ var DebugLevel;
     DebugLevel[DebugLevel["Verbose"] = 2] = "Verbose";
 })(DebugLevel || (DebugLevel = {}));
 let debugLevel = DebugLevel.Silent;
-function logDebug(...data) {
+
+export function logDebug(...data) {
     if (debugLevel >= 1) {
-        console.log(...data);
+        const message = data.join(" ");
+        console.log(message); // Keep default console log
+        logToHtml(message);   // Append to the HTML log
     }
 }
-function logVerbose(...data) {
+
+export function logVerbose(...data) {
     if (debugLevel >= 2) {
-        console.log(...data);
+        const message = data.join(" ");
+        console.log(message); // Keep default console log
+        logToHtml(message);   // Append to the HTML log
     }
 }
+
 /**
  * Change the debug level for the fastboot client:
  *   - 0 = silent
