@@ -542,17 +542,6 @@
             transition: transform 0.2s ease, opacity 2s ease;
         }
 
-	.log-box {
-	    width: 100%;
-	    margin-top: 10px;
-	    font-family: monospace;
-	    resize: none;
-	    color: #333;
-	    background-color: #f8f8f8;
-	    border: 1px solid #ccc;
-	    padding: 5px;
-	}
-
 
 </style>
 </head>
@@ -795,25 +784,22 @@
 	</form>
     </div>
 	
-<div class="container">
-    <form class="flash-form" onsubmit="flashFormFile(event)">
-        <label for="flash-file">Flash any images</label>
-        <input type="file" name="flash-file" id="flash-file" accept=".img,.bin" />
-        
-        <label for="flash-partition">Enter Partition</label>
-        <input type="text" name="flash-partition" class="flash-partition" 
-               placeholder="Partition like - boot, dtbo, super, vendor_boot, recovery, etc." />
-        
-        <input type="submit" value="Flash" class="button" />
-    </form>
-    
-    <label for="log-output">Logs:</label>
-    <!-- Replace <textarea> with <pre> -->
-    <pre id="log-output" class="result-field"></pre>
-</div>
-
-
-
+	<div class="container">
+	    <form class="flash-form" onsubmit="flashFormFile(event)">
+	        <label for="flash-file">Flash any images</label>
+	        <input type="file" name="flash-file" id="flash-file" accept=".img,.bin" />
+	        
+	        <label for="flash-partition">Enter Partition</label>
+	        <input type="text" name="flash-partition" class="flash-partition" 
+	               placeholder="Partition like - boot, dtbo, super, vendor_boot, recovery, etc." />
+	        
+	        <input type="submit" value="Flash" class="button" />
+	    </form>
+	    
+	    <label for="log-output">Logs:</label>
+	    <!-- Replace <textarea> with <pre> -->
+	    <pre id="log-output" class="result-field"></pre>
+	</div>
 
 
 	<div class="container">
@@ -1420,8 +1406,13 @@ document.querySelector("#flash-file").addEventListener("change", function () {
     const fileMapping = {
         "boot.img": "boot",
         "dtbo.img": "dtbo",
+	"odm.img": "odm",
+	"product.img": "product",
+	"system.img": "system",
+	"system_ext.img": "system_ext",
         "vbmeta.img": "vbmeta",
         "vbmeta_system.img": "vbmeta_system",
+	"vendor.img": "vendor",
         "vendor_boot.img": "vendor_boot",
         "super.img": "super"
     };
