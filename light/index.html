@@ -859,7 +859,7 @@
             const toggleInput = document.getElementById('toggle-input');
 
             setTimeout(() => {
-                window.location.href = "https://arkt-7.github.io/nabu/"; 
+                window.location.href = "https://arkt-7.github.io/nabu"; 
             }, 400);
         }
 
@@ -2029,23 +2029,23 @@ async function vbmeta_system_disable() {
 	
 	document.querySelector(".rickroll-button").addEventListener("click", playMusic);
 	
-	document.getElementById('download-log-button').addEventListener('click', function () {
-        const logOutput = document.getElementById('log-output').textContent.trim(); // Get log content
-        if (logOutput === "") {
-            alert("Log is empty LOL. Nothing to download! 😂");
-            return;
-        }
-        const blob = new Blob([logOutput], { type: 'text/plain' }); // Create a Blob object
-        const url = URL.createObjectURL(blob); // Create a URL for the Blob
-        const a = document.createElement('a'); // Create an anchor element
-        a.href = url;
-        a.download = 'arkt_fastboot_tool.log'; // Set the file name
-        document.body.appendChild(a); // Append the anchor to the body
-        a.click(); // Trigger the download
-        document.body.removeChild(a); // Remove the anchor
-        URL.revokeObjectURL(url); // Revoke the URL to free resources
-    });
-
+	function logdownload() {
+	    const logOutput = document.getElementById('log-output').textContent.trim(); // Get log content
+	    if (logOutput === "") {
+	        alert("Log is empty LOL. Nothing to download! 😂");
+	        return;
+	    }
+	    const blob = new Blob([logOutput], { type: 'text/plain' }); // Create a Blob object
+	    const url = URL.createObjectURL(blob); // Create a URL for the Blob
+	    const a = document.createElement('a'); // Create an anchor element
+	    a.href = url;
+	    a.download = 'arkt_fastboot_tool.txt'; // Set the file name
+	    document.body.appendChild(a); // Append the anchor to the body
+	    a.click(); // Trigger the download
+	    document.body.removeChild(a); // Remove the anchor
+	    URL.revokeObjectURL(url); // Revoke the URL to free resources
+	}
+	
 	
     document.querySelector(".connect-button").addEventListener("click", connectDevice);
     document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
@@ -2058,6 +2058,7 @@ async function vbmeta_system_disable() {
     document.querySelector(".boot-form").addEventListener("submit", bootFormFile);
     document.querySelector(".flash-form").addEventListener("submit", flashFormFile);
     document.querySelector(".rboot-flash-form").addEventListener("submit", rbootFlashFormFile);
+    document.querySelector(".download-log-button").addEventListener("click", logdownload);
 </script>
 </body>
 </html>
