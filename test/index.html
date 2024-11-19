@@ -541,6 +541,18 @@
             transition: transform 0.2s ease, opacity 2s ease;
         }
 
+	    .log-box {
+    width: 100%;
+    margin-top: 10px;
+    font-family: monospace;
+    resize: none;
+    color: #333;
+    background-color: #f8f8f8;
+    border: 1px solid #ccc;
+    padding: 5px;
+}
+
+
 </style>
 </head>
 <body>
@@ -793,7 +805,10 @@
         
         <input type="submit" value="Flash" class="button" />
     </form>
+    <label for="log-box">Logs</label>
+    <textarea id="log-box" class="log-box" readonly rows="10" placeholder="Logs will appear here..."></textarea>
 </div>
+
 
 
 	<div class="container">
@@ -1336,7 +1351,15 @@ async function runRebootCommand(command, successMessage) {
         }
     }
 
-    async function flashFormFile(event) {
+    // Function to log messages to the log box
+function logMessage(message) {
+    const logBox = document.getElementById("log-box");
+    logBox.value += message + "\n";
+    logBox.scrollTop = logBox.scrollHeight; // Auto-scroll to the bottom
+}
+
+// Update `flashFormFile` to include logging
+async function flashFormFile(event) {
     event.preventDefault();
     showProgressOverlay();
 
@@ -1344,30 +1367,40 @@ async function runRebootCommand(command, successMessage) {
     let partField = document.querySelector(".flash-partition");
     let file = fileField.files[0];
 
+    logMessage("Preparing to flash...");
+
     if (!file) {
         alert("Please select a file to flash!");
+        logMessage("Error: No file selected.");
         hideProgressOverlay();
         return;
     }
 
     if (!partField.value) {
         alert("Please specify a partition to flash!");
+        logMessage("Error: No partition specified.");
         hideProgressOverlay();
         return;
     }
 
     try {
-        await device.flashBlob(partField.value, file);
+        logMessage(`Flashing partition: ${partField.value}`);
+        logMessage(`File: ${file.name}`);
+        await device.flashBlob(partField.value, file, (progress) => {
+            logMessage(`Progress: ${(progress * 100).toFixed(2)}%`);
+        });
+        logMessage(`Successfully flashed ${partField.value}.`);
         alert(`Successfully flashed ${partField.value}`);
     } catch (error) {
+        logMessage(`Error flashing ${partField.value}: ${error.message}`);
         alert(`Failed to flash: ${error.message}`);
     } finally {
         fileField.value = "";
         partField.value = "";
+        logMessage("Resetting form fields.");
         hideProgressOverlay();
         await checkDeviceConnection();
     }
-}
 
 // Function for typing animation
 function typeAnimation(element, text, delay = 50) {
