@@ -786,8 +786,8 @@
 	
 	<div class="container">
 	    <form class="flash-form" onsubmit="flashFormFile(event)">
-	        <label for="flash-file">Flash any images</label>
-	        <input type="file" name="flash-file" id="flash-file" accept=".img,.bin" />
+	        <label for="flash-file">Flash any images/Complete ROM</label>
+	        <input type="file" name="flash-file" id="flash-file" accept=".img,.bin,.elf,.mbn" />
 	        
 	        <label for="flash-partition">Enter Partition</label>
 	        <input type="text" name="flash-partition" class="flash-partition" 
@@ -797,10 +797,12 @@
 	    </form>
 	    
 	    <label for="log-output">Logs:</label>
-	    <!-- Replace <textarea> with <pre> -->
-	    <pre id="log-output" class="result-field"></pre>
-	</div>
-
+	    <pre id="log-output" class="result-field">
+This is a sample log content. test-2.
+</pre>
+    <!-- Download button -->
+    <button id="download-button">Download Log</button>
+</div>
 
 	<div class="container">
 	    <form class="wipe-form">
@@ -879,7 +881,8 @@
         };
 
 	
-	   
+
+	
 let messageInterval;
 let typingInterval; 
 let clearingInterval; 
@@ -1401,21 +1404,48 @@ document.querySelector("#flash-file").addEventListener("change", function () {
 
     const file = fileField.files[0];
     const fileName = file.name;
+	
+	// Mapping of file names to partition names
+	const fileMapping = {
+	    "boot.img": "boot_ab",
+	    "ksu_boot.img": "boot_ab",
+	    "magisk_boot.img": "boot_ab",
+	    "dtbo.img": "dtbo_ab",
+	    "ksu_dtbo.img": "dtbo_ab",
+	    "odm.img": "odm",
+	    "product.img": "product",
+	    "system.img": "system",
+	    "system_ext.img": "system_ext",
+	    "vbmeta.img": "vbmeta_ab",
+	    "vbmeta_system.img": "vbmeta_system_ab",
+	    "vendor.img": "vendor",
+	    "vendor_boot.img": "vendor_boot_ab",
+	    "super.img": "super",
+	    "xbl.elf": "xbl_ab",
+	    "xbl_config.elf": "xbl_config_ab",
+	    "abl.elf": "abl_ab",
+	    "tz.mbn": "tz_ab",
+	    "hyp.mbn": "hyp_ab",
+	    "devcfg.mbn": "devcfg_ab",
+	    "storsec.mbn": "storsec",
+	    "BTFM.bin": "bluetooth_ab",
+	    "cmnlib.mbn": "cmnlib_ab",
+	    "cmnlib64.mbn": "cmnlib64_ab",
+	    "NON-HLOS.bin": "modem_ab",
+	    "dspso.bin": "dsp_ab",
+	    "km41.mbn": "keymaster_ab",
+	    "aop.mbn": "aop_ab",
+	    "qupv3fw.elf": "qupfw_ab",
+	    "imagefv.elf": "imagefv_ab",
+	    "uefi_sec.mbn": "uefisecapp_ab",
+	    "multi_image.mbn": "multiimgoem_ab",
+	    "metadata.img": "metadata",
+	    "userdata.img": "userdata",
+	    "rescue.img": "rescue",
+	    "cust.img": "cust",
+	    "misc.img": "misc"
+	};
 
-    // Mapping of file names to partition names
-    const fileMapping = {
-        "boot.img": "boot",
-        "dtbo.img": "dtbo",
-	"odm.img": "odm",
-	"product.img": "product",
-	"system.img": "system",
-	"system_ext.img": "system_ext",
-        "vbmeta.img": "vbmeta",
-        "vbmeta_system.img": "vbmeta_system",
-	"vendor.img": "vendor",
-        "vendor_boot.img": "vendor_boot",
-        "super.img": "super"
-    };
 
     // Check if the file matches a known partition
     const matchedPartition = fileMapping[fileName.toLowerCase()];
@@ -1427,10 +1457,10 @@ document.querySelector("#flash-file").addEventListener("change", function () {
 
 
 
-       async function rbootFlashFormFile(event) {
+ async function rbootFlashFormFile(event) {
     event.preventDefault();
     rbootShowProgressOverlay();
-           showProgressOverlay();
+    showProgressOverlay();
 
     let fileField = document.querySelector(".rboot-flash-file");
     let partField = document.querySelector(".rboot-flash-partition"); 
@@ -1456,8 +1486,21 @@ document.querySelector("#flash-file").addEventListener("change", function () {
     }
 
     try {
-        await device.flashBlob(partField.value, file);
-        alert(`Successfully flashed to ${partField.value}`);
+        const selectedPartition = partField.value;
+
+        if (selectedPartition === "boot_ab") {
+            // Flash to Boot_A
+            await device.flashBlob("boot_a", file);
+            alert("Successfully flashed to Boot A");
+
+            // Flash to Boot_B
+            await device.flashBlob("boot_b", file);
+            alert("Successfully flashed to Boot B");
+        } else {
+            // Flash to selected partition
+            await device.flashBlob(selectedPartition, file);
+            alert(`Successfully flashed to ${selectedPartition}`);
+        }
     } catch (error) {
         alert(`Failed to flash: ${error.message}`);
     } finally {
@@ -1467,6 +1510,7 @@ document.querySelector("#flash-file").addEventListener("change", function () {
         await checkDeviceConnection();
     }
 }
+
 
 
 function rbootGetImagePath(selectedImage) {
@@ -1988,7 +2032,22 @@ async function vbmeta_system_disable() {
 	
 	document.querySelector(".rickroll-button").addEventListener("click", playMusic);
 	
-
+document.getElementById('download-button').addEventListener('click', function () {
+        const logOutput = document.getElementById('log-output').textContent.trim(); // Get log content
+        if (logOutput === "") {
+            alert("Log is empty. Nothing to download!");
+            return;
+        }
+        const blob = new Blob([logOutput], { type: 'text/plain' }); // Create a Blob object
+        const url = URL.createObjectURL(blob); // Create a URL for the Blob
+        const a = document.createElement('a'); // Create an anchor element
+        a.href = url;
+        a.download = 'arkt_fastboot_tool.txt'; // Set the file name
+        document.body.appendChild(a); // Append the anchor to the body
+        a.click(); // Trigger the download
+        document.body.removeChild(a); // Remove the anchor
+        URL.revokeObjectURL(url); // Revoke the URL to free resources
+    });
     document.querySelector(".connect-button").addEventListener("click", connectDevice);
     document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
     document.querySelector(".reboot-button").addEventListener("click", rebootDevice);
