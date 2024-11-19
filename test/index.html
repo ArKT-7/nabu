@@ -981,7 +981,7 @@ function toggleElements(disable, isNabu = false) {
     const wipeButton = document.querySelector(".wipe-button");
     wipeButton.disabled = true;
     formElements.forEach((element) => {
-        if (!element.classList.contains('connect-button') && !element.closest('.switchx')) {
+        if (!element.classList.contains('connect-button') && !element.classList.contains('download-log-button') && !element.closest('.switchx')) {
             element.disabled = disable; // General enable/disable logic
         }
     });
@@ -2039,7 +2039,7 @@ async function vbmeta_system_disable() {
         const url = URL.createObjectURL(blob); // Create a URL for the Blob
         const a = document.createElement('a'); // Create an anchor element
         a.href = url;
-        a.download = 'arkt_fastboot_tool.txt'; // Set the file name
+        a.download = 'arkt_fastboot_tool.log'; // Set the file name
         document.body.appendChild(a); // Append the anchor to the body
         a.click(); // Trigger the download
         document.body.removeChild(a); // Remove the anchor
