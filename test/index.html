@@ -1353,12 +1353,6 @@ async function runRebootCommand(command, successMessage) {
         }
     }
 
-// Function to log messages to the log box
-function logMessage(message) {
-    const logBox = document.getElementById("log-box");
-    logBox.value += message + "\n";
-    logBox.scrollTop = logBox.scrollHeight; // Auto-scroll to the bottom
-}
 
 // Update `flashFormFile` to include logging
 async function flashFormFile(event) {
@@ -1369,37 +1363,27 @@ async function flashFormFile(event) {
     let partField = document.querySelector(".flash-partition");
     let file = fileField.files[0];
 
-    logMessage("Preparing to flash...");
-
     if (!file) {
         alert("Please select a file to flash!");
-        logMessage("Error: No file selected.");
         hideProgressOverlay();
         return;
     }
 
     if (!partField.value) {
         alert("Please specify a partition to flash!");
-        logMessage("Error: No partition specified.");
         hideProgressOverlay();
         return;
     }
 
     try {
-        logMessage(`Flashing partition: ${partField.value}`);
-        logMessage(`File: ${file.name}`);
         await device.flashBlob(partField.value, file, (progress) => {
-            logMessage(`Progress: ${(progress * 100).toFixed(2)}%`);
         });
-        logMessage(`Successfully flashed ${partField.value}.`);
         alert(`Successfully flashed ${partField.value}`);
     } catch (error) {
-        logMessage(`Error flashing ${partField.value}: ${error.message}`);
         alert(`Failed to flash: ${error.message}`);
     } finally {
         fileField.value = "";
         partField.value = "";
-        logMessage("Resetting form fields.");
         hideProgressOverlay();
         await checkDeviceConnection();
     }
