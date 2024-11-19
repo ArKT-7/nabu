@@ -17,7 +17,6 @@ function logToHtml(message) {
     }
 }
 
-
 // Debug-level logging
 export function logDebug(...data) {
     if (debugLevel >= DebugLevel.Debug) {
