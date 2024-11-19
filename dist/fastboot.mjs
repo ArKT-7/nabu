@@ -12,8 +12,11 @@ let debugLevel = DebugLevel.Silent; // Default debug level
 function logToHtml(message) {
     const logOutput = document.querySelector("#log-output");
     if (logOutput) {
-        logOutput.textContent += message + "\n"; // Append the message
-        logOutput.scrollTop = logOutput.scrollHeight; // Auto-scroll to the bottom
+        console.log("Appending to log:", message); // Debugging in console
+        logOutput.textContent += message + "\n";
+        logOutput.scrollTop = logOutput.scrollHeight;
+    } else {
+        console.error("log-output element not found!");
     }
 }
 
@@ -45,8 +48,9 @@ export function logVerbose(...data) {
  * @param {number} level - Debug level to use.
  */
 function setDebugLevel(level) {
-    debugLevel = level;
+    debugLevel = Debug;
 }
+
 /**
  * Reads all of the data in the given blob and returns it as an ArrayBuffer.
  *
