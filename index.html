@@ -1404,16 +1404,19 @@ document.querySelector("#flash-file").addEventListener("change", function () {
 
     // Mapping of file names to partition names
     const fileMapping = {
-        "boot.img": "boot",
-        "dtbo.img": "dtbo",
+        "boot.img": "boot_ab",
+	"ksu_boot.img": "boot_ab",
+	"magisk_boot.img": "boot_ab",
+        "dtbo.img": "dtbo_ab",
+	"ksu_dtbo.img": "boot_ab",
 	"odm.img": "odm",
 	"product.img": "product",
 	"system.img": "system",
 	"system_ext.img": "system_ext",
-        "vbmeta.img": "vbmeta",
-        "vbmeta_system.img": "vbmeta_system",
+        "vbmeta.img": "vbmeta_ab",
+        "vbmeta_system.img": "vbmeta_system_ab",
 	"vendor.img": "vendor",
-        "vendor_boot.img": "vendor_boot",
+        "vendor_boot.img": "vendor_boot_ab",
         "super.img": "super"
     };
 
