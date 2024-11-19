@@ -9,11 +9,33 @@ var DebugLevel;
 let debugLevel = DebugLevel.Silent; // Default debug level
 
 // Function to log messages to the HTML textarea
+// Buffer to hold logs before flushing
+let logBuffer = [];
+let logTimeout = null;
+
+// Append logs to the HTML <pre> element in batches
 function logToHtml(message) {
-    const logOutput = document.querySelector("#log-output");
-    if (logOutput) {
-        logOutput.textContent += message + "\n"; // Append message
-        logOutput.scrollTop = logOutput.scrollHeight; // Auto-scroll to bottom
+    // Add the message to the buffer
+    logBuffer.push(message);
+
+    // Set up a timeout to flush logs after 2 seconds
+    if (!logTimeout) {
+        logTimeout = setTimeout(() => {
+            // Get the log output element
+            const logOutput = document.querySelector("#log-output");
+
+            if (logOutput) {
+                // Append all buffered logs at once
+                logOutput.textContent += logBuffer.join("\n") + "\n";
+
+                // Auto-scroll to the bottom
+                logOutput.scrollTop = logOutput.scrollHeight;
+            }
+
+            // Clear the buffer and reset the timeout
+            logBuffer = [];
+            logTimeout = null;
+        }, 2000); // Flush every 2 seconds
     }
 }
 
