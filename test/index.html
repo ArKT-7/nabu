@@ -542,17 +542,17 @@
         }
 
 
-	    pre.log-output {
+	pre.log-output {
 	    background: linear-gradient(135deg, #f0f4f8, #e2e8f0); 
-	    padding: 20px 20px 20px; /* Adjust bottom padding */
+	    padding: 20px; /* Consistent padding */
 	    border-radius: 15px;
 	    overflow-y: auto; 
 	    overflow-x: hidden; /* Prevent horizontal overflow */
-	    max-height: 200px; 
+	    max-height: 200px; /* Adjust the height as needed */
 	    border: 1px solid #ccc;
 	    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 	    width: 90%; 
-	    margin-top: 0; 
+	    margin: 0 auto; /* Center horizontally */
 	    position: relative; 
 	    color: black;
 	    white-space: pre-wrap; /* Preserve whitespace and wrap text */
@@ -570,8 +570,6 @@
 	    border-radius: 10px; 
 	    border: 3px solid transparent; 
 	    background-clip: padding-box; 
-	    height: 50px; /* Set a fixed height for the scrollbar thumb */
-	    margin: 10px 0; /* Add top and bottom margin */
 	}
 	
 	pre.log-output::-webkit-scrollbar-thumb:hover {
@@ -834,7 +832,7 @@
     <p style="text-align: center; font-style: italic; margin-top: 6px;">
 	            <strong>- Output logs - </strong>
 	        </p>
-            <pre class="log-output"></pre>
+    <pre id="log-output" class="log-output"></pre>
 </div>
 
 
