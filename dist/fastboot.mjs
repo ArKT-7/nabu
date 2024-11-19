@@ -6,21 +6,33 @@ var DebugLevel;
 })(DebugLevel || (DebugLevel = {}));
 let debugLevel = DebugLevel.Silent;
 
-export function logDebug(...data) {
-    if (debugLevel >= 1) {
-        const message = data.join(" ");
-        console.log(message); // Keep default console log
-        logToHtml(message);   // Append to the HTML log
+// Append logs to the HTML textarea
+function logToHtml(message) {
+    const logOutput = document.querySelector("#log-output");
+    if (logOutput) {
+        logOutput.value += message + "\n"; // Append the message
+        logOutput.scrollTop = logOutput.scrollHeight; // Auto-scroll to the bottom
     }
 }
 
+// Debug-level logging
+export function logDebug(...data) {
+    if (debugLevel >= 1) {
+        const message = data.join(" ");
+        console.log(message); // Log to the browser console
+        logToHtml(message);   // Log to the HTML textarea
+    }
+}
+
+// Verbose-level logging
 export function logVerbose(...data) {
     if (debugLevel >= 2) {
         const message = data.join(" ");
-        console.log(message); // Keep default console log
-        logToHtml(message);   // Append to the HTML log
+        console.log(message); // Log to the browser console
+        logToHtml(message);   // Log to the HTML textarea
     }
 }
+
 
 /**
  * Change the debug level for the fastboot client:
