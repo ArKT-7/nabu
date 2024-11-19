@@ -1353,6 +1353,19 @@ async function runRebootCommand(command, successMessage) {
         }
     }
 
+		// Function for typing animation
+function typeAnimation(element, text, delay = 50) {
+    element.value = ""; // Clear the input box
+    let i = 0;
+
+    const typeInterval = setInterval(() => {
+        element.value += text[i];
+        i++;
+        if (i === text.length) {
+            clearInterval(typeInterval);
+        }
+    }, delay);
+}
 
 // Update `flashFormFile` to include logging
 async function flashFormFile(event) {
