@@ -798,8 +798,8 @@
 	    
 	    <label for="log-output">Logs:</label>
 	    <pre id="log-output" class="result-field"></pre>
-	    <button onclick="downloadLog()">Download Log</button>
-	</div>
+    <button class="button" id="download-log-button">Download Logs</button>
+</div>
 
 	<div class="container">
 	    <form class="wipe-form">
@@ -878,16 +878,7 @@
         };
 
 	
-function downloadLog() {
-        const logContent = document.getElementById('log-output').textContent; // Get log content
-        const blob = new Blob([logContent], { type: 'text/plain' }); // Create a Blob object
-        const url = URL.createObjectURL(blob); // Create a URL for the Blob
-        const a = document.createElement('a'); // Create an anchor element
-        a.href = url;
-        a.download = 'arkt_fastboot_tool.txt'; // Set the file name
-        a.click(); // Trigger the download
-        URL.revokeObjectURL(url); // Revoke the URL to free resources
-    }
+
 	
 let messageInterval;
 let typingInterval; 
@@ -2038,7 +2029,24 @@ async function vbmeta_system_disable() {
 	
 	document.querySelector(".rickroll-button").addEventListener("click", playMusic);
 	
+	document.getElementById('download-log-button').addEventListener('click', function () {
+        const logOutput = document.getElementById('log-output').textContent.trim(); // Get log content
+        if (logOutput === "") {
+            alert("Log is empty LOL. Nothing to download! 😂");
+            return;
+        }
+        const blob = new Blob([logOutput], { type: 'text/plain' }); // Create a Blob object
+        const url = URL.createObjectURL(blob); // Create a URL for the Blob
+        const a = document.createElement('a'); // Create an anchor element
+        a.href = url;
+        a.download = 'arkt_fastboot_tool.txt'; // Set the file name
+        document.body.appendChild(a); // Append the anchor to the body
+        a.click(); // Trigger the download
+        document.body.removeChild(a); // Remove the anchor
+        URL.revokeObjectURL(url); // Revoke the URL to free resources
+    });
 
+	
     document.querySelector(".connect-button").addEventListener("click", connectDevice);
     document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
     document.querySelector(".reboot-button").addEventListener("click", rebootDevice);
