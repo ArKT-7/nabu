@@ -10,41 +10,38 @@ let debugLevel = DebugLevel.Silent; // Default debug level
 
 // Log handling
 let logBuffer = []; // Buffer to store log messages
-let isUpdating = false; // Track if an update is in progress
-const LOG_FLUSH_INTERVAL = 200; // Interval in milliseconds to flush logs
+let inactivityTimer = null; // Timer to track inactivity
+const INACTIVITY_DELAY = 2000; // 2 seconds delay
 
 // Function to log messages to the HTML <pre> element
 function logToHtml(message) {
-    logBuffer.push(message); // Add message to buffer
+    logBuffer.push(message); // Add message to the buffer
 
-    // Trigger updates if not already updating
-    if (!isUpdating) {
-        isUpdating = true;
-        scheduleFlushLogs();
+    // Reset the inactivity timer
+    if (inactivityTimer) {
+        clearTimeout(inactivityTimer);
     }
+
+    // Start a new timer to flush logs after 2 seconds of inactivity
+    inactivityTimer = setTimeout(() => {
+        flushLogsToHtml();
+    }, INACTIVITY_DELAY);
 }
 
-// Function to flush logs to the DOM at regular intervals
-function scheduleFlushLogs() {
-    requestAnimationFrame(() => {
-        const logOutput = document.querySelector("#log-output");
+// Flush all buffered logs to the HTML and clear the buffer
+function flushLogsToHtml() {
+    const logOutput = document.querySelector("#log-output");
 
-        if (logOutput && logBuffer.length > 0) {
-            // Append buffered logs
-            logOutput.textContent += logBuffer.join("\n") + "\n";
-            logBuffer = []; // Clear the buffer
+    if (logOutput && logBuffer.length > 0) {
+        // Append all buffered logs at once
+        logOutput.textContent += logBuffer.join("\n") + "\n";
 
-            // Auto-scroll to the bottom
-            logOutput.scrollTop = logOutput.scrollHeight;
-        }
+        // Auto-scroll to the bottom
+        logOutput.scrollTop = logOutput.scrollHeight;
 
-        // If more logs are in the buffer, schedule the next update
-        if (logBuffer.length > 0) {
-            setTimeout(scheduleFlushLogs, LOG_FLUSH_INTERVAL);
-        } else {
-            isUpdating = false; // Stop updates when buffer is empty
-        }
-    });
+        // Clear the buffer
+        logBuffer = [];
+    }
 }
 
 // Debug-level logging
