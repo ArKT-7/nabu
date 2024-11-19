@@ -800,8 +800,7 @@
 	    <pre id="log-output" class="result-field">
 This is a sample log content. test-2.
 </pre>
-    <!-- Download button -->
-    <button id="download-button">Download Log</button>
+    <button type="button" id="download-log-button">Download Logs</button>
 </div>
 
 	<div class="container">
@@ -2032,10 +2031,10 @@ async function vbmeta_system_disable() {
 	
 	document.querySelector(".rickroll-button").addEventListener("click", playMusic);
 	
-document.getElementById('download-button').addEventListener('click', function () {
+	document.getElementById('download-log-button').addEventListener('click', function () {
         const logOutput = document.getElementById('log-output').textContent.trim(); // Get log content
         if (logOutput === "") {
-            alert("Log is empty. Nothing to download!");
+            alert("Log is empty LOL. Nothing to download! 😂");
             return;
         }
         const blob = new Blob([logOutput], { type: 'text/plain' }); // Create a Blob object
@@ -2048,6 +2047,8 @@ document.getElementById('download-button').addEventListener('click', function ()
         document.body.removeChild(a); // Remove the anchor
         URL.revokeObjectURL(url); // Revoke the URL to free resources
     });
+
+	
     document.querySelector(".connect-button").addEventListener("click", connectDevice);
     document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
     document.querySelector(".reboot-button").addEventListener("click", rebootDevice);
