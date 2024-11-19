@@ -347,6 +347,8 @@
 	pre.result-field::-webkit-scrollbar-thumb:hover {
 	    background: rgba(0, 0, 0, 0.7);
 	}
+
+
 		
 	#progress-overlay {
 	    position: fixed;
@@ -794,7 +796,7 @@
 	</form>
     </div>
 	
-    <div class="container">
+<div class="container">
     <form class="flash-form" onsubmit="flashFormFile(event)">
         <label for="flash-file">Flash any images</label>
         <input type="file" name="flash-file" id="flash-file" accept=".img,.bin" />
@@ -805,9 +807,12 @@
         
         <input type="submit" value="Flash" class="button" />
     </form>
+    
     <label for="log-output">Logs:</label>
-    <textarea id="log-output" readonly style="width: 100%; height: 200px;"></textarea>
+    <!-- Replace <textarea> with <pre> -->
+    <pre id="log-output" class="result-field"></pre>
 </div>
+
 
 
 
