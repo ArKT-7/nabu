@@ -8,44 +8,45 @@ var DebugLevel;
 
 let debugLevel = DebugLevel.Silent; // Default debug level
 
-// Function to log messages to the HTML textarea
-let logBuffer = [];
-let debounceTimeout = null;
+// Log handling
+let logBuffer = []; // Store log messages
+let isRendering = false; // Flag to prevent multiple rendering cycles
 
-// Append logs to the HTML <pre> element only after a 2-second pause
+// Function to log messages to the HTML <pre> element
 function logToHtml(message) {
     // Add the message to the buffer
     logBuffer.push(message);
 
-    // Clear any existing debounce timer
-    clearTimeout(debounceTimeout);
+    // If not already rendering, schedule a render
+    if (!isRendering) {
+        isRendering = true;
 
-    // Set a new debounce timer
-    debounceTimeout = setTimeout(() => {
-        // Get the log output element
-        const logOutput = document.querySelector("#log-output");
+        // Use requestAnimationFrame for efficient rendering
+        requestAnimationFrame(() => {
+            const logOutput = document.querySelector("#log-output");
 
-        if (logOutput) {
-            // Append all buffered logs at once
-            logOutput.textContent += logBuffer.join("\n") + "\n";
+            if (logOutput && logBuffer.length > 0) {
+                // Append all buffered logs at once
+                logOutput.textContent += logBuffer.join("\n") + "\n";
 
-            // Auto-scroll to the bottom
-            logOutput.scrollTop = logOutput.scrollHeight;
-        }
+                // Auto-scroll to the bottom
+                logOutput.scrollTop = logOutput.scrollHeight;
 
-        // Clear the buffer
-        logBuffer = [];
-    }, 2000); // Wait for 2 seconds of inactivity before printing
+                // Clear the buffer
+                logBuffer = [];
+            }
+
+            isRendering = false; // Allow new rendering cycles
+        });
+    }
 }
-
-
 
 // Debug-level logging
 export function logDebug(...data) {
     if (debugLevel >= DebugLevel.Debug) {
         const message = data.join(" ");
-        console.log(message); // Console log
-        logToHtml(message);   // HTML log
+        console.log(message); // Log to console
+        logToHtml(message);   // Log to HTML
     }
 }
 
@@ -53,8 +54,8 @@ export function logDebug(...data) {
 export function logVerbose(...data) {
     if (debugLevel >= DebugLevel.Verbose) {
         const message = data.join(" ");
-        console.log(message); // Console log
-        logToHtml(message);   // HTML log
+        console.log(message); // Log to console
+        logToHtml(message);   // Log to HTML
     }
 }
 
@@ -66,7 +67,7 @@ export function logVerbose(...data) {
  *
  * @param {number} level - Debug level to use.
  */
-function setDebugLevel(level) {
+export function setDebugLevel(level) {
     debugLevel = level;
 }
 /**
