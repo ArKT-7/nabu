@@ -541,16 +541,16 @@
             transition: transform 0.2s ease, opacity 2s ease;
         }
 
-	    .log-box {
-    width: 100%;
-    margin-top: 10px;
-    font-family: monospace;
-    resize: none;
-    color: #333;
-    background-color: #f8f8f8;
-    border: 1px solid #ccc;
-    padding: 5px;
-}
+	.log-box {
+	    width: 100%;
+	    margin-top: 10px;
+	    font-family: monospace;
+	    resize: none;
+	    color: #333;
+	    background-color: #f8f8f8;
+	    border: 1px solid #ccc;
+	    padding: 5px;
+	}
 
 
 </style>
@@ -1351,7 +1351,7 @@ async function runRebootCommand(command, successMessage) {
         }
     }
 
-    // Function to log messages to the log box
+// Function to log messages to the log box
 function logMessage(message) {
     const logBox = document.getElementById("log-box");
     logBox.value += message + "\n";
@@ -1401,6 +1401,21 @@ async function flashFormFile(event) {
         hideProgressOverlay();
         await checkDeviceConnection();
     }
+}
+
+// Extend logging in other functions if needed
+async function checkDeviceConnection() {
+    try {
+        logMessage("Checking device connection...");
+        if (await device.isConnected) {
+            logMessage("Device is connected.");
+        } else {
+            logMessage("Device not connected.");
+        }
+    } catch (error) {
+        logMessage(`Error checking connection: ${error.message}`);
+    }
+}
 
 // Function for typing animation
 function typeAnimation(element, text, delay = 50) {
