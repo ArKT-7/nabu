@@ -1401,24 +1401,48 @@ document.querySelector("#flash-file").addEventListener("change", function () {
 
     const file = fileField.files[0];
     const fileName = file.name;
+	
+	// Mapping of file names to partition names
+	const fileMapping = {
+	    "boot.img": "boot_ab",
+	    "ksu_boot.img": "boot_ab",
+	    "magisk_boot.img": "boot_ab",
+	    "dtbo.img": "dtbo_ab",
+	    "ksu_dtbo.img": "dtbo_ab",
+	    "odm.img": "odm",
+	    "product.img": "product",
+	    "system.img": "system",
+	    "system_ext.img": "system_ext",
+	    "vbmeta.img": "vbmeta_ab",
+	    "vbmeta_system.img": "vbmeta_system_ab",
+	    "vendor.img": "vendor",
+	    "vendor_boot.img": "vendor_boot_ab",
+	    "super.img": "super",
+	    "xbl.elf": "xbl_ab",
+	    "xbl_config.elf": "xbl_config_ab",
+	    "abl.elf": "abl_ab",
+	    "tz.mbn": "tz_ab",
+	    "hyp.mbn": "hyp_ab",
+	    "devcfg.mbn": "devcfg_ab",
+	    "storsec.mbn": "storsec",
+	    "BTFM.bin": "bluetooth_ab",
+	    "cmnlib.mbn": "cmnlib_ab",
+	    "cmnlib64.mbn": "cmnlib64_ab",
+	    "NON-HLOS.bin": "modem_ab",
+	    "dspso.bin": "dsp_ab",
+	    "km41.mbn": "keymaster_ab",
+	    "aop.mbn": "aop_ab",
+	    "qupv3fw.elf": "qupfw_ab",
+	    "imagefv.elf": "imagefv_ab",
+	    "uefi_sec.mbn": "uefisecapp_ab",
+	    "multi_image.mbn": "multiimgoem_ab",
+	    "metadata.img": "metadata",
+	    "userdata.img": "userdata",
+	    "rescue.img": "rescue",
+	    "cust.img": "cust",
+	    "misc.img": "misc"
+	};
 
-    // Mapping of file names to partition names
-    const fileMapping = {
-        "boot.img": "boot_ab",
-	"ksu_boot.img": "boot_ab",
-	"magisk_boot.img": "boot_ab",
-        "dtbo.img": "dtbo_ab",
-	"ksu_dtbo.img": "boot_ab",
-	"odm.img": "odm",
-	"product.img": "product",
-	"system.img": "system",
-	"system_ext.img": "system_ext",
-        "vbmeta.img": "vbmeta_ab",
-        "vbmeta_system.img": "vbmeta_system_ab",
-	"vendor.img": "vendor",
-        "vendor_boot.img": "vendor_boot_ab",
-        "super.img": "super"
-    };
 
     // Check if the file matches a known partition
     const matchedPartition = fileMapping[fileName.toLowerCase()];
