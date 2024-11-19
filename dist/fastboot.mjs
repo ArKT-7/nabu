@@ -66,7 +66,7 @@ export function logVerbose(...data) {
  *   - 2 = verbose, for debugging only
  *
  * @param {number} level - Debug level to use.
- */
+ *
 export function setDebugLevel(level) {
     debugLevel = level;
 }
