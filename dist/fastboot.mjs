@@ -8,44 +8,51 @@ var DebugLevel;
 
 let debugLevel = DebugLevel.Silent; // Default debug level
 
-// Function to log messages to the HTML textarea
-let logBuffer = [];
-let debounceTimeout = null;
+// Log handling
+let logBuffer = []; // Buffer to store log messages
+let isUpdating = false; // Track if an update is in progress
+const LOG_FLUSH_INTERVAL = 200; // Interval in milliseconds to flush logs
 
-// Append logs to the HTML <pre> element only after a 2-second pause
+// Function to log messages to the HTML <pre> element
 function logToHtml(message) {
-    // Add the message to the buffer
-    logBuffer.push(message);
+    logBuffer.push(message); // Add message to buffer
 
-    // Clear any existing debounce timer
-    clearTimeout(debounceTimeout);
+    // Trigger updates if not already updating
+    if (!isUpdating) {
+        isUpdating = true;
+        scheduleFlushLogs();
+    }
+}
 
-    // Set a new debounce timer
-    debounceTimeout = setTimeout(() => {
-        // Get the log output element
+// Function to flush logs to the DOM at regular intervals
+function scheduleFlushLogs() {
+    requestAnimationFrame(() => {
         const logOutput = document.querySelector("#log-output");
 
-        if (logOutput) {
-            // Append all buffered logs at once
+        if (logOutput && logBuffer.length > 0) {
+            // Append buffered logs
             logOutput.textContent += logBuffer.join("\n") + "\n";
+            logBuffer = []; // Clear the buffer
 
             // Auto-scroll to the bottom
             logOutput.scrollTop = logOutput.scrollHeight;
         }
 
-        // Clear the buffer
-        logBuffer = [];
-    }, 2000); // Wait for 2 seconds of inactivity before printing
+        // If more logs are in the buffer, schedule the next update
+        if (logBuffer.length > 0) {
+            setTimeout(scheduleFlushLogs, LOG_FLUSH_INTERVAL);
+        } else {
+            isUpdating = false; // Stop updates when buffer is empty
+        }
+    });
 }
-
-
 
 // Debug-level logging
 export function logDebug(...data) {
     if (debugLevel >= DebugLevel.Debug) {
         const message = data.join(" ");
-        console.log(message); // Console log
-        logToHtml(message);   // HTML log
+        console.log(message); // Log to console
+        logToHtml(message);   // Log to HTML
     }
 }
 
@@ -53,8 +60,8 @@ export function logDebug(...data) {
 export function logVerbose(...data) {
     if (debugLevel >= DebugLevel.Verbose) {
         const message = data.join(" ");
-        console.log(message); // Console log
-        logToHtml(message);   // HTML log
+        console.log(message); // Log to console
+        logToHtml(message);   // Log to HTML
     }
 }
 
@@ -66,9 +73,10 @@ export function logVerbose(...data) {
  *
  * @param {number} level - Debug level to use.
  */
-function setDebugLevel(level) {
+export function setDebugLevel(level) {
     debugLevel = level;
 }
+
 /**
  * Reads all of the data in the given blob and returns it as an ArrayBuffer.
  *
