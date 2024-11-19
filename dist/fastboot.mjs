@@ -12,10 +12,11 @@ let debugLevel = DebugLevel.Silent; // Default debug level
 function logToHtml(message) {
     const logOutput = document.querySelector("#log-output");
     if (logOutput) {
-        logOutput.value += message + "\n"; // Append message
-        logOutput.scrollTop = logOutput.scrollHeight; // Auto-scroll
+        logOutput.textContent += message + "\n"; // Append message
+        logOutput.scrollTop = logOutput.scrollHeight; // Auto-scroll to bottom
     }
 }
+
 
 // Debug-level logging
 export function logDebug(...data) {
