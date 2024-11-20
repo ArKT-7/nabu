@@ -800,16 +800,17 @@
     <pre id="log-output" class="result-field"></pre>
     <button class="button download-log-button">Download Logs</button>
 
-    <!-- Table for displaying selected files and partitions -->
-    <table id="file-table" class="file-table">
-        <thead>
-            <tr>
-                <th>File Name</th>
-                <th>Partition</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+    <!-- Table for displaying selected files, partitions, and sizes -->
+	<table id="file-table" class="file-table">
+	    <thead>
+	        <tr>
+	            <th>File Name</th>
+	            <th>Partition</th>
+	            <th>Size</th>
+	        </tr>
+	    </thead>
+	    <tbody></tbody>
+	</table>
 </div>
 
 
@@ -1411,7 +1412,15 @@ const fileMapping = {
     "misc.img": "misc"
 };
 
-// Handle multiple file selection
+// Convert file size to a human-readable format
+function formatFileSize(size) {
+    if (size < 1024) return size + " B";
+    if (size < 1024 * 1024) return (size / 1024).toFixed(2) + " KB";
+    if (size < 1024 * 1024 * 1024) return (size / (1024 * 1024)).toFixed(2) + " MB";
+    return (size / (1024 * 1024 * 1024)).toFixed(2) + " GB";
+}
+
+// Handle multiple file selection with size display
 document.querySelector("#flash-file").addEventListener("change", function () {
     const fileField = document.querySelector("#flash-file");
     const partField = document.querySelector(".flash-partition");
@@ -1424,22 +1433,24 @@ document.querySelector("#flash-file").addEventListener("change", function () {
     Array.from(fileField.files).forEach((file) => {
         const fileName = file.name.toLowerCase();
         const matchedPartition = fileMapping[fileName];
+        const fileSize = formatFileSize(file.size);
 
-        if (matchedPartition) {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td>${fileName}</td>
-                <td>${matchedPartition}</td>
-            `;
-            fileTable.appendChild(row);
+        // Add row to table
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${fileName}</td>
+            <td>${matchedPartition || "N/A"}</td>
+            <td>${fileSize}</td>
+        `;
+        fileTable.appendChild(row);
 
-            // If a single file, animate partition field
-            if (fileField.files.length === 1) {
-                typeAnimation(partField, matchedPartition);
-            }
+        // If only one file is selected, animate the partition input
+        if (fileField.files.length === 1 && matchedPartition) {
+            typeAnimation(partField, matchedPartition);
         }
     });
 });
+
 
 // Flash files one by one
 async function flashFormFile(event) {
