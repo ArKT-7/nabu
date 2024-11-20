@@ -8650,7 +8650,7 @@ class FastbootDevice {
             await this.upload(partition, split.data, (progress) => {
 		    // Calculate real-time progress
 		    let currentProgress = ((sentBytes + progress * split.bytes) / totalBytes) * 100;
-		    onProgress(currentProgress.toFixed(2)); // Limit to two decimal places
+		    onProgress(currentProgress.toFixed(2)); // Limit to two decimal place
 		});
             logDebug("Flashing payload...");
             await this.runCommand(`flash:${partition}`);
