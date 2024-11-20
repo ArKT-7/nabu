@@ -785,27 +785,31 @@
     </div>
 	
 	<div class="container">
-    <form class="flash-form" onsubmit="flashAllFiles(event)">
+    <form class="flash-form" onsubmit="flashFormFile(event)">
         <label for="flash-file">Flash any images/Complete ROM 💀</label>
         <input type="file" name="flash-file" id="flash-file" accept=".img,.bin,.elf,.mbn" multiple />
-        
-        <table id="file-list" border="1">
-            <thead>
-                <tr>
-                    <th>File Name</th>
-                    <th>Partition</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-        
-        <input type="submit" value="Flash All" class="button" />
+
+        <label for="flash-partition">Enter Partition</label>
+        <input type="text" name="flash-partition" class="flash-partition" 
+               placeholder="Partition like - boot, dtbo, super, vendor_boot, recovery, etc." />
+
+        <input type="submit" value="Flash" class="button" />
     </form>
-    
+
     <label for="log-output">Logs:</label>
     <pre id="log-output" class="result-field"></pre>
     <button class="button download-log-button">Download Logs</button>
+
+    <!-- Table for displaying selected files and partitions -->
+    <table id="file-table" class="file-table">
+        <thead>
+            <tr>
+                <th>File Name</th>
+                <th>Partition</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
 </div>
 
 
@@ -1351,105 +1355,137 @@ async function runRebootCommand(command, successMessage) {
         }
     }
 
+		// Function for typing animation
+// Function for typing animation
+function typeAnimation(element, text, delay = 50) {
+    element.value = ""; // Clear the input box
+    let i = 0;
+
+    const typeInterval = setInterval(() => {
+        element.value += text[i];
+        i++;
+        if (i === text.length) {
+            clearInterval(typeInterval);
+        }
+    }, delay);
+}
+
+// Mapping of file names to partition names
+const fileMapping = {
+    "boot.img": "boot_ab",
+    "ksu_boot.img": "boot_ab",
+    "magisk_boot.img": "boot_ab",
+    "dtbo.img": "dtbo_ab",
+    "ksu_dtbo.img": "dtbo_ab",
+    "odm.img": "odm",
+    "product.img": "product",
+    "system.img": "system",
+    "system_ext.img": "system_ext",
+    "vbmeta.img": "vbmeta_ab",
+    "vbmeta_system.img": "vbmeta_system_ab",
+    "vendor.img": "vendor",
+    "vendor_boot.img": "vendor_boot_ab",
+    "super.img": "super",
+    "xbl.elf": "xbl_ab",
+    "xbl_config.elf": "xbl_config_ab",
+    "abl.elf": "abl_ab",
+    "tz.mbn": "tz_ab",
+    "hyp.mbn": "hyp_ab",
+    "devcfg.mbn": "devcfg_ab",
+    "storsec.mbn": "storsec",
+    "BTFM.bin": "bluetooth_ab",
+    "cmnlib.mbn": "cmnlib_ab",
+    "cmnlib64.mbn": "cmnlib64_ab",
+    "NON-HLOS.bin": "modem_ab",
+    "dspso.bin": "dsp_ab",
+    "km41.mbn": "keymaster_ab",
+    "aop.mbn": "aop_ab",
+    "qupv3fw.elf": "qupfw_ab",
+    "imagefv.elf": "imagefv_ab",
+    "uefi_sec.mbn": "uefisecapp_ab",
+    "multi_image.mbn": "multiimgoem_ab",
+    "metadata.img": "metadata",
+    "userdata.img": "userdata",
+    "rescue.img": "rescue",
+    "cust.img": "cust",
+    "misc.img": "misc"
+};
+
+// Handle multiple file selection
 document.querySelector("#flash-file").addEventListener("change", function () {
     const fileField = document.querySelector("#flash-file");
-    const fileListTable = document.querySelector("#file-list tbody");
+    const partField = document.querySelector(".flash-partition");
+    const fileTable = document.querySelector("#file-table tbody");
 
-    const fileMapping = {
-        "boot.img": "boot_ab",
-        "ksu_boot.img": "boot_ab",
-        "magisk_boot.img": "boot_ab",
-        "dtbo.img": "dtbo_ab",
-        "ksu_dtbo.img": "dtbo_ab",
-        "odm.img": "odm",
-        "product.img": "product",
-        "system.img": "system",
-        "system_ext.img": "system_ext",
-        "vbmeta.img": "vbmeta_ab",
-        "vbmeta_system.img": "vbmeta_system_ab",
-        "vendor.img": "vendor",
-        "vendor_boot.img": "vendor_boot_ab",
-        "super.img": "super",
-        "xbl.elf": "xbl_ab",
-        "xbl_config.elf": "xbl_config_ab",
-        "abl.elf": "abl_ab",
-        "tz.mbn": "tz_ab",
-        "hyp.mbn": "hyp_ab",
-        "devcfg.mbn": "devcfg_ab",
-        "storsec.mbn": "storsec",
-        "BTFM.bin": "bluetooth_ab",
-        "cmnlib.mbn": "cmnlib_ab",
-        "cmnlib64.mbn": "cmnlib64_ab",
-        "NON-HLOS.bin": "modem_ab",
-        "dspso.bin": "dsp_ab",
-        "km41.mbn": "keymaster_ab",
-        "aop.mbn": "aop_ab",
-        "qupv3fw.elf": "qupfw_ab",
-        "imagefv.elf": "imagefv_ab",
-        "uefi_sec.mbn": "uefisecapp_ab",
-        "multi_image.mbn": "multiimgoem_ab",
-        "metadata.img": "metadata",
-        "userdata.img": "userdata",
-        "rescue.img": "rescue",
-        "cust.img": "cust",
-        "misc.img": "misc"
-    };
+    // Clear the table and disable partition input if multiple files are selected
+    fileTable.innerHTML = "";
+    partField.disabled = fileField.files.length > 1;
 
-    // Clear previous table entries
-    fileListTable.innerHTML = "";
-
-    const files = Array.from(fileField.files);
-    files.forEach((file) => {
+    Array.from(fileField.files).forEach((file) => {
         const fileName = file.name.toLowerCase();
-        const partition = fileMapping[fileName];
+        const matchedPartition = fileMapping[fileName];
 
-        if (partition) {
-            const row = fileListTable.insertRow();
-            row.insertCell(0).innerText = file.name;
-            row.insertCell(1).innerText = partition;
-            row.insertCell(2).innerText = "Pending";
-            row.dataset.file = fileName; // Store file reference
-            row.dataset.partition = partition; // Store partition reference
+        if (matchedPartition) {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${fileName}</td>
+                <td>${matchedPartition}</td>
+            `;
+            fileTable.appendChild(row);
+
+            // If a single file, animate partition field
+            if (fileField.files.length === 1) {
+                typeAnimation(partField, matchedPartition);
+            }
         }
     });
-
-    // Disable file input if there are valid files
-    fileField.disabled = files.length > 0;
 });
 
-// Function to flash all files
-async function flashAllFiles(event) {
+// Flash files one by one
+async function flashFormFile(event) {
     event.preventDefault();
-    const fileListTable = document.querySelector("#file-list tbody");
-    const rows = Array.from(fileListTable.rows);
+    showProgressOverlay();
 
-    if (rows.length === 0) {
-        alert("No files to flash!");
+    const fileField = document.querySelector("#flash-file");
+    const partField = document.querySelector(".flash-partition");
+    const logOutput = document.querySelector("#log-output");
+
+    const files = Array.from(fileField.files);
+    if (files.length === 0) {
+        alert("Please select at least one file to flash!");
+        hideProgressOverlay();
         return;
     }
 
-    showProgressOverlay();
+    try {
+        for (const file of files) {
+            const fileName = file.name.toLowerCase();
+            const partition = fileMapping[fileName];
 
-    for (const row of rows) {
-        const fileName = row.dataset.file;
-        const partition = row.dataset.partition;
-        const fileField = document.querySelector("#flash-file");
+            if (!partition) {
+                logOutput.textContent += `Skipped ${fileName}: No partition mapping found.\n`;
+                continue;
+            }
 
-        try {
-            const file = Array.from(fileField.files).find((f) => f.name.toLowerCase() === fileName);
+            logOutput.textContent += `Flashing ${fileName} to ${partition}...\n`;
             await device.flashBlob(partition, file, (progress) => {
-                row.cells[2].innerText = `Flashing: ${Math.round(progress * 100)}%`;
+                logOutput.textContent += `Progress: ${progress}%\n`;
             });
-            row.cells[2].innerText = "Success";
-        } catch (error) {
-            row.cells[2].innerText = `Failed: ${error.message}`;
+            logOutput.textContent += `Successfully flashed ${fileName} to ${partition}.\n`;
         }
+        alert("All files flashed successfully!");
+    } catch (error) {
+        alert(`Failed to flash: ${error.message}`);
+    } finally {
+        fileField.value = "";
+        partField.value = "";
+        document.querySelector("#file-table tbody").innerHTML = "";
+        partField.disabled = false;
+        hideProgressOverlay();
+        await checkDeviceConnection();
     }
-
-    hideProgressOverlay();
-    alert("Flashing complete!");
-    document.querySelector("#flash-file").disabled = false; // Re-enable input
 }
+
 
 
  async function rbootFlashFormFile(event) {
@@ -2054,6 +2090,7 @@ async function vbmeta_system_disable() {
     document.querySelector(".reboot-edl-button").addEventListener("click", rebootToEDL);
     document.querySelector(".switchslot-button").addEventListener("click", switchSlot);
     document.querySelector(".boot-form").addEventListener("submit", bootFormFile);
+    document.querySelector(".flash-form").addEventListener("submit", flashFormFile);
     document.querySelector(".rboot-flash-form").addEventListener("submit", rbootFlashFormFile);
     document.querySelector(".download-log-button").addEventListener("click", logdownload);
 </script>
