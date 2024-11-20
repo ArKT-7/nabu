@@ -1,4 +1,4 @@
-// Debug level enum
+// Debug level enum  SAVE
 var DebugLevel;
 (function (DebugLevel) {
     DebugLevel[DebugLevel["Silent"] = 0] = "Silent";
