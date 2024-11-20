@@ -1479,10 +1479,10 @@ async function flashFormFile(event) {
             }
 
             logOutput.textContent += `Flashing ${fileName} to ${partition}...\n`;
-		await device.flashBlob(partition, file, (progress) => {
-		    logOutput.textContent += `Progress: ${progress}% (${(progress * totalBytes).toFixed(0)} bytes)\n`;
-		});
-		logOutput.textContent += `Successfully flashed ${fileName} to ${partition}.\n`;
+            await device.flashBlob(partition, file, (progress) => {
+                logOutput.textContent += `Progress: ${progress}%\n`;
+            });
+            logOutput.textContent += `Successfully flashed ${fileName} to ${partition}.\n`;
         }
         alert("All files flashed successfully!");
     } catch (error) {
