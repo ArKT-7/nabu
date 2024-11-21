@@ -542,6 +542,112 @@
             transition: transform 0.2s ease, opacity 2s ease;
         }
 
+	    
+	/* Scrollable container styling for the table */
+	.file-table-container {
+	    max-height: 200px; /* Set a max height for scrolling */
+	    overflow-y: auto; /* Enable vertical scrolling */
+	    overflow-x: auto; /* Enable horizontal scrolling */
+	    margin: 20px 0;
+	    border: 1px solid #ccc;
+	    border-radius: 15px; /* Rounded corners */
+	    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Modern shadow */
+	    background: linear-gradient(135deg, #f0f4f8, #e2e8f0); /* Gradient background */
+	    width: 100%; /* Full width inside the container */
+	    margin: 0 auto; /* Center the container horizontally */
+	}
+	
+	/* Table styling */
+	.file-table {
+	    width: 100%; /* Full width inside the container */
+	    border-collapse: collapse; /* Remove gaps between cells */
+	    text-align: center; /* Center text horizontally in each cell */
+	    color: black; /* Text color */
+	    font-family: 'Arial', sans-serif; /* Modern, clean font */
+	    table-layout: fixed; /* Fix table layout to handle overflow properly */
+	    margin: 0; /* Remove any margin from the table */
+	}
+	
+	/* Header styling */
+	.file-table th {
+	    position: sticky;
+	    top: 0; /* Sticky headers */
+	    background: rgba(0, 0, 0, 0.02); /* Subtle dark overlay */
+	    color: black; /* Dark text color */
+	    font-weight: bold;
+	    padding: 10px;
+	    border-bottom: 2px solid #ccc;
+	    word-wrap: break-word; /* Break words in header */
+	    white-space: normal; /* Allow wrapping in header */
+	}
+	
+	/* Row styling */
+	.file-table td {
+	    padding: 10px;
+	    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+	    color: black;
+	    overflow: auto; /* Allow scrolling within individual cells */
+	    white-space: nowrap; /* Keep text in a single line */
+	    word-wrap: break-word; /* Allow wrapping within the cell */
+	    max-width: 200px; /* Set a max width for each cell */
+	}
+	
+	/* Custom Scrollbar Styling */
+	.file-table td::-webkit-scrollbar {
+	    width: 8px; /* Adjust the width of the scrollbar */
+	    height: 8px; /* Adjust the height for horizontal scrollbar */
+	}
+	
+	/* Track (background area) styling */
+	.file-table td::-webkit-scrollbar-track {
+	    background: transparent; /* Make the scrollbar track transparent */
+	}
+	
+	/* Thumb (scroll handle) styling */
+	.file-table td::-webkit-scrollbar-thumb {
+	    background: rgba(0, 0, 0, 0.1); /* Subtle dark color for the thumb */
+	    border-radius: 10px; /* Rounded corners for the thumb */
+	    border: 2px solid transparent; /* Add space around the thumb */
+	    background-clip: padding-box; /* Ensure the thumb stays within its border */
+	}
+	
+	/* Hover effect for the thumb */
+	.file-table td::-webkit-scrollbar-thumb:hover {
+	    background: rgba(0, 0, 0, 0.3); /* Darken the thumb slightly on hover */
+	}
+	
+	
+	
+	/* Hover effect for rows */
+	.file-table tbody tr:hover {
+	    background: rgba(0, 0, 0, 0.05); /* Highlight on hover */
+	    cursor: pointer; /* Pointer cursor */
+	}
+	
+	/* Editable cell styling */
+	.file-table td.editable-partition {
+	    background: #eef7ff; /* Highlight editable cells */
+	    cursor: text; /* Text cursor */
+	}
+	
+	/* Scrollbar styling */
+	.file-table-container::-webkit-scrollbar {
+	    width: 12px;
+	    background: transparent;
+	}
+	
+	.file-table-container::-webkit-scrollbar-thumb {
+	    background: rgba(0, 0, 0, 0.5); /* Dark scrollbar thumb */
+	    border-radius: 10px; /* Rounded corners */
+	    border: 3px solid transparent;
+	    background-clip: padding-box;
+	}
+	
+	.file-table-container::-webkit-scrollbar-thumb:hover {
+	    background: rgba(0, 0, 0, 0.7); /* Darker thumb on hover */
+	}
+
+	    
 
 </style>
 </head>
@@ -785,21 +891,39 @@
     </div>
 	
 	<div class="container">
-	    <form class="flash-form" onsubmit="flashFormFile(event)">
-	        <label for="flash-file">Flash any images/Complete ROM 💀</label>
-	        <input type="file" name="flash-file" id="flash-file" accept=".img,.bin,.elf,.mbn" />
-	        
-	        <label for="flash-partition">Enter Partition</label>
-	        <input type="text" name="flash-partition" class="flash-partition" 
-	               placeholder="Partition like - boot, dtbo, super, vendor_boot, recovery, etc." />
-	        
-	        <input type="submit" value="Flash" class="button" />
-	    </form>
-	    
-	    <label for="log-output">Logs:</label>
-	    <pre id="log-output" class="result-field"></pre>
+    <form class="flash-form">
+        <label for="flash-file">Flash any images/Complete ROM 💀</label>
+        <input type="file" name="flash-file" id="flash-file" accept=".img,.bin,.elf,.mbn" multiple />
+
+        <label for="flash-partition">Enter Partition</label>
+        <input type="text" name="flash-partition" class="flash-partition" 
+               placeholder="Partition like - boot, dtbo, super, vendor_boot, recovery, etc." disabled />
+
+        <div class="file-table-container">
+            <!-- Table for displaying selected files -->
+            <table id="file-table" class="file-table">
+                <thead>
+                    <tr>
+                        <th>File Name</th>
+                        <th>Partition</th>
+                        <th>Size</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dynamic rows will be added here -->
+                </tbody>
+            </table>
+        </div>
+
+        <input type="submit" value="Flash" class="button" />
+    </form>
+
+    <label for="log-output">Logs:</label>
+    <pre id="log-output" class="result-field"></pre>
     <button class="button download-log-button">Download Logs</button>
 </div>
+
+
 
 	<div class="container">
 	    <form class="wipe-form">
@@ -1343,7 +1467,78 @@ async function runRebootCommand(command, successMessage) {
         }
     }
 
-		// Function for typing animation
+	
+// Mapping of file names to partition names
+const fileMapping = {
+    "boot.img": "boot_ab",
+    "crclist.txt": "crclist",
+    "sparsecrclist.txt": "sparsecrclist",
+    "sparsecrclist.txt": "sparsecrclist",
+    "ksu_boot.img": "boot_ab",
+    "magisk_boot.img": "boot_ab",
+    "ksu_dtbo.img": "dtbo_ab",
+    "system.img": "system",
+    "system_ext.img": "system_ext",
+    "vendor.img": "vendor",
+    "odm.img": "odm",
+    "product.img": "product",
+    "xbl.elf": "xbl_ab",
+    "xbl_config.elf": "xbl_config_ab",
+    "xbl.img": "xbl_ab",
+    "xbl_config.img": "xbl_config_ab",
+    "abl.elf": "abl_ab",
+    "abl.img": "abl_ab",
+    "tz.mbn": "tz_ab",
+    "tz.img": "tz_ab",
+    "hyp.mbn": "hyp_ab",
+    "hyp.img": "hyp_ab",
+    "devcfg.mbn": "devcfg_ab",
+    "devcfg.img": "devcfg_ab",
+    "storsec.mbn": "storsec",
+    "storsec.img": "storsec",
+    "btfm.bin": "bluetooth_ab",
+    "bluetooth.img": "bluetooth_ab",	
+    "cmnlib.mbn": "cmnlib_ab",
+    "cmnlib64.mbn": "cmnlib64_ab",
+    "cmnlib.img": "cmnlib_ab",
+    "cmnlib64.img": "cmnlib64_ab",
+    "non-hlos.bin": "modem_ab",
+    "modem.img": "modem_ab",
+    "dspso.bin": "dsp_ab",
+    "dsp.img": "dsp_ab",	
+    "km41.mbn": "keymaster_ab",
+    "aop.mbn": "aop_ab",
+    "aop.img": "aop_ab",	
+    "qupv3fw.elf": "qupfw_ab",
+    "qupfw.img": "qupfw_ab",
+    "imagefv.elf": "imagefv_ab",
+    "uefi_sec.mbn": "uefisecapp_ab",
+    "multi_image.mbn": "multiimgoem_ab",
+    "super.img": "super",
+    "metadata.img": "metadata",
+    "vbmeta_system.img": "vbmeta_system_ab",
+    "vbmeta.img": "vbmeta_ab",
+    "dtbo.img": "dtbo_ab",
+    "userdata.img": "userdata",
+    "rescue.img": "rescue",
+    "vendor_boot.img": "vendor_boot_ab",
+    "cust.img": "cust",
+    "fw_4j1ed.img": "fw_4j1ed_ab",
+    "fw_4u1ea.img": "fw_4u1ea_ab",
+    "LOGO.img": "logo_ab",
+    "misc.img": "misc"
+};
+
+// Convert file size to a human-readable format
+function formatFileSize(size) {
+    if (size < 1024) return size + " B";
+    if (size < 1024 * 1024) return (size / 1024).toFixed(2) + " KB";
+    if (size < 1024 * 1024 * 1024) return (size / (1024 * 1024)).toFixed(2) + " MB";
+    return (size / (1024 * 1024 * 1024)).toFixed(2) + " GB";
+}
+
+
+// Function for typing animation
 function typeAnimation(element, text, delay = 50) {
     element.value = ""; // Clear the input box
     let i = 0;
@@ -1357,100 +1552,176 @@ function typeAnimation(element, text, delay = 50) {
     }, delay);
 }
 
-// Update `flashFormFile` to include logging
+// Handle file selection
+document.querySelector("#flash-file").addEventListener("change", function () {
+    const fileField = document.querySelector("#flash-file");
+    const partField = document.querySelector(".flash-partition");
+    const fileTable = document.querySelector("#file-table tbody");
+
+    // Clear existing rows
+    fileTable.innerHTML = "";
+
+    // Update placeholder and disable status based on file selection
+    if (fileField.files.length > 1) {
+        partField.disabled = true;
+        partField.placeholder = "Enter partition in the table for multiple files";
+    } else {
+        partField.disabled = false;
+        partField.placeholder = "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
+    }
+
+    // Populate the table with file data
+    Array.from(fileField.files).forEach((file, index) => {
+        const fileName = file.name.toLowerCase();
+        const matchedPartition = fileMapping[fileName];
+        const fileSize = formatFileSize(file.size);
+
+        const isEditable = !matchedPartition;
+
+        // Add row to the table
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${fileName}</td>
+            <td contenteditable="${isEditable}" 
+                class="${isEditable ? 'editable-partition' : ''}">
+                ${matchedPartition || "Enter Partition"}
+            </td>
+            <td>${fileSize}</td>
+        `;
+        fileTable.appendChild(row);
+
+        // Synchronize input field and table for a single file
+        if (fileField.files.length === 1) {
+            if (matchedPartition) {
+                // Known file, trigger typing animation for the partition
+                partField.value = ""; // Clear the input field
+                typeAnimation(partField, matchedPartition, 100);
+
+                partField.addEventListener("input", (e) => {
+                    row.cells[1].textContent = e.target.value;
+                });
+
+                row.cells[1].addEventListener("input", (e) => {
+                    partField.value = e.target.textContent;
+                });
+            } else {
+                // Unknown file, don't trigger typing animation, leave input as placeholder
+                partField.value = ""; // Clear the input field
+                partField.placeholder = "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
+                partField.addEventListener("input", (e) => {
+                    row.cells[1].textContent = e.target.value;
+                });
+
+                row.cells[1].addEventListener("input", (e) => {
+                    partField.value = e.target.textContent;
+                });
+            }
+        }
+    });
+});
+
+// Validate before flashing
 async function flashFormFile(event) {
     event.preventDefault();
     showProgressOverlay();
 
-    let fileField = document.querySelector("#flash-file");
-    let partField = document.querySelector(".flash-partition");
-    let file = fileField.files[0];
+    const fileField = document.querySelector("#flash-file");
+    const logOutput = document.querySelector("#log-output");
+    const resultField = document.querySelector(".result-field");
+    const fileTable = document.querySelector("#file-table tbody");
+    const rows = fileTable.querySelectorAll("tr");
 
-    if (!file) {
-        alert("Please select a file to flash!");
+    const files = Array.from(fileField.files);
+    if (files.length === 0) {
+        alert("Please select at least one file to flash!");
         hideProgressOverlay();
         return;
     }
 
-    if (!partField.value) {
-        alert("Please specify a partition to flash!");
+    // Validate partitions
+    const partitions = [];
+    let hasError = false;
+
+    rows.forEach((row, index) => {
+        const fileName = files[index].name.toLowerCase();
+        const partitionCell = row.cells[1];
+        const partition = partitionCell.textContent.trim();
+
+        if (!partition || partition === "Enter Partition" || partition === "Enter Partition in the table for multiple files") {
+            partitionCell.textContent = "Enter Partition";
+            hasError = true;
+        } else {
+            partitions.push(partition);
+        }
+    });
+
+    if (hasError) {
+        alert("Error: Please enter valid partitions for all files in the table.");
+        // Reset the table to display placeholder text again
+        resetTableToPlaceholders();
         hideProgressOverlay();
         return;
     }
 
+    // Flash files
     try {
-        await device.flashBlob(partField.value, file, (progress) => {
-        });
-        alert(`Successfully flashed ${partField.value}`);
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const partition = partitions[i];
+
+            // Handle `_AB` logic
+           // Handle `_AB` logic
+	if (partition.endsWith("_ab")) {
+	    const partitionA = partition.replace("_ab", "_a");
+	    const partitionB = partition.replace("_ab", "_b");
+	
+	    // Prepend flashing messages to resultField
+	    resultField.textContent = `Flashing ${file.name} to ${partitionA}...\n` + resultField.textContent;
+	    await device.flashBlob(partitionA, file, (progress) => {
+	        resultField.textContent = `Progress: ${progress}%\n` + resultField.textContent;
+	    });
+	    resultField.textContent = `Successfully flashed ${file.name} to ${partitionA}.\n` + resultField.textContent;
+	
+	    resultField.textContent = `Flashing ${file.name} to ${partitionB}...\n` + resultField.textContent;
+	    await device.flashBlob(partitionB, file, (progress) => {
+	        resultField.textContent = `Progress: ${progress}%\n` + resultField.textContent;
+	    });
+	    resultField.textContent = `Successfully flashed ${file.name} to ${partitionB}.\n` + resultField.textContent;
+	} else {
+	    // Flash normally
+	    resultField.textContent = `Flashing ${file.name} to ${partition}...\n` + resultField.textContent;
+	    await device.flashBlob(partition, file, (progress) => {
+	        resultField.textContent = `Progress: ${progress}%\n` + resultField.textContent;
+	    });
+	    resultField.textContent = `Successfully flashed ${file.name} to ${partition}.\n` + resultField.textContent;
+	}
+        }
+        alert("All files flashed successfully!");
     } catch (error) {
         alert(`Failed to flash: ${error.message}`);
     } finally {
         fileField.value = "";
-        partField.value = "";
+        document.querySelector("#file-table tbody").innerHTML = "";
         hideProgressOverlay();
         await checkDeviceConnection();
     }
 }
 
-// Add event listener for file selection
-document.querySelector("#flash-file").addEventListener("change", function () {
-    const fileField = document.querySelector("#flash-file");
-    const partField = document.querySelector(".flash-partition");
-
-    if (!fileField.files.length) return;
-
-    const file = fileField.files[0];
-    const fileName = file.name;
-	
-	// Mapping of file names to partition names
-	const fileMapping = {
-	    "boot.img": "boot_ab",
-	    "ksu_boot.img": "boot_ab",
-	    "magisk_boot.img": "boot_ab",
-	    "dtbo.img": "dtbo_ab",
-	    "ksu_dtbo.img": "dtbo_ab",
-	    "odm.img": "odm",
-	    "product.img": "product",
-	    "system.img": "system",
-	    "system_ext.img": "system_ext",
-	    "vbmeta.img": "vbmeta_ab",
-	    "vbmeta_system.img": "vbmeta_system_ab",
-	    "vendor.img": "vendor",
-	    "vendor_boot.img": "vendor_boot_ab",
-	    "super.img": "super",
-	    "xbl.elf": "xbl_ab",
-	    "xbl_config.elf": "xbl_config_ab",
-	    "abl.elf": "abl_ab",
-	    "tz.mbn": "tz_ab",
-	    "hyp.mbn": "hyp_ab",
-	    "devcfg.mbn": "devcfg_ab",
-	    "storsec.mbn": "storsec",
-	    "BTFM.bin": "bluetooth_ab",
-	    "cmnlib.mbn": "cmnlib_ab",
-	    "cmnlib64.mbn": "cmnlib64_ab",
-	    "NON-HLOS.bin": "modem_ab",
-	    "dspso.bin": "dsp_ab",
-	    "km41.mbn": "keymaster_ab",
-	    "aop.mbn": "aop_ab",
-	    "qupv3fw.elf": "qupfw_ab",
-	    "imagefv.elf": "imagefv_ab",
-	    "uefi_sec.mbn": "uefisecapp_ab",
-	    "multi_image.mbn": "multiimgoem_ab",
-	    "metadata.img": "metadata",
-	    "userdata.img": "userdata",
-	    "rescue.img": "rescue",
-	    "cust.img": "cust",
-	    "misc.img": "misc"
-	};
+// Reset table cells to show placeholder text
+function resetTableToPlaceholders() {
+    const fileTable = document.querySelector("#file-table tbody");
+    const rows = fileTable.querySelectorAll("tr");
+    
+    rows.forEach(row => {
+        const partitionCell = row.cells[1];
+        // Reset the partition cell to its placeholder state
+        if (!partitionCell.textContent.trim() || partitionCell.textContent.trim() === "Enter Partition") {
+            partitionCell.textContent = "Enter Partition";
+        }
+    });
+}
 
 
-    // Check if the file matches a known partition
-    const matchedPartition = fileMapping[fileName.toLowerCase()];
-    if (matchedPartition) {
-        // Animate the typing of the partition name
-        typeAnimation(partField, matchedPartition);
-    }
-});
 
 
 
