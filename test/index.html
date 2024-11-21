@@ -542,6 +542,64 @@
             transition: transform 0.2s ease, opacity 2s ease;
         }
 
+		    /* Scrollable container styling */
+	.file-table-container {
+	    max-height: 300px; /* Set a max height for scrolling */
+	    overflow-y: auto; /* Enable vertical scrolling */
+	    margin: 20px 0; /* Add spacing around the table */
+	    border: 1px solid #ddd; /* Border for the scrollable box */
+	    border-radius: 8px; /* Rounded corners */
+	    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+	    background: #fff; /* White background for contrast */
+	}
+	
+	/* Table styling */
+	.file-table {
+	    width: 100%; /* Full width inside the container */
+	    border-collapse: collapse; /* Remove extra spacing */
+	    text-align: left; /* Align text to the left */
+	    font-family: 'Arial', sans-serif; /* Clean, modern font */
+	}
+	
+	/* Header styling */
+	.file-table th {
+	    position: sticky;
+	    top: 0; /* Stick header to the top when scrolling */
+	    background-color: #f8f9fa; /* Light gray for the header */
+	    color: #333; /* Dark text color */
+	    font-weight: bold;
+	    padding: 10px 15px;
+	    border-bottom: 2px solid #ddd;
+	}
+	
+	/* Body cell styling */
+	.file-table td {
+	    padding: 10px 15px;
+	    border-bottom: 1px solid #eee; /* Subtle separator between rows */
+	    color: #555; /* Slightly muted text color */
+	}
+	
+	/* Hover effect for rows */
+	.file-table tbody tr:hover {
+	    background-color: #f1f1f1; /* Light gray highlight */
+	    cursor: pointer; /* Change cursor to pointer */
+	}
+	
+	/* Scrollbar styling (for modern browsers) */
+	.file-table-container::-webkit-scrollbar {
+	    width: 8px;
+	}
+	
+	.file-table-container::-webkit-scrollbar-thumb {
+	    background-color: #888; /* Thumb color */
+	    border-radius: 4px; /* Rounded thumb */
+	}
+	
+	.file-table-container::-webkit-scrollbar-thumb:hover {
+	    background-color: #555; /* Darker thumb on hover */
+	}
+
+
 
 </style>
 </head>
@@ -785,33 +843,37 @@
     </div>
 	
 	<div class="container">
-    <form class="flash-form" onsubmit="flashFormFile(event)">
-        <label for="flash-file">Flash any images/Complete ROM 💀</label>
-        <input type="file" name="flash-file" id="flash-file" accept=".img,.bin,.elf,.mbn" multiple />
-
-        <label for="flash-partition">Enter Partition</label>
-        <input type="text" name="flash-partition" class="flash-partition" 
-               placeholder="Partition like - boot, dtbo, super, vendor_boot, recovery, etc." />
-
-        <input type="submit" value="Flash" class="button" />
-    </form>
-
-    <label for="log-output">Logs:</label>
-    <pre id="log-output" class="result-field"></pre>
-    <button class="button download-log-button">Download Logs</button>
-
-    <!-- Table for displaying selected files, partitions, and sizes -->
-	<table id="file-table" class="file-table">
-	    <thead>
-	        <tr>
-	            <th>File Name</th>
-	            <th>Partition</th>
-	            <th>Size</th>
-	        </tr>
-	    </thead>
-	    <tbody></tbody>
-	</table>
-</div>
+	    <form class="flash-form" onsubmit="flashFormFile(event)">
+	        <label for="flash-file">Flash any images/Complete ROM 💀</label>
+	        <input type="file" name="flash-file" id="flash-file" accept=".img,.bin,.elf,.mbn" multiple />
+	
+	        <label for="flash-partition">Enter Partition</label>
+	        <input type="text" name="flash-partition" class="flash-partition" 
+	               placeholder="Partition like - boot, dtbo, super, vendor_boot, recovery, etc." />
+	
+	        <input type="submit" value="Flash" class="button" />
+	    </form>
+	
+	    <label for="log-output">Logs:</label>
+	    <pre id="log-output" class="result-field"></pre>
+	    <button class="button download-log-button">Download Logs</button>
+	
+	    <div class="file-table-container">
+	        <!-- Table for displaying selected files -->
+	        <table id="file-table" class="file-table">
+	            <thead>
+	                <tr>
+	                    <th>File Name</th>
+	                    <th>Partition</th>
+	                    <th>Size</th>
+	                </tr>
+	            </thead>
+	            <tbody>
+	                <!-- Dynamic rows will be added here -->
+	            </tbody>
+	        </table>
+	    </div>
+	</div>
 
 
 	<div class="container">
