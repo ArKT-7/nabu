@@ -1529,14 +1529,19 @@ document.querySelector("#flash-file").addEventListener("change", function () {
     const partField = document.querySelector(".flash-partition");
     const fileTable = document.querySelector("#file-table tbody");
 
-    fileTable.innerHTML = ""; // Clear existing rows
+    // Clear existing rows
+    fileTable.innerHTML = "";
 
-    // Enable or disable input box based on file count
-    partField.disabled = fileField.files.length > 1;
-    partField.placeholder = fileField.files.length > 1
-        ? "Enter partition in the table for multiple files"
-        : "Enter Partition";
+    // Update placeholder and disable status based on file selection
+    if (fileField.files.length > 1) {
+        partField.disabled = true;
+        partField.placeholder = "Enter partition in the table for multiple files";
+    } else {
+        partField.disabled = false;
+        partField.placeholder = "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
+    }
 
+    // Populate the table with file data
     Array.from(fileField.files).forEach((file, index) => {
         const fileName = file.name.toLowerCase();
         const matchedPartition = fileMapping[fileName];
@@ -1544,7 +1549,7 @@ document.querySelector("#flash-file").addEventListener("change", function () {
 
         const isEditable = !matchedPartition;
 
-        // Add row to table
+        // Add row to the table
         const row = document.createElement("tr");
         row.innerHTML = `
             <td>${fileName}</td>
@@ -1558,7 +1563,6 @@ document.querySelector("#flash-file").addEventListener("change", function () {
 
         // Synchronize input field and table for a single file
         if (fileField.files.length === 1 && isEditable) {
-            partField.disabled = false;
             partField.value = ""; // Clear the input field
             partField.addEventListener("input", (e) => {
                 row.cells[1].textContent = e.target.value;
@@ -1567,15 +1571,9 @@ document.querySelector("#flash-file").addEventListener("change", function () {
             row.cells[1].addEventListener("input", (e) => {
                 partField.value = e.target.textContent;
             });
-
-            // Optional: Add typing animation for mapped partitions
-            if (matchedPartition) {
-                typeAnimation(partField, matchedPartition);
-            }
         }
     });
 });
-
 
 // Validate before flashing
 async function flashFormFile(event) {
@@ -1604,8 +1602,8 @@ async function flashFormFile(event) {
         const partitionCell = row.cells[1];
         const partition = partitionCell.textContent.trim();
 
-        if (!partition || partition === "Enter Partition") {
-            partitionCell.textContent = "Invalid (No Partition Entered)";
+        if (!partition || partition === "Enter Partition" || partition === "Enter Partition in the table for multiple files") {
+            partitionCell.textContent = "Enter Partition";
             hasError = true;
         } else {
             partitions.push(partition);
@@ -1614,6 +1612,8 @@ async function flashFormFile(event) {
 
     if (hasError) {
         alert("Error: Please enter valid partitions for all files in the table.");
+        // Reset the table to display placeholder text again
+        resetTableToPlaceholders();
         hideProgressOverlay();
         return;
     }
@@ -1658,6 +1658,20 @@ async function flashFormFile(event) {
         hideProgressOverlay();
         await checkDeviceConnection();
     }
+}
+
+// Reset table cells to show placeholder text
+function resetTableToPlaceholders() {
+    const fileTable = document.querySelector("#file-table tbody");
+    const rows = fileTable.querySelectorAll("tr");
+    
+    rows.forEach(row => {
+        const partitionCell = row.cells[1];
+        // Reset the partition cell to its placeholder state
+        if (!partitionCell.textContent.trim() || partitionCell.textContent.trim() === "Enter Partition") {
+            partitionCell.textContent = "Enter Partition";
+        }
+    });
 }
 
 
