@@ -1583,25 +1583,27 @@ document.querySelector("#flash-file").addEventListener("change", function () {
         return 0;
     });
 
+    // Populate the table with grouped files
     sortedGroups.forEach(([baseName, files]) => {
-        // If multiple files share the same base name, create a dropdown
         let fileOptionsHTML = "";
+
         if (files.length > 1) {
+            // Create a dropdown for multiple variants
             fileOptionsHTML = `
-                <select>
+                <select class="file-variant-dropdown">
                     ${files
                         .map(
-                            (file) =>
-                                `<option value="${file.fileName}">${file.fileName} (${file.fileSize})</option>`
+                            (file) => `
+                        <option value="${file.fileName}" data-size="${file.fileSize}">${file.fileName} (${file.fileSize})</option>`
                         )
                         .join("")}
                 </select>
             `;
         } else {
+            // Single file
             fileOptionsHTML = files[0].fileName;
         }
 
-        // Add row to the table
         const row = document.createElement("tr");
         row.innerHTML = `
             <td>${fileOptionsHTML}</td>
@@ -1613,7 +1615,7 @@ document.querySelector("#flash-file").addEventListener("change", function () {
         `;
         fileTable.appendChild(row);
 
-        // Synchronize input field and table for a single file (if no dropdown)
+        // Synchronize input field and table for single file case
         if (fileField.files.length === 1 && files.length === 1) {
             if (files[0].matchedPartition) {
                 typeAnimation(partField, files[0].matchedPartition, 100);
@@ -1640,9 +1642,22 @@ document.querySelector("#flash-file").addEventListener("change", function () {
 
     // Disable the input field for multiple files
     partField.disabled = fileField.files.length > 1;
-    partField.placeholder = fileField.files.length > 1
-        ? "Enter partition in the table for multiple files"
-        : "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
+    partField.placeholder =
+        fileField.files.length > 1
+            ? "Enter partition in the table for multiple files"
+            : "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
+
+    // Handle dropdown changes
+    fileTable.addEventListener("change", (event) => {
+        if (event.target.classList.contains("file-variant-dropdown")) {
+            const selectedOption = event.target.options[event.target.selectedIndex];
+            const fileSize = selectedOption.dataset.size;
+
+            // Update the size cell in the table
+            const sizeCell = event.target.closest("tr").querySelector("td:nth-child(3)");
+            sizeCell.textContent = fileSize;
+        }
+    });
 });
 
 
