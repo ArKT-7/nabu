@@ -855,37 +855,38 @@
     </div>
 	
 	<div class="container">
-	    <form class="flash-form" onsubmit="flashFormFile(event)">
-	        <label for="flash-file">Flash any images/Complete ROM 💀</label>
-	        <input type="file" name="flash-file" id="flash-file" accept=".img,.bin,.elf,.mbn" multiple />
-	
-	        <label for="flash-partition">Enter Partition</label>
-	        <input type="text" name="flash-partition" class="flash-partition" 
-	               placeholder="Partition like - boot, dtbo, super, vendor_boot, recovery, etc." />
+    <form class="flash-form" onsubmit="flashFormFile(event)">
+        <label for="flash-file">Flash any images/Complete ROM 💀</label>
+        <input type="file" name="flash-file" id="flash-file" accept=".img,.bin,.elf,.mbn" multiple />
 
-		    <div class="file-table-container">
-	        <!-- Table for displaying selected files -->
-	        <table id="file-table" class="file-table">
-	            <thead>
-	                <tr>
-	                    <th>File Name</th>
-	                    <th>Partition</th>
-	                    <th>Size</th>
-	                </tr>
-	            </thead>
-	            <tbody>
-	                <!-- Dynamic rows will be added here -->
-	            </tbody>
-	        </table>
-	    </div>
-	
-	        <input type="submit" value="Flash" class="button" />
-	    </form>
-	
-	    <label for="log-output">Logs:</label>
-	    <pre id="log-output" class="result-field"></pre>
-	    <button class="button download-log-button">Download Logs</button>
-	</div>
+        <label for="flash-partition">Enter Partition</label>
+        <input type="text" name="flash-partition" class="flash-partition" 
+               placeholder="Enter partition in the table for multiple files" disabled />
+
+        <div class="file-table-container">
+            <!-- Table for displaying selected files -->
+            <table id="file-table" class="file-table">
+                <thead>
+                    <tr>
+                        <th>File Name</th>
+                        <th>Partition (Editable)</th>
+                        <th>Size</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dynamic rows will be added here -->
+                </tbody>
+            </table>
+        </div>
+
+        <input type="submit" value="Flash" class="button" />
+    </form>
+
+    <label for="log-output">Logs:</label>
+    <pre id="log-output" class="result-field"></pre>
+    <button class="button download-log-button">Download Logs</button>
+</div>
+
 
 
 	<div class="container">
@@ -1514,29 +1515,22 @@ function formatFileSize(size) {
     return (size / (1024 * 1024 * 1024)).toFixed(2) + " GB";
 }
 
-// Update partition name in the table when input box value changes
-document.querySelector(".flash-partition").addEventListener("input", function () {
-    const partField = document.querySelector(".flash-partition");
-    const fileTable = document.querySelector("#file-table tbody");
+//* Update partition name in the table when input box value changes
 
-    // Update "Custom (Enter Partition)" rows in the table
-    Array.from(fileTable.querySelectorAll("tr")).forEach((row) => {
-        const partitionCell = row.cells[1];
-        if (partitionCell.textContent === "Custom (Enter Partition)") {
-            partitionCell.textContent = partField.value || "Custom (Enter Partition)";
-        }
-    });
-});
-
-// Handle multiple file selection with size display
+// Handle multiple file selection with editable partitions in the table
 document.querySelector("#flash-file").addEventListener("change", function () {
     const fileField = document.querySelector("#flash-file");
     const partField = document.querySelector(".flash-partition");
     const fileTable = document.querySelector("#file-table tbody");
 
-    // Clear the table and disable partition input if multiple files are selected
+    // Clear the table
     fileTable.innerHTML = "";
+
+    // Enable or disable input box based on the number of files selected
     partField.disabled = fileField.files.length > 1;
+    partField.placeholder = fileField.files.length > 1 
+        ? "Enter partition in the table for multiple files" 
+        : "Enter Partition";
 
     Array.from(fileField.files).forEach((file) => {
         const fileName = file.name.toLowerCase();
@@ -1547,31 +1541,27 @@ document.querySelector("#flash-file").addEventListener("change", function () {
         const row = document.createElement("tr");
         row.innerHTML = `
             <td>${fileName}</td>
-            <td>${matchedPartition || "Custom (Enter Partition)"}</td>
+            <td contenteditable="${!matchedPartition}" class="${!matchedPartition ? 'editable-partition' : ''}">
+                ${matchedPartition || "Enter Partition"}
+            </td>
             <td>${fileSize}</td>
         `;
         fileTable.appendChild(row);
-
-        // If only one file is selected, animate the partition input
-        if (fileField.files.length === 1 && matchedPartition) {
-            typeAnimation(partField, matchedPartition);
-        }
     });
 });
 
-// Flash files one by one with validation
+// Validate before flashing
 async function flashFormFile(event) {
     event.preventDefault();
     showProgressOverlay();
 
     const fileField = document.querySelector("#flash-file");
-    const partField = document.querySelector(".flash-partition");
     const logOutput = document.querySelector("#log-output");
     const resultField = document.querySelector(".result-field");
+    const fileTable = document.querySelector("#file-table tbody");
+    const rows = fileTable.querySelectorAll("tr");
 
     const files = Array.from(fileField.files);
-    const fileTable = document.querySelector("#file-table tbody");
-
     if (files.length === 0) {
         alert("Please select at least one file to flash!");
         hideProgressOverlay();
@@ -1579,53 +1569,57 @@ async function flashFormFile(event) {
     }
 
     // Validate partitions
+    const partitions = [];
     let hasError = false;
-    files.forEach((file, index) => {
-        const row = fileTable.rows[index];
-        const partitionCell = row.cells[1];
-        const fileName = file.name.toLowerCase();
-        const matchedPartition = fileMapping[fileName];
 
-        if (!matchedPartition && !partField.value.trim()) {
-            hasError = true;
+    rows.forEach((row, index) => {
+        const fileName = files[index].name.toLowerCase();
+        const partitionCell = row.cells[1];
+        const partition = partitionCell.textContent.trim();
+
+        if (!partition || partition === "Enter Partition") {
             partitionCell.textContent = "Invalid (No Partition Entered)";
+            hasError = true;
+        } else {
+            partitions.push(partition);
         }
     });
 
     if (hasError) {
-        alert("Error: Please enter a valid partition for all files or select files with valid mapping.");
+        alert("Error: Please enter valid partitions for all files in the table.");
         hideProgressOverlay();
         return;
     }
 
+    // Flash files
     try {
-        for (const file of files) {
-            const fileName = file.name.toLowerCase();
-            let partition = fileMapping[fileName] || partField.value.trim();
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const partition = partitions[i];
 
-            // Flash `_A` and `_B` for `_AB` partitions
+            // Handle `_AB` logic
             if (partition.endsWith("_ab")) {
                 const partitionA = partition.replace("_ab", "_a");
                 const partitionB = partition.replace("_ab", "_b");
 
-                resultField.textContent += `Flashing ${fileName} to ${partitionA}...\n`;
+                resultField.textContent += `Flashing ${file.name} to ${partitionA}...\n`;
                 await device.flashBlob(partitionA, file, (progress) => {
                     resultField.textContent += `Progress: ${progress}%\n`;
                 });
-                resultField.textContent += `Successfully flashed ${fileName} to ${partitionA}.\n`;
+                resultField.textContent += `Successfully flashed ${file.name} to ${partitionA}.\n`;
 
-                resultField.textContent += `Flashing ${fileName} to ${partitionB}...\n`;
+                resultField.textContent += `Flashing ${file.name} to ${partitionB}...\n`;
                 await device.flashBlob(partitionB, file, (progress) => {
                     resultField.textContent += `Progress: ${progress}%\n`;
                 });
-                resultField.textContent += `Successfully flashed ${fileName} to ${partitionB}.\n`;
+                resultField.textContent += `Successfully flashed ${file.name} to ${partitionB}.\n`;
             } else {
-                // Flash normally for non-_AB partitions
-                resultField.textContent += `Flashing ${fileName} to ${partition}...\n`;
+                // Flash normally
+                resultField.textContent += `Flashing ${file.name} to ${partition}...\n`;
                 await device.flashBlob(partition, file, (progress) => {
                     resultField.textContent += `Progress: ${progress}%\n`;
                 });
-                resultField.textContent += `Successfully flashed ${fileName} to ${partition}.\n`;
+                resultField.textContent += `Successfully flashed ${file.name} to ${partition}.\n`;
             }
         }
         alert("All files flashed successfully!");
@@ -1633,14 +1627,11 @@ async function flashFormFile(event) {
         alert(`Failed to flash: ${error.message}`);
     } finally {
         fileField.value = "";
-        partField.value = "";
         document.querySelector("#file-table tbody").innerHTML = "";
-        partField.disabled = false;
         hideProgressOverlay();
         await checkDeviceConnection();
     }
 }
-
 
 
 
