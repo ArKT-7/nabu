@@ -1374,41 +1374,61 @@ function typeAnimation(element, text, delay = 50) {
 // Mapping of file names to partition names
 const fileMapping = {
     "boot.img": "boot_ab",
+    "crclist.txt": "crclist",
+    "sparsecrclist.txt": "sparsecrclist",
+    "sparsecrclist.txt": "sparsecrclist",
     "ksu_boot.img": "boot_ab",
     "magisk_boot.img": "boot_ab",
-    "dtbo.img": "dtbo_ab",
     "ksu_dtbo.img": "dtbo_ab",
-    "odm.img": "odm",
-    "product.img": "product",
     "system.img": "system",
     "system_ext.img": "system_ext",
-    "vbmeta.img": "vbmeta_ab",
-    "vbmeta_system.img": "vbmeta_system_ab",
     "vendor.img": "vendor",
-    "vendor_boot.img": "vendor_boot_ab",
-    "super.img": "super",
+    "odm.img": "odm",
+    "product.img": "product",
     "xbl.elf": "xbl_ab",
     "xbl_config.elf": "xbl_config_ab",
+    "xbl.img": "xbl_ab",
+    "xbl_config.img": "xbl_config_ab",
     "abl.elf": "abl_ab",
+    "abl.img": "abl_ab",
     "tz.mbn": "tz_ab",
+    "tz.img": "tz_ab",
     "hyp.mbn": "hyp_ab",
+    "hyp.img": "hyp_ab",
     "devcfg.mbn": "devcfg_ab",
+    "devcfg.img": "devcfg_ab",
     "storsec.mbn": "storsec",
+    "storsec.img": "storsec",
     "BTFM.bin": "bluetooth_ab",
+    "bluetooth.img": "bluetooth_ab",	
     "cmnlib.mbn": "cmnlib_ab",
     "cmnlib64.mbn": "cmnlib64_ab",
+    "cmnlib.img": "cmnlib_ab",
+    "cmnlib64.img": "cmnlib64_ab",
     "NON-HLOS.bin": "modem_ab",
+    "modem.img": "modem_ab",
     "dspso.bin": "dsp_ab",
+    "dsp.img": "dsp_ab",	
     "km41.mbn": "keymaster_ab",
     "aop.mbn": "aop_ab",
+    "aop.img": "aop_ab",	
     "qupv3fw.elf": "qupfw_ab",
+    "qupfw.img": "qupfw_ab",
     "imagefv.elf": "imagefv_ab",
     "uefi_sec.mbn": "uefisecapp_ab",
     "multi_image.mbn": "multiimgoem_ab",
+    "super.img": "super",
     "metadata.img": "metadata",
+    "vbmeta_system.img": "vbmeta_system_ab",
+    "vbmeta.img": "vbmeta_ab",
+    "dtbo.img": "dtbo_ab",
     "userdata.img": "userdata",
     "rescue.img": "rescue",
+    "vendor_boot.img": "vendor_boot_ab",
     "cust.img": "cust",
+    "fw_4j1ed.img": "fw_4j1ed_ab",
+    "fw_4u1ea.img": "fw_4u1ea_ab",
+    "LOGO.img": "logo_ab",
     "misc.img": "misc"
 };
 
@@ -1478,11 +1498,11 @@ async function flashFormFile(event) {
                 continue;
             }
 
-            logOutput.textContent += `Flashing ${fileName} to ${partition}...\n`;
-            await device.flashBlob(partition, file, (progress) => {
-                logOutput.textContent += `Progress: ${progress}%\n`;
-            });
-            logOutput.textContent += `Successfully flashed ${fileName} to ${partition}.\n`;
+             resultField.textContent += `Flashing ${fileName} to ${partition}...\n`;
+		await device.flashBlob(partition, file, (progress) => {
+		     resultField.textContent += `Progress: ${progress}% (${(progress * totalBytes).toFixed(0)} bytes)\n`;
+		});
+		 resultField.textContent += `Successfully flashed ${fileName} to ${partition}.\n`;
         }
         alert("All files flashed successfully!");
     } catch (error) {
