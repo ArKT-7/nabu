@@ -1,4 +1,4 @@
-<!DOCTYPE html>  //save
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -542,11 +542,11 @@
             transition: transform 0.2s ease, opacity 2s ease;
         }
 	
-	/* Scrollable container styling for the table */
+		/* Scrollable container styling for the table */
 	.file-table-container {
 	    max-height: 300px; /* Set a max height for scrolling */
 	    overflow-y: auto; /* Enable vertical scrolling */
-	    overflow-x: auto; /* Prevent horizontal scrolling */
+	    overflow-x: auto; /* Enable horizontal scrolling */
 	    margin: 20px 0;
 	    border: 1px solid #ccc;
 	    border-radius: 15px; /* Rounded corners */
@@ -563,8 +563,7 @@
 	    text-align: left; /* Align text to the left */
 	    color: black; /* Text color */
 	    font-family: 'Arial', sans-serif; /* Modern, clean font */
-	    white-space: pre-wrap; /* Allow wrapping for long text */
-	    word-wrap: break-word; /* Break long words to prevent overflow */
+	    table-layout: fixed; /* Fix table layout */
 	}
 	
 	/* Header styling */
@@ -574,21 +573,30 @@
 	    background: rgba(0, 0, 0, 0.05); /* Subtle dark overlay */
 	    color: black; /* Dark text color */
 	    font-weight: bold;
-	    padding: 10px 15px;
+	    padding: 10px;
 	    border-bottom: 2px solid #ccc;
 	}
 	
 	/* Row styling */
 	.file-table td {
-	    padding: 10px 15px;
+	    padding: 10px;
 	    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 	    color: black;
+	    overflow: hidden; /* Prevent overflow */
+	    text-overflow: ellipsis; /* Show ellipsis for long text */
+	    white-space: nowrap; /* Keep text in a single line */
 	}
 	
 	/* Hover effect for rows */
 	.file-table tbody tr:hover {
 	    background: rgba(0, 0, 0, 0.05); /* Highlight on hover */
 	    cursor: pointer; /* Pointer cursor */
+	}
+	
+	/* Editable cell styling */
+	.file-table td.editable-partition {
+	    background: #eef7ff; /* Highlight editable cells */
+	    cursor: text; /* Text cursor */
 	}
 	
 	/* Scrollbar styling */
@@ -602,13 +610,12 @@
 	    border-radius: 10px; /* Rounded corners */
 	    border: 3px solid transparent;
 	    background-clip: padding-box;
-	    height: 50px;
-	    margin: 10px 0; /* Add margin to thumb */
 	}
 	
 	.file-table-container::-webkit-scrollbar-thumb:hover {
 	    background: rgba(0, 0, 0, 0.7); /* Darker thumb on hover */
 	}
+	
 
 
 
@@ -1445,7 +1452,7 @@ function typeAnimation(element, text, delay = 50) {
         }
     }, delay);
 }
-
+	
 // Mapping of file names to partition names
 const fileMapping = {
     "boot.img": "boot_ab",
@@ -1515,40 +1522,60 @@ function formatFileSize(size) {
     return (size / (1024 * 1024 * 1024)).toFixed(2) + " GB";
 }
 
-//* Update partition name in the table when input box value changes
 
-// Handle multiple file selection with editable partitions in the table
+// Handle file selection
 document.querySelector("#flash-file").addEventListener("change", function () {
     const fileField = document.querySelector("#flash-file");
     const partField = document.querySelector(".flash-partition");
     const fileTable = document.querySelector("#file-table tbody");
 
-    // Clear the table
-    fileTable.innerHTML = "";
+    fileTable.innerHTML = ""; // Clear existing rows
 
-    // Enable or disable input box based on the number of files selected
+    // Enable or disable input box based on file count
     partField.disabled = fileField.files.length > 1;
-    partField.placeholder = fileField.files.length > 1 
-        ? "Enter partition in the table for multiple files" 
+    partField.placeholder = fileField.files.length > 1
+        ? "Enter partition in the table for multiple files"
         : "Enter Partition";
 
-    Array.from(fileField.files).forEach((file) => {
+    Array.from(fileField.files).forEach((file, index) => {
         const fileName = file.name.toLowerCase();
         const matchedPartition = fileMapping[fileName];
         const fileSize = formatFileSize(file.size);
+
+        const isEditable = !matchedPartition;
 
         // Add row to table
         const row = document.createElement("tr");
         row.innerHTML = `
             <td>${fileName}</td>
-            <td contenteditable="${!matchedPartition}" class="${!matchedPartition ? 'editable-partition' : ''}">
+            <td contenteditable="${isEditable}" 
+                class="${isEditable ? 'editable-partition' : ''}">
                 ${matchedPartition || "Enter Partition"}
             </td>
             <td>${fileSize}</td>
         `;
         fileTable.appendChild(row);
+
+        // Synchronize input field and table for a single file
+        if (fileField.files.length === 1 && isEditable) {
+            partField.disabled = false;
+            partField.value = ""; // Clear the input field
+            partField.addEventListener("input", (e) => {
+                row.cells[1].textContent = e.target.value;
+            });
+
+            row.cells[1].addEventListener("input", (e) => {
+                partField.value = e.target.textContent;
+            });
+
+            // Optional: Add typing animation for mapped partitions
+            if (matchedPartition) {
+                typeAnimation(partField, matchedPartition);
+            }
+        }
     });
 });
+
 
 // Validate before flashing
 async function flashFormFile(event) {
