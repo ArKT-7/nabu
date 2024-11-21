@@ -1620,17 +1620,17 @@ document.querySelector("#flash-file").addEventListener("change", function () {
         if (files.length > 1) {
             // Create dropdown for grouped files
             fileOptionsHTML = `
-	    <select class="select_table">
-	        ${files
-	            .map(
-	                (file) => `
-	            <option value="${file.fileName}" data-size="${file.fileSize}">
-	                ${file.fileName} (${file.fileSize})
-	            </option>`
-	            )
-	            .join("")}
-	    </select>
-	`;
+                <select class="file-variant-dropdown">
+                    ${files
+                        .map(
+                            (file) => `
+                        <option value="${file.fileName}" data-size="${file.fileSize}">
+                            ${file.fileName} (${file.fileSize})
+                        </option>`
+                        )
+                        .join("")}
+                </select>
+            `;
         } else {
             // Single file
             fileOptionsHTML = files[0].fileName;
@@ -1693,6 +1693,7 @@ document.querySelector("#flash-file").addEventListener("change", function () {
         }
     });
 });
+
 
 
 
