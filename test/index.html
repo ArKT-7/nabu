@@ -865,7 +865,7 @@
 	</form>
     </div>
 	
-	<div class="container">
+<div class="container">
     <form class="flash-form" onsubmit="flashFormFile(event)">
         <label for="flash-file">Flash any images/Complete ROM 💀</label>
         <input type="file" name="flash-file" id="flash-file" accept=".img,.bin,.elf,.mbn" multiple />
@@ -882,6 +882,7 @@
                         <th>File Name</th>
                         <th>Partition</th>
                         <th>Size</th>
+                        <th>Actions</th> <!-- New column for actions -->
                     </tr>
                 </thead>
                 <tbody>
@@ -897,6 +898,7 @@
     <pre id="log-output" class="result-field"></pre>
     <button class="button download-log-button">Download Logs</button>
 </div>
+
 
 
 
@@ -1552,6 +1554,7 @@ document.querySelector("#flash-file").addEventListener("change", function () {
         const fileSize = formatFileSize(file.size);
 
         const isEditable = !matchedPartition;
+        const isDisabled = !matchedPartition; // Disable flashing for unknown files
 
         // Add row to the table
         const row = document.createElement("tr");
@@ -1562,6 +1565,10 @@ document.querySelector("#flash-file").addEventListener("change", function () {
                 ${matchedPartition || "Enter Partition"}
             </td>
             <td>${fileSize}</td>
+            <td>
+                <button class="remove-file-btn">&#10006;</button>
+                <input type="checkbox" class="enable-flash-checkbox" ${isDisabled ? '' : 'checked'}>
+            </td>
         `;
         fileTable.appendChild(row);
 
@@ -1592,6 +1599,26 @@ document.querySelector("#flash-file").addEventListener("change", function () {
                 });
             }
         }
+
+        // Handle remove button click
+        row.querySelector(".remove-file-btn").addEventListener("click", () => {
+            row.remove(); // Remove the row from the table
+        });
+
+        // Handle checkbox toggle (Enable/Disable flashing)
+        row.querySelector(".enable-flash-checkbox").addEventListener("change", (e) => {
+            const checkbox = e.target;
+            const partitionCell = row.cells[1];
+
+            if (checkbox.checked) {
+                partitionCell.contentEditable = true;
+                partitionCell.classList.add("editable-partition");
+            } else {
+                partitionCell.contentEditable = false;
+                partitionCell.classList.remove("editable-partition");
+                partitionCell.textContent = "Disabled"; // Indicate it's disabled
+            }
+        });
     });
 });
 
@@ -1613,7 +1640,7 @@ async function flashFormFile(event) {
         return;
     }
 
-    // Validate partitions
+    // Validate partitions and enabled files
     const partitions = [];
     let hasError = false;
 
@@ -1621,9 +1648,13 @@ async function flashFormFile(event) {
         const fileName = files[index].name.toLowerCase();
         const partitionCell = row.cells[1];
         const partition = partitionCell.textContent.trim();
+        const isEnabled = row.querySelector(".enable-flash-checkbox").checked;
 
         if (!partition || partition === "Enter Partition" || partition === "Enter Partition in the table for multiple files") {
             partitionCell.textContent = "Enter Partition";
+            hasError = true;
+        } else if (!isEnabled) {
+            partitionCell.textContent = "Disabled";
             hasError = true;
         } else {
             partitions.push(partition);
@@ -1631,20 +1662,20 @@ async function flashFormFile(event) {
     });
 
     if (hasError) {
-        alert("Error: Please enter valid partitions for all files in the table.");
+        alert("Error: Please enter valid partitions for all files and ensure enabled files are correct.");
         // Reset the table to display placeholder text again
         resetTableToPlaceholders();
         hideProgressOverlay();
         return;
     }
 
-    // Flash files
+    // Flash files (same as your previous logic)
     try {
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
             const partition = partitions[i];
 
-            // Handle `_AB` logic
+            // Handle `_AB` logic (same as your previous logic)
             if (partition.endsWith("_ab")) {
                 const partitionA = partition.replace("_ab", "_a");
                 const partitionB = partition.replace("_ab", "_b");
@@ -1679,6 +1710,7 @@ async function flashFormFile(event) {
         await checkDeviceConnection();
     }
 }
+
 
 // Reset table cells to show placeholder text
 function resetTableToPlaceholders() {
