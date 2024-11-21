@@ -541,8 +541,23 @@
             border-radius: 50%;
             transition: transform 0.2s ease, opacity 2s ease;
         }
-	
-	/* Table styling */
+
+	    
+/* Scrollable container styling for the table */
+.file-table-container {
+    max-height: 200px; /* Set a max height for scrolling */
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    margin: 20px 0;
+    border: 1px solid #ccc;
+    border-radius: 15px; /* Rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Modern shadow */
+    background: linear-gradient(135deg, #f0f4f8, #e2e8f0); /* Gradient background */
+    width: 100%; /* Full width inside the container */
+    margin: 0 auto; /* Center the container horizontally */
+}
+
+/* Table styling */
 .file-table {
     width: 100%; /* Full width inside the container */
     border-collapse: collapse; /* Remove gaps between cells */
@@ -564,7 +579,6 @@
     border-bottom: 2px solid #ccc;
     word-wrap: break-word; /* Break words in header */
     white-space: normal; /* Allow wrapping in header */
-    text-align: center; /* Center the header text horizontally */
 }
 
 /* Row styling */
@@ -576,8 +590,6 @@
     text-overflow: ellipsis; /* Show ellipsis for long text */
     white-space: nowrap; /* Keep text in a single line */
     word-wrap: break-word; /* Allow wrapping within the cell */
-    text-align: center; /* Center the text horizontally */
-    vertical-align: middle; /* Center the text vertically */
 }
 
 /* Hover effect for rows */
@@ -609,8 +621,7 @@
     background: rgba(0, 0, 0, 0.7); /* Darker thumb on hover */
 }
 
-	
-
+	    
 
 </style>
 </head>
