@@ -1552,7 +1552,6 @@ function typeAnimation(element, text, delay = 50) {
     }, delay);
 }
 
-// Handle file selection
 document.querySelector("#flash-file").addEventListener("change", function () {
     const fileField = document.querySelector("#flash-file");
     const partField = document.querySelector(".flash-partition");
@@ -1561,41 +1560,63 @@ document.querySelector("#flash-file").addEventListener("change", function () {
     // Clear existing rows
     fileTable.innerHTML = "";
 
-    // Update placeholder and disable status based on file selection
-    if (fileField.files.length > 1) {
-        partField.disabled = true;
-        partField.placeholder = "Enter partition in the table for multiple files";
-    } else {
-        partField.disabled = false;
-        partField.placeholder = "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
-    }
+    // Group files based on common prefixes
+    const fileGroups = new Map();
 
-    // Populate the table with file data
-    Array.from(fileField.files).forEach((file, index) => {
+    Array.from(fileField.files).forEach((file) => {
         const fileName = file.name.toLowerCase();
+        const baseName = fileName.split(".")[0]; // Extract the base name before "."
         const matchedPartition = fileMapping[fileName];
         const fileSize = formatFileSize(file.size);
 
-        const isEditable = !matchedPartition;
+        // Group files by base name
+        if (!fileGroups.has(baseName)) {
+            fileGroups.set(baseName, []);
+        }
+        fileGroups.get(baseName).push({ fileName, matchedPartition, fileSize });
+    });
+
+    // Ensure `super.img` is processed last
+    const sortedGroups = [...fileGroups].sort(([keyA], [keyB]) => {
+        if (keyA === "super") return 1; // Move `super` to the end
+        if (keyB === "super") return -1;
+        return 0;
+    });
+
+    sortedGroups.forEach(([baseName, files]) => {
+        // If multiple files share the same base name, create a dropdown
+        let fileOptionsHTML = "";
+        if (files.length > 1) {
+            fileOptionsHTML = `
+                <select>
+                    ${files
+                        .map(
+                            (file) =>
+                                `<option value="${file.fileName}">${file.fileName} (${file.fileSize})</option>`
+                        )
+                        .join("")}
+                </select>
+            `;
+        } else {
+            fileOptionsHTML = files[0].fileName;
+        }
 
         // Add row to the table
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td>${fileName}</td>
-            <td contenteditable="${isEditable}" 
-                class="${isEditable ? 'editable-partition' : ''}">
-                ${matchedPartition || "Enter Partition"}
+            <td>${fileOptionsHTML}</td>
+            <td contenteditable="${!files[0].matchedPartition}" 
+                class="${!files[0].matchedPartition ? "editable-partition" : ""}">
+                ${files[0].matchedPartition || "Enter Partition"}
             </td>
-            <td>${fileSize}</td>
+            <td>${files[0].fileSize}</td>
         `;
         fileTable.appendChild(row);
 
-        // Synchronize input field and table for a single file
-        if (fileField.files.length === 1) {
-            if (matchedPartition) {
-                // Known file, trigger typing animation for the partition
-                partField.value = ""; // Clear the input field
-                typeAnimation(partField, matchedPartition, 100);
+        // Synchronize input field and table for a single file (if no dropdown)
+        if (fileField.files.length === 1 && files.length === 1) {
+            if (files[0].matchedPartition) {
+                typeAnimation(partField, files[0].matchedPartition, 100);
 
                 partField.addEventListener("input", (e) => {
                     row.cells[1].textContent = e.target.value;
@@ -1605,9 +1626,7 @@ document.querySelector("#flash-file").addEventListener("change", function () {
                     partField.value = e.target.textContent;
                 });
             } else {
-                // Unknown file, don't trigger typing animation, leave input as placeholder
-                partField.value = ""; // Clear the input field
-                partField.placeholder = "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
+                partField.placeholder = "Partition like - boot, dtbo, super, etc.";
                 partField.addEventListener("input", (e) => {
                     row.cells[1].textContent = e.target.value;
                 });
@@ -1618,7 +1637,14 @@ document.querySelector("#flash-file").addEventListener("change", function () {
             }
         }
     });
+
+    // Disable the input field for multiple files
+    partField.disabled = fileField.files.length > 1;
+    partField.placeholder = fileField.files.length > 1
+        ? "Enter partition in the table for multiple files"
+        : "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
 });
+
 
 // Validate before flashing
 async function flashFormFile(event) {
