@@ -1441,20 +1441,6 @@ async function runRebootCommand(command, successMessage) {
         }
     }
 
-		// Function for typing animation
-// Function for typing animation
-function typeAnimation(element, text, delay = 50) {
-    element.value = ""; // Clear the input box
-    let i = 0;
-
-    const typeInterval = setInterval(() => {
-        element.value += text[i];
-        i++;
-        if (i === text.length) {
-            clearInterval(typeInterval);
-        }
-    }, delay);
-}
 	
 // Mapping of file names to partition names
 const fileMapping = {
@@ -1526,6 +1512,20 @@ function formatFileSize(size) {
 }
 
 
+// Function for typing animation
+function typeAnimation(element, text, delay = 50) {
+    element.value = ""; // Clear the input box
+    let i = 0;
+
+    const typeInterval = setInterval(() => {
+        element.value += text[i];
+        i++;
+        if (i === text.length) {
+            clearInterval(typeInterval);
+        }
+    }, delay);
+}
+
 // Handle file selection
 document.querySelector("#flash-file").addEventListener("change", function () {
     const fileField = document.querySelector("#flash-file");
@@ -1565,18 +1565,31 @@ document.querySelector("#flash-file").addEventListener("change", function () {
         fileTable.appendChild(row);
 
         // Synchronize input field and table for a single file
-        if (fileField.files.length === 1 && isEditable) {
-            // Type animation for the input field
-            partField.value = ""; // Clear the input field
-            typeAnimation(partField, "Enter partition", 100);
+        if (fileField.files.length === 1) {
+            if (matchedPartition) {
+                // Known file, trigger typing animation for the partition
+                partField.value = ""; // Clear the input field
+                typeAnimation(partField, matchedPartition, 100);
 
-            partField.addEventListener("input", (e) => {
-                row.cells[1].textContent = e.target.value;
-            });
+                partField.addEventListener("input", (e) => {
+                    row.cells[1].textContent = e.target.value;
+                });
 
-            row.cells[1].addEventListener("input", (e) => {
-                partField.value = e.target.textContent;
-            });
+                row.cells[1].addEventListener("input", (e) => {
+                    partField.value = e.target.textContent;
+                });
+            } else {
+                // Unknown file, don't trigger typing animation, leave input as placeholder
+                partField.value = ""; // Clear the input field
+                partField.placeholder = "Enter partition";
+                partField.addEventListener("input", (e) => {
+                    row.cells[1].textContent = e.target.value;
+                });
+
+                row.cells[1].addEventListener("input", (e) => {
+                    partField.value = e.target.textContent;
+                });
+            }
         }
     });
 });
@@ -1679,6 +1692,7 @@ function resetTableToPlaceholders() {
         }
     });
 }
+
 
 
 
