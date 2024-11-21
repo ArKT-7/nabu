@@ -542,62 +542,74 @@
             transition: transform 0.2s ease, opacity 2s ease;
         }
 
-		    /* Scrollable container styling */
+	/* Scrollable container styling for the table */
 	.file-table-container {
 	    max-height: 300px; /* Set a max height for scrolling */
 	    overflow-y: auto; /* Enable vertical scrolling */
-	    margin: 20px 0; /* Add spacing around the table */
-	    border: 1px solid #ddd; /* Border for the scrollable box */
-	    border-radius: 8px; /* Rounded corners */
-	    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-	    background: #fff; /* White background for contrast */
+	    overflow-x: hidden; /* Prevent horizontal scrolling */
+	    margin: 20px 0;
+	    border: 1px solid #ccc;
+	    border-radius: 15px; /* Rounded corners */
+	    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Modern shadow */
+	    background: linear-gradient(135deg, #f0f4f8, #e2e8f0); /* Gradient background */
+	    width: 90%; /* Center the table within its container */
+	    margin: 0 auto; /* Center the container horizontally */
 	}
 	
 	/* Table styling */
 	.file-table {
 	    width: 100%; /* Full width inside the container */
-	    border-collapse: collapse; /* Remove extra spacing */
+	    border-collapse: collapse; /* Remove gaps between cells */
 	    text-align: left; /* Align text to the left */
-	    font-family: 'Arial', sans-serif; /* Clean, modern font */
+	    color: black; /* Text color */
+	    font-family: 'Arial', sans-serif; /* Modern, clean font */
+	    white-space: pre-wrap; /* Allow wrapping for long text */
+	    word-wrap: break-word; /* Break long words to prevent overflow */
 	}
 	
 	/* Header styling */
 	.file-table th {
 	    position: sticky;
-	    top: 0; /* Stick header to the top when scrolling */
-	    background-color: #f8f9fa; /* Light gray for the header */
-	    color: #333; /* Dark text color */
+	    top: 0; /* Sticky headers */
+	    background: rgba(0, 0, 0, 0.05); /* Subtle dark overlay */
+	    color: black; /* Dark text color */
 	    font-weight: bold;
 	    padding: 10px 15px;
-	    border-bottom: 2px solid #ddd;
+	    border-bottom: 2px solid #ccc;
 	}
 	
-	/* Body cell styling */
+	/* Row styling */
 	.file-table td {
 	    padding: 10px 15px;
-	    border-bottom: 1px solid #eee; /* Subtle separator between rows */
-	    color: #555; /* Slightly muted text color */
+	    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+	    color: black;
 	}
 	
 	/* Hover effect for rows */
 	.file-table tbody tr:hover {
-	    background-color: #f1f1f1; /* Light gray highlight */
-	    cursor: pointer; /* Change cursor to pointer */
+	    background: rgba(0, 0, 0, 0.05); /* Highlight on hover */
+	    cursor: pointer; /* Pointer cursor */
 	}
 	
-	/* Scrollbar styling (for modern browsers) */
+	/* Scrollbar styling */
 	.file-table-container::-webkit-scrollbar {
-	    width: 8px;
+	    width: 12px;
+	    background: transparent;
 	}
 	
 	.file-table-container::-webkit-scrollbar-thumb {
-	    background-color: #888; /* Thumb color */
-	    border-radius: 4px; /* Rounded thumb */
+	    background: rgba(0, 0, 0, 0.5); /* Dark scrollbar thumb */
+	    border-radius: 10px; /* Rounded corners */
+	    border: 3px solid transparent;
+	    background-clip: padding-box;
+	    height: 50px;
+	    margin: 10px 0; /* Add margin to thumb */
 	}
 	
 	.file-table-container::-webkit-scrollbar-thumb:hover {
-	    background-color: #555; /* Darker thumb on hover */
+	    background: rgba(0, 0, 0, 0.7); /* Darker thumb on hover */
 	}
+
 
 
 
