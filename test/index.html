@@ -1560,12 +1560,13 @@ document.querySelector("#flash-file").addEventListener("change", function () {
     // Clear existing rows
     fileTable.innerHTML = "";
 
-    // Group files based on common prefixes
+    // Group files based on base name (prefix before first "_", "-", or ".")
     const fileGroups = new Map();
 
     Array.from(fileField.files).forEach((file) => {
         const fileName = file.name.toLowerCase();
-        const baseName = fileName.split(".")[0]; // Extract the base name before "."
+        // Extract base name before first "_", "-", or "." (e.g., "boot", "dtbo", "super")
+        const baseName = fileName.split(/[_\-.]/)[0];
         const matchedPartition = fileMapping[fileName];
         const fileSize = formatFileSize(file.size);
 
@@ -1576,15 +1577,8 @@ document.querySelector("#flash-file").addEventListener("change", function () {
         fileGroups.get(baseName).push({ fileName, matchedPartition, fileSize });
     });
 
-    // Ensure `super.img` is processed last
-    const sortedGroups = [...fileGroups].sort(([keyA], [keyB]) => {
-        if (keyA === "super") return 1; // Move `super` to the end
-        if (keyB === "super") return -1;
-        return 0;
-    });
-
     // Populate the table with grouped files
-    sortedGroups.forEach(([baseName, files]) => {
+    fileGroups.forEach((files, baseName) => {
         let fileOptionsHTML = "";
 
         if (files.length > 1) {
