@@ -1,4 +1,4 @@
-<!DOCTYPE html> //SAVE BEST
+<!DOCTYPE html> /save latest
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -647,22 +647,7 @@
     background: rgba(0, 0, 0, 0.7); /* Darker thumb on hover */
 }
 
-/* Dropdown (custom select) */
-.select_table {
-    background-color: #f9f9f9;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
-    padding: 5px;
-    width: 100%;
-    box-sizing: border-box;
-    cursor: pointer;
-}	    
-
-.select_table {
-    height: 100%;
-    line-height: normal;
-}
+	    
 
 </style>
 </head>
@@ -906,38 +891,37 @@
     </div>
 	
 	<div class="container">
-	    <form class="flash-form">
-	        <label for="flash-file">Flash any images/Complete ROM 💀</label>
-	        <input type="file" name="flash-file" id="flash-file" accept=".img,.bin,.elf,.mbn" multiple />
-	
-	        <label for="flash-partition">Enter Partition</label>
-	        <input type="text" name="flash-partition" class="flash-partition" 
-	               placeholder="Partition like - boot, dtbo, super, vendor_boot, recovery, etc." disabled />
-	
-	        <div class="file-table-container">
-	            <!-- Table for displaying selected files -->
-	            <table id="file-table" class="file-table">
-	                <thead>
-	                    <tr>
-	                        <th>File Name</th>
-	                        <th>Partition</th>
-	                        <th>Size</th>
-	                    </tr>
-	                </thead>
-	                <tbody>
-	                    <!-- Dynamic rows will be added here -->
-	                </tbody>
-	            </table>
-	        </div>
-	
-	        <input type="submit" value="Flash" class="button" />
-	    </form>
-	
-	    <label for="log-output">Logs:</label>
-	    <pre id="log-output" class="result-field"></pre>
-	    <button class="button download-log-button">Download Logs</button>
-	</div>
+    <form class="flash-form">
+        <label for="flash-file">Flash any images/Complete ROM 💀</label>
+        <input type="file" name="flash-file" id="flash-file" accept=".img,.bin,.elf,.mbn" multiple />
 
+        <label for="flash-partition">Enter Partition</label>
+        <input type="text" name="flash-partition" class="flash-partition" 
+               placeholder="Partition like - boot, dtbo, super, vendor_boot, recovery, etc." disabled />
+
+        <div class="file-table-container">
+            <!-- Table for displaying selected files -->
+            <table id="file-table" class="file-table">
+                <thead>
+                    <tr>
+                        <th>File Name</th>
+                        <th>Partition</th>
+                        <th>Size</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dynamic rows will be added here -->
+                </tbody>
+            </table>
+        </div>
+
+        <input type="submit" value="Flash" class="button" />
+    </form>
+
+    <label for="log-output">Logs:</label>
+    <pre id="log-output" class="result-field"></pre>
+    <button class="button download-log-button">Download Logs</button>
+</div>
 
 
 
@@ -1568,6 +1552,7 @@ function typeAnimation(element, text, delay = 50) {
     }, delay);
 }
 
+// Handle file selection
 document.querySelector("#flash-file").addEventListener("change", function () {
     const fileField = document.querySelector("#flash-file");
     const partField = document.querySelector(".flash-partition");
@@ -1576,116 +1561,64 @@ document.querySelector("#flash-file").addEventListener("change", function () {
     // Clear existing rows
     fileTable.innerHTML = "";
 
-    // Define allowed filenames for dropdown options
-    const dropdownFiles = {
-        boot: ["boot.img", "ksu_boot.img", "magisk_boot.img"],
-        dtbo: ["dtbo.img", "ksu_dtbo.img"],
-    };
-
-    // Convert file size to a human-readable format
-    function formatFileSize(size) {
-        if (size < 1024) return size + " B";
-        if (size < 1024 * 1024) return (size / 1024).toFixed(2) + " KB";
-        return (size / (1024 * 1024)).toFixed(2) + " MB";
+    // Update placeholder and disable status based on file selection
+    if (fileField.files.length > 1) {
+        partField.disabled = true;
+        partField.placeholder = "Enter partition in the table for multiple files";
+    } else {
+        partField.disabled = false;
+        partField.placeholder = "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
     }
 
-    // Group files by base name (e.g., boot, dtbo)
-    const fileGroups = new Map();
-
-    Array.from(fileField.files).forEach((file) => {
+    // Populate the table with file data
+    Array.from(fileField.files).forEach((file, index) => {
         const fileName = file.name.toLowerCase();
-        const baseName = fileName.split(/[_\-.]/)[0]; // Extract base name
-
+        const matchedPartition = fileMapping[fileName];
         const fileSize = formatFileSize(file.size);
-        let matchedDropdown = null;
 
-        // Check if the file is part of the boot or dtbo variants
-        if (dropdownFiles.boot.includes(fileName)) {
-            matchedDropdown = "boot";
-        } else if (dropdownFiles.dtbo.includes(fileName)) {
-            matchedDropdown = "dtbo";
-        }
+        const isEditable = !matchedPartition;
 
-        // Group files by base name
-        if (!fileGroups.has(baseName)) {
-            fileGroups.set(baseName, []);
-        }
-        fileGroups.get(baseName).push({ fileName, matchedDropdown, fileSize });
-    });
-
-    // Populate the table with grouped files
-    fileGroups.forEach((files, baseName) => {
-        let fileOptionsHTML = "";
-
-        // Handle dropdown for boot and dtbo files
-        if (files.length > 1 && files[0].matchedDropdown) {
-            fileOptionsHTML = `
-                <select class="select_table">
-                    ${files
-                        .map(
-                            (file) => `
-                        <option value="${file.fileName}" data-size="${file.fileSize}">
-                            ${file.fileName} (${file.fileSize})
-                        </option>`
-                        )
-                        .join("")}
-                </select>
-            `;
-        } else {
-            // Single file, display the file name directly
-            fileOptionsHTML = files[0].fileName;
-        }
-
+        // Add row to the table
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td>${fileOptionsHTML}</td>
-            <td contenteditable="${!files[0].matchedDropdown}" 
-                class="${!files[0].matchedDropdown ? "editable-partition" : ""}">
-                ${files[0].matchedDropdown || "Enter Partition"}
+            <td>${fileName}</td>
+            <td contenteditable="${isEditable}" 
+                class="${isEditable ? 'editable-partition' : ''}">
+                ${matchedPartition || "Enter Partition"}
             </td>
-            <td>${files[0].fileSize}</td>
+            <td>${fileSize}</td>
         `;
         fileTable.appendChild(row);
 
-        // Synchronize input field and table for single file case
-        if (fileField.files.length === 1 && files.length === 1) {
-            if (files[0].matchedDropdown) {
-                partField.value = files[0].matchedDropdown;
-                partField.disabled = true;
-            } else {
-                partField.placeholder = "Partition like - boot, dtbo, super, etc.";
-                partField.disabled = false;
+        // Synchronize input field and table for a single file
+        if (fileField.files.length === 1) {
+            if (matchedPartition) {
+                // Known file, trigger typing animation for the partition
+                partField.value = ""; // Clear the input field
+                typeAnimation(partField, matchedPartition, 100);
+
                 partField.addEventListener("input", (e) => {
                     row.cells[1].textContent = e.target.value;
                 });
+
+                row.cells[1].addEventListener("input", (e) => {
+                    partField.value = e.target.textContent;
+                });
+            } else {
+                // Unknown file, don't trigger typing animation, leave input as placeholder
+                partField.value = ""; // Clear the input field
+                partField.placeholder = "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
+                partField.addEventListener("input", (e) => {
+                    row.cells[1].textContent = e.target.value;
+                });
+
                 row.cells[1].addEventListener("input", (e) => {
                     partField.value = e.target.textContent;
                 });
             }
         }
     });
-
-    // Disable the input field for multiple files
-    partField.disabled = fileField.files.length > 1;
-    partField.placeholder =
-        fileField.files.length > 1
-            ? "Enter partition in the table for multiple files"
-            : "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
-
-    // Handle dropdown changes for boot and dtbo files
-    fileTable.addEventListener("change", (event) => {
-        if (event.target.classList.contains("select_table")) {
-            const selectedOption = event.target.options[event.target.selectedIndex];
-            const fileSize = selectedOption.dataset.size;
-
-            // Update the size cell in the table
-            const sizeCell = event.target.closest("tr").querySelector("td:nth-child(3)");
-            sizeCell.textContent = fileSize;
-        }
-    });
 });
-
-
 
 // Validate before flashing
 async function flashFormFile(event) {
