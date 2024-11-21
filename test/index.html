@@ -541,12 +541,12 @@
             border-radius: 50%;
             transition: transform 0.2s ease, opacity 2s ease;
         }
-
+	
 	/* Scrollable container styling for the table */
 	.file-table-container {
 	    max-height: 300px; /* Set a max height for scrolling */
 	    overflow-y: auto; /* Enable vertical scrolling */
-	    overflow-x: hidden; /* Prevent horizontal scrolling */
+	    overflow-x: auto; /* Prevent horizontal scrolling */
 	    margin: 20px 0;
 	    border: 1px solid #ccc;
 	    border-radius: 15px; /* Rounded corners */
@@ -854,7 +854,7 @@
 	</form>
     </div>
 	
-	<div class="container">
+	<div class="flash-section">
 	    <form class="flash-form" onsubmit="flashFormFile(event)">
 	        <label for="flash-file">Flash any images/Complete ROM 💀</label>
 	        <input type="file" name="flash-file" id="flash-file" accept=".img,.bin,.elf,.mbn" multiple />
@@ -863,15 +863,7 @@
 	        <input type="text" name="flash-partition" class="flash-partition" 
 	               placeholder="Partition like - boot, dtbo, super, vendor_boot, recovery, etc." />
 	
-	        <input type="submit" value="Flash" class="button" />
-	    </form>
-	
-	    <label for="log-output">Logs:</label>
-	    <pre id="log-output" class="result-field"></pre>
-	    <button class="button download-log-button">Download Logs</button>
-	
-	    <div class="file-table-container">
-	        <!-- Table for displaying selected files -->
+	        <!-- Scrollable table container for file details -->
 	        <table id="file-table" class="file-table">
 	            <thead>
 	                <tr>
@@ -884,7 +876,13 @@
 	                <!-- Dynamic rows will be added here -->
 	            </tbody>
 	        </table>
-	    </div>
+	
+	        <input type="submit" value="Flash" class="button" />
+	    </form>
+	
+	    <label for="log-output">Logs:</label>
+	    <pre id="log-output" class="result-field"></pre>
+	    <button class="button download-log-button">Download Logs</button>
 	</div>
 
 
