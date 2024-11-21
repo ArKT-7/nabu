@@ -1514,6 +1514,20 @@ function formatFileSize(size) {
     return (size / (1024 * 1024 * 1024)).toFixed(2) + " GB";
 }
 
+// Update partition name in the table when input box value changes
+document.querySelector(".flash-partition").addEventListener("input", function () {
+    const partField = document.querySelector(".flash-partition");
+    const fileTable = document.querySelector("#file-table tbody");
+
+    // Update "Custom (Enter Partition)" rows in the table
+    Array.from(fileTable.querySelectorAll("tr")).forEach((row) => {
+        const partitionCell = row.cells[1];
+        if (partitionCell.textContent === "Custom (Enter Partition)") {
+            partitionCell.textContent = partField.value || "Custom (Enter Partition)";
+        }
+    });
+});
+
 // Handle multiple file selection with size display
 document.querySelector("#flash-file").addEventListener("change", function () {
     const fileField = document.querySelector("#flash-file");
@@ -1545,7 +1559,7 @@ document.querySelector("#flash-file").addEventListener("change", function () {
     });
 });
 
-// Flash files one by one with `_A` and `_B` handling
+// Flash files one by one with validation
 async function flashFormFile(event) {
     event.preventDefault();
     showProgressOverlay();
@@ -1556,8 +1570,30 @@ async function flashFormFile(event) {
     const resultField = document.querySelector(".result-field");
 
     const files = Array.from(fileField.files);
+    const fileTable = document.querySelector("#file-table tbody");
+
     if (files.length === 0) {
         alert("Please select at least one file to flash!");
+        hideProgressOverlay();
+        return;
+    }
+
+    // Validate partitions
+    let hasError = false;
+    files.forEach((file, index) => {
+        const row = fileTable.rows[index];
+        const partitionCell = row.cells[1];
+        const fileName = file.name.toLowerCase();
+        const matchedPartition = fileMapping[fileName];
+
+        if (!matchedPartition && !partField.value.trim()) {
+            hasError = true;
+            partitionCell.textContent = "Invalid (No Partition Entered)";
+        }
+    });
+
+    if (hasError) {
+        alert("Error: Please enter a valid partition for all files or select files with valid mapping.");
         hideProgressOverlay();
         return;
     }
@@ -1565,16 +1601,7 @@ async function flashFormFile(event) {
     try {
         for (const file of files) {
             const fileName = file.name.toLowerCase();
-            let partition = fileMapping[fileName];
-
-            // Use entered partition if not found in the mapping
-            if (!partition) {
-                partition = partField.value.trim();
-                if (!partition) {
-                    logOutput.textContent += `Skipped ${fileName}: No partition mapping or custom partition provided.\n`;
-                    continue;
-                }
-            }
+            let partition = fileMapping[fileName] || partField.value.trim();
 
             // Flash `_A` and `_B` for `_AB` partitions
             if (partition.endsWith("_ab")) {
@@ -1613,6 +1640,7 @@ async function flashFormFile(event) {
         await checkDeviceConnection();
     }
 }
+
 
 
 
