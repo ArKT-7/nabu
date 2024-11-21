@@ -1,4 +1,4 @@
-<!DOCTYPE html> //best
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -564,7 +564,7 @@
     text-align: center; /* Center text horizontally in each cell */
     color: black; /* Text color */
     font-family: 'Arial', sans-serif; /* Modern, clean font */
-    table-layout: fixed; /* Fix table layout to handle overflow properly */
+    table-layout: auto; /* Change layout to auto for better handling of text overflow */
     margin: 0; /* Remove any margin from the table */
 }
 
@@ -579,6 +579,7 @@
     border-bottom: 2px solid #ccc;
     word-wrap: break-word; /* Break words in header */
     white-space: normal; /* Allow wrapping in header */
+    z-index: 1; /* Ensure header stays above content */
 }
 
 /* Row styling */
@@ -590,6 +591,8 @@
     text-overflow: ellipsis; /* Show ellipsis for long text */
     white-space: nowrap; /* Keep text in a single line */
     word-wrap: break-word; /* Allow wrapping within the cell */
+    max-width: 200px; /* Ensure cells have a max width */
+    overflow-x: auto; /* Enable horizontal scroll for each cell */
 }
 
 /* Hover effect for rows */
@@ -620,6 +623,7 @@
 .file-table-container::-webkit-scrollbar-thumb:hover {
     background: rgba(0, 0, 0, 0.7); /* Darker thumb on hover */
 }
+
 
 	    
 
