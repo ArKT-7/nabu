@@ -544,83 +544,88 @@
             transition: transform 0.2s ease, opacity 2s ease;
         }
 
-	 /* Scrollable container styling for the table (Dark Mode) */
-.file-table-container {
-    max-height: 200px; /* Set a max height for scrolling */
-    overflow-y: auto; /* Enable vertical scrolling */
-    overflow-x: auto; /* Enable horizontal scrolling */
-    margin: 20px 0;
-    border: 1px solid #444; /* Dark border color */
-    border-radius: 15px; /* Rounded corners */
-    box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1); /* Light shadow for contrast */
-    background: linear-gradient(135deg, #333, #444); /* Dark gradient background */
-    width: 100%; /* Full width inside the container */
-    margin: 0 auto; /* Center the container horizontally */
-}
-
-/* Table styling (Dark Mode) */
-.file-table {
-    width: 100%; /* Full width inside the container */
-    border-collapse: collapse; /* Remove gaps between cells */
-    text-align: center; /* Center text horizontally in each cell */
-    color: #fff; /* White text color */
-    font-family: 'Arial', sans-serif; /* Modern, clean font */
-    table-layout: fixed; /* Fix table layout to handle overflow properly */
-    margin: 0; /* Remove any margin from the table */
-}
-
-/* Header styling (Dark Mode) */
-.file-table th {
-    position: sticky;
-    top: 0; /* Sticky headers */
-    background: rgba(255, 255, 255, 0.1); /* Subtle light overlay for headers */
-    color: #fff; /* Light text color */
-    font-weight: bold;
-    padding: 10px;
-    border-bottom: 2px solid #666; /* Darker border */
-    word-wrap: break-word; /* Break words in header */
-    white-space: normal; /* Allow wrapping in header */
-}
-
-/* Row styling (Dark Mode) */
-.file-table td {
-    padding: 10px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Light border between rows */
-    color: #ddd; /* Lighter text color */
-    overflow: auto; /* Allow scrolling within individual cells */
-    white-space: nowrap; /* Keep text in a single line */
-    word-wrap: break-word; /* Allow wrapping within the cell */
-    max-width: 200px; /* Set a max width for each cell */
-}
-
-/* Hover effect for rows (Dark Mode) */
-.file-table tbody tr:hover {
-    background: rgba(255, 255, 255, 0.05); /* Highlight on hover */
-    cursor: pointer; /* Pointer cursor */
-}
-
-/* Editable cell styling (Dark Mode) */
-.file-table td.editable-partition {
-    background: #444; /* Highlight editable cells */
-    cursor: text; /* Text cursor */
-}
-
-/* Scrollbar styling for container (Dark Mode) */
-.file-table-container::-webkit-scrollbar {
-    width: 12px;
-    background: transparent;
-}
-
-.file-table-container::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.3); /* Lighter thumb */
-    border-radius: 10px; /* Rounded corners */
-    border: 3px solid transparent;
-    background-clip: padding-box;
-}
-
-.file-table-container::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.5); /* Lighter thumb on hover */
-}
+	/* Scrollable container styling for the table (Dark Mode) */
+	.file-table-container {
+	    padding: 20px 20px 20px; /* Match padding from pre.result-field */
+	    border-radius: 15px; /* Rounded corners */
+	    overflow-y: auto; /* Enable vertical scrolling */
+	    overflow-x: hidden; /* Prevent horizontal overflow */
+	    max-height: 200px; /* Set a max height for scrolling */
+	    border: none; /* No border */
+	    background-color: #222; /* Dark background color */
+	    background: linear-gradient(135deg, #333, #444); /* Gradient background */
+	    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2); /* Soft shadow */
+	    width: 90%; /* Same width as pre.result-field */
+	    margin-top: 0; /* Align with the page */
+	    position: relative; /* Same positioning */
+	    color: white; /* White text for contrast */
+	    white-space: pre-wrap; /* Preserve whitespace */
+	    word-wrap: break-word; /* Allow long words to break */
+	}
+	
+	/* Table styling (Dark Mode) */
+	.file-table {
+	    width: 100%; /* Full width inside the container */
+	    border-collapse: collapse; /* Remove gaps between cells */
+	    text-align: center; /* Center text horizontally in each cell */
+	    color: #fff; /* White text color */
+	    font-family: 'Arial', sans-serif; /* Modern, clean font */
+	    table-layout: fixed; /* Fix table layout to handle overflow properly */
+	    margin: 0; /* Remove any margin from the table */
+	}
+	
+	/* Header styling (Dark Mode) */
+	.file-table th {
+	    position: sticky;
+	    top: 0; /* Sticky headers */
+	    background: rgba(255, 255, 255, 0.1); /* Subtle light overlay for headers */
+	    color: #fff; /* White text */
+	    font-weight: bold;
+	    padding: 10px;
+	    border-bottom: 2px solid #666; /* Darker border for the header */
+	    word-wrap: break-word; /* Break words in header */
+	    white-space: normal; /* Allow wrapping in header */
+	}
+	
+	/* Row styling (Dark Mode) */
+	.file-table td {
+	    padding: 10px;
+	    border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Light border between rows */
+	    color: #ddd; /* Lighter text color */
+	    overflow: auto; /* Allow scrolling within individual cells */
+	    white-space: nowrap; /* Keep text in a single line */
+	    word-wrap: break-word; /* Allow wrapping within the cell */
+	    max-width: 200px; /* Set a max width for each cell */
+	}
+	
+	/* Hover effect for rows (Dark Mode) */
+	.file-table tbody tr:hover {
+	    background: rgba(255, 255, 255, 0.05); /* Highlight on hover */
+	    cursor: pointer; /* Pointer cursor */
+	}
+	
+	/* Editable cell styling (Dark Mode) */
+	.file-table td.editable-partition {
+	    background: #444; /* Highlight editable cells */
+	    cursor: text; /* Text cursor */
+	}
+	
+	/* Scrollbar styling for table container (Dark Mode) */
+	.file-table-container::-webkit-scrollbar {
+	    width: 12px; /* Same width as pre.result-field scrollbar */
+	    background: transparent;
+	}
+	
+	.file-table-container::-webkit-scrollbar-thumb {
+	    background: rgba(255, 255, 255, 0.3); /* Lighter thumb */
+	    border-radius: 10px; /* Rounded corners */
+	    border: 3px solid transparent;
+	    background-clip: padding-box;
+	}
+	
+	.file-table-container::-webkit-scrollbar-thumb:hover {
+	    background: rgba(255, 255, 255, 0.5); /* Lighter thumb on hover */
+	}
 
 
 </style>
