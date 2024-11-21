@@ -1552,7 +1552,6 @@ function typeAnimation(element, text, delay = 50) {
     }, delay);
 }
 
-// Handle file selection
 document.querySelector("#flash-file").addEventListener("change", function () {
     const fileField = document.querySelector("#flash-file");
     const partField = document.querySelector(".flash-partition");
@@ -1561,41 +1560,76 @@ document.querySelector("#flash-file").addEventListener("change", function () {
     // Clear existing rows
     fileTable.innerHTML = "";
 
-    // Update placeholder and disable status based on file selection
-    if (fileField.files.length > 1) {
-        partField.disabled = true;
-        partField.placeholder = "Enter partition in the table for multiple files";
-    } else {
-        partField.disabled = false;
-        partField.placeholder = "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
-    }
+    // Define the specific groups for dropdowns
+    const dropdownGroups = {
+        boot: ["boot.img", "ksu_boot.img", "magisk_boot.img"],
+        dtbo: ["dtbo.img", "ksu_dtbo.img"],
+    };
 
-    // Populate the table with file data
-    Array.from(fileField.files).forEach((file, index) => {
+    // Group files into specific partitions
+    const fileGroups = {};
+
+    Array.from(fileField.files).forEach((file) => {
         const fileName = file.name.toLowerCase();
-        const matchedPartition = fileMapping[fileName];
+        const matchedPartition = Object.keys(dropdownGroups).find((partition) =>
+            dropdownGroups[partition].includes(fileName)
+        );
+
         const fileSize = formatFileSize(file.size);
 
-        const isEditable = !matchedPartition;
+        // Add to group if it matches a dropdown group
+        if (matchedPartition) {
+            if (!fileGroups[matchedPartition]) {
+                fileGroups[matchedPartition] = [];
+            }
+            fileGroups[matchedPartition].push({ fileName, fileSize });
+        } else {
+            // Handle non-grouped files
+            fileGroups[fileName] = [{ fileName, fileSize }];
+        }
+    });
 
-        // Add row to the table
+    // Populate the table with grouped and non-grouped files
+    Object.keys(fileGroups).forEach((partition) => {
+        const files = fileGroups[partition];
+        let fileOptionsHTML = "";
+
+        if (files.length > 1) {
+            // Create dropdown for grouped files
+            fileOptionsHTML = `
+                <select class="file-variant-dropdown">
+                    ${files
+                        .map(
+                            (file) => `
+                        <option value="${file.fileName}" data-size="${file.fileSize}">
+                            ${file.fileName} (${file.fileSize})
+                        </option>`
+                        )
+                        .join("")}
+                </select>
+            `;
+        } else {
+            // Single file
+            fileOptionsHTML = files[0].fileName;
+        }
+
         const row = document.createElement("tr");
+        row.style.verticalAlign = "middle"; // Fix UI row height
+
         row.innerHTML = `
-            <td>${fileName}</td>
-            <td contenteditable="${isEditable}" 
-                class="${isEditable ? 'editable-partition' : ''}">
-                ${matchedPartition || "Enter Partition"}
+            <td>${fileOptionsHTML}</td>
+            <td contenteditable="${partition === fileName}" 
+                class="${partition === fileName ? "editable-partition" : ""}">
+                ${partition === fileName ? "Enter Partition" : partition}
             </td>
-            <td>${fileSize}</td>
+            <td>${files[0].fileSize}</td>
         `;
         fileTable.appendChild(row);
 
-        // Synchronize input field and table for a single file
-        if (fileField.files.length === 1) {
-            if (matchedPartition) {
-                // Known file, trigger typing animation for the partition
-                partField.value = ""; // Clear the input field
-                typeAnimation(partField, matchedPartition, 100);
+        // Synchronize input field and table for single file case
+        if (fileField.files.length === 1 && files.length === 1) {
+            if (partition !== fileName) {
+                typeAnimation(partField, partition, 100);
 
                 partField.addEventListener("input", (e) => {
                     row.cells[1].textContent = e.target.value;
@@ -1605,9 +1639,7 @@ document.querySelector("#flash-file").addEventListener("change", function () {
                     partField.value = e.target.textContent;
                 });
             } else {
-                // Unknown file, don't trigger typing animation, leave input as placeholder
-                partField.value = ""; // Clear the input field
-                partField.placeholder = "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
+                partField.placeholder = "Partition like - boot, dtbo, super, etc.";
                 partField.addEventListener("input", (e) => {
                     row.cells[1].textContent = e.target.value;
                 });
@@ -1616,6 +1648,25 @@ document.querySelector("#flash-file").addEventListener("change", function () {
                     partField.value = e.target.textContent;
                 });
             }
+        }
+    });
+
+    // Disable the input field for multiple files
+    partField.disabled = fileField.files.length > 1;
+    partField.placeholder =
+        fileField.files.length > 1
+            ? "Enter partition in the table for multiple files"
+            : "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
+
+    // Handle dropdown changes
+    fileTable.addEventListener("change", (event) => {
+        if (event.target.classList.contains("file-variant-dropdown")) {
+            const selectedOption = event.target.options[event.target.selectedIndex];
+            const fileSize = selectedOption.dataset.size;
+
+            // Update the size cell in the table
+            const sizeCell = event.target.closest("tr").querySelector("td:nth-child(3)");
+            sizeCell.textContent = fileSize;
         }
     });
 });
