@@ -542,7 +542,7 @@
             transition: transform 0.2s ease, opacity 2s ease;
         }
 	
-		/* Scrollable container styling for the table */
+	/* Scrollable container styling for the table */
 	.file-table-container {
 	    max-height: 300px; /* Set a max height for scrolling */
 	    overflow-y: auto; /* Enable vertical scrolling */
@@ -552,7 +552,7 @@
 	    border-radius: 15px; /* Rounded corners */
 	    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Modern shadow */
 	    background: linear-gradient(135deg, #f0f4f8, #e2e8f0); /* Gradient background */
-	    width: 90%; /* Center the table within its container */
+	    width: 100%; /* Full width inside the container */
 	    margin: 0 auto; /* Center the container horizontally */
 	}
 	
@@ -564,6 +564,7 @@
 	    color: black; /* Text color */
 	    font-family: 'Arial', sans-serif; /* Modern, clean font */
 	    table-layout: fixed; /* Fix table layout to handle overflow properly */
+	    margin: 0; /* Remove any margin from the table */
 	}
 	
 	/* Header styling */
@@ -581,7 +582,7 @@
 	
 	/* Row styling */
 	.file-table td {
-	    padding: 10px;
+	    padding: 10px; /* Padding inside each cell */
 	    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 	    color: black;
 	    overflow: hidden; /* Prevent overflow */
@@ -618,8 +619,8 @@
 	.file-table-container::-webkit-scrollbar-thumb:hover {
 	    background: rgba(0, 0, 0, 0.7); /* Darker thumb on hover */
 	}
-		
 	
+		
 	
 
 
@@ -879,7 +880,7 @@
                 <thead>
                     <tr>
                         <th>File Name</th>
-                        <th>Partition (Editable)</th>
+                        <th>Partition</th>
                         <th>Size</th>
                     </tr>
                 </thead>
