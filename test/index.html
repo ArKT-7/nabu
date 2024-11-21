@@ -543,109 +543,109 @@
         }
 
 	    
-/* Scrollable container styling for the table */
-.file-table-container {
-    max-height: 200px; /* Set a max height for scrolling */
-    overflow-y: auto; /* Enable vertical scrolling */
-    overflow-x: auto; /* Enable horizontal scrolling */
-    margin: 20px 0;
-    border: 1px solid #ccc;
-    border-radius: 15px; /* Rounded corners */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Modern shadow */
-    background: linear-gradient(135deg, #f0f4f8, #e2e8f0); /* Gradient background */
-    width: 100%; /* Full width inside the container */
-    margin: 0 auto; /* Center the container horizontally */
-}
-
-/* Table styling */
-.file-table {
-    width: 100%; /* Full width inside the container */
-    border-collapse: collapse; /* Remove gaps between cells */
-    text-align: center; /* Center text horizontally in each cell */
-    color: black; /* Text color */
-    font-family: 'Arial', sans-serif; /* Modern, clean font */
-    table-layout: fixed; /* Fix table layout to handle overflow properly */
-    margin: 0; /* Remove any margin from the table */
-}
-
-/* Header styling */
-.file-table th {
-    position: sticky;
-    top: 0; /* Sticky headers */
-    background: rgba(0, 0, 0, 0.02); /* Subtle dark overlay */
-    color: black; /* Dark text color */
-    font-weight: bold;
-    padding: 10px;
-    border-bottom: 2px solid #ccc;
-    word-wrap: break-word; /* Break words in header */
-    white-space: normal; /* Allow wrapping in header */
-}
-
-/* Row styling */
-.file-table td {
-    padding: 10px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    color: black;
-    overflow: auto; /* Allow scrolling within individual cells */
-    white-space: nowrap; /* Keep text in a single line */
-    word-wrap: break-word; /* Allow wrapping within the cell */
-    max-width: 200px; /* Set a max width for each cell */
-}
-
-/* Custom Scrollbar Styling */
-.file-table td::-webkit-scrollbar {
-    width: 8px; /* Adjust the width of the scrollbar */
-    height: 8px; /* Adjust the height for horizontal scrollbar */
-}
-
-/* Track (background area) styling */
-.file-table td::-webkit-scrollbar-track {
-    background: transparent; /* Make the scrollbar track transparent */
-}
-
-/* Thumb (scroll handle) styling */
-.file-table td::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.1); /* Subtle dark color for the thumb */
-    border-radius: 10px; /* Rounded corners for the thumb */
-    border: 2px solid transparent; /* Add space around the thumb */
-    background-clip: padding-box; /* Ensure the thumb stays within its border */
-}
-
-/* Hover effect for the thumb */
-.file-table td::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.3); /* Darken the thumb slightly on hover */
-}
-
-
-
-/* Hover effect for rows */
-.file-table tbody tr:hover {
-    background: rgba(0, 0, 0, 0.05); /* Highlight on hover */
-    cursor: pointer; /* Pointer cursor */
-}
-
-/* Editable cell styling */
-.file-table td.editable-partition {
-    background: #eef7ff; /* Highlight editable cells */
-    cursor: text; /* Text cursor */
-}
-
-/* Scrollbar styling */
-.file-table-container::-webkit-scrollbar {
-    width: 12px;
-    background: transparent;
-}
-
-.file-table-container::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.5); /* Dark scrollbar thumb */
-    border-radius: 10px; /* Rounded corners */
-    border: 3px solid transparent;
-    background-clip: padding-box;
-}
-
-.file-table-container::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.7); /* Darker thumb on hover */
-}
+	/* Scrollable container styling for the table */
+	.file-table-container {
+	    max-height: 200px; /* Set a max height for scrolling */
+	    overflow-y: auto; /* Enable vertical scrolling */
+	    overflow-x: auto; /* Enable horizontal scrolling */
+	    margin: 20px 0;
+	    border: 1px solid #ccc;
+	    border-radius: 15px; /* Rounded corners */
+	    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Modern shadow */
+	    background: linear-gradient(135deg, #f0f4f8, #e2e8f0); /* Gradient background */
+	    width: 100%; /* Full width inside the container */
+	    margin: 0 auto; /* Center the container horizontally */
+	}
+	
+	/* Table styling */
+	.file-table {
+	    width: 100%; /* Full width inside the container */
+	    border-collapse: collapse; /* Remove gaps between cells */
+	    text-align: center; /* Center text horizontally in each cell */
+	    color: black; /* Text color */
+	    font-family: 'Arial', sans-serif; /* Modern, clean font */
+	    table-layout: fixed; /* Fix table layout to handle overflow properly */
+	    margin: 0; /* Remove any margin from the table */
+	}
+	
+	/* Header styling */
+	.file-table th {
+	    position: sticky;
+	    top: 0; /* Sticky headers */
+	    background: rgba(0, 0, 0, 0.02); /* Subtle dark overlay */
+	    color: black; /* Dark text color */
+	    font-weight: bold;
+	    padding: 10px;
+	    border-bottom: 2px solid #ccc;
+	    word-wrap: break-word; /* Break words in header */
+	    white-space: normal; /* Allow wrapping in header */
+	}
+	
+	/* Row styling */
+	.file-table td {
+	    padding: 10px;
+	    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+	    color: black;
+	    overflow: auto; /* Allow scrolling within individual cells */
+	    white-space: nowrap; /* Keep text in a single line */
+	    word-wrap: break-word; /* Allow wrapping within the cell */
+	    max-width: 200px; /* Set a max width for each cell */
+	}
+	
+	/* Custom Scrollbar Styling */
+	.file-table td::-webkit-scrollbar {
+	    width: 8px; /* Adjust the width of the scrollbar */
+	    height: 8px; /* Adjust the height for horizontal scrollbar */
+	}
+	
+	/* Track (background area) styling */
+	.file-table td::-webkit-scrollbar-track {
+	    background: transparent; /* Make the scrollbar track transparent */
+	}
+	
+	/* Thumb (scroll handle) styling */
+	.file-table td::-webkit-scrollbar-thumb {
+	    background: rgba(0, 0, 0, 0.1); /* Subtle dark color for the thumb */
+	    border-radius: 10px; /* Rounded corners for the thumb */
+	    border: 2px solid transparent; /* Add space around the thumb */
+	    background-clip: padding-box; /* Ensure the thumb stays within its border */
+	}
+	
+	/* Hover effect for the thumb */
+	.file-table td::-webkit-scrollbar-thumb:hover {
+	    background: rgba(0, 0, 0, 0.3); /* Darken the thumb slightly on hover */
+	}
+	
+	
+	
+	/* Hover effect for rows */
+	.file-table tbody tr:hover {
+	    background: rgba(0, 0, 0, 0.05); /* Highlight on hover */
+	    cursor: pointer; /* Pointer cursor */
+	}
+	
+	/* Editable cell styling */
+	.file-table td.editable-partition {
+	    background: #eef7ff; /* Highlight editable cells */
+	    cursor: text; /* Text cursor */
+	}
+	
+	/* Scrollbar styling */
+	.file-table-container::-webkit-scrollbar {
+	    width: 12px;
+	    background: transparent;
+	}
+	
+	.file-table-container::-webkit-scrollbar-thumb {
+	    background: rgba(0, 0, 0, 0.5); /* Dark scrollbar thumb */
+	    border-radius: 10px; /* Rounded corners */
+	    border: 3px solid transparent;
+	    background-clip: padding-box;
+	}
+	
+	.file-table-container::-webkit-scrollbar-thumb:hover {
+	    background: rgba(0, 0, 0, 0.7); /* Darker thumb on hover */
+	}
 
 	    
 
