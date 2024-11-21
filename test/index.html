@@ -1533,7 +1533,7 @@ document.querySelector("#flash-file").addEventListener("change", function () {
         const row = document.createElement("tr");
         row.innerHTML = `
             <td>${fileName}</td>
-            <td>${matchedPartition || "N/A"}</td>
+            <td>${matchedPartition || "Custom (Enter Partition)"}</td>
             <td>${fileSize}</td>
         `;
         fileTable.appendChild(row);
@@ -1545,8 +1545,7 @@ document.querySelector("#flash-file").addEventListener("change", function () {
     });
 });
 
-
-// Flash files one by one
+// Flash files one by one with `_A` and `_B` handling
 async function flashFormFile(event) {
     event.preventDefault();
     showProgressOverlay();
@@ -1554,7 +1553,7 @@ async function flashFormFile(event) {
     const fileField = document.querySelector("#flash-file");
     const partField = document.querySelector(".flash-partition");
     const logOutput = document.querySelector("#log-output");
-    let resultField = document.querySelector(".result-field");
+    const resultField = document.querySelector(".result-field");
 
     const files = Array.from(fileField.files);
     if (files.length === 0) {
@@ -1566,17 +1565,41 @@ async function flashFormFile(event) {
     try {
         for (const file of files) {
             const fileName = file.name.toLowerCase();
-            const partition = fileMapping[fileName];
+            let partition = fileMapping[fileName];
 
+            // Use entered partition if not found in the mapping
             if (!partition) {
-                logOutput.textContent += `Skipped ${fileName}: No partition mapping found.\n`;
-                continue;
+                partition = partField.value.trim();
+                if (!partition) {
+                    logOutput.textContent += `Skipped ${fileName}: No partition mapping or custom partition provided.\n`;
+                    continue;
+                }
             }
-		resultField.textContent += `Flashing ${fileName} to ${partition}...\n`;
-            await device.flashBlob(partition, file, (progress) => {
-                resultField.textContent += `Progress: ${progress}%\n`;
-            });
-            resultField.textContent += `Successfully flashed ${fileName} to ${partition}.\n`;
+
+            // Flash `_A` and `_B` for `_AB` partitions
+            if (partition.endsWith("_ab")) {
+                const partitionA = partition.replace("_ab", "_a");
+                const partitionB = partition.replace("_ab", "_b");
+
+                resultField.textContent += `Flashing ${fileName} to ${partitionA}...\n`;
+                await device.flashBlob(partitionA, file, (progress) => {
+                    resultField.textContent += `Progress: ${progress}%\n`;
+                });
+                resultField.textContent += `Successfully flashed ${fileName} to ${partitionA}.\n`;
+
+                resultField.textContent += `Flashing ${fileName} to ${partitionB}...\n`;
+                await device.flashBlob(partitionB, file, (progress) => {
+                    resultField.textContent += `Progress: ${progress}%\n`;
+                });
+                resultField.textContent += `Successfully flashed ${fileName} to ${partitionB}.\n`;
+            } else {
+                // Flash normally for non-_AB partitions
+                resultField.textContent += `Flashing ${fileName} to ${partition}...\n`;
+                await device.flashBlob(partition, file, (progress) => {
+                    resultField.textContent += `Progress: ${progress}%\n`;
+                });
+                resultField.textContent += `Successfully flashed ${fileName} to ${partition}.\n`;
+            }
         }
         alert("All files flashed successfully!");
     } catch (error) {
@@ -1590,6 +1613,7 @@ async function flashFormFile(event) {
         await checkDeviceConnection();
     }
 }
+
 
 
 
