@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html> //SAVE BEST
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -647,29 +647,6 @@
     background: rgba(0, 0, 0, 0.7); /* Darker thumb on hover */
 }
 
-/* Base styles for select_table */
-.select_table {
-    background-color: #f9f9f9;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
-    padding: 5px;
-    width: 100%; /* Adjust as needed */
-    box-sizing: border-box;
-    cursor: pointer;
-}
-
-/* Optional: hover effects */
-.select_table:hover {
-    border-color: #007bff;
-}
-
-/* Optional: focus styles */
-.select_table:focus {
-    outline: none;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-    border-color: #007bff;
-}
 	    
 
 </style>
@@ -1583,50 +1560,35 @@ document.querySelector("#flash-file").addEventListener("change", function () {
     // Clear existing rows
     fileTable.innerHTML = "";
 
-    // Define the specific groups for dropdowns
-    const dropdownGroups = {
-        boot: ["boot.img", "ksu_boot.img", "magisk_boot.img"],
-        dtbo: ["dtbo.img", "ksu_dtbo.img"],
-    };
-
-    // Group files into specific partitions
-    const fileGroups = {};
+    // Group files based on base name (prefix before first "_", "-", or ".")
+    const fileGroups = new Map();
 
     Array.from(fileField.files).forEach((file) => {
         const fileName = file.name.toLowerCase();
-        const matchedPartition = Object.keys(dropdownGroups).find((partition) =>
-            dropdownGroups[partition].includes(fileName)
-        );
-
+        // Extract base name before first "_", "-", or "." (e.g., "boot", "dtbo", "super")
+        const baseName = fileName.split(/[_\-.]/)[0];
+        const matchedPartition = fileMapping[fileName];
         const fileSize = formatFileSize(file.size);
 
-        // Add to group if it matches a dropdown group
-        if (matchedPartition) {
-            if (!fileGroups[matchedPartition]) {
-                fileGroups[matchedPartition] = [];
-            }
-            fileGroups[matchedPartition].push({ fileName, fileSize });
-        } else {
-            // Handle non-grouped files
-            fileGroups[fileName] = [{ fileName, fileSize }];
+        // Group files by base name
+        if (!fileGroups.has(baseName)) {
+            fileGroups.set(baseName, []);
         }
+        fileGroups.get(baseName).push({ fileName, matchedPartition, fileSize });
     });
 
-    // Populate the table with grouped and non-grouped files
-    Object.keys(fileGroups).forEach((partition) => {
-        const files = fileGroups[partition];
+    // Populate the table with grouped files
+    fileGroups.forEach((files, baseName) => {
         let fileOptionsHTML = "";
 
         if (files.length > 1) {
-            // Create dropdown for grouped files
+            // Create a dropdown for multiple variants
             fileOptionsHTML = `
                 <select class="file-variant-dropdown">
                     ${files
                         .map(
                             (file) => `
-                        <option value="${file.fileName}" data-size="${file.fileSize}">
-                            ${file.fileName} (${file.fileSize})
-                        </option>`
+                        <option value="${file.fileName}" data-size="${file.fileSize}">${file.fileName} (${file.fileSize})</option>`
                         )
                         .join("")}
                 </select>
@@ -1637,13 +1599,11 @@ document.querySelector("#flash-file").addEventListener("change", function () {
         }
 
         const row = document.createElement("tr");
-        row.style.verticalAlign = "middle"; // Fix UI row height
-
         row.innerHTML = `
             <td>${fileOptionsHTML}</td>
-            <td contenteditable="${partition === fileName}" 
-                class="${partition === fileName ? "editable-partition" : ""}">
-                ${partition === fileName ? "Enter Partition" : partition}
+            <td contenteditable="${!files[0].matchedPartition}" 
+                class="${!files[0].matchedPartition ? "editable-partition" : ""}">
+                ${files[0].matchedPartition || "Enter Partition"}
             </td>
             <td>${files[0].fileSize}</td>
         `;
@@ -1651,8 +1611,8 @@ document.querySelector("#flash-file").addEventListener("change", function () {
 
         // Synchronize input field and table for single file case
         if (fileField.files.length === 1 && files.length === 1) {
-            if (partition !== fileName) {
-                typeAnimation(partField, partition, 100);
+            if (files[0].matchedPartition) {
+                typeAnimation(partField, files[0].matchedPartition, 100);
 
                 partField.addEventListener("input", (e) => {
                     row.cells[1].textContent = e.target.value;
@@ -1693,8 +1653,6 @@ document.querySelector("#flash-file").addEventListener("change", function () {
         }
     });
 });
-
-
 
 
 // Validate before flashing
