@@ -1566,7 +1566,10 @@ document.querySelector("#flash-file").addEventListener("change", function () {
 
         // Synchronize input field and table for a single file
         if (fileField.files.length === 1 && isEditable) {
+            // Type animation for the input field
             partField.value = ""; // Clear the input field
+            typeAnimation(partField, "Enter partition", 100);
+
             partField.addEventListener("input", (e) => {
                 row.cells[1].textContent = e.target.value;
             });
