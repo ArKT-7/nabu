@@ -563,7 +563,7 @@
 	    text-align: left; /* Align text to the left */
 	    color: black; /* Text color */
 	    font-family: 'Arial', sans-serif; /* Modern, clean font */
-	    table-layout: fixed; /* Fix table layout */
+	    table-layout: fixed; /* Fix table layout to handle overflow properly */
 	}
 	
 	/* Header styling */
@@ -575,6 +575,8 @@
 	    font-weight: bold;
 	    padding: 10px;
 	    border-bottom: 2px solid #ccc;
+	    word-wrap: break-word; /* Break words in header */
+	    white-space: normal; /* Allow wrapping in header */
 	}
 	
 	/* Row styling */
@@ -585,6 +587,7 @@
 	    overflow: hidden; /* Prevent overflow */
 	    text-overflow: ellipsis; /* Show ellipsis for long text */
 	    white-space: nowrap; /* Keep text in a single line */
+	    word-wrap: break-word; /* Allow wrapping within the cell */
 	}
 	
 	/* Hover effect for rows */
@@ -615,9 +618,9 @@
 	.file-table-container::-webkit-scrollbar-thumb:hover {
 	    background: rgba(0, 0, 0, 0.7); /* Darker thumb on hover */
 	}
+		
 	
-
-
+	
 
 
 </style>
@@ -868,7 +871,7 @@
 
         <label for="flash-partition">Enter Partition</label>
         <input type="text" name="flash-partition" class="flash-partition" 
-               placeholder="Enter partition in the table for multiple files" disabled />
+               placeholder="Partition like - boot, dtbo, super, vendor_boot, recovery, etc." disabled />
 
         <div class="file-table-container">
             <!-- Table for displaying selected files -->
