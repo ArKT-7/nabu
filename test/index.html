@@ -854,7 +854,7 @@
 	</form>
     </div>
 	
-	<div class="flash-section">
+	<div class="container">
 	    <form class="flash-form" onsubmit="flashFormFile(event)">
 	        <label for="flash-file">Flash any images/Complete ROM 💀</label>
 	        <input type="file" name="flash-file" id="flash-file" accept=".img,.bin,.elf,.mbn" multiple />
@@ -862,8 +862,9 @@
 	        <label for="flash-partition">Enter Partition</label>
 	        <input type="text" name="flash-partition" class="flash-partition" 
 	               placeholder="Partition like - boot, dtbo, super, vendor_boot, recovery, etc." />
-	
-	        <!-- Scrollable table container for file details -->
+
+		    <div class="file-table-container">
+	        <!-- Table for displaying selected files -->
 	        <table id="file-table" class="file-table">
 	            <thead>
 	                <tr>
@@ -876,6 +877,7 @@
 	                <!-- Dynamic rows will be added here -->
 	            </tbody>
 	        </table>
+	    </div>
 	
 	        <input type="submit" value="Flash" class="button" />
 	    </form>
