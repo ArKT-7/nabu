@@ -1581,7 +1581,7 @@ document.querySelector("#flash-file").addEventListener("change", function () {
             } else {
                 // Unknown file, don't trigger typing animation, leave input as placeholder
                 partField.value = ""; // Clear the input field
-                partField.placeholder = "Enter partition";
+                partField.placeholder = "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
                 partField.addEventListener("input", (e) => {
                     row.cells[1].textContent = e.target.value;
                 });
