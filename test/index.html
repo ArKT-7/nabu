@@ -1480,6 +1480,7 @@ async function flashFormFile(event) {
     const fileField = document.querySelector("#flash-file");
     const partField = document.querySelector(".flash-partition");
     const logOutput = document.querySelector("#log-output");
+    let resultField = document.querySelector(".result-field");
 
     const files = Array.from(fileField.files);
     if (files.length === 0) {
