@@ -572,7 +572,7 @@
 .file-table th {
     position: sticky;
     top: 0; /* Sticky headers */
-    background: rgba(0, 0, 0, 0.05); /* Subtle dark overlay */
+    background: rgba(0, 0, 0, 0.02); /* Subtle dark overlay */
     color: black; /* Dark text color */
     font-weight: bold;
     padding: 10px;
@@ -1644,29 +1644,31 @@ async function flashFormFile(event) {
             const partition = partitions[i];
 
             // Handle `_AB` logic
-            if (partition.endsWith("_ab")) {
-                const partitionA = partition.replace("_ab", "_a");
-                const partitionB = partition.replace("_ab", "_b");
-
-                resultField.textContent += `Flashing ${file.name} to ${partitionA}...\n`;
-                await device.flashBlob(partitionA, file, (progress) => {
-                    resultField.textContent += `Progress: ${progress}%\n`;
-                });
-                resultField.textContent += `Successfully flashed ${file.name} to ${partitionA}.\n`;
-
-                resultField.textContent += `Flashing ${file.name} to ${partitionB}...\n`;
-                await device.flashBlob(partitionB, file, (progress) => {
-                    resultField.textContent += `Progress: ${progress}%\n`;
-                });
-                resultField.textContent += `Successfully flashed ${file.name} to ${partitionB}.\n`;
-            } else {
-                // Flash normally
-                resultField.textContent += `Flashing ${file.name} to ${partition}...\n`;
-                await device.flashBlob(partition, file, (progress) => {
-                    resultField.textContent += `Progress: ${progress}%\n`;
-                });
-                resultField.textContent += `Successfully flashed ${file.name} to ${partition}.\n`;
-            }
+           // Handle `_AB` logic
+	if (partition.endsWith("_ab")) {
+	    const partitionA = partition.replace("_ab", "_a");
+	    const partitionB = partition.replace("_ab", "_b");
+	
+	    // Prepend flashing messages to resultField
+	    resultField.textContent = `Flashing ${file.name} to ${partitionA}...\n` + resultField.textContent;
+	    await device.flashBlob(partitionA, file, (progress) => {
+	        resultField.textContent = `Progress: ${progress}%\n` + resultField.textContent;
+	    });
+	    resultField.textContent = `Successfully flashed ${file.name} to ${partitionA}.\n` + resultField.textContent;
+	
+	    resultField.textContent = `Flashing ${file.name} to ${partitionB}...\n` + resultField.textContent;
+	    await device.flashBlob(partitionB, file, (progress) => {
+	        resultField.textContent = `Progress: ${progress}%\n` + resultField.textContent;
+	    });
+	    resultField.textContent = `Successfully flashed ${file.name} to ${partitionB}.\n` + resultField.textContent;
+	} else {
+	    // Flash normally
+	    resultField.textContent = `Flashing ${file.name} to ${partition}...\n` + resultField.textContent;
+	    await device.flashBlob(partition, file, (progress) => {
+	        resultField.textContent = `Progress: ${progress}%\n` + resultField.textContent;
+	    });
+	    resultField.textContent = `Successfully flashed ${file.name} to ${partition}.\n` + resultField.textContent;
+	}
         }
         alert("All files flashed successfully!");
     } catch (error) {
