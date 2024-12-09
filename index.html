@@ -1755,11 +1755,11 @@ function resetTableToPlaceholders() {
         if (selectedPartition === "boot_ab") {
             // Flash to Boot_A
             await device.flashBlob("boot_a", file);
-            alert("Successfully flashed to Boot A");
+            //alert("Successfully flashed to Boot A");
 
             // Flash to Boot_B
             await device.flashBlob("boot_b", file);
-            alert("Successfully flashed to Boot B");
+            alert("Successfully flashed to Boot_ab");
         } else {
             // Flash to selected partition
             await device.flashBlob(selectedPartition, file);
