@@ -712,7 +712,7 @@
                 <option value="boot_a">Flash to Boot A only</option>
                 <option value="boot_b">Flash to Boot B only</option>
             </select>
-            <label for="rboot-flash-image">Magisk V28 Rooted Boot Images</label>
+            <label for="rboot-flash-image">Magisk V28.1 Rooted Boot Images</label>
             <select name="rboot-flash-image" class="rboot-flash-image">
                 <option value="">Select rooted HyperOS/MIUI 13/14 boot</option>
 
@@ -723,6 +723,7 @@
 	    	<option value="magisk-1-0-1-global">HyperOS 1.0.1 (Global)</option>
 
 		<!-- India Versions -->
+		<option value="magisk-1-0-12-india">HyperOS 1.0.12 (India)</option>
 		<option value="magisk-1-0-9-india">HyperOS 1.0.9 (India)</option>    
 	    	<option value="magisk-1-0-8-india">HyperOS 1.0.8 (India)</option>
 	    	<option value="magisk-1-0-7-india">HyperOS 1.0.7 (India)</option>
@@ -813,7 +814,6 @@
 		<option value="magisk-13-0-1-global">MIUI 13.0.1 (Global)</option>
 		
 		<!-- India Versions -->
-		<option value="magisk-13-1-8-india">MIUI 13.1.8 (India)</option>
 		<option value="magisk-13-1-4-india">MIUI 13.1.4 (India)</option>
 		<option value="magisk-13-1-3-india">MIUI 13.1.3 (India)</option>
 		<option value="magisk-13-0-6-india">MIUI 13.0.6 (India)</option>
@@ -821,6 +821,7 @@
 		<option value="magisk-13-0-4-india">MIUI 13.0.4 (India)</option>
 		
 		<!-- Russia Versions -->
+		<option value="magisk-13-1-8-russia">MIUI 13.1.8 (Russia)</option>
 		<option value="magisk-13-1-6-russia">MIUI 13.1.6 (Russia)</option>
 		<option value="magisk-13-1-4-russia">MIUI 13.1.4 (Russia)</option>
 		<option value="magisk-13-0-3-russia">MIUI 13.0.3 (Russia)</option>
@@ -1781,241 +1782,243 @@ function rbootGetImagePath(selectedImage) {
     switch (selectedImage) {
         // HyperOS GLOBAL Versions
 	case "magisk-1-0-6-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.6.0.TKXMIXM.GLOBAL.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.6.0.TKXMIXM.GLOBAL.boot.img";
 	case "magisk-1-0-5-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.5.0.TKXMIXM.GLOBAL.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.5.0.TKXMIXM.GLOBAL.boot.img";
         case "magisk-1-0-4-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.4.0.TKXMIXM.GLOBAL.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.4.0.TKXMIXM.GLOBAL.boot.img";
         case "magisk-1-0-1-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.1.0.TKXMIXM.GLOBAL.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.1.0.TKXMIXM.GLOBAL.boot.img";
         
-	// India Versions    
+	// India Versions  
+	case "magisk-1-0-12-india":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.12.0.TKXINXM.INDIA.boot.img";
 	case "magisk-1-0-9-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.9.0.TKXINXM.INDIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.9.0.TKXINXM.INDIA.boot.img";
 	case "magisk-1-0-8-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.8.0.TKXINXM.INDIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.8.0.TKXINXM.INDIA.boot.img";
         case "magisk-1-0-7-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.7.0.TKXINXM.INDIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.7.0.TKXINXM.INDIA.boot.img";
         case "magisk-1-0-4-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.4.0.TKXINXM.INDIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.4.0.TKXINXM.INDIA.boot.img";
         
 	// EEA Versions  
 	case "magisk-1-0-6-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.6.0.TKXEUXM.EEA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.6.0.TKXEUXM.EEA.boot.img";
 	case "magisk-1-0-5-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.5.0.TKXEUXM.EEA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.5.0.TKXEUXM.EEA.boot.img";
         case "magisk-1-0-2-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.2.0.TKXEUXM.EEA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.2.0.TKXEUXM.EEA.boot.img";
         case "magisk-1-0-1-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.1.0.TKXEUXM.EEA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.1.0.TKXEUXM.EEA.boot.img";
         
 	// Russia Versions    
 	case "magisk-1-0-5-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.5.0.TKXRUXM.RUSSIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.5.0.TKXRUXM.RUSSIA.boot.img";
 	case "magisk-1-0-4-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.4.0.TKXRUXM.RUSSIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.4.0.TKXRUXM.RUSSIA.boot.img";
         case "magisk-1-0-3-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.3.0.TKXRUXM.RUSSIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.3.0.TKXRUXM.RUSSIA.boot.img";
         case "magisk-1-0-1-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.1.0.TKXRUXM.RUSSIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.1.0.TKXRUXM.RUSSIA.boot.img";
         
 	// China Versions    
 	case "magisk-1-0-3-china":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.3.0.TKXCNXM.CHINA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.3.0.TKXCNXM.CHINA.boot.img";
         case "magisk-1-0-2-china":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.2.0.TKXCNXM.CHINA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.2.0.TKXCNXM.CHINA.boot.img";
         
 	// Turkey Versions
 	case "magisk-1-0-6-turkey":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.6.0.TKXTRXM.TURKEY.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.6.0.TKXTRXM.TURKEY.boot.img";
 	case "magisk-1-0-5-turkey":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.5.0.TKXTRXM.TURKEY.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.5.0.TKXTRXM.TURKEY.boot.img";
         case "magisk-1-0-4-turkey":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.4.0.TKXTRXM.TURKEY.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.4.0.TKXTRXM.TURKEY.boot.img";
         case "magisk-1-0-2-turkey":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.2.0.TKXTRXM.TURKEY.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.2.0.TKXTRXM.TURKEY.boot.img";
         
 	// taiwan Versions
 	case "magisk-1-0-6-taiwan":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.6.0.TKXTWXM.TAIWAN.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.6.0.TKXTWXM.TAIWAN.boot.img";
 	case "magisk-1-0-5-taiwan":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.5.0.TKXTWXM.TAIWAN.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.5.0.TKXTWXM.TAIWAN.boot.img";
         case "magisk-1-0-4-taiwan":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.4.0.TKXTWXM.TAIWAN.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.4.0.TKXTWXM.TAIWAN.boot.img";
         case "magisk-1-0-2-taiwan":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk.28.NABU.OS1.0.2.0.TKXTWXM.TAIWAN.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.2.0.TKXTWXM.TAIWAN.boot.img";
         
 	// MIUI 14 GLOBAL Versions
         case "magisk-14-0-8-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.28.NABU.V14.0.8.0.TKXMIXM.GLOBAL.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.8.0.TKXMIXM.GLOBAL.boot.img";
         case "magisk-14-0-7-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.28.NABU.V14.0.7.0.TKXMIXM.GLOBAL.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.7.0.TKXMIXM.GLOBAL.boot.img";
         case "magisk-14-0-6-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.28.NABU.V14.0.6.0.TKXMIXM.GLOBAL.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.6.0.TKXMIXM.GLOBAL.boot.img";
         case "magisk-14-0-5-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.28.NABU.V14.0.5.0.TKXMIXM.GLOBAL.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.5.0.TKXMIXM.GLOBAL.boot.img";
         case "magisk-14-0-4-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.28.NABU.V14.0.4.0.TKXMIXM.GLOBAL.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.4.0.TKXMIXM.GLOBAL.boot.img";
         case "magisk-14-0-3-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.28.NABU.V14.0.3.0.TKXMIXM.GLOBAL.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.3.0.TKXMIXM.GLOBAL.boot.img";
 
 	// India Versions	    
         case "magisk-14-0-7-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.28.NABU.V14.0.7.0.TKXINXM.INDIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.7.0.TKXINXM.INDIA.boot.img";
         case "magisk-14-0-4-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.28.NABU.V14.0.4.0.TKXINXM.INDIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.4.0.TKXINXM.INDIA.boot.img";
         case "magisk-14-0-3-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.28.NABU.V14.0.3.0.TKXINXM.INDIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.3.0.TKXINXM.INDIA.boot.img";
         case "magisk-14-0-1-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.28.NABU.V14.0.1.0.TKXINXM.INDIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.1.0.TKXINXM.INDIA.boot.img";
 
 	// EEA Versions	    
         case "magisk-14-0-9-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.28.NABU.V14.0.9.0.TKXEUXM.EEA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.9.0.TKXEUXM.EEA.boot.img";
         case "magisk-14-0-8-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.28.NABU.V14.0.8.0.TKXEUXM.EEA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.8.0.TKXEUXM.EEA.boot.img";
         case "magisk-14-0-7-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.28.NABU.V14.0.7.0.TKXEUXM.EEA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.7.0.TKXEUXM.EEA.boot.img";
         case "magisk-14-0-6-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.28.NABU.V14.0.6.0.TKXEUXM.EEA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.6.0.TKXEUXM.EEA.boot.img";
         case "magisk-14-0-5-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.28.NABU.V14.0.5.0.TKXEUXM.EEA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.5.0.TKXEUXM.EEA.boot.img";
         case "magisk-14-0-4-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.28.NABU.V14.0.4.0.TKXEUXM.EEA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.4.0.TKXEUXM.EEA.boot.img";
         case "magisk-14-0-2-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.28.NABU.V14.0.2.0.TKXEUXM.EEA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.2.0.TKXEUXM.EEA.boot.img";
 
 	// Russia Versions    
         case "magisk-14-0-7-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.28.NABU.V14.0.7.0.TKXRUXM.RUSSIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.7.0.TKXRUXM.RUSSIA.boot.img";
         case "magisk-14-0-6-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.28.NABU.V14.0.6.0.TKXRUXM.RUSSIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.6.0.TKXRUXM.RUSSIA.boot.img";
         case "magisk-14-0-5-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.28.NABU.V14.0.5.0.TKXRUXM.RUSSIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.5.0.TKXRUXM.RUSSIA.boot.img";
         case "magisk-14-0-4-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.28.NABU.V14.0.4.0.TKXRUXM.RUSSIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.4.0.TKXRUXM.RUSSIA.boot.img";
         case "magisk-14-0-3-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.28.NABU.V14.0.3.0.TKXRUXM.RUSSIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.3.0.TKXRUXM.RUSSIA.boot.img";
         case "magisk-14-0-2-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.28.NABU.V14.0.2.0.TKXRUXM.RUSSIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.2.0.TKXRUXM.RUSSIA.boot.img";
 
 	// China Versions	    
         case "magisk-14-0-7-china":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.28.NABU.V14.0.7.0.TKXCNXM.CHINA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.7.0.TKXCNXM.CHINA.boot.img";
         case "magisk-14-0-6-china":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.28.NABU.V14.0.6.0.TKXCNXM.CHINA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.6.0.TKXCNXM.CHINA.boot.img";
         case "magisk-14-0-5-china":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.28.NABU.V14.0.5.0.TKXCNXM.CHINA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.5.0.TKXCNXM.CHINA.boot.img";
         case "magisk-14-0-4-china":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.28.NABU.V14.0.4.0.TKXCNXM.CHINA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.4.0.TKXCNXM.CHINA.boot.img";
         
 	// Turkey Versions    
         case "magisk-14-0-5-turkey":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.28.NABU.V14.0.5.0.TKXTRXM.TURKEY.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.5.0.TKXTRXM.TURKEY.boot.img";
         case "magisk-14-0-4-turkey":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.28.NABU.V14.0.4.0.TKXTRXM.TURKEY.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.4.0.TKXTRXM.TURKEY.boot.img";
         case "magisk-14-0-2-turkey":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.28.NABU.V14.0.2.0.TKXTRXM.TURKEY.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.2.0.TKXTRXM.TURKEY.boot.img";
         case "magisk-14-0-1-turkey":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.28.NABU.V14.0.1.0.TKXTRXM.TURKEY.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.1.0.TKXTRXM.TURKEY.boot.img";
 
 	// taiwan Versions	    
         case "magisk-14-0-3-taiwan":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.28.NABU.V14.0.3.0.TKXTWXM.TAIWAN.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.3.0.TKXTWXM.TAIWAN.boot.img";
         case "magisk-14-0-2-taiwan":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.28.NABU.V14.0.2.0.TKXTWXM.TAIWAN.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.2.0.TKXTWXM.TAIWAN.boot.img";
         case "magisk-14-0-1-taiwan":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk.28.NABU.V14.0.1.0.TKXTWXM.TAIWAN.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.1.0.TKXTWXM.TAIWAN.boot.img";
 
 	// MIUI 13 GLOBAL Versions
 	case "magisk-13-1-4-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.1.4.0.SKXMIXM.GLOBAL.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.4.0.SKXMIXM.GLOBAL.boot.img";
         case "magisk-13-1-3-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.1.3.0.SKXMIXM.GLOBAL.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.3.0.SKXMIXM.GLOBAL.boot.img";
         case "magisk-13-0-4-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.0.4.0.RKXMIXM.GLOBAL.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.4.0.RKXMIXM.GLOBAL.boot.img";
         case "magisk-13-0-3-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.0.3.0.RKXMIXM.GLOBAL.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.3.0.RKXMIXM.GLOBAL.boot.img";
         case "magisk-13-0-2-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.0.2.0.RKXMIXM.GLOBAL.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.2.0.RKXMIXM.GLOBAL.boot.img";
         case "magisk-13-0-1-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.0.1.0.RKXMIXM.GLOBAL.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.1.0.RKXMIXM.GLOBAL.boot.img";
 
         // India Versions
-        case "magisk-13-1-8-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.1.8.0.SKXINXM.INDIA.boot.img";
         case "magisk-13-1-4-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.1.4.0.SKXINXM.INDIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.4.0.SKXINXM.INDIA.boot.img";
         case "magisk-13-1-3-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.1.3.0.SKXINXM.INDIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.3.0.SKXINXM.INDIA.boot.img";
         case "magisk-13-0-6-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.0.6.0.RKXINXM.INDIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.6.0.RKXINXM.INDIA.boot.img";
         case "magisk-13-0-5-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.0.5.0.RKXINXM.INDIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.5.0.RKXINXM.INDIA.boot.img";
         case "magisk-13-0-4-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.0.4.0.RKXINXM.INDIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.4.0.RKXINXM.INDIA.boot.img";
 
         // Russia Versions
+	case "magisk-13-1-8-russia":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.8.0.SKXRUXM.RUSSIA.boot.img";
         case "magisk-13-1-6-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.1.6.0.SKXRUXM.RUSSIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.6.0.SKXRUXM.RUSSIA.boot.img";
         case "magisk-13-1-4-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.1.4.0.SKXRUXM.RUSSIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.4.0.SKXRUXM.RUSSIA.boot.img";
         case "magisk-13-0-3-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.0.3.0.RKXRUXM.RUSSIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.3.0.RKXRUXM.RUSSIA.boot.img";
         case "magisk-13-0-2-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.0.2.0.RKXRUXM.RUSSIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.2.0.RKXRUXM.RUSSIA.boot.img";
         case "magisk-13-0-1-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.0.1.0.RKXRUXM.RUSSIA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.1.0.RKXRUXM.RUSSIA.boot.img";
 
         // EEA Versions
         case "magisk-13-1-5-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.1.5.0.SKXEUXM.EEA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.5.0.SKXEUXM.EEA.boot.img";
         case "magisk-13-1-3-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.1.3.0.SKXEUXM.EEA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.3.0.SKXEUXM.EEA.boot.img";
         case "magisk-13-1-2-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.1.2.0.SKXEUXM.EEA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.2.0.SKXEUXM.EEA.boot.img";
         case "magisk-13-0-6-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.0.6.0.RKXEUXM.EEA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.6.0.RKXEUXM.EEA.boot.img";
         case "magisk-13-0-5-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.0.5.0.RKXEUXM.EEA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.5.0.RKXEUXM.EEA.boot.img";
         case "magisk-13-0-4-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.0.4.0.RKXEUXM.EEA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.4.0.RKXEUXM.EEA.boot.img";
         case "magisk-13-0-3-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.0.3.0.RKXEUXM.EEA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.3.0.RKXEUXM.EEA.boot.img";
 
         // China Versions
         case "magisk-13-1-5-china":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.1.5.0.SKXCNXM.CHINA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.5.0.SKXCNXM.CHINA.boot.img";
         case "magisk-13-1-4-china":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.1.4.0.SKXCNXM.CHINA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.4.0.SKXCNXM.CHINA.boot.img";
         case "magisk-13-0-9-china":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.0.9.0.RKXCNXM.CHINA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.9.0.RKXCNXM.CHINA.boot.img";
         case "magisk-13-0-8-china":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.0.8.0.RKXCNXM.CHINA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.8.0.RKXCNXM.CHINA.boot.img";
         case "magisk-13-0-5-china":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.0.5.0.RKXCNXM.CHINA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.5.0.RKXCNXM.CHINA.boot.img";
         case "magisk-13-0-3-china":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.0.3.0.RKXCNXM.CHINA.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.3.0.RKXCNXM.CHINA.boot.img";
 
         // Turkey Versions
         case "magisk-13-1-2-turkey":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.1.2.0.SKXTRXM.TURKEY.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.2.0.SKXTRXM.TURKEY.boot.img";
         case "magisk-13-0-3-turkey":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.0.3.0.RKXTRXM.TURKEY.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.3.0.RKXTRXM.TURKEY.boot.img";
         case "magisk-13-0-2-turkey":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.0.2.0.RKXTRXM.TURKEY.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.2.0.RKXTRXM.TURKEY.boot.img";
         case "magisk-13-0-1-turkey":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.0.1.0.RKXTRXM.TURKEY.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.1.0.RKXTRXM.TURKEY.boot.img";
 
 	// taiwan Versions
         case "magisk-13-1-2-taiwan":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.1.2.0.RKXTWXM.TAIWAN.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.2.0.RKXTWXM.TAIWAN.boot.img";
         case "magisk-13-0-4-taiwan":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.0.4.0.RKXTWXM.TAIWAN.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.4.0.RKXTWXM.TAIWAN.boot.img";
         case "magisk-13-0-3-taiwan":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.0.3.0.RKXTWXM.TAIWAN.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.3.0.RKXTWXM.TAIWAN.boot.img";
         case "magisk-13-0-2-taiwan":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk.27.NABU.V13.0.2.0.RKXTWXM.TAIWAN.boot.img";
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.2.0.RKXTWXM.TAIWAN.boot.img";
 		    
         default:
             return null;
