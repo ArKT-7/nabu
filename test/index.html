@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="../dist/fastboot.mjs" type="module"></script>
-    <script src="../download.js" type="module"></script>
     <meta property="og:title" content="Android Web Flasher by ArKT" />
     <meta property="og:description" content="It can flash android rom" />
     <meta property="og:url" content="https://arkt-7.github.io/nabu/" />
@@ -751,10 +750,8 @@
 
 <script type="module">
     import * as fastboot from "../dist/fastboot.mjs";
-    import { BlobStore } from "../download.js";
     let device = new fastboot.FastbootDevice();
     window.device = device;
-    let blobStore = new BlobStore();
 
     fastboot.setDebugLevel(2);
 
