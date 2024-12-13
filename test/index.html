@@ -3,15 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="dist/fastboot.mjs" type="module"></script>
-    <script src="download.js" type="module"></script>
-    <meta property="og:title" content="Fastboot Tool by ArKT" />
-    <meta property="og:description" content="It can boot Images like recovery and can flash images in any partition" />
+    <meta property="og:title" content="Android web flasher by ArKT" />
+    <meta property="og:description" content="It can flash android roms" />
     <meta property="og:url" content="https://arkt-7.github.io/nabu/" />
     <meta property="og:type" content="website" />
-    <meta name="description" content="It can boot Images like recovery and can flash images in any partition" />
-    <meta name="title" content="Fastboot Tool for flashing/booting/rooting" />
-    <title>Fastboot Tool by ArKT</title>
+    <meta name="description" content="It can flash android roms" />
+    <meta name="title" content="Fastboot Tool for flashing android rom" />
+    <title>Andrid web flasher by ArKT</title>
     <link rel="icon" href="https://img.icons8.com/fluency/48/android.png" type="image/png">
     <style>
         body {
@@ -605,7 +603,7 @@
 	
 	/* Thumb (scroll handle) styling */
 	.file-table td::-webkit-scrollbar-thumb {
-	    background: rgba(0, 0, 0, 0.1); /* Subtle dark color for the thumb */
+	    background: #191919; /* Subtle dark color for the thumb */
 	    border-radius: 10px; /* Rounded corners for the thumb */
 	    border: 2px solid transparent; /* Add space around the thumb */
 	    background-clip: padding-box; /* Ensure the thumb stays within its border */
@@ -659,7 +657,7 @@
     </div>
 
     <div class="container">
-        <label class="switchx">
+        <!-- <label class="switchx">
             <span class="sun">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <g fill="#ffd43b">
@@ -675,12 +673,12 @@
             </span>
             <input type="checkbox" class="inputx" id="toggle-input">
             <span class="slider"></span>
-        </label> 
+        </label> -->
 
         <p class="status-field">Not connected in Fastboot</p>
         <button class="button connect-button">Connect device Fastboot</button>
     </div>
-         <!-- hot added for fun -->
+        <!-- just for fun -->
 	<audio id="audioPlayer" src="https://raw.githubusercontent.com/arkt-7/nabu-files/main/other/rickroll.mp3"></audio>
 
     <div class="container">
@@ -702,11 +700,191 @@
             <pre class="result-field"></pre>
     </div>
 
+ <!-- New Container for Downloading and Flashing Images -->
+    <div class="container">
+        <form class="rboot-flash-form">
+            <label for="rboot-flash-file">Flash any rooted or normal boot image</label>
+            <input type="file" name="rboot-flash-file" class="rboot-flash-file" accept=".img" />
+            <label for="rboot-flash-partition">Select Flash boot partition</label>
+            <select name="rboot-flash-partition" class="rboot-flash-partition" required>
+                <option value="">Select boot partition</option>
+                <option value="boot_ab" selected>Flash to Boot ab (both slots)</option>
+                <option value="boot">Flash to Boot (current slot)</option>
+                <option value="boot_a">Flash to Boot A only</option>
+                <option value="boot_b">Flash to Boot B only</option>
+            </select>
+            <label for="rboot-flash-image">Magisk V28.1 Rooted Boot Images</label>
+            <select name="rboot-flash-image" class="rboot-flash-image">
+                <option value="">Select rooted HyperOS/MIUI 13/14 boot</option>
+
+		<!-- Global Versions HyperOS-->
+		<option value="magisk-1-0-6-global">HyperOS 1.0.6 (Global)</option>
+                <option value="magisk-1-0-5-global">HyperOS 1.0.5 (Global)</option>
+                <option value="magisk-1-0-4-global">HyperOS 1.0.4 (Global)</option>
+	    	<option value="magisk-1-0-1-global">HyperOS 1.0.1 (Global)</option>
+
+		<!-- India Versions -->
+		<option value="magisk-1-0-12-india">HyperOS 1.0.12 (India)</option>
+		<option value="magisk-1-0-9-india">HyperOS 1.0.9 (India)</option>    
+	    	<option value="magisk-1-0-8-india">HyperOS 1.0.8 (India)</option>
+	    	<option value="magisk-1-0-7-india">HyperOS 1.0.7 (India)</option>
+	    	<option value="magisk-1-0-4-india">HyperOS 1.0.4 (India)</option>
+
+		<!-- EEA Versions -->
+		<option value="magisk-1-0-6-eea">HyperOS 1.0.6 (EEA)</option>
+	    	<option value="magisk-1-0-5-eea">HyperOS 1.0.5 (EEA)</option>
+	    	<option value="magisk-1-0-2-eea">HyperOS 1.0.2 (EEA)</option>
+	   	<option value="magisk-1-0-1-eea">HyperOS 1.0.1 (EEA)</option>
+
+		<!-- Russia Versions -->
+		<option value="magisk-1-0-5-russia">HyperOS 1.0.5 (Russia)</option>
+	    	<option value="magisk-1-0-4-russia">HyperOS 1.0.4 (Russia)</option>
+	    	<option value="magisk-1-0-3-russia">HyperOS 1.0.3 (Russia)</option>
+	    	<option value="magisk-1-0-1-russia">HyperOS 1.0.1 (Russia)</option>
+
+		<!-- China Versions -->
+	    	<option value="magisk-1-0-3-china">HyperOS 1.0.3 (China)</option>
+	    	<option value="magisk-1-0-2-china">HyperOS 1.0.2 (China)</option>
+
+		<!-- Turkey Versions -->
+		<option value="magisk-1-0-6-turkey">HyperOS 1.0.6 (Turkey)</option>
+	    	<option value="magisk-1-0-5-turkey">HyperOS 1.0.5 (Turkey)</option>
+	    	<option value="magisk-1-0-4-turkey">HyperOS 1.0.4 (Turkey)</option>
+	    	<option value="magisk-1-0-2-turkey">HyperOS 1.0.2 (Turkey)</option>
+
+		<!-- Taiwan Versions -->
+		<option value="magisk-1-0-6-taiwan">HyperOS 1.0.6 (Taiwan)</option>
+	    	<option value="magisk-1-0-5-taiwan">HyperOS 1.0.5 (Taiwan)</option>
+	    	<option value="magisk-1-0-4-taiwan">HyperOS 1.0.4 (Taiwan)</option>
+	    	<option value="magisk-1-0-2-taiwan">HyperOS 1.0.2 (Taiwan)</option>
+	
+	    	<!-- Global Versions MIUI 14-->
+	    	<option value="magisk-14-0-8-global">MIUI 14.0.8 (Global)</option>
+	    	<option value="magisk-14-0-7-global">MIUI 14.0.7 (Global)</option>
+	    	<option value="magisk-14-0-6-global">MIUI 14.0.6 (Global)</option>
+	    	<option value="magisk-14-0-5-global">MIUI 14.0.5 (Global)</option>
+	    	<option value="magisk-14-0-4-global">MIUI 14.0.4 (Global)</option>
+	    	<option value="magisk-14-0-3-global">MIUI 14.0.3 (Global)</option>
+	    
+	    	<!-- India Versions -->
+	    	<option value="magisk-14-0-7-india">MIUI 14.0.7 (India)</option>
+	    	<option value="magisk-14-0-4-india">MIUI 14.0.4 (India)</option>
+	    	<option value="magisk-14-0-3-india">MIUI 14.0.3 (India)</option>
+	    	<option value="magisk-14-0-1-india">MIUI 14.0.1 (India)</option>
+	    
+	    	<!-- EEA Versions -->
+	    	<option value="magisk-14-0-9-eea">MIUI 14.0.9 (EEA)</option>
+	    	<option value="magisk-14-0-8-eea">MIUI 14.0.8 (EEA)</option>
+	    	<option value="magisk-14-0-7-eea">MIUI 14.0.7 (EEA)</option>
+	    	<option value="magisk-14-0-6-eea">MIUI 14.0.6 (EEA)</option>
+	    	<option value="magisk-14-0-5-eea">MIUI 14.0.5 (EEA)</option>
+	    	<option value="magisk-14-0-4-eea">MIUI 14.0.4 (EEA)</option>
+	    	<option value="magisk-14-0-2-eea">MIUI 14.0.2 (EEA)</option>
+	    
+	    	<!-- Russia Versions -->
+	    	<option value="magisk-14-0-7-russia">MIUI 14.0.7 (Russia)</option>
+	    	<option value="magisk-14-0-6-russia">MIUI 14.0.6 (Russia)</option>
+	    	<option value="magisk-14-0-5-russia">MIUI 14.0.5 (Russia)</option>
+	    	<option value="magisk-14-0-4-russia">MIUI 14.0.4 (Russia)</option>
+	    	<option value="magisk-14-0-3-russia">MIUI 14.0.3 (Russia)</option>
+	    	<option value="magisk-14-0-2-russia">MIUI 14.0.2 (Russia)</option>
+	    
+	    	<!-- China Versions -->
+	    	<option value="magisk-14-0-7-china">MIUI 14.0.7 (China)</option>
+	    	<option value="magisk-14-0-6-china">MIUI 14.0.6 (China)</option>
+	    	<option value="magisk-14-0-5-china">MIUI 14.0.5 (China)</option>
+	    	<option value="magisk-14-0-4-china">MIUI 14.0.4 (China)</option>
+	    
+	    	<!-- Turkey Versions -->
+	    	<option value="magisk-14-0-5-turkey">MIUI 14.0.5 (Turkey)</option>
+	    	<option value="magisk-14-0-4-turkey">MIUI 14.0.4 (Turkey)</option>
+	    	<option value="magisk-14-0-2-turkey">MIUI 14.0.2 (Turkey)</option>
+	    	<option value="magisk-14-0-1-turkey">MIUI 14.0.1 (Turkey)</option>
+	    
+	    	<!-- Taiwan Versions -->
+	    	<option value="magisk-14-0-3-taiwan">MIUI 14.0.3 (Taiwan)</option>
+	    	<option value="magisk-14-0-2-taiwan">MIUI 14.0.2 (Taiwan)</option>
+	    	<option value="magisk-14-0-1-taiwan">MIUI 14.0.1 (Taiwan)</option>
+
+		<!-- Global Versions MIUI 13-->
+		<option value="magisk-13-1-4-global">MIUI 13.1.4 (Global)</option>
+		<option value="magisk-13-1-3-global">MIUI 13.1.3 (Global)</option>
+		<option value="magisk-13-0-4-global">MIUI 13.0.4 (Global)</option>
+		<option value="magisk-13-0-3-global">MIUI 13.0.3 (Global)</option>
+		<option value="magisk-13-0-2-global">MIUI 13.0.2 (Global)</option>
+		<option value="magisk-13-0-1-global">MIUI 13.0.1 (Global)</option>
+		
+		<!-- India Versions -->
+		<option value="magisk-13-1-4-india">MIUI 13.1.4 (India)</option>
+		<option value="magisk-13-1-3-india">MIUI 13.1.3 (India)</option>
+		<option value="magisk-13-0-6-india">MIUI 13.0.6 (India)</option>
+		<option value="magisk-13-0-5-india">MIUI 13.0.5 (India)</option>
+		<option value="magisk-13-0-4-india">MIUI 13.0.4 (India)</option>
+		
+		<!-- Russia Versions -->
+		<option value="magisk-13-1-8-russia">MIUI 13.1.8 (Russia)</option>
+		<option value="magisk-13-1-6-russia">MIUI 13.1.6 (Russia)</option>
+		<option value="magisk-13-1-4-russia">MIUI 13.1.4 (Russia)</option>
+		<option value="magisk-13-0-3-russia">MIUI 13.0.3 (Russia)</option>
+		<option value="magisk-13-0-2-russia">MIUI 13.0.2 (Russia)</option>
+		<option value="magisk-13-0-1-russia">MIUI 13.0.1 (Russia)</option>
+		
+		<!-- EEA Versions -->
+		<option value="magisk-13-1-5-eea">MIUI 13.1.5 (EEA)</option>
+		<option value="magisk-13-1-3-eea">MIUI 13.1.3 (EEA)</option>
+		<option value="magisk-13-1-2-eea">MIUI 13.1.2 (EEA)</option>
+		<option value="magisk-13-0-6-eea">MIUI 13.0.6 (EEA)</option>
+		<option value="magisk-13-0-5-eea">MIUI 13.0.5 (EEA)</option>
+		<option value="magisk-13-0-4-eea">MIUI 13.0.4 (EEA)</option>
+		<option value="magisk-13-0-3-eea">MIUI 13.0.3 (EEA)</option>
+		
+		<!-- China Versions -->
+		<option value="magisk-13-1-5-china">MIUI 13.1.5 (China)</option>
+		<option value="magisk-13-1-4-china">MIUI 13.1.4 (China)</option>
+		<option value="magisk-13-0-9-china">MIUI 13.0.9 (China)</option>
+		<option value="magisk-13-0-8-china">MIUI 13.0.8 (China)</option>
+		<option value="magisk-13-0-5-china">MIUI 13.0.5 (China)</option>
+		<option value="magisk-13-0-3-china">MIUI 13.0.3 (China)</option>
+		
+		<!-- Turkey Versions -->
+		<option value="magisk-13-1-2-turkey">MIUI 13.1.2 (Turkey)</option>
+		<option value="magisk-13-0-3-turkey">MIUI 13.0.3 (Turkey)</option>
+		<option value="magisk-13-0-2-turkey">MIUI 13.0.2 (Turkey)</option>
+		<option value="magisk-13-0-1-turkey">MIUI 13.0.1 (Turkey)</option>
+		
+		<!-- Taiwan Versions -->
+		<option value="magisk-13-1-2-taiwan">MIUI 13.1.2 (Taiwan)</option>
+		<option value="magisk-13-0-4-taiwan">MIUI 13.0.4 (Taiwan)</option>
+		<option value="magisk-13-0-3-taiwan">MIUI 13.0.3 (Taiwan)</option>
+		<option value="magisk-13-0-2-taiwan">MIUI 13.0.2 (Taiwan)</option>
+
+	    </select>
+		<input type="submit" value="Flash" class="button" />
+		<!-- Progress bar for feedback -->
+		<div class="rboot-progress-container" style="display:none;">
+			<div class="rboot-progress-bar" style="width:0%;"></div>
+		</div>
+	</form>
+    </div>
+
     <div class="container">
         <form class="boot-form">
             <label for="boot-file">Boot any images</label>
             <input type="file" name="boot-file" id="boot-file" accept=".img" />
+            <select name="boot-type" class="boot-type">
+                <option value="">Select Images to boot on Nabu directly</option>
+            	<option value="twrp-portrait">Twrp Recovery Portrait</option>
+		<option value="twrp-landscape">Twrp Recovery landscape</option>
+            	<option value="pbrp-pitchblack">Pitch Black Recovery</option>
+            	<option value="win-uefi">Windows UEFI Boot</option>
+            	<option value="twrp-mod-portrait">Modded Twrp Recovery Portrait</option>
+		<option value="twrp-mod-landscape">Modded Twrp Recovery landscape</option>
+            	<option value="orangefox-mod">Modded OrangeFox Recovery</option>
+            </select>
 		<input type="submit" value="Boot" class="button" />
+		<div class="progress-container" style="display: none;">
+			<div class="progress-bar" style="width:0%;"></div>
+		</div>
 	</form>
     </div>
 	
@@ -745,16 +923,26 @@
 
 	<div class="container">
 	    <form class="wipe-form">
-	        <label for="wipe-input">format wipe android userdata</label>
+	        <label for="wipe-input">Format/wipe make Partition Stock</label>
 	        <p id="warning-message" style="text-align: center; font-style: italic; margin-bottom: 10px; margin-top: 10px;">
-	            ⚠️ <strong>This will Format all data</strong><br>
+	            ⚠️ <strong>This will Format all data, including Android and Windows (if installed).</strong><br>
 	            <strong>So think twice before doing.</strong>
 	        </p>
-	        <input type="text" name="wipe-input" class="wipe-input" placeholder="Type FORMAT - to wipe android userdata" />
+	        <input type="text" name="wipe-input" class="wipe-input" placeholder="Type FORMAT - to remove Windows and make partition layout stock." />
 	        <button type="button" class="button wipe-button red-button" disabled>Format/Wipe</button>
 	    </form>
 	</div>
 
+	<div class="container">
+        <form class="other-form">
+        <label for="other">other stuffs for Nabu Only :)</label>
+        </form>
+        <button class="button vbmeta-button">Disable Vbmeta verification</button>
+        <button class="button vbmeta-system-button">Disable Vbmeta System verification</button>
+	<button class="button rickroll-button">😅 Ram health check 😁</button>
+    </div>
+    
+	<audio id="audioPlayer" src="https://raw.githubusercontent.com/arkt-7/nabu-files/main/other/rickroll.mp3"></audio>
 	
 
     <div class="container">
@@ -1336,6 +1524,7 @@ const fileMapping = {
     "fw_4u1ea.img": "fw_4u1ea_ab",
     "LOGO.img": "logo_ab",
     "logo.img": "LOGO_ab",
+    "featenabler.img": "featenabler",
     "misc.img": "misc"
 };
 
