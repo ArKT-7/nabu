@@ -1675,20 +1675,20 @@ async function flashFormFile(event) {
 	    // Prepend flashing messages to resultField
 	    resultField.textContent = `Flashing ${file.name} to ${partitionA}...\n` + resultField.textContent;
 	    await device.flashBlob(partitionA, file, (progress) => {
-	        resultField.textContent = `Progress: ${progress}%\n` + resultField.textContent;
+	        resultField.textContent = `${partitionA} Progress: ${progress}%\n` + resultField.textContent;
 	    });
 	    resultField.textContent = `Successfully flashed ${file.name} to ${partitionA}.\n` + resultField.textContent;
 	
 	    resultField.textContent = `Flashing ${file.name} to ${partitionB}...\n` + resultField.textContent;
 	    await device.flashBlob(partitionB, file, (progress) => {
-	        resultField.textContent = `Progress: ${progress}%\n` + resultField.textContent;
+	        resultField.textContent = `${partitionB} Progress: ${progress}%\n` + resultField.textContent;
 	    });
 	    resultField.textContent = `Successfully flashed ${file.name} to ${partitionB}.\n` + resultField.textContent;
 	} else {
 	    // Flash normally
 	    resultField.textContent = `Flashing ${file.name} to ${partition}...\n` + resultField.textContent;
 	    await device.flashBlob(partition, file, (progress) => {
-	        resultField.textContent = `Progress: ${progress}%\n` + resultField.textContent;
+	        resultField.textContent = `${partition} Progress: ${progress}%\n` + resultField.textContent;
 	    });
 	    resultField.textContent = `Successfully flashed ${file.name} to ${partition}.\n` + resultField.textContent;
 	}
