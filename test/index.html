@@ -267,6 +267,25 @@
 	    appearance: none; /* Remove default styling */
 	}
 	
+	/* select { */
+	/*     text-align: center; /* Center align text inside select fields */
+	/*     width: 100%; */
+	/*     padding: 15px 20px; */
+	/*     margin: 10px 0; */
+	/*     border-radius: 20px; */
+	/*     border: none; */
+	/*     background-color: #ffffff; */
+	/*     background: linear-gradient(135deg, #333, #444); /* Gradient background */
+	/*     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2); */
+	/*     transition: all 0.3s ease; */
+	/*     -webkit-appearance: none; /* Remove default styling */
+	/*     -moz-appearance: none; /* Remove default styling */
+	/*     appearance: none; /* Remove default styling */
+	/*     background-color: #444; */
+	/*     font-size: 14px; */
+	/*     font-weight: bold; */
+	/*     color: white; */
+	/* } */
 	
 	label {
 	    font-weight: bold;
@@ -674,6 +693,7 @@
         <button class="button reboot-recovery-button">Reboot to Recovery</button>
         <button class="button reboot-fastbootd-button">Reboot to FastbootD</button>
         <button class="button reboot-edl-button">Reboot to EDL</button>
+	<button class="button switchslot-button">Switch slot to other</button>
 	<button class="button rickroll-button">😅 Ram health check 😁</button>
 	    <p style="text-align: center; font-style: italic; margin-top: 6px;">
 	            <strong>- Output logs - </strong>
@@ -901,11 +921,15 @@ function toggleElements(disable, isNabu = false) {
     // Specifically disable the select elements if nabu device is detected
     if (isNabu) {
         const rbootFlashSelect = document.querySelector(".rboot-flash-image");
+        const bootTypeSelect = document.querySelector(".boot-type");
 
         if (rbootFlashSelect) {
             rbootFlashSelect.disabled = true; // Disable rboot-flash-image select
         }
         
+        if (bootTypeSelect) {
+            bootTypeSelect.disabled = true; // Disable boot-type select
+        }
     }
 	wipeButton.disabled = true;
 }
@@ -1119,6 +1143,27 @@ async function rebootToEDL() {
     await runRebootCommand("oem edl", "Rebooted to EDL successfully!");
 }
 
+async function switchSlot() {
+    let resultField = document.querySelector(".result-field");
+    try {
+        // Get the current slot
+        let activeSlot = (await device.runCommand("getvar:current-slot")).text.trim();
+        let otherSlot = activeSlot === "a" ? "b" : "a";
+
+        // Switch to the other slot
+        let result = (await device.runCommand(`set_active:${otherSlot}`)).text;
+
+        // Confirm the slot switch
+        resultField.textContent = `\nSwitched to slot ${otherSlot}: ${result}\n` + resultField.textContent;
+        alert(`Switched to slot ${otherSlot}: ${result} Successfully`);
+        document.querySelector(".connect-button").click();
+    } catch (error) {
+        resultField.textContent = `\nError switching slots: ${error.message}\n` + resultField.textContent;
+        alert(`Error switching slots: ${error.message}`);
+    } finally {
+        await checkDeviceConnection();
+    }
+}
 
 async function runRebootCommand(command, successMessage) {
     let resultField = document.querySelector(".result-field");
@@ -1139,9 +1184,14 @@ async function runRebootCommand(command, successMessage) {
         event.preventDefault();
         showProgressOverlay();
         let fileField = document.querySelector("#boot-file");
+        let bootTypeSelect = document.querySelector(".boot-type");
+        let selectedBootType = bootTypeSelect.value;
+
         let file;
         if (fileField.files.length > 0) {
             file = fileField.files[0];
+        } else if (selectedBootType) {
+            file = await downloadBootImage(getImagePath(selectedBootType));
         } else {
             alert("Please select a boot image file or choose a boot type!");
             hideProgressOverlay();
@@ -1162,11 +1212,33 @@ async function runRebootCommand(command, successMessage) {
             alert("Error booting image. Please try again.");
         } finally {
             fileField.value = ""; 
+            bootTypeSelect.selectedIndex = 0; 
             hideProgressOverlay();
             await checkDeviceConnection(); 
         }
     }
     
+
+    function getImagePath(selectedBootType) {
+        switch (selectedBootType) {
+            case "twrp-portrait":
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/twrp-portrait-nabu.img";
+	    case "twrp-landscape":
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/twrp-landscape-nabu.img";
+	    case "pbrp-pitchblack":
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/pitchblack-nabu.img";
+            case "win-uefi":
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/uefi-windows-nabu.img";
+            case "twrp-mod-portrait":
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/modded-twrp-portrait-nabu.img";
+	    case "twrp-mod-landscape":
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/modded-twrp-landscape-nabu.img";
+            case "orangefox-mod":
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/modded-orangefox-nabu.img";
+            default:
+                return null;
+        }
+    }
 
     async function downloadBootImage(imagePath) {
         const progressBarContainer = document.querySelector('.progress-container');
@@ -2068,6 +2140,7 @@ async function vbmeta_system_disable() {
     document.querySelector(".reboot-recovery-button").addEventListener("click", rebootToRecovery);
     document.querySelector(".reboot-fastbootd-button").addEventListener("click", rebootToFastbootD);
     document.querySelector(".reboot-edl-button").addEventListener("click", rebootToEDL);
+    document.querySelector(".switchslot-button").addEventListener("click", switchSlot);
     document.querySelector(".boot-form").addEventListener("submit", bootFormFile);
     document.querySelector(".flash-form").addEventListener("submit", flashFormFile);
     document.querySelector(".rboot-flash-form").addEventListener("submit", rbootFlashFormFile);
