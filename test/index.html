@@ -447,7 +447,7 @@
 	    border-radius: 15px;
 	}
 	
-	.switchx {
+	/*.switchx {
 	    font-size: 17px;
 	    position: absolute;
 	    top: 7px;
@@ -470,7 +470,7 @@
 	    left: 0;
 	    right: 0;
 	    bottom: 0;
-	    background: linear-gradient(135deg, #3a3f44, #50575d); /* Dark mode background */
+	    background: linear-gradient(135deg, #3a3f44, #50575d); 
 	    transition: 0.4s;
 	    border-radius: 15px;
 	    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 0.2);
@@ -485,47 +485,46 @@
 	    left: 2px;
 	    bottom: 2px;
 	    z-index: 2;
-	    background-color: #e8e8e8; /* White knob */
+	    background-color: #e8e8e8;
 	    transition: 0.4s;
 	    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.3);
 	}
 	
-	/* Adjusted sun icon for smaller size */
+	
 	.sun svg {
 	    position: absolute;
-	    top: 4px; /* Adjusted position */
-	    left: 4px; /* Move sun to the left */
+	    top: 4px; 
+	    left: 4px;
 	    z-index: 1;
-	    width: 14px; /* Smaller size */
-	    height: 14px; /* Smaller size */
+	    width: 14px; 
+	    height: 14px; 
 	}
 	
-	/* Adjusted moon icon for smaller size */
 	.moon svg {
 	    fill: #73C0FC;
 	    position: absolute;
-	    top: 4px; /* Adjusted position */
-	    left: 24px; /* Adjusted to fit smaller toggle */
+	    top: 4px; 
+	    left: 24px; 
 	    z-index: 1;
-	    width: 14px; /* Smaller size */
-	    height: 14px; /* Smaller size */
+	    width: 14px; 
+	    height: 14px; 
 	}
 	
-	/* Light mode when the switch is checked */
+
 	input:checked + .slider {
-	    background: linear-gradient(135deg, #e0e6ed, #c8d0d8); /* Light mode gradient */
+	    background: linear-gradient(135deg, #e0e6ed, #c8d0d8); 
 	    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.1);
 	}
 	
 	input:checked + .slider:before {
-	    background-color: #ffffff; /* Knob in light mode */
+	    background-color: #ffffff;
 	    transform: translateX(18px);
 	    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.2);
 	}
 	
 	.inputx:focus + .slider {
 	    box-shadow: 0 0 1px #183153;
-	}
+	} */
 
 	.animated-button img {
 	    transition: transform 0.3s ease, opacity 0.3s ease;
@@ -659,7 +658,7 @@
     </div>
 
     <div class="container">
-        <label class="switchx">
+         <!--<label class="switchx">
             <span class="sun">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <g fill="#ffd43b">
@@ -675,7 +674,7 @@
             </span>
             <input type="checkbox" class="inputx" id="toggle-input">
             <span class="slider"></span>
-        </label>
+        </label>-->
 
         <p class="status-field">Not connected in Fastboot</p>
         <button class="button connect-button">Connect device Fastboot</button>
@@ -1098,7 +1097,8 @@ function toggleElements(disable, isNabu = false) {
     const wipeButton = document.querySelector(".wipe-button");
     wipeButton.disabled = true;
     formElements.forEach((element) => {
-        if (!element.classList.contains('connect-button') && !element.classList.contains('download-log-button') && !element.closest('.switchx')) {
+	   // if (!element.classList.contains('connect-button') && !element.classList.contains('download-log-button') && !element.closest('.switchx')) {
+        if (!element.classList.contains('connect-button') && !element.classList.contains('download-log-button')) {
             element.disabled = disable; // General enable/disable logic
         }
     });
