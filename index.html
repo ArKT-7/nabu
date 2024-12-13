@@ -3,14 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="dist/fastboot.mjs" type="module"></script>
-    <script src="download.js" type="module"></script>
-    <meta property="og:title" content="Fastboot Tool by ArKT" />
-    <meta property="og:description" content="It can boot Images like recovery and can flash images in any partition" />
+    <meta property="og:title" content="Android web flasher by ArKT" />
+    <meta property="og:description" content="It can flash android rom" />
     <meta property="og:url" content="https://arkt-7.github.io/nabu/" />
     <meta property="og:type" content="website" />
-    <meta name="description" content="It can boot Images like recovery and can flash images in any partition" />
-    <meta name="title" content="Fastboot Tool for flashing/booting/rooting" />
+    <meta name="description" content="It can flash android rom" />
+    <meta name="title" content="web flasher for flashing android rom" />
     <title>Fastboot Tool by ArKT</title>
     <link rel="icon" href="https://img.icons8.com/fluency/48/android.png" type="image/png">
     <style>
@@ -958,8 +956,8 @@
     </div>
 
 <script type="module">
-    import * as fastboot from "./dist/fastboot.mjs";
-    import { BlobStore } from "./download.js";
+    import * as fastboot from "../dist/fastboot.mjs";
+    import { BlobStore } from "../download.js";
     let device = new fastboot.FastbootDevice();
     window.device = device;
     let blobStore = new BlobStore();
