@@ -875,10 +875,10 @@
             	<option value="twrp-portrait">Twrp Recovery Portrait</option>
 		<option value="twrp-landscape">Twrp Recovery landscape</option>
             	<option value="pbrp-pitchblack">Pitch Black Recovery</option>
-            	<option value="win-uefi">Windows UEFI Boot</option>
+            	<option value="win-uefi-v4">Windows UEFI-v4 Boot</option>
+	        <option value="win-uefi-v3">Windows UEFI-v3 Boot</option>
             	<option value="twrp-mod-portrait">Modded Twrp Recovery Portrait</option>
 		<option value="twrp-mod-landscape">Modded Twrp Recovery landscape</option>
-            	<option value="orangefox-mod">Modded OrangeFox Recovery</option>
             </select>
 		<input type="submit" value="Boot" class="button" />
 		<div class="progress-container" style="display: none;">
@@ -1412,14 +1412,14 @@ async function runRebootCommand(command, successMessage) {
                 return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/twrp-landscape-nabu.img";
 	    case "pbrp-pitchblack":
                 return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/pitchblack-nabu.img";
-            case "win-uefi":
+            case "win-uefi-v4":
                 return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/uefi-windows-nabu.img";
+            case "win-uefi-v3":
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/uefi-windows-nabu-v3.img";
             case "twrp-mod-portrait":
                 return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/modded-twrp-portrait-nabu.img";
 	    case "twrp-mod-landscape":
                 return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/modded-twrp-landscape-nabu.img";
-            case "orangefox-mod":
-                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/modded-orangefox-nabu.img";
             default:
                 return null;
         }
@@ -2147,6 +2147,17 @@ async function wipepart() {
 	// Step 2.1 LOL: Execute additional erase commands
         await device.runCommand("erase:metadata");
         await device.runCommand("erase:userdata");
+
+	 // Get the current slot
+	let activeSlot = (await device.runCommand("getvar:current-slot")).text.trim();
+	let otherSlot = activeSlot === "a" ? "b" : "a";
+	
+	    // Switch to the other slot twice
+	await device.runCommand(`set_active:${otherSlot}`);
+	let newActiveSlot = (await device.runCommand("getvar:current-slot")).text.trim();
+	    
+	let finalSlot = newActiveSlot === "a" ? "b" : "a";
+	await device.runCommand(`set_active:${finalSlot}`);
 
         alert("gpt_both0.bin flashed successfully, and userdata has been erased.");
 
