@@ -169,6 +169,35 @@
             }
         }
 
+        .only-nabu-wipe {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .only-nabu-wipe::after {
+            content: "Only for Nabu";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(2px);
+            background-color: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.551);
+            font-weight: bold;
+            font-size: 1.2em;
+            pointer-events: none;
+            z-index: 1;
+            border-radius: 20px;
+        }
+
+        .only-nabu-wipe .wipe-content {
+            pointer-events: none;
+        }
+
 	.button {
 	    background-color: #ffffff;
 	    background: linear-gradient(135deg, #007bff, #00d4ff);
@@ -199,6 +228,33 @@
 	    box-shadow: none;
 	    transform: none;
 	}
+
+    .only-nabu-disabled:disabled::after {
+        content: "Only for Nabu";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(1.2px);
+        background-color: rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.716);
+        font-weight: bold;
+        font-size: 1em;
+        pointer-events: none;
+        z-index: 1;
+        border-radius: 20px;
+    }
+
+
+    .only-nabu-disabled {
+        position: relative;
+        overflow: hidden;
+    }
+
 
 	.red-button {
 	    background: linear-gradient(135deg, #ff3b3b, #ff6666); /* Brighter red shades */
@@ -734,7 +790,7 @@
             <label for="boot-file">Boot any images</label>
             <input type="file" name="boot-file" id="boot-file" accept=".img" />
             <select name="boot-type" class="boot-type">
-                <option value="">Select Images to boot on Nabu directly</option>
+                <option value="">Select Images to boot directly on/for Nabu</option>
                 <option value="twrp">TWRP New/Modded Recovery</option>
             	<option value="pbrp">Pitch Black Recovery</option>
             	<option value="uefi-v4-sb">Windows UEFI-v4 Secure boot</option>
@@ -748,17 +804,20 @@
 	</form>
     </div>
 
-	<div class="container">
-	    <form class="wipe-form">
-	        <label for="wipe-input">Format/wipe make Partition Stock</label>
-	        <p id="warning-message" style="text-align: center; font-style: italic; margin-bottom: 10px; margin-top: 10px;">
-	            ⚠️ <strong>This will Format all data, including Android and Windows (if installed).</strong><br>
-	            <strong>So think twice before doing.</strong>
-	        </p>
-	        <input type="text" name="wipe-input" class="wipe-input" placeholder="Type FORMAT - to remove Windows and make partition layout stock." />
-	        <button type="button" class="button wipe-button red-button" disabled>Format/Wipe</button>
-	    </form>
-	</div>
+	<div class="container wipe-container">
+        <div class="wipe-content">
+            <form class="wipe-form">
+                <label for="wipe-input">Format/wipe make Partition Stock</label>
+                <p id="warning-message" style="text-align: center; font-style: italic; margin-bottom: 10px; margin-top: 10px;">
+                    ⚠️ <strong>This will Format all data, including Android and Windows (if installed).</strong><br>
+                    <strong>So think twice before doing.</strong>
+                </p>
+                <input type="text" name="wipe-input" class="wipe-input" placeholder="Type FORMAT - to remove Windows and make partition layout stock." />
+                <button type="button" class="button wipe-button red-button" disabled>Format/Wipe</button>
+            </form>
+        </div>
+    </div>
+       
 
      <!-- New Container for Downloading and Flashing Images -->
      <div class="container">
@@ -773,7 +832,7 @@
                 <option value="boot_a">Flash to Boot A only</option>
                 <option value="boot_b">Flash to Boot B only</option>
             </select>
-            <label for="rboot-flash-image">Magisk V28.1 Rooted Boot Images</label>
+            <label for="rboot-flash-image">Magisk V28.1 Rooted images for Nabu</label>
             <select name="rboot-flash-image" class="rboot-flash-image">
                 <option value="">Select rooted HyperOS/MIUI 13/14 boot</option>
 
@@ -955,6 +1014,7 @@
 <script type="module">
     import * as fastboot from "./dist/fastboot.mjs";
     import { BlobStore } from "./download.js";
+    
     let device = new fastboot.FastbootDevice();
     window.device = device;
     let blobStore = new BlobStore();
@@ -1090,29 +1150,56 @@ function hideProgressOverlay() {
 
 function toggleElements(disable, isNabu = false) {
     const formElements = document.querySelectorAll("input, button, select");
+    const rbootFlashSelect = document.querySelector(".rboot-flash-image");
+    const bootTypeSelect = document.querySelector(".boot-type");
+    const vbmetaButton = document.querySelector(".vbmeta-button");
+    const vbmetaSButton = document.querySelector(".vbmeta-system-button");
+    const wipeContainer = document.querySelector(".wipe-container");
+    const wipeinput = document.querySelector(".wipe-input");
     const wipeButton = document.querySelector(".wipe-button");
     wipeButton.disabled = true;
+
     formElements.forEach((element) => {
-        if (!element.classList.contains('connect-button') && !element.classList.contains('download-log-button') && !element.closest('.switchx')) {
-            element.disabled = disable; // General enable/disable logic
+        if (
+            !element.classList.contains("connect-button") &&
+            !element.classList.contains("download-log-button") &&
+            !element.closest(".switchx")
+        ) {
+            element.disabled = disable;
         }
     });
 
-    // Specifically disable the select elements if nabu device is detected
     if (isNabu) {
-        const rbootFlashSelect = document.querySelector(".rboot-flash-image");
-        const bootTypeSelect = document.querySelector(".boot-type");
+        if (rbootFlashSelect) rbootFlashSelect.disabled = true;
+        if (bootTypeSelect) bootTypeSelect.disabled = true;
+        if (wipeinput) wipeinput.disabled = true;
 
-        if (rbootFlashSelect) {
-            rbootFlashSelect.disabled = true; // Disable rboot-flash-image select
+        if (vbmetaButton) {
+            vbmetaButton.disabled = true;
+            vbmetaButton.classList.add("only-nabu-disabled");
         }
-        
-        if (bootTypeSelect) {
-            bootTypeSelect.disabled = true; // Disable boot-type select
+
+        if (vbmetaSButton) {
+            vbmetaSButton.disabled = true;
+            vbmetaSButton.classList.add("only-nabu-disabled");
+        }
+
+        if (wipeContainer) {
+            wipeContainer.classList.add("only-nabu-wipe");
+        }
+    } else {
+        if (vbmetaButton) vbmetaButton.classList.remove("only-nabu-disabled");
+        if (vbmetaSButton) vbmetaSButton.classList.remove("only-nabu-disabled");
+
+        if (wipeContainer) {
+            wipeContainer.classList.remove("only-nabu-wipe");
         }
     }
-	wipeButton.disabled = true;
+
+    wipeButton.disabled = true;
 }
+
+
 	
 	
 
