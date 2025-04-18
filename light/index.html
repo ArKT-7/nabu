@@ -703,7 +703,69 @@
             <pre class="result-field"></pre>
     </div>
 
- <!-- New Container for Downloading and Flashing Images -->
+    <div class="container">
+        <form class="flash-form">
+            <label for="flash-file">Flash any images/Complete ROM 💀</label>
+            <input type="file" name="flash-file" id="flash-file" accept=".img,.bin,.elf,.mbn" multiple />
+    
+            <label for="flash-partition">Enter Partition</label>
+            <input type="text" name="flash-partition" class="flash-partition" 
+                   placeholder="Partition like - boot, dtbo, super, vendor_boot, recovery, etc." disabled />
+            <div class="file-table-container">
+                <!-- Table for displaying selected files -->
+                <table id="file-table" class="file-table">
+                    <thead>
+                        <tr>
+                            <th>File Name</th>
+                            <th>Partition</th>
+                            <th>Size</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Dynamic rows will be added here -->
+                    </tbody>
+                </table>
+            </div>
+            <input type="submit" value="Flash" class="button" />
+        </form>
+        <label for="log-output">Logs:</label>
+        <pre id="log-output" class="result-field"></pre>
+        <button class="button download-log-button">Download Logs</button>
+    </div>
+
+    <div class="container">
+        <form class="boot-form">
+            <label for="boot-file">Boot any images</label>
+            <input type="file" name="boot-file" id="boot-file" accept=".img" />
+            <select name="boot-type" class="boot-type">
+                <option value="">Select Images to boot on Nabu directly</option>
+                <option value="twrp">TWRP New/Modded Recovery</option>
+            	<option value="pbrp">Pitch Black Recovery</option>
+            	<option value="uefi-v4-sb">Windows UEFI-v4 Secure boot</option>
+                <option value="uefi-v4-nosb">Windows UEFI-v4 No Secure boot</option>
+	            <option value="uefi-v3">Windows UEFI-v3 old</option>
+            </select>
+		<input type="submit" value="Boot" class="button" />
+		<div class="progress-container" style="display: none;">
+			<div class="progress-bar" style="width:0%;"></div>
+		</div>
+	</form>
+    </div>
+	
+
+	<div class="container">
+	    <form class="wipe-form">
+	        <label for="wipe-input">Format/wipe make Partition Stock</label>
+	        <p id="warning-message" style="text-align: center; font-style: italic; margin-bottom: 10px; margin-top: 10px;">
+	            ⚠️ <strong>This will Format all data, including Android and Windows (if installed).</strong><br>
+	            <strong>So think twice before doing.</strong>
+	        </p>
+	        <input type="text" name="wipe-input" class="wipe-input" placeholder="Type FORMAT - to remove Windows and make partition layout stock." />
+	        <button type="button" class="button wipe-button red-button" disabled>Format/Wipe</button>
+	    </form>
+	</div>
+
+	<!-- New Container for Downloading and Flashing Images -->
     <div class="container">
         <form class="rboot-flash-form">
             <label for="rboot-flash-file">Flash any rooted or normal boot image</label>
@@ -869,75 +931,7 @@
 	</form>
     </div>
 
-    <div class="container">
-        <form class="boot-form">
-            <label for="boot-file">Boot any images</label>
-            <input type="file" name="boot-file" id="boot-file" accept=".img" />
-            <select name="boot-type" class="boot-type">
-                <option value="">Select Images to boot on Nabu directly</option>
-            	<option value="twrp-portrait">Twrp Recovery Portrait</option>
-		<option value="twrp-landscape">Twrp Recovery landscape</option>
-            	<option value="pbrp-pitchblack">Pitch Black Recovery</option>
-            	<option value="win-uefi-v4">Windows UEFI-v4 Boot</option>
-	        <option value="win-uefi-v3">Windows UEFI-v3 Boot</option>
-            	<option value="twrp-mod-portrait">Modded Twrp Recovery Portrait</option>
-		<option value="twrp-mod-landscape">Modded Twrp Recovery landscape</option>
-            </select>
-		<input type="submit" value="Boot" class="button" />
-		<div class="progress-container" style="display: none;">
-			<div class="progress-bar" style="width:0%;"></div>
-		</div>
-	</form>
-    </div>
-	
-	<div class="container">
-    <form class="flash-form">
-        <label for="flash-file">Flash any images/Complete ROM 💀</label>
-        <input type="file" name="flash-file" id="flash-file" accept=".img,.bin,.elf,.mbn" multiple />
 
-        <label for="flash-partition">Enter Partition</label>
-        <input type="text" name="flash-partition" class="flash-partition" 
-               placeholder="Partition like - boot, dtbo, super, vendor_boot, recovery, etc." disabled />
-
-        <div class="file-table-container">
-            <!-- Table for displaying selected files -->
-            <table id="file-table" class="file-table">
-                <thead>
-                    <tr>
-                        <th>File Name</th>
-                        <th>Partition</th>
-                        <th>Size</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Dynamic rows will be added here -->
-                </tbody>
-            </table>
-        </div>
-
-        <input type="submit" value="Flash" class="button" />
-    </form>
-
-    <label for="log-output">Logs:</label>
-    <pre id="log-output" class="result-field"></pre>
-    <button class="button download-log-button">Download Logs</button>
-</div>
-
-
-
-	<div class="container">
-	    <form class="wipe-form">
-	        <label for="wipe-input">Format/wipe make Partition Stock</label>
-	        <p id="warning-message" style="text-align: center; font-style: italic; margin-bottom: 10px; margin-top: 10px;">
-	            ⚠️ <strong>This will Format all data, including Android and Windows (if installed).</strong><br>
-	            <strong>So think twice before doing.</strong>
-	        </p>
-	        <input type="text" name="wipe-input" class="wipe-input" placeholder="Type FORMAT - to remove Windows and make partition layout stock." />
-	        <button type="button" class="button wipe-button red-button" disabled>Format/Wipe</button>
-	    </form>
-	</div>
-
-	
     <div class="container">
         <form class="other-form">
         <label for="other">other stuffs for Nabu Only :)</label>
@@ -1413,20 +1407,16 @@ async function runRebootCommand(command, successMessage) {
 
     function getImagePath(selectedBootType) {
         switch (selectedBootType) {
-            case "twrp-portrait":
-                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/twrp-portrait-nabu.img";
-	    case "twrp-landscape":
-                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/twrp-landscape-nabu.img";
-	    case "pbrp-pitchblack":
+            case "twrp":
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/modded-twrp-new.img";
+	        case "pbrp":
                 return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/pitchblack-nabu.img";
-            case "win-uefi-v4":
-                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/uefi-windows-nabu.img";
-            case "win-uefi-v3":
+            case "uefi-v4-sb":
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/uefi-windows-nabu-SB.img";
+            case "uefi-v4-nosb":
+                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/uefi-windows-nabu-NOSB.img";
+            case "uefi-v3":
                 return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/uefi-windows-nabu-v3.img";
-            case "twrp-mod-portrait":
-                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/modded-twrp-portrait-nabu.img";
-	    case "twrp-mod-landscape":
-                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/modded-twrp-landscape-nabu.img";
             default:
                 return null;
         }
