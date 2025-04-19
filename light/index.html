@@ -845,6 +845,12 @@
 	    	<option value="magisk-1-0-1-global">HyperOS 1.0.1 (Global)</option>
 
 		<!-- India Versions -->
+        <option value="magisk-1-0-18-india">HyperOS 1.0.18 (India)</option>
+        <option value="magisk-1-0-17-india">HyperOS 1.0.17 (India)</option>
+        <option value="magisk-1-0-16-india">HyperOS 1.0.16 (India)</option>
+        <option value="magisk-1-0-14-india">HyperOS 1.0.14 (India)</option>
+        <option value="magisk-1-0-13-india">HyperOS 1.0.13 (India)</option>
+		<option value="magisk-1-0-12-india">HyperOS 1.0.12 (India)</option>
 		<option value="magisk-1-0-9-india">HyperOS 1.0.9 (India)</option>    
 	    	<option value="magisk-1-0-8-india">HyperOS 1.0.8 (India)</option>
 	    	<option value="magisk-1-0-7-india">HyperOS 1.0.7 (India)</option>
@@ -1862,9 +1868,9 @@ function resetTableToPlaceholders() {
 function rbootGetImagePath(selectedImage) {
     switch (selectedImage) {
         // HyperOS GLOBAL Versions
-	case "magisk-1-0-6-global":
+	    case "magisk-1-0-6-global":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.6.0.TKXMIXM.GLOBAL.boot.img";
-	case "magisk-1-0-5-global":
+	    case "magisk-1-0-5-global":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.5.0.TKXMIXM.GLOBAL.boot.img";
         case "magisk-1-0-4-global":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.4.0.TKXMIXM.GLOBAL.boot.img";
@@ -1872,11 +1878,21 @@ function rbootGetImagePath(selectedImage) {
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.1.0.TKXMIXM.GLOBAL.boot.img";
         
 	// India Versions  
-	case "magisk-1-0-12-india":
+        case "magisk-1-0-18-india":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.18.0.TKXINXM.INDIA.boot.img";
+        case "magisk-1-0-17-india":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.17.0.TKXINXM.INDIA.boot.img";
+        case "magisk-1-0-16-india":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.16.0.TKXINXM.INDIA.boot.img";
+        case "magisk-1-0-14-india":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.14.0.TKXINXM.INDIA.boot.img";
+        case "magisk-1-0-13-india":
+            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.13.0.TKXINXM.INDIA.boot.img";
+	    case "magisk-1-0-12-india":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.12.0.TKXINXM.INDIA.boot.img";
-	case "magisk-1-0-9-india":
+	    case "magisk-1-0-9-india":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.9.0.TKXINXM.INDIA.boot.img";
-	case "magisk-1-0-8-india":
+	    case "magisk-1-0-8-india":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.8.0.TKXINXM.INDIA.boot.img";
         case "magisk-1-0-7-india":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.7.0.TKXINXM.INDIA.boot.img";
@@ -1884,9 +1900,9 @@ function rbootGetImagePath(selectedImage) {
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.4.0.TKXINXM.INDIA.boot.img";
         
 	// EEA Versions  
-	case "magisk-1-0-6-eea":
+	    case "magisk-1-0-6-eea":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.6.0.TKXEUXM.EEA.boot.img";
-	case "magisk-1-0-5-eea":
+	    case "magisk-1-0-5-eea":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.5.0.TKXEUXM.EEA.boot.img";
         case "magisk-1-0-2-eea":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.2.0.TKXEUXM.EEA.boot.img";
@@ -1894,9 +1910,9 @@ function rbootGetImagePath(selectedImage) {
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.1.0.TKXEUXM.EEA.boot.img";
         
 	// Russia Versions    
-	case "magisk-1-0-5-russia":
+	    case "magisk-1-0-5-russia":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.5.0.TKXRUXM.RUSSIA.boot.img";
-	case "magisk-1-0-4-russia":
+	    case "magisk-1-0-4-russia":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.4.0.TKXRUXM.RUSSIA.boot.img";
         case "magisk-1-0-3-russia":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.3.0.TKXRUXM.RUSSIA.boot.img";
@@ -1904,15 +1920,15 @@ function rbootGetImagePath(selectedImage) {
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.1.0.TKXRUXM.RUSSIA.boot.img";
         
 	// China Versions    
-	case "magisk-1-0-3-china":
+	    case "magisk-1-0-3-china":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.3.0.TKXCNXM.CHINA.boot.img";
         case "magisk-1-0-2-china":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.2.0.TKXCNXM.CHINA.boot.img";
         
 	// Turkey Versions
-	case "magisk-1-0-6-turkey":
+	    case "magisk-1-0-6-turkey":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.6.0.TKXTRXM.TURKEY.boot.img";
-	case "magisk-1-0-5-turkey":
+	    case "magisk-1-0-5-turkey":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.5.0.TKXTRXM.TURKEY.boot.img";
         case "magisk-1-0-4-turkey":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.4.0.TKXTRXM.TURKEY.boot.img";
@@ -1920,9 +1936,9 @@ function rbootGetImagePath(selectedImage) {
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.2.0.TKXTRXM.TURKEY.boot.img";
         
 	// taiwan Versions
-	case "magisk-1-0-6-taiwan":
+	    case "magisk-1-0-6-taiwan":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.6.0.TKXTWXM.TAIWAN.boot.img";
-	case "magisk-1-0-5-taiwan":
+	    case "magisk-1-0-5-taiwan":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.5.0.TKXTWXM.TAIWAN.boot.img";
         case "magisk-1-0-4-taiwan":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.4.0.TKXTWXM.TAIWAN.boot.img";
@@ -2012,7 +2028,7 @@ function rbootGetImagePath(selectedImage) {
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.1.0.TKXTWXM.TAIWAN.boot.img";
 
 	// MIUI 13 GLOBAL Versions
-	case "magisk-13-1-4-global":
+	    case "magisk-13-1-4-global":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.4.0.SKXMIXM.GLOBAL.boot.img";
         case "magisk-13-1-3-global":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.3.0.SKXMIXM.GLOBAL.boot.img";
@@ -2025,7 +2041,7 @@ function rbootGetImagePath(selectedImage) {
         case "magisk-13-0-1-global":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.1.0.RKXMIXM.GLOBAL.boot.img";
 
-        // India Versions
+    // India Versions
         case "magisk-13-1-4-india":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.4.0.SKXINXM.INDIA.boot.img";
         case "magisk-13-1-3-india":
@@ -2037,8 +2053,8 @@ function rbootGetImagePath(selectedImage) {
         case "magisk-13-0-4-india":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.4.0.RKXINXM.INDIA.boot.img";
 
-        // Russia Versions
-	case "magisk-13-1-8-russia":
+    // Russia Versions
+	    case "magisk-13-1-8-russia":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.8.0.SKXRUXM.RUSSIA.boot.img";
         case "magisk-13-1-6-russia":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.6.0.SKXRUXM.RUSSIA.boot.img";
@@ -2051,7 +2067,7 @@ function rbootGetImagePath(selectedImage) {
         case "magisk-13-0-1-russia":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.1.0.RKXRUXM.RUSSIA.boot.img";
 
-        // EEA Versions
+    // EEA Versions
         case "magisk-13-1-5-eea":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.5.0.SKXEUXM.EEA.boot.img";
         case "magisk-13-1-3-eea":
@@ -2067,7 +2083,7 @@ function rbootGetImagePath(selectedImage) {
         case "magisk-13-0-3-eea":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.3.0.RKXEUXM.EEA.boot.img";
 
-        // China Versions
+    // China Versions
         case "magisk-13-1-5-china":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.5.0.SKXCNXM.CHINA.boot.img";
         case "magisk-13-1-4-china":
@@ -2081,7 +2097,7 @@ function rbootGetImagePath(selectedImage) {
         case "magisk-13-0-3-china":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.3.0.RKXCNXM.CHINA.boot.img";
 
-        // Turkey Versions
+    // Turkey Versions
         case "magisk-13-1-2-turkey":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.2.0.SKXTRXM.TURKEY.boot.img";
         case "magisk-13-0-3-turkey":
@@ -2100,7 +2116,6 @@ function rbootGetImagePath(selectedImage) {
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.3.0.RKXTWXM.TAIWAN.boot.img";
         case "magisk-13-0-2-taiwan":
             return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.2.0.RKXTWXM.TAIWAN.boot.img";
-		    
         default:
             return null;
     }
