@@ -937,18 +937,17 @@
         </div>
     </div>
 
-<script type="module">
-    import * as fastboot from "./dist/fastboot.mjs";
-    import { BlobStore } from "./download.js";
+    <script type="module">
+        import * as fastboot from "./dist/fastboot.mjs";
+        import { BlobStore } from "./download.js";
     
-    let device = new fastboot.FastbootDevice();
-    window.device = device;
-    let blobStore = new BlobStore();
+        let device = new fastboot.FastbootDevice();
+        window.device = device;
+        let blobStore = new BlobStore();
 
-    fastboot.setDebugLevel(2);
+        fastboot.setDebugLevel(2);
 
-
-	   window.onload = function() {
+	    window.onload = function() {
             const toggleInput = document.getElementById('toggle-input');
             toggleInput.checked = false;
         };
@@ -975,1291 +974,1239 @@
             toggleInput.checked = false;
         };
 
-	
+        let messageInterval;
+        let typingInterval; 
+        let clearingInterval; 
+        const progressMessage = document.getElementById('progress-message');
+        const messages = [
+            'Hi its downloading, ig Flashing...',
+            'idk may be Booting...',
+            'Going inside device...xd',
+            'IDK what\'s going on lol',
+            'Processing... ig Please wait now'
+        ];
 
-	
-let messageInterval;
-let typingInterval; 
-let clearingInterval; 
-const progressMessage = document.getElementById('progress-message');
-const messages = [
-    'Hi its downloading, ig Flashing...',
-    'idk may be Booting...',
-    'Going inside device...xd',
-    'IDK what\'s going on lol',
-    'Processing... ig Please wait now'
-];
-const finalMessage = 'Please wait...'; 
-let messageIndex = 0;
-let isFinalLoop = false;
+        const finalMessage = 'Please wait...'; 
+        let messageIndex = 0;
+        let isFinalLoop = false;
 
-function typeMessage(message, callback) {
-    let i = 0;
-    progressMessage.textContent = '';
-    typingInterval = setInterval(() => {
-        if (i < message.length) {
-            progressMessage.textContent += message[i];
-            i++;
-        } else {
-            clearInterval(typingInterval);
-            if (callback) callback(); 
-        }
-    }, 60);
-}
-
-function clearMessage(callback) {
-    clearingInterval = setInterval(() => {
-        if (progressMessage.textContent.length > 0) {
-            progressMessage.textContent = progressMessage.textContent.slice(0, -1);
-        } else {
-            clearInterval(clearingInterval);
-            if (callback) callback(); 
-        }
-    }, 50); 
-}
-
-function cycleMessages() {
-    clearInterval(typingInterval);
-    clearInterval(clearingInterval);
-    clearMessage(() => {
-        if (isFinalLoop) {
-            typeMessage(finalMessage, () => {
-                messageInterval = setTimeout(cycleMessages, 5000);
-            });
-        } else {
-            typeMessage(messages[messageIndex], () => {
-                messageIndex++;
-                if (messageIndex < messages.length) {
-                    messageInterval = setTimeout(cycleMessages, messageIndex === messages.length - 1 ? 5000 : 1000);
+        function typeMessage(message, callback) {
+            let i = 0;
+            progressMessage.textContent = '';
+            typingInterval = setInterval(() => {
+                if (i < message.length) {
+                    progressMessage.textContent += message[i];
+                    i++;
                 } else {
-                    isFinalLoop = true;
-                    messageInterval = setTimeout(cycleMessages, 1000);
+                    clearInterval(typingInterval);
+                    if (callback) callback(); 
+                }
+            }, 60);
+        }
+
+        function clearMessage(callback) {
+            clearingInterval = setInterval(() => {
+                if (progressMessage.textContent.length > 0) {
+                    progressMessage.textContent = progressMessage.textContent.slice(0, -1);
+                } else {
+                    clearInterval(clearingInterval);
+                    if (callback) callback(); 
+                }
+            }, 50); 
+        }
+
+        function cycleMessages() {
+            clearInterval(typingInterval);
+            clearInterval(clearingInterval);
+            clearMessage(() => {
+                if (isFinalLoop) {
+                    typeMessage(finalMessage, () => {
+                        messageInterval = setTimeout(cycleMessages, 5000);
+                    });
+                } else {
+                    typeMessage(messages[messageIndex], () => {
+                        messageIndex++;
+                        if (messageIndex < messages.length) {
+                            messageInterval = setTimeout(cycleMessages, messageIndex === messages.length - 1 ? 5000 : 1000);
+                        } else {
+                            isFinalLoop = true;
+                            messageInterval = setTimeout(cycleMessages, 1000);
+                        }
+                    });
                 }
             });
         }
-    });
-}
 
-function showProgressOverlay() {
-    const progressOverlay = document.getElementById('progress-overlay');
-    const buttons = document.querySelectorAll('.button');
-    const wipeButton = document.querySelector(".wipe-button");
-    wipeButton.disabled = true;
-    progressOverlay.classList.add('active');
-    buttons.forEach(button => {
-        button.disabled = true;
-    });
-    wipeButton.disabled = true;
-    messageIndex = 0;
-    isFinalLoop = false;
-    cycleMessages();
-}
-
-function hideProgressOverlay() {
-    const progressOverlay = document.getElementById('progress-overlay');
-    const buttons = document.querySelectorAll('.button');
-    const wipeButton = document.querySelector(".wipe-button");
-    wipeButton.disabled = true;
-    progressOverlay.classList.remove('active');
-    buttons.forEach(button => {
-        button.disabled = false;
-    });
-    wipeButton.disabled = true;
-    clearTimeout(messageInterval);
-    clearInterval(typingInterval);
-    clearInterval(clearingInterval);
-
-    messageIndex = 0; 
-    isFinalLoop = false; 
-    progressMessage.textContent = ''; 
-}
-
-function toggleElements(disable, isNabu = false) {
-    const formElements = document.querySelectorAll("input, button, select");
-    const rbootFlashSelect = document.querySelector(".rboot-flash-image");
-    const bootTypeSelect = document.querySelector(".boot-type");
-    const vbmetaButton = document.querySelector(".vbmeta-button");
-    const vbmetaSButton = document.querySelector(".vbmeta-system-button");
-    const wipeContainer = document.querySelector(".wipe-container");
-    const wipeinput = document.querySelector(".wipe-input");
-    const wipeButton = document.querySelector(".wipe-button");
-    wipeButton.disabled = true;
-
-    formElements.forEach((element) => {
-        if (
-            !element.classList.contains("connect-button") &&
-            !element.classList.contains("download-log-button") &&
-            !element.closest(".switchx")
-        ) {
-            element.disabled = disable;
-        }
-    });
-
-    if (isNabu) {
-        if (rbootFlashSelect) rbootFlashSelect.disabled = true;
-        if (bootTypeSelect) bootTypeSelect.disabled = true;
-        if (wipeinput) wipeinput.disabled = true;
-
-        if (vbmetaButton) {
-            vbmetaButton.disabled = true;
-            vbmetaButton.classList.add("only-nabu-disabled");
+        function showProgressOverlay() {
+            const progressOverlay = document.getElementById('progress-overlay');
+            const buttons = document.querySelectorAll('.button');
+            const wipeButton = document.querySelector(".wipe-button");
+            wipeButton.disabled = true;
+            progressOverlay.classList.add('active');
+            buttons.forEach(button => {
+                button.disabled = true;
+            });
+            wipeButton.disabled = true;
+            messageIndex = 0;
+            isFinalLoop = false;
+            cycleMessages();
         }
 
-        if (vbmetaSButton) {
-            vbmetaSButton.disabled = true;
-            vbmetaSButton.classList.add("only-nabu-disabled");
+        function hideProgressOverlay() {
+            const progressOverlay = document.getElementById('progress-overlay');
+            const buttons = document.querySelectorAll('.button');
+            const wipeButton = document.querySelector(".wipe-button");
+            wipeButton.disabled = true;
+            progressOverlay.classList.remove('active');
+            buttons.forEach(button => {
+                button.disabled = false;
+            });
+            wipeButton.disabled = true;
+            clearTimeout(messageInterval);
+            clearInterval(typingInterval);
+            clearInterval(clearingInterval);
+
+            messageIndex = 0; 
+            isFinalLoop = false; 
+            progressMessage.textContent = ''; 
         }
 
-        if (wipeContainer) {
-            wipeContainer.classList.add("only-nabu-wipe");
-        }
-    } else {
-        if (vbmetaButton) vbmetaButton.classList.remove("only-nabu-disabled");
-        if (vbmetaSButton) vbmetaSButton.classList.remove("only-nabu-disabled");
+        function toggleElements(disable, isNabu = false) {
+            const formElements = document.querySelectorAll("input, button, select");
+            const rbootFlashSelect = document.querySelector(".rboot-flash-image");
+            const bootTypeSelect = document.querySelector(".boot-type");
+            const vbmetaButton = document.querySelector(".vbmeta-button");
+            const vbmetaSButton = document.querySelector(".vbmeta-system-button");
+            const wipeContainer = document.querySelector(".wipe-container");
+            const wipeinput = document.querySelector(".wipe-input");
+            const wipeButton = document.querySelector(".wipe-button");
+            wipeButton.disabled = true;
 
-        if (wipeContainer) {
-            wipeContainer.classList.remove("only-nabu-wipe");
-        }
-    }
+            formElements.forEach((element) => {
+                if (
+                    !element.classList.contains("connect-button") &&
+                    !element.classList.contains("download-log-button") &&
+                    !element.closest(".switchx")
+                ) {
+                    element.disabled = disable;
+                }
+            });
 
-    wipeButton.disabled = true;
-}
+            if (isNabu) {
+                if (rbootFlashSelect) rbootFlashSelect.disabled = true;
+                if (bootTypeSelect) bootTypeSelect.disabled = true;
+                if (wipeinput) wipeinput.disabled = true;
 
+                if (vbmetaButton) {
+                    vbmetaButton.disabled = true;
+                    vbmetaButton.classList.add("only-nabu-disabled");
+                }
 
-	
-	
+                if (vbmetaSButton) {
+                    vbmetaSButton.disabled = true;
+                    vbmetaSButton.classList.add("only-nabu-disabled");
+                }
 
-function clearFormElements() {
-    const formElements = document.querySelectorAll("input, button, select, textarea");
-
-    let rbootPartitionSelect = document.querySelector('.rboot-flash-partition');
-    let previousSelectedValue = rbootPartitionSelect ? rbootPartitionSelect.value : null;
-
-    formElements.forEach((element) => {
-        if (element.tagName === "INPUT" && (element.type === "text" || element.type === "file")) {
-            element.value = "";
-        } else if (element.tagName === "SELECT") {
-            element.selectedIndex = 0;
-        } else if (element.tagName === "TEXTAREA") {
-            element.value = ""; 
-        }
-    });
-
-    if (rbootPartitionSelect && previousSelectedValue !== null) {
-        rbootPartitionSelect.value = previousSelectedValue;
-    }
-}
-       
-
-async function connectDevice() {
-    let statusField = document.querySelector(".status-field");
-    // let resultField = document.querySelector(".result-field"); // Commenting out result field reference
-    statusField.textContent = "Connecting...";
-
-    try {
-        await device.connect();
-    } catch (error) {
-        statusField.textContent = `Failed to connect to device: ${error.message}`;
-        toggleElements(true); 
-        return;
-    }
-
-    let product = await device.getVariable("product");
-    let slot = await device.getVariable("current-slot");
-    let serial = await device.getVariable("serialno");
-    let bootloaderStatus = await device.getVariable("unlocked"); 
-    let userdata_chk = await device.getVariable("partition-type:userdata");
-    let win_chk = await device.getVariable("partition-type:win");
-    let esp_chk = await device.getVariable("partition-type:esp"); 
-    let linux_chk = await device.getVariable("partition-type:linux"); 
-    let userdata_size = await device.getVariable("partition-size:userdata");
-    let win_size = await device.getVariable("partition-size:win");
-    let esp_size = await device.getVariable("partition-size:esp");
-    let linux_size = await device.getVariable("partition-size:linux"); 
-    let bootloaderStatusText = bootloaderStatus === "yes" ? "unlocked" : "locked";
-
-    let deviceName = "";
-    let isNabu = false;
-    if (product === "nabu") {
-        deviceName = "Device name : Xiaomi Pad 5";
-        let rbootFlashPartitionSelect = document.querySelector('.rboot-flash-partition');
-        if (rbootFlashPartitionSelect) {
-            rbootFlashPartitionSelect.value = "boot_ab"; // Select the "Flash to Boot ab (both slots)"
-        }
-    } else if (product === "dm3q") {
-        deviceName = "Device name : Samsung S23 Ultra";
-        isNabu = true; // Device is not nabu
-        // Select the current slot in the rboot-flash-partition select
-        let rbootFlashPartitionSelect = document.querySelector('.rboot-flash-partition');
-        if (rbootFlashPartitionSelect) {
-            rbootFlashPartitionSelect.value = "boot"; // Select the "Flash to Boot (current slot)" option
-        }
-    } else if (product !== "nabu") {
-        isNabu = true; // Device is not nabu
-        deviceName = "Device name : IDK LoL 😂";
-        // Select the current slot in the rboot-flash-partition select
-        let rbootFlashPartitionSelect = document.querySelector('.rboot-flash-partition');
-        if (rbootFlashPartitionSelect) {
-            rbootFlashPartitionSelect.value = "boot"; // Select the "Flash to Boot (current slot)" option
-        }
-    }
-
-    let status = `Connected to : ${product} <br /> Current slot : ${slot} <br /> (serial : ${serial})`;
-    if (deviceName) {
-        status += `<br />${deviceName}`;
-    }
-
-    status += `<br />Bootloader status: ${bootloaderStatusText}`; // Keep Bootloader status without extra spacing
-	
-	// Check partitions availability and sizes
-	let sizeInfo = ''; // Initialize a variable to collect size info
-	if (await checkPartition("userdata", userdata_chk, userdata_size)) {
-	    sizeInfo += `<p style="margin: 0; margin-top: 5px;">Android Partition : ${getSizeString(userdata_size)}</p>`;
-	}
-	if (await checkPartition("linux", linux_chk, linux_size)) {
-	    sizeInfo += `<p style="margin: 0; margin-bottom: 0px;">Linux Partition : ${getSizeString(linux_size)}</p>`;
-	}
-	if (await checkPartition("win", win_chk, win_size)) {
-	    sizeInfo += `<p style="margin: 0; margin-bottom: 0px;">Windows Partition : ${getSizeString(win_size)}</p>`;
-	}
-	if (await checkPartition("esp", esp_chk, esp_size)) {
-	    sizeInfo += `<p style="margin: 0; margin-bottom: 0px;">ESP Partition : ${getSizeString(esp_size)}</p>`;
-	}
-	
-	if (sizeInfo) {
-	    status += `<br />${sizeInfo}`; // Add size info to status only if available
-	}
-	
-	statusField.innerHTML = status;
-	
-	
-	    // Call toggleElements with the isNabu flag
-	    toggleElements(false, isNabu); 
-	}
-	
-	// Function to check a partition's availability
-	async function checkPartition(partitionName, partitionChk, partitionSize) {
-	    return partitionChk; // Return true if the partition is available
-	}
-	
-	// Function to get size string based on the size value
-	function getSizeString(hex) {
-	    const size = parseInt(hex, 16); // Convert hex to integer
-	    const sizeInGB = size / (1024 ** 3);
-	    const sizeInMB = size / (1024 ** 2);
-	
-	    // Return the size in appropriate format
-	    if (sizeInGB < 1) {
-	        return `${sizeInMB.toFixed(2)} MB`; // Show in MB if under 1 GB
-	    }
-	    return `${sizeInGB.toFixed(2)} GB`; // Show in GB otherwise
-	}
-	
-	// Function to write messages to the result field
-	// function writeToResultField(message, resultField) {
-	//     resultField.innerHTML = `${message}<br />` + resultField.innerHTML; // Prepend new message
-	// }
-	
-	toggleElements(true); 
-	
-
-
-
-    function handleDisconnect() {
-        let statusField = document.querySelector(".status-field");
-        statusField.textContent = "Not connected in Fastboot";
-        toggleElements(true); 
-    }
-
-async function checkDeviceConnection() {
-    const wipeButton = document.querySelector(".wipe-button");
-     wipeButton.disabled = true;
-    let statusField = document.querySelector(".status-field");
-
-    try {
-        let product = await device.getVariable("product");
-        if (product) {
-        }
-    } catch (error) {
-        statusField.textContent = "Device disconnected!";
-        toggleElements(true);
-    }
-    clearFormElements();
-}
-
-   async function sendFormCommand(event) {
-    event.preventDefault();
-    let inputField = document.querySelector(".command-input");
-    let command = inputField.value.trim();
-    let resultField = document.querySelector(".result-field");
-
-    if (!command) {
-        resultField.textContent = "\nPlease enter a command!\n" + resultField.textContent; // Prepend error message
-        alert("Please enter a command!");
-        return;
-    }
-
-    try {
-        let result = (await device.runCommand(command)).text;
-        // Use backticks for string interpolation
-        resultField.textContent = `\nCommand executed successfully: ${result}\n` + resultField.textContent; 
-        alert(`Command executed successfully: ${result}`);
-    } catch (error) {
-        // Use backticks for error message as well
-        resultField.textContent = `\nError executing command: ${error.message}\n` + resultField.textContent; 
-        alert(`Error executing command: ${error.message}`);
-    } finally {
-        inputField.value = ""; // Clear the input field after execution
-        await checkDeviceConnection(); // Check device connection after the command
-    }
-}
-
-
-
-async function rebootDevice() {
-    await runRebootCommand("reboot", "Device rebooted successfully!");
-}
-
-async function rebootToBootloader() {
-    await runRebootCommand("reboot-bootloader", "Rebooted to Bootloader successfully!");
-}
-
-async function rebootToRecovery() {
-    await runRebootCommand("reboot-recovery", "Rebooted to Recovery successfully!");
-}
-
-async function rebootToFastbootD() {
-    await runRebootCommand("reboot-fastboot", "Rebooted to FastbootD successfully!");
-}
-
-async function rebootToEDL() {
-    await runRebootCommand("oem edl", "Rebooted to EDL successfully!");
-}
-
-async function switchSlot() {
-    let resultField = document.querySelector(".result-field");
-    try {
-        // Get the current slot
-        let activeSlot = (await device.runCommand("getvar:current-slot")).text.trim();
-        let otherSlot = activeSlot === "a" ? "b" : "a";
-
-        // Switch to the other slot
-        let result = (await device.runCommand(`set_active:${otherSlot}`)).text;
-
-        // Confirm the slot switch
-        resultField.textContent = `\nSwitched to slot ${otherSlot}: ${result}\n` + resultField.textContent;
-        alert(`Switched to slot ${otherSlot}: ${result} Successfully`);
-        document.querySelector(".connect-button").click();
-    } catch (error) {
-        resultField.textContent = `\nError switching slots: ${error.message}\n` + resultField.textContent;
-        alert(`Error switching slots: ${error.message}`);
-    } finally {
-        await checkDeviceConnection();
-    }
-}
-
-async function runRebootCommand(command, successMessage) {
-    let resultField = document.querySelector(".result-field");
-    try {
-        let result = (await device.runCommand(command)).text;
-        resultField.textContent = `\n${successMessage}\n` + resultField.textContent;
-        alert(successMessage);
-    } catch (error) {
-        resultField.textContent = `\nError during reboot: ${error.message}\n` + resultField.textContent;
-        alert(`Error during reboot: ${error.message}`);
-    } finally {
-        await checkDeviceConnection();
-    }
-}
-
-
-    async function bootFormFile(event) {
-        event.preventDefault();
-        showProgressOverlay();
-        let fileField = document.querySelector("#boot-file");
-        let bootTypeSelect = document.querySelector(".boot-type");
-        let selectedBootType = bootTypeSelect.value;
-
-        let file;
-        if (fileField.files.length > 0) {
-            file = fileField.files[0];
-        } else if (selectedBootType) {
-            file = await downloadBootImage(getImagePath(selectedBootType));
-        } else {
-            alert("Please select a boot image file or choose a boot type!");
-            hideProgressOverlay();
-            return;
-        }
-
-        if (!file) {
-            alert("Failed to obtain a valid boot image.");
-            hideProgressOverlay();
-            return;
-        }
-
-        try {
-            await device.bootBlob(file);
-            alert("Boot image booted successfully!");
-        } catch (error) {
-            console.error("Error booting image:", error);
-            alert("Error booting image. Please try again.");
-        } finally {
-            fileField.value = ""; 
-            bootTypeSelect.selectedIndex = 0; 
-            hideProgressOverlay();
-            await checkDeviceConnection(); 
-        }
-    }
-    
-
-    function getImagePath(selectedBootType) {
-        switch (selectedBootType) {
-            case "twrp":
-                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/modded-twrp-new.img";
-	        case "pbrp":
-                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/pitchblack-nabu.img";
-            case "uefi-v4-sb":
-                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/uefi-windows-nabu-SB.img";
-            case "uefi-v4-nosb":
-                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/uefi-windows-nabu-NOSB.img";
-            case "uefi-v3":
-                return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/uefi-windows-nabu-v3.img";
-            default:
-                return null;
-        }
-    }
-
-    async function downloadBootImage(imagePath) {
-        const progressBarContainer = document.querySelector('.progress-container');
-        const progressBar = document.querySelector('.progress-bar');
-        progressBarContainer.style.display = 'block';
-
-        try {
-            const response = await fetch(imagePath);
-            if (!response.ok) throw new Error("Failed to download boot image");
-
-            const contentLength = response.headers.get('Content-Length');
-            const total = parseInt(contentLength, 10);
-            let loaded = 0;
-
-            const reader = response.body.getReader();
-            const chunks = [];
-
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-                chunks.push(value);
-                loaded += value.length;
-                progressBar.style.width = `${(loaded / total) * 100}%`;
-            }
-
-            const blob = new Blob(chunks);
-            return blob;
-        } catch (error) {
-            console.error("Download error:", error);
-            alert("Error downloading boot image. Please try again.");
-        } finally {
-            progressBarContainer.style.display = 'none';
-            progressBar.style.width = `0%`;
-        }
-    }
-
-	
-// Mapping of file names to partition names
-const fileMapping = {
-    "boot.img": "boot_ab",
-    "crclist.txt": "crclist",
-    "sparsecrclist.txt": "sparsecrclist",
-    "sparsecrclist.txt": "sparsecrclist",
-    "ksu_boot.img": "boot_ab",
-    "ksu-n_boot.img": "boot_ab",
-    "magisk_boot.img": "boot_ab",
-    "ksu_dtbo.img": "dtbo_ab",
-    "ksu-n_dtbo.img": "dtbo_ab",
-    "xbl.elf": "xbl_ab",
-    "xbl_config.elf": "xbl_config_ab",
-    "xbl.img": "xbl_ab",
-    "xbl_config.img": "xbl_config_ab",
-    "abl.elf": "abl_ab",
-    "abl.img": "abl_ab",
-    "tz.mbn": "tz_ab",
-    "tz.img": "tz_ab",
-    "hyp.mbn": "hyp_ab",
-    "hyp.img": "hyp_ab",
-    "devcfg.mbn": "devcfg_ab",
-    "devcfg.img": "devcfg_ab",
-    "storsec.mbn": "storsec",
-    "storsec.img": "storsec",
-    "btfm.bin": "bluetooth_ab",
-    "bluetooth.img": "bluetooth_ab",	
-    "cmnlib.mbn": "cmnlib_ab",
-    "cmnlib64.mbn": "cmnlib64_ab",
-    "cmnlib.img": "cmnlib_ab",
-    "cmnlib64.img": "cmnlib64_ab",
-    "non-hlos.bin": "modem_ab",
-    "modem.img": "modem_ab",
-    "dspso.bin": "dsp_ab",
-    "dsp.img": "dsp_ab",	
-    "km41.mbn": "keymaster_ab",
-    "keymaster.img": "keymaster_ab",
-    "aop.mbn": "aop_ab",
-    "aop.img": "aop_ab",	
-    "qupv3fw.elf": "qupfw_ab",
-    "qupfw.img": "qupfw_ab",
-    "imagefv.elf": "imagefv_ab",
-    "imagefv.img": "imagefv_ab",
-    "uefi_sec.mbn": "uefisecapp_ab",
-    "uefisecapp.img": "uefisecapp_ab",
-    "multi_image.mbn": "multiimgoem_ab",
-    "metadata.img": "metadata",
-    "vbmeta_system.img": "vbmeta_system_ab",
-    "vbmeta.img": "vbmeta_ab",
-    "dtbo.img": "dtbo_ab",
-    "userdata.img": "userdata",
-    "rescue.img": "rescue",
-    "vendor_boot.img": "vendor_boot_ab",
-    "cust.img": "cust",
-    "fw_4j1ed.img": "fw_4j1ed_ab",
-    "fw_4u1ea.img": "fw_4u1ea_ab",
-    "LOGO.img": "logo_ab",
-    "logo.img": "LOGO_ab",
-    "featenabler.img": "featenabler",
-    "system.img": "system",
-    "system_ext.img": "system_ext",
-    "vendor.img": "vendor",
-    "odm.img": "odm",
-    "product.img": "product",
-    "mi_ext.img": "mi_ext",
-    "super.img": "super",
-    "misc.img": "misc"
-};
-
-// Convert file size to a human-readable format
-function formatFileSize(size) {
-    if (size < 1024) return size + " B";
-    if (size < 1024 * 1024) return (size / 1024).toFixed(2) + " KB";
-    if (size < 1024 * 1024 * 1024) return (size / (1024 * 1024)).toFixed(2) + " MB";
-    return (size / (1024 * 1024 * 1024)).toFixed(2) + " GB";
-}
-
-
-// Function for typing animation
-function typeAnimation(element, text, delay = 33) {
-    element.value = ""; // Clear the input box
-    let i = 0;
-
-    const typeInterval = setInterval(() => {
-        element.value += text[i];
-        i++;
-        if (i === text.length) {
-            clearInterval(typeInterval);
-        }
-    }, delay);
-}
-
-// Handle file selection
-document.querySelector("#flash-file").addEventListener("change", function () {
-    const fileField = document.querySelector("#flash-file");
-    const partField = document.querySelector(".flash-partition");
-    const fileTable = document.querySelector("#file-table tbody");
-
-    // Clear existing rows
-    fileTable.innerHTML = "";
-
-    // Update placeholder and disable status based on file selection
-    if (fileField.files.length > 1) {
-        partField.disabled = true;
-        partField.placeholder = "Enter partition in the table for multiple files";
-    } else {
-        partField.disabled = false;
-        partField.placeholder = "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
-    }
-
-    // Populate the table with file data
-    Array.from(fileField.files).forEach((file, index) => {
-        const fileName = file.name.toLowerCase();
-        const matchedPartition = fileMapping[fileName];
-        const fileSize = formatFileSize(file.size);
-
-        const isEditable = !matchedPartition;
-
-        // Add row to the table
-        const row = document.createElement("tr");
-        row.innerHTML = `
-            <td>${fileName}</td>
-            <td contenteditable="${isEditable}" 
-                class="${isEditable ? 'editable-partition' : ''}">
-                ${matchedPartition || "Enter Partition"}
-            </td>
-            <td>${fileSize}</td>
-        `;
-        fileTable.appendChild(row);
-
-        // Synchronize input field and table for a single file
-        if (fileField.files.length === 1) {
-            if (matchedPartition) {
-                // Known file, trigger typing animation for the partition
-                partField.value = ""; // Clear the input field
-                typeAnimation(partField, matchedPartition, 100);
-
-                partField.addEventListener("input", (e) => {
-                    row.cells[1].textContent = e.target.value;
-                });
-
-                row.cells[1].addEventListener("input", (e) => {
-                    partField.value = e.target.textContent;
-                });
+                if (wipeContainer) {
+                    wipeContainer.classList.add("only-nabu-wipe");
+                }
             } else {
-                // Unknown file, don't trigger typing animation, leave input as placeholder
-                partField.value = ""; // Clear the input field
-                partField.placeholder = "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
-                partField.addEventListener("input", (e) => {
-                    row.cells[1].textContent = e.target.value;
-                });
+                if (vbmetaButton) vbmetaButton.classList.remove("only-nabu-disabled");
+                if (vbmetaSButton) vbmetaSButton.classList.remove("only-nabu-disabled");
 
-                row.cells[1].addEventListener("input", (e) => {
-                    partField.value = e.target.textContent;
-                });
+                if (wipeContainer) {
+                    wipeContainer.classList.remove("only-nabu-wipe");
+                }
+            }
+            wipeButton.disabled = true;
+        }
+
+        function clearFormElements() {
+            const formElements = document.querySelectorAll("input, button, select, textarea");
+            let rbootPartitionSelect = document.querySelector('.rboot-flash-partition');
+            let previousSelectedValue = rbootPartitionSelect ? rbootPartitionSelect.value : null;
+
+            formElements.forEach((element) => {
+                if (element.tagName === "INPUT" && (element.type === "text" || element.type === "file")) {
+                    element.value = "";
+                } else if (element.tagName === "SELECT") {
+                    element.selectedIndex = 0;
+                } else if (element.tagName === "TEXTAREA") {
+                    element.value = ""; 
+                }
+            });
+
+            if (rbootPartitionSelect && previousSelectedValue !== null) {
+                rbootPartitionSelect.value = previousSelectedValue;
             }
         }
-    });
-});
+            
+        async function connectDevice() {
+            let statusField = document.querySelector(".status-field");
+            statusField.textContent = "Connecting...";
 
-// Validate before flashing
-async function flashFormFile(event) {
-    event.preventDefault();
-    showProgressOverlay();
+            try {
+                await device.connect();
+            } catch (error) {
+                statusField.textContent = `Failed to connect to device: ${error.message}`;
+                toggleElements(true); 
+                return;
+            }
 
-    const fileField = document.querySelector("#flash-file");
-    const logOutput = document.querySelector("#log-output");
-    const resultField = document.querySelector(".result-field");
-    const fileTable = document.querySelector("#file-table tbody");
-    const rows = fileTable.querySelectorAll("tr");
+            let product = await device.getVariable("product");
+            let slot = await device.getVariable("current-slot");
+            let serial = await device.getVariable("serialno");
+            let bootloaderStatus = await device.getVariable("unlocked"); 
+            let userdata_chk = await device.getVariable("partition-type:userdata");
+            let win_chk = await device.getVariable("partition-type:win");
+            let esp_chk = await device.getVariable("partition-type:esp"); 
+            let linux_chk = await device.getVariable("partition-type:linux"); 
+            let userdata_size = await device.getVariable("partition-size:userdata");
+            let win_size = await device.getVariable("partition-size:win");
+            let esp_size = await device.getVariable("partition-size:esp");
+            let linux_size = await device.getVariable("partition-size:linux"); 
+            let bootloaderStatusText = bootloaderStatus === "yes" ? "unlocked" : "locked";
 
-    const files = Array.from(fileField.files);
-    if (files.length === 0) {
-        alert("Please select at least one file to flash!");
-        hideProgressOverlay();
-        return;
-    }
+            let deviceName = "";
+            let isNabu = false;
+            if (product === "nabu") {
+                deviceName = "Device name : Xiaomi Pad 5";
+                let rbootFlashPartitionSelect = document.querySelector('.rboot-flash-partition');
+                if (rbootFlashPartitionSelect) {
+                    rbootFlashPartitionSelect.value = "boot_ab"; // Select the "Flash to Boot ab (both slots)"
+                }
+            } else if (product === "dm3q") {
+                deviceName = "Device name : Samsung S23 Ultra";
+                isNabu = true; // Device is not nabu
+                // Select the current slot in the rboot-flash-partition select
+                let rbootFlashPartitionSelect = document.querySelector('.rboot-flash-partition');
+                if (rbootFlashPartitionSelect) {
+                    rbootFlashPartitionSelect.value = "boot"; // Select the "Flash to Boot (current slot)" option
+                }
+            } else if (product !== "nabu") {
+                isNabu = true; // Device is not nabu
+                deviceName = "Device name : IDK LoL 😂";
+                // Select the current slot in the rboot-flash-partition select
+                let rbootFlashPartitionSelect = document.querySelector('.rboot-flash-partition');
+                if (rbootFlashPartitionSelect) {
+                    rbootFlashPartitionSelect.value = "boot"; // Select the "Flash to Boot (current slot)" option
+                }
+            }
 
-    // Validate partitions
-    const partitions = [];
-    let hasError = false;
+            let status = `Connected to : ${product} <br /> Current slot : ${slot} <br /> (serial : ${serial})`;
+            if (deviceName) {
+                status += `<br />${deviceName}`;
+            }
 
-    rows.forEach((row, index) => {
-        const fileName = files[index].name.toLowerCase();
-        const partitionCell = row.cells[1];
-        const partition = partitionCell.textContent.trim();
-
-        if (!partition || partition === "Enter Partition" || partition === "Enter Partition in the table for multiple files") {
-            partitionCell.textContent = "Enter Partition";
-            hasError = true;
-        } else {
-            partitions.push(partition);
+            status += `<br />Bootloader status: ${bootloaderStatusText}`; // Keep Bootloader status without extra spacing
+            
+            // Check partitions availability and sizes
+            let sizeInfo = ''; // Initialize a variable to collect size info
+            if (await checkPartition("userdata", userdata_chk, userdata_size)) {
+                sizeInfo += `<p style="margin: 0; margin-top: 5px;">Android Partition : ${getSizeString(userdata_size)}</p>`;
+            }
+            if (await checkPartition("linux", linux_chk, linux_size)) {
+                sizeInfo += `<p style="margin: 0; margin-bottom: 0px;">Linux Partition : ${getSizeString(linux_size)}</p>`;
+            }
+            if (await checkPartition("win", win_chk, win_size)) {
+                sizeInfo += `<p style="margin: 0; margin-bottom: 0px;">Windows Partition : ${getSizeString(win_size)}</p>`;
+            }
+            if (await checkPartition("esp", esp_chk, esp_size)) {
+                sizeInfo += `<p style="margin: 0; margin-bottom: 0px;">ESP Partition : ${getSizeString(esp_size)}</p>`;
+            }
+            
+            if (sizeInfo) {
+                status += `<br />${sizeInfo}`; // Add size info to status only if available
+            }
+            statusField.innerHTML = status;
+            toggleElements(false, isNabu); 
         }
-    });
-
-    if (hasError) {
-        alert("Error: Please enter valid partitions for all files in the table.");
-        // Reset the table to display placeholder text again
-        resetTableToPlaceholders();
-        hideProgressOverlay();
-        return;
-    }
-
-    // Flash files
-    try {
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            const partition = partitions[i];
-
-            // Handle `_AB` logic
-           // Handle `_AB` logic
-	if (partition.endsWith("_ab")) {
-	    const partitionA = partition.replace("_ab", "_a");
-	    const partitionB = partition.replace("_ab", "_b");
 	
-	    // Prepend flashing messages to resultField
-	    resultField.textContent = `Flashing ${file.name} to ${partitionA}...\n` + resultField.textContent;
-	    await device.flashBlob(partitionA, file, (progress) => {
-	        resultField.textContent = `${partitionA} Progress: ${progress}%\n` + resultField.textContent;
-	    });
-	    resultField.textContent = `Successfully flashed ${file.name} to ${partitionA}.\n` + resultField.textContent;
+        // Function to check a partition's availability
+        async function checkPartition(partitionName, partitionChk, partitionSize) {
+            return partitionChk; // Return true if the partition is available
+        }
 	
-	    resultField.textContent = `Flashing ${file.name} to ${partitionB}...\n` + resultField.textContent;
-	    await device.flashBlob(partitionB, file, (progress) => {
-	        resultField.textContent = `${partitionB} Progress: ${progress}%\n` + resultField.textContent;
-	    });
-	    resultField.textContent = `Successfully flashed ${file.name} to ${partitionB}.\n` + resultField.textContent;
-	} else {
-	    // Flash normally
-	    resultField.textContent = `Flashing ${file.name} to ${partition}...\n` + resultField.textContent;
-	    await device.flashBlob(partition, file, (progress) => {
-	        resultField.textContent = `${partition} Progress: ${progress}%\n` + resultField.textContent;
-	    });
-	    resultField.textContent = `Successfully flashed ${file.name} to ${partition}.\n` + resultField.textContent;
-	}
+        // Function to get size string based on the size value
+        function getSizeString(hex) {
+            const size = parseInt(hex, 16); // Convert hex to integer
+            const sizeInGB = size / (1024 ** 3);
+            const sizeInMB = size / (1024 ** 2);
+        
+            // Return the size in appropriate format
+            if (sizeInGB < 1) {
+                return `${sizeInMB.toFixed(2)} MB`; // Show in MB if under 1 GB
+            }
+            return `${sizeInGB.toFixed(2)} GB`; // Show in GB otherwise
         }
-        alert("All files flashed successfully!");
-    } catch (error) {
-        alert(`Failed to flash: ${error.message}`);
-    } finally {
-        fileField.value = "";
-        document.querySelector("#file-table tbody").innerHTML = "";
-        hideProgressOverlay();
-        await checkDeviceConnection();
-    }
-}
+        
+        toggleElements(true); 
 
-// Reset table cells to show placeholder text
-function resetTableToPlaceholders() {
-    const fileTable = document.querySelector("#file-table tbody");
-    const rows = fileTable.querySelectorAll("tr");
+        function handleDisconnect() {
+            let statusField = document.querySelector(".status-field");
+            statusField.textContent = "Not connected in Fastboot";
+            toggleElements(true); 
+        }
+
+        async function checkDeviceConnection() {
+            const wipeButton = document.querySelector(".wipe-button");
+            wipeButton.disabled = true;
+            let statusField = document.querySelector(".status-field");
+
+            try {
+                let product = await device.getVariable("product");
+                if (product) {
+                }
+            } catch (error) {
+                statusField.textContent = "Device disconnected!";
+                toggleElements(true);
+            }
+            clearFormElements();
+        }
+
+        async function sendFormCommand(event) {
+            event.preventDefault();
+            let inputField = document.querySelector(".command-input");
+            let command = inputField.value.trim();
+            let resultField = document.querySelector(".result-field");
+
+            if (!command) {
+                resultField.textContent = "\nPlease enter a command!\n" + resultField.textContent; // Prepend error message
+                alert("Please enter a command!");
+                return;
+            }
+
+            try {
+                let result = (await device.runCommand(command)).text;
+                // Use backticks for string interpolation
+                resultField.textContent = `\nCommand executed successfully: ${result}\n` + resultField.textContent; 
+                alert(`Command executed successfully: ${result}`);
+            } catch (error) {
+                // Use backticks for error message as well
+                resultField.textContent = `\nError executing command: ${error.message}\n` + resultField.textContent; 
+                alert(`Error executing command: ${error.message}`);
+            } finally {
+                inputField.value = ""; // Clear the input field after execution
+                await checkDeviceConnection(); // Check device connection after the command
+            }
+        }
+
+        async function rebootDevice() {
+            await runRebootCommand("reboot", "Device rebooted successfully!");
+        }
+
+        async function rebootToBootloader() {
+            await runRebootCommand("reboot-bootloader", "Rebooted to Bootloader successfully!");
+        }
+
+        async function rebootToRecovery() {
+            await runRebootCommand("reboot-recovery", "Rebooted to Recovery successfully!");
+        }
+
+        async function rebootToFastbootD() {
+            await runRebootCommand("reboot-fastboot", "Rebooted to FastbootD successfully!");
+        }
+
+        async function rebootToEDL() {
+            await runRebootCommand("oem edl", "Rebooted to EDL successfully!");
+        }
+
+        async function switchSlot() {
+            let resultField = document.querySelector(".result-field");
+            try {
+                // Get the current slot
+                let activeSlot = (await device.runCommand("getvar:current-slot")).text.trim();
+                let otherSlot = activeSlot === "a" ? "b" : "a";
+
+                // Switch to the other slot
+                let result = (await device.runCommand(`set_active:${otherSlot}`)).text;
+
+                // Confirm the slot switch
+                resultField.textContent = `\nSwitched to slot ${otherSlot}: ${result}\n` + resultField.textContent;
+                alert(`Switched to slot ${otherSlot}: ${result} Successfully`);
+                document.querySelector(".connect-button").click();
+            } catch (error) {
+                resultField.textContent = `\nError switching slots: ${error.message}\n` + resultField.textContent;
+                alert(`Error switching slots: ${error.message}`);
+            } finally {
+                await checkDeviceConnection();
+            }
+        }
+
+        async function runRebootCommand(command, successMessage) {
+            let resultField = document.querySelector(".result-field");
+            try {
+                let result = (await device.runCommand(command)).text;
+                resultField.textContent = `\n${successMessage}\n` + resultField.textContent;
+                alert(successMessage);
+            } catch (error) {
+                resultField.textContent = `\nError during reboot: ${error.message}\n` + resultField.textContent;
+                alert(`Error during reboot: ${error.message}`);
+            } finally {
+                await checkDeviceConnection();
+            }
+        }
+
+        async function bootFormFile(event) {
+            event.preventDefault();
+            showProgressOverlay();
+            let fileField = document.querySelector("#boot-file");
+            let bootTypeSelect = document.querySelector(".boot-type");
+            let selectedBootType = bootTypeSelect.value;
+
+            let file;
+            if (fileField.files.length > 0) {
+                file = fileField.files[0];
+            } else if (selectedBootType) {
+                file = await downloadBootImage(getImagePath(selectedBootType));
+            } else {
+                alert("Please select a boot image file or choose a boot type!");
+                hideProgressOverlay();
+                return;
+            }
+
+            if (!file) {
+                alert("Failed to obtain a valid boot image.");
+                hideProgressOverlay();
+                return;
+            }
+
+            try {
+                await device.bootBlob(file);
+                alert("Boot image booted successfully!");
+            } catch (error) {
+                console.error("Error booting image:", error);
+                alert("Error booting image. Please try again.");
+            } finally {
+                fileField.value = ""; 
+                bootTypeSelect.selectedIndex = 0; 
+                hideProgressOverlay();
+                await checkDeviceConnection(); 
+            }
+        }
     
-    rows.forEach(row => {
-        const partitionCell = row.cells[1];
-        // Reset the partition cell to its placeholder state
-        if (!partitionCell.textContent.trim() || partitionCell.textContent.trim() === "Enter Partition") {
-            partitionCell.textContent = "Enter Partition";
-        }
-    });
-}
-
-
-
-
-
- async function rbootFlashFormFile(event) {
-    event.preventDefault();
-    rbootShowProgressOverlay();
-    showProgressOverlay();
-
-    let fileField = document.querySelector(".rboot-flash-file");
-    let partField = document.querySelector(".rboot-flash-partition"); 
-    let selectedImage = document.querySelector(".rboot-flash-image").value;
-
-    let file;
-    if (fileField.files.length > 0) {
-        file = fileField.files[0];
-    } else if (selectedImage) {
-        file = await rbootDownloadFlashImage(rbootGetImagePath(selectedImage));
-    } else {
-        alert("Please select a file to flash or choose a predefined image!");
-        rbootHideProgressOverlay();
-        hideProgressOverlay();
-        return;
-    }
-
-    if (!file || !partField.value) {
-        alert("Please select a valid file and partition!");
-        rbootHideProgressOverlay();
-        hideProgressOverlay();
-        return;
-    }
-
-    try {
-        const selectedPartition = partField.value;
-
-        if (selectedPartition === "boot_ab") {
-            // Flash to Boot_A
-            await device.flashBlob("boot_a", file);
-            //alert("Successfully flashed to Boot A");
-
-            // Flash to Boot_B
-            await device.flashBlob("boot_b", file);
-            alert("Successfully flashed to Boot_ab");
-        } else {
-            // Flash to selected partition
-            await device.flashBlob(selectedPartition, file);
-            alert(`Successfully flashed to ${selectedPartition}`);
-        }
-    } catch (error) {
-        alert(`Failed to flash: ${error.message}`);
-    } finally {
-        fileField.value = "";
-        rbootHideProgressOverlay();
-        hideProgressOverlay();
-        await checkDeviceConnection();
-    }
-}
-
-
-
-function rbootGetImagePath(selectedImage) {
-    switch (selectedImage) {
-        // HyperOS GLOBAL Versions
-	    case "magisk-1-0-6-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.6.0.TKXMIXM.GLOBAL.boot.img";
-	    case "magisk-1-0-5-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.5.0.TKXMIXM.GLOBAL.boot.img";
-        case "magisk-1-0-4-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.4.0.TKXMIXM.GLOBAL.boot.img";
-        case "magisk-1-0-1-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.1.0.TKXMIXM.GLOBAL.boot.img";
-        
-	// India Versions  
-        case "magisk-1-0-18-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.18.0.TKXINXM.INDIA.boot.img";
-        case "magisk-1-0-17-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.17.0.TKXINXM.INDIA.boot.img";
-        case "magisk-1-0-16-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.16.0.TKXINXM.INDIA.boot.img";
-        case "magisk-1-0-14-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.14.0.TKXINXM.INDIA.boot.img";
-        case "magisk-1-0-13-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.13.0.TKXINXM.INDIA.boot.img";
-	    case "magisk-1-0-12-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.12.0.TKXINXM.INDIA.boot.img";
-	    case "magisk-1-0-9-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.9.0.TKXINXM.INDIA.boot.img";
-	    case "magisk-1-0-8-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.8.0.TKXINXM.INDIA.boot.img";
-        case "magisk-1-0-7-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.7.0.TKXINXM.INDIA.boot.img";
-        case "magisk-1-0-4-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.4.0.TKXINXM.INDIA.boot.img";
-        
-	// EEA Versions  
-	    case "magisk-1-0-6-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.6.0.TKXEUXM.EEA.boot.img";
-	    case "magisk-1-0-5-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.5.0.TKXEUXM.EEA.boot.img";
-        case "magisk-1-0-2-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.2.0.TKXEUXM.EEA.boot.img";
-        case "magisk-1-0-1-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.1.0.TKXEUXM.EEA.boot.img";
-        
-	// Russia Versions    
-	    case "magisk-1-0-5-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.5.0.TKXRUXM.RUSSIA.boot.img";
-	    case "magisk-1-0-4-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.4.0.TKXRUXM.RUSSIA.boot.img";
-        case "magisk-1-0-3-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.3.0.TKXRUXM.RUSSIA.boot.img";
-        case "magisk-1-0-1-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.1.0.TKXRUXM.RUSSIA.boot.img";
-        
-	// China Versions    
-	    case "magisk-1-0-3-china":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.3.0.TKXCNXM.CHINA.boot.img";
-        case "magisk-1-0-2-china":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.2.0.TKXCNXM.CHINA.boot.img";
-        
-	// Turkey Versions
-	    case "magisk-1-0-6-turkey":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.6.0.TKXTRXM.TURKEY.boot.img";
-	    case "magisk-1-0-5-turkey":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.5.0.TKXTRXM.TURKEY.boot.img";
-        case "magisk-1-0-4-turkey":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.4.0.TKXTRXM.TURKEY.boot.img";
-        case "magisk-1-0-2-turkey":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.2.0.TKXTRXM.TURKEY.boot.img";
-        
-	// taiwan Versions
-	    case "magisk-1-0-6-taiwan":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.6.0.TKXTWXM.TAIWAN.boot.img";
-	    case "magisk-1-0-5-taiwan":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.5.0.TKXTWXM.TAIWAN.boot.img";
-        case "magisk-1-0-4-taiwan":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.4.0.TKXTWXM.TAIWAN.boot.img";
-        case "magisk-1-0-2-taiwan":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.2.0.TKXTWXM.TAIWAN.boot.img";
-        
-	// MIUI 14 GLOBAL Versions
-        case "magisk-14-0-8-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.8.0.TKXMIXM.GLOBAL.boot.img";
-        case "magisk-14-0-7-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.7.0.TKXMIXM.GLOBAL.boot.img";
-        case "magisk-14-0-6-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.6.0.TKXMIXM.GLOBAL.boot.img";
-        case "magisk-14-0-5-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.5.0.TKXMIXM.GLOBAL.boot.img";
-        case "magisk-14-0-4-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.4.0.TKXMIXM.GLOBAL.boot.img";
-        case "magisk-14-0-3-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.3.0.TKXMIXM.GLOBAL.boot.img";
-
-	// India Versions	    
-        case "magisk-14-0-7-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.7.0.TKXINXM.INDIA.boot.img";
-        case "magisk-14-0-4-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.4.0.TKXINXM.INDIA.boot.img";
-        case "magisk-14-0-3-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.3.0.TKXINXM.INDIA.boot.img";
-        case "magisk-14-0-1-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.1.0.TKXINXM.INDIA.boot.img";
-
-	// EEA Versions	    
-        case "magisk-14-0-9-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.9.0.TKXEUXM.EEA.boot.img";
-        case "magisk-14-0-8-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.8.0.TKXEUXM.EEA.boot.img";
-        case "magisk-14-0-7-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.7.0.TKXEUXM.EEA.boot.img";
-        case "magisk-14-0-6-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.6.0.TKXEUXM.EEA.boot.img";
-        case "magisk-14-0-5-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.5.0.TKXEUXM.EEA.boot.img";
-        case "magisk-14-0-4-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.4.0.TKXEUXM.EEA.boot.img";
-        case "magisk-14-0-2-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.2.0.TKXEUXM.EEA.boot.img";
-
-	// Russia Versions    
-        case "magisk-14-0-7-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.7.0.TKXRUXM.RUSSIA.boot.img";
-        case "magisk-14-0-6-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.6.0.TKXRUXM.RUSSIA.boot.img";
-        case "magisk-14-0-5-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.5.0.TKXRUXM.RUSSIA.boot.img";
-        case "magisk-14-0-4-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.4.0.TKXRUXM.RUSSIA.boot.img";
-        case "magisk-14-0-3-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.3.0.TKXRUXM.RUSSIA.boot.img";
-        case "magisk-14-0-2-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.2.0.TKXRUXM.RUSSIA.boot.img";
-
-	// China Versions	    
-        case "magisk-14-0-7-china":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.7.0.TKXCNXM.CHINA.boot.img";
-        case "magisk-14-0-6-china":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.6.0.TKXCNXM.CHINA.boot.img";
-        case "magisk-14-0-5-china":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.5.0.TKXCNXM.CHINA.boot.img";
-        case "magisk-14-0-4-china":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.4.0.TKXCNXM.CHINA.boot.img";
-        
-	// Turkey Versions    
-        case "magisk-14-0-5-turkey":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.5.0.TKXTRXM.TURKEY.boot.img";
-        case "magisk-14-0-4-turkey":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.4.0.TKXTRXM.TURKEY.boot.img";
-        case "magisk-14-0-2-turkey":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.2.0.TKXTRXM.TURKEY.boot.img";
-        case "magisk-14-0-1-turkey":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.1.0.TKXTRXM.TURKEY.boot.img";
-
-	// taiwan Versions	    
-        case "magisk-14-0-3-taiwan":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.3.0.TKXTWXM.TAIWAN.boot.img";
-        case "magisk-14-0-2-taiwan":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.2.0.TKXTWXM.TAIWAN.boot.img";
-        case "magisk-14-0-1-taiwan":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.1.0.TKXTWXM.TAIWAN.boot.img";
-
-	// MIUI 13 GLOBAL Versions
-	    case "magisk-13-1-4-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.4.0.SKXMIXM.GLOBAL.boot.img";
-        case "magisk-13-1-3-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.3.0.SKXMIXM.GLOBAL.boot.img";
-        case "magisk-13-0-4-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.4.0.RKXMIXM.GLOBAL.boot.img";
-        case "magisk-13-0-3-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.3.0.RKXMIXM.GLOBAL.boot.img";
-        case "magisk-13-0-2-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.2.0.RKXMIXM.GLOBAL.boot.img";
-        case "magisk-13-0-1-global":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.1.0.RKXMIXM.GLOBAL.boot.img";
-
-    // India Versions
-        case "magisk-13-1-4-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.4.0.SKXINXM.INDIA.boot.img";
-        case "magisk-13-1-3-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.3.0.SKXINXM.INDIA.boot.img";
-        case "magisk-13-0-6-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.6.0.RKXINXM.INDIA.boot.img";
-        case "magisk-13-0-5-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.5.0.RKXINXM.INDIA.boot.img";
-        case "magisk-13-0-4-india":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.4.0.RKXINXM.INDIA.boot.img";
-
-    // Russia Versions
-	    case "magisk-13-1-8-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.8.0.SKXRUXM.RUSSIA.boot.img";
-        case "magisk-13-1-6-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.6.0.SKXRUXM.RUSSIA.boot.img";
-        case "magisk-13-1-4-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.4.0.SKXRUXM.RUSSIA.boot.img";
-        case "magisk-13-0-3-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.3.0.RKXRUXM.RUSSIA.boot.img";
-        case "magisk-13-0-2-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.2.0.RKXRUXM.RUSSIA.boot.img";
-        case "magisk-13-0-1-russia":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.1.0.RKXRUXM.RUSSIA.boot.img";
-
-    // EEA Versions
-        case "magisk-13-1-5-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.5.0.SKXEUXM.EEA.boot.img";
-        case "magisk-13-1-3-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.3.0.SKXEUXM.EEA.boot.img";
-        case "magisk-13-1-2-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.2.0.SKXEUXM.EEA.boot.img";
-        case "magisk-13-0-6-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.6.0.RKXEUXM.EEA.boot.img";
-        case "magisk-13-0-5-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.5.0.RKXEUXM.EEA.boot.img";
-        case "magisk-13-0-4-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.4.0.RKXEUXM.EEA.boot.img";
-        case "magisk-13-0-3-eea":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.3.0.RKXEUXM.EEA.boot.img";
-
-    // China Versions
-        case "magisk-13-1-5-china":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.5.0.SKXCNXM.CHINA.boot.img";
-        case "magisk-13-1-4-china":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.4.0.SKXCNXM.CHINA.boot.img";
-        case "magisk-13-0-9-china":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.9.0.RKXCNXM.CHINA.boot.img";
-        case "magisk-13-0-8-china":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.8.0.RKXCNXM.CHINA.boot.img";
-        case "magisk-13-0-5-china":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.5.0.RKXCNXM.CHINA.boot.img";
-        case "magisk-13-0-3-china":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.3.0.RKXCNXM.CHINA.boot.img";
-
-    // Turkey Versions
-        case "magisk-13-1-2-turkey":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.2.0.SKXTRXM.TURKEY.boot.img";
-        case "magisk-13-0-3-turkey":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.3.0.RKXTRXM.TURKEY.boot.img";
-        case "magisk-13-0-2-turkey":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.2.0.RKXTRXM.TURKEY.boot.img";
-        case "magisk-13-0-1-turkey":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.1.0.RKXTRXM.TURKEY.boot.img";
-
-	// taiwan Versions
-        case "magisk-13-1-2-taiwan":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.2.0.RKXTWXM.TAIWAN.boot.img";
-        case "magisk-13-0-4-taiwan":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.4.0.RKXTWXM.TAIWAN.boot.img";
-        case "magisk-13-0-3-taiwan":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.3.0.RKXTWXM.TAIWAN.boot.img";
-        case "magisk-13-0-2-taiwan":
-            return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.2.0.RKXTWXM.TAIWAN.boot.img";
-        default:
-            return null;
-    }
-}
-
-async function rbootDownloadFlashImage(imagePath) {
-    const progressBarContainer = document.querySelector('.rboot-progress-container');
-    const progressBar = document.querySelector('.rboot-progress-bar');
-    progressBarContainer.style.display = 'block';
-
-    try {
-        const response = await fetch(imagePath);
-        if (!response.ok) throw new Error("Failed to download flash image");
-
-        const contentLength = response.headers.get('Content-Length');
-        const total = parseInt(contentLength, 10);
-        let loaded = 0;
-
-        const reader = response.body.getReader();
-        const chunks = [];
-
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            chunks.push(value);
-            loaded += value.length;
-            progressBar.style.width = `${(loaded / total) * 100}%`;
+        function getImagePath(selectedBootType) {
+            switch (selectedBootType) {
+                case "twrp":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/modded-twrp-new.img";
+                case "pbrp":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/pitchblack-nabu.img";
+                case "uefi-v4-sb":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/uefi-windows-nabu-SB.img";
+                case "uefi-v4-nosb":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/uefi-windows-nabu-NOSB.img";
+                case "uefi-v3":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/uefi-windows-nabu-v3.img";
+                default:
+                    return null;
+            }
         }
 
-        const blob = new Blob(chunks);
-        return blob;
-    } catch (error) {
-        console.error("Download error:", error);
-        alert("Error downloading flash image. Please try again.");
-    } finally {
-        progressBarContainer.style.display = 'none';
-        progressBar.style.width = `0%`;
-    }
-}
+        async function downloadBootImage(imagePath) {
+            const progressBarContainer = document.querySelector('.progress-container');
+            const progressBar = document.querySelector('.progress-bar');
+            progressBarContainer.style.display = 'block';
 
-function rbootShowProgressOverlay() {
-    const progressBarContainer = document.querySelector('.rboot-progress-container');
-    const progressBar = document.querySelector('.rboot-progress-bar');
-    progressBarContainer.style.display = 'block';
-    progressBar.style.width = '0%';
-}
+            try {
+                const response = await fetch(imagePath);
+                if (!response.ok) throw new Error("Failed to download boot image");
 
-function rbootHideProgressOverlay() {
-    const progressBarContainer = document.querySelector('.rboot-progress-container');
-    progressBarContainer.style.display = 'none';
-}
+                const contentLength = response.headers.get('Content-Length');
+                const total = parseInt(contentLength, 10);
+                let loaded = 0;
 
+                const reader = response.body.getReader();
+                const chunks = [];
 
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    chunks.push(value);
+                    loaded += value.length;
+                    progressBar.style.width = `${(loaded / total) * 100}%`;
+                }
 
-// Function to handle input and enable the wipe button
-function handleWipeInput(event) {
-    const wipeButton = document.querySelector(".wipe-button");
-    const warningMessage = document.getElementById("warning-message");
-
-    if (event.target.value.toUpperCase() === "FORMAT") {
-        wipeButton.disabled = false;
-        warningMessage.style.color = "red"; 
-	warningMessage.style.fontStyle = "normal"; 
-    } else {
-        wipeButton.disabled = true;
-        warningMessage.style.color = ""; 
-	warningMessage.style.fontStyle = "italic"; 
-    }
-}
-
-
-async function wipeDownloadFile(url) {
-    try {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error("Failed to download file");
-
-        const reader = response.body.getReader();
-        const chunks = [];
-
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            chunks.push(value);
+                const blob = new Blob(chunks);
+                return blob;
+            } catch (error) {
+                console.error("Download error:", error);
+                alert("Error downloading boot image. Please try again.");
+            } finally {
+                progressBarContainer.style.display = 'none';
+                progressBar.style.width = `0%`;
+            }
         }
-
-        return new Blob(chunks);
-    } catch (error) {
-        console.error("Download error:", error);
-        alert("Error downloading file. Please try again.");
-    }
-}
-
-// Main function to handle the wipe operation
-async function wipepart() {
-    const wipeButton = document.querySelector(".wipe-button");
-    
-    // Show confirmation dialog
-    const userConfirmed = confirm("⚠️ This will format all data, including Android and Windows (if installed). Do you want to continue?");
-    
-    if (!userConfirmed) {
-        // User canceled, reset the input and button
-        document.querySelector(".wipe-input").value = ""; 
-        handleWipeInput({ target: { value: "" } }); // Reset wipe button state
-        return; // Exit the function
-    }
-    
-    wipeButton.disabled = true; // Disable the button to prevent multiple clicks
-    showProgressOverlay();
-
-    try {
-        // Step 1: Download and flash GPT file to partition "partition:0"
-        let gptBlob = await wipeDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/uninstall/gpt_both0.bin");
-        await device.flashBlob("partition:0", gptBlob);
-
-	// Step 2: Execute additional erase commands
-        await device.runCommand("erase:metadata");
-        await device.runCommand("erase:userdata");
-
-        // Step 3: Download and flash userdata to partition "userdata"
-        let userdataBlob = await wipeDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/uninstall/userdata.img");
-        await device.flashBlob("userdata", userdataBlob);
-
-	// Step 2.1 LOL: Execute additional erase commands
-        await device.runCommand("erase:metadata");
-        await device.runCommand("erase:userdata");
-
-	 // Get the current slot
-	let activeSlot = (await device.runCommand("getvar:current-slot")).text.trim();
-	let otherSlot = activeSlot === "a" ? "b" : "a";
 	
-	    // Switch to the other slot twice
-	await device.runCommand(`set_active:${otherSlot}`);
-	let newActiveSlot = (await device.runCommand("getvar:current-slot")).text.trim();
-	    
-	let finalSlot = newActiveSlot === "a" ? "b" : "a";
-	await device.runCommand(`set_active:${finalSlot}`);
+        // Mapping of file names to partition names
+        const fileMapping = {
+            "boot.img": "boot_ab",
+            "crclist.txt": "crclist",
+            "sparsecrclist.txt": "sparsecrclist",
+            "sparsecrclist.txt": "sparsecrclist",
+            "ksu_boot.img": "boot_ab",
+            "ksu-n_boot.img": "boot_ab",
+            "magisk_boot.img": "boot_ab",
+            "ksu_dtbo.img": "dtbo_ab",
+            "ksu-n_dtbo.img": "dtbo_ab",
+            "xbl.elf": "xbl_ab",
+            "xbl_config.elf": "xbl_config_ab",
+            "xbl.img": "xbl_ab",
+            "xbl_config.img": "xbl_config_ab",
+            "abl.elf": "abl_ab",
+            "abl.img": "abl_ab",
+            "tz.mbn": "tz_ab",
+            "tz.img": "tz_ab",
+            "hyp.mbn": "hyp_ab",
+            "hyp.img": "hyp_ab",
+            "devcfg.mbn": "devcfg_ab",
+            "devcfg.img": "devcfg_ab",
+            "storsec.mbn": "storsec",
+            "storsec.img": "storsec",
+            "btfm.bin": "bluetooth_ab",
+            "bluetooth.img": "bluetooth_ab",	
+            "cmnlib.mbn": "cmnlib_ab",
+            "cmnlib64.mbn": "cmnlib64_ab",
+            "cmnlib.img": "cmnlib_ab",
+            "cmnlib64.img": "cmnlib64_ab",
+            "non-hlos.bin": "modem_ab",
+            "modem.img": "modem_ab",
+            "dspso.bin": "dsp_ab",
+            "dsp.img": "dsp_ab",	
+            "km41.mbn": "keymaster_ab",
+            "keymaster.img": "keymaster_ab",
+            "aop.mbn": "aop_ab",
+            "aop.img": "aop_ab",	
+            "qupv3fw.elf": "qupfw_ab",
+            "qupfw.img": "qupfw_ab",
+            "imagefv.elf": "imagefv_ab",
+            "imagefv.img": "imagefv_ab",
+            "uefi_sec.mbn": "uefisecapp_ab",
+            "uefisecapp.img": "uefisecapp_ab",
+            "multi_image.mbn": "multiimgoem_ab",
+            "metadata.img": "metadata",
+            "vbmeta_system.img": "vbmeta_system_ab",
+            "vbmeta.img": "vbmeta_ab",
+            "dtbo.img": "dtbo_ab",
+            "userdata.img": "userdata",
+            "rescue.img": "rescue",
+            "vendor_boot.img": "vendor_boot_ab",
+            "cust.img": "cust",
+            "fw_4j1ed.img": "fw_4j1ed_ab",
+            "fw_4u1ea.img": "fw_4u1ea_ab",
+            "LOGO.img": "logo_ab",
+            "logo.img": "LOGO_ab",
+            "featenabler.img": "featenabler",
+            "system.img": "system",
+            "system_ext.img": "system_ext",
+            "vendor.img": "vendor",
+            "odm.img": "odm",
+            "product.img": "product",
+            "mi_ext.img": "mi_ext",
+            "super.img": "super",
+            "misc.img": "misc"
+        };
 
-        alert("gpt_both0.bin flashed successfully, and userdata has been erased.");
+        // Convert file size to a human-readable format
+        function formatFileSize(size) {
+            if (size < 1024) return size + " B";
+            if (size < 1024 * 1024) return (size / 1024).toFixed(2) + " KB";
+            if (size < 1024 * 1024 * 1024) return (size / (1024 * 1024)).toFixed(2) + " MB";
+            return (size / (1024 * 1024 * 1024)).toFixed(2) + " GB";
+        }
 
-    } catch (error) {
-        alert(`Failed to complete wipe: ${error.message}`);
-    } finally {
-        document.querySelector(".wipe-input").value = "";
-        const warningMessage = document.getElementById("warning-message");
-        warningMessage.style.color = ""; 
-	warningMessage.style.fontStyle = "italic"; 
-        hideProgressOverlay();
-        await checkDeviceConnection();
-    }
-}
+        // Function for typing animation
+        function typeAnimation(element, text, delay = 33) {
+            element.value = ""; // Clear the input box
+            let i = 0;
 
+            const typeInterval = setInterval(() => {
+                element.value += text[i];
+                i++;
+                if (i === text.length) {
+                    clearInterval(typeInterval);
+                }
+            }, delay);
+        }
+
+        // Handle file selection
+        document.querySelector("#flash-file").addEventListener("change", function () {
+            const fileField = document.querySelector("#flash-file");
+            const partField = document.querySelector(".flash-partition");
+            const fileTable = document.querySelector("#file-table tbody");
+
+            // Clear existing rows
+            fileTable.innerHTML = "";
+
+            // Update placeholder and disable status based on file selection
+            if (fileField.files.length > 1) {
+                partField.disabled = true;
+                partField.placeholder = "Enter partition in the table for multiple files";
+            } else {
+                partField.disabled = false;
+                partField.placeholder = "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
+            }
+
+            // Populate the table with file data
+            Array.from(fileField.files).forEach((file, index) => {
+                const fileName = file.name.toLowerCase();
+                const matchedPartition = fileMapping[fileName];
+                const fileSize = formatFileSize(file.size);
+
+                const isEditable = !matchedPartition;
+
+                // Add row to the table
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${fileName}</td>
+                    <td contenteditable="${isEditable}" 
+                        class="${isEditable ? 'editable-partition' : ''}">
+                        ${matchedPartition || "Enter Partition"}
+                    </td>
+                    <td>${fileSize}</td>
+                `;
+                fileTable.appendChild(row);
+
+                // Synchronize input field and table for a single file
+                if (fileField.files.length === 1) {
+                    if (matchedPartition) {
+                        // Known file, trigger typing animation for the partition
+                        partField.value = ""; // Clear the input field
+                        typeAnimation(partField, matchedPartition, 100);
+
+                        partField.addEventListener("input", (e) => {
+                            row.cells[1].textContent = e.target.value;
+                        });
+
+                        row.cells[1].addEventListener("input", (e) => {
+                            partField.value = e.target.textContent;
+                        });
+                    } else {
+                        // Unknown file, don't trigger typing animation, leave input as placeholder
+                        partField.value = ""; // Clear the input field
+                        partField.placeholder = "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
+                        partField.addEventListener("input", (e) => {
+                            row.cells[1].textContent = e.target.value;
+                        });
+
+                        row.cells[1].addEventListener("input", (e) => {
+                            partField.value = e.target.textContent;
+                        });
+                    }
+                }
+            });
+        });
+
+        // Validate before flashing
+        async function flashFormFile(event) {
+            event.preventDefault();
+            showProgressOverlay();
+
+            const fileField = document.querySelector("#flash-file");
+            const logOutput = document.querySelector("#log-output");
+            const resultField = document.querySelector(".result-field");
+            const fileTable = document.querySelector("#file-table tbody");
+            const rows = fileTable.querySelectorAll("tr");
+
+            const files = Array.from(fileField.files);
+            if (files.length === 0) {
+                alert("Please select at least one file to flash!");
+                hideProgressOverlay();
+                return;
+            }
+
+            // Validate partitions
+            const partitions = [];
+            let hasError = false;
+
+            rows.forEach((row, index) => {
+                const fileName = files[index].name.toLowerCase();
+                const partitionCell = row.cells[1];
+                const partition = partitionCell.textContent.trim();
+
+                if (!partition || partition === "Enter Partition" || partition === "Enter Partition in the table for multiple files") {
+                    partitionCell.textContent = "Enter Partition";
+                    hasError = true;
+                } else {
+                    partitions.push(partition);
+                }
+            });
+
+            if (hasError) {
+                alert("Error: Please enter valid partitions for all files in the table.");
+                // Reset the table to display placeholder text again
+                resetTableToPlaceholders();
+                hideProgressOverlay();
+                return;
+            }
+
+            // Flash files
+            try {
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    const partition = partitions[i];
+
+                    // Handle `_AB` logic
+                // Handle `_AB` logic
+            if (partition.endsWith("_ab")) {
+                const partitionA = partition.replace("_ab", "_a");
+                const partitionB = partition.replace("_ab", "_b");
+            
+                // Prepend flashing messages to resultField
+                resultField.textContent = `Flashing ${file.name} to ${partitionA}...\n` + resultField.textContent;
+                await device.flashBlob(partitionA, file, (progress) => {
+                    resultField.textContent = `${partitionA} Progress: ${progress}%\n` + resultField.textContent;
+                });
+                resultField.textContent = `Successfully flashed ${file.name} to ${partitionA}.\n` + resultField.textContent;
+            
+                resultField.textContent = `Flashing ${file.name} to ${partitionB}...\n` + resultField.textContent;
+                await device.flashBlob(partitionB, file, (progress) => {
+                    resultField.textContent = `${partitionB} Progress: ${progress}%\n` + resultField.textContent;
+                });
+                resultField.textContent = `Successfully flashed ${file.name} to ${partitionB}.\n` + resultField.textContent;
+            } else {
+                // Flash normally
+                resultField.textContent = `Flashing ${file.name} to ${partition}...\n` + resultField.textContent;
+                await device.flashBlob(partition, file, (progress) => {
+                    resultField.textContent = `${partition} Progress: ${progress}%\n` + resultField.textContent;
+                });
+                resultField.textContent = `Successfully flashed ${file.name} to ${partition}.\n` + resultField.textContent;
+            }
+                }
+                alert("All files flashed successfully!");
+            } catch (error) {
+                alert(`Failed to flash: ${error.message}`);
+            } finally {
+                fileField.value = "";
+                document.querySelector("#file-table tbody").innerHTML = "";
+                hideProgressOverlay();
+                await checkDeviceConnection();
+            }
+        }
+
+        // Reset table cells to show placeholder text
+        function resetTableToPlaceholders() {
+            const fileTable = document.querySelector("#file-table tbody");
+            const rows = fileTable.querySelectorAll("tr");
+            
+            rows.forEach(row => {
+                const partitionCell = row.cells[1];
+                // Reset the partition cell to its placeholder state
+                if (!partitionCell.textContent.trim() || partitionCell.textContent.trim() === "Enter Partition") {
+                    partitionCell.textContent = "Enter Partition";
+                }
+            });
+        }
+
+        async function rbootFlashFormFile(event) {
+            event.preventDefault();
+            rbootShowProgressOverlay();
+            showProgressOverlay();
+
+            let fileField = document.querySelector(".rboot-flash-file");
+            let partField = document.querySelector(".rboot-flash-partition"); 
+            let selectedImage = document.querySelector(".rboot-flash-image").value;
+
+            let file;
+            if (fileField.files.length > 0) {
+                file = fileField.files[0];
+            } else if (selectedImage) {
+                file = await rbootDownloadFlashImage(rbootGetImagePath(selectedImage));
+            } else {
+                alert("Please select a file to flash or choose a predefined image!");
+                rbootHideProgressOverlay();
+                hideProgressOverlay();
+                return;
+            }
+
+            if (!file || !partField.value) {
+                alert("Please select a valid file and partition!");
+                rbootHideProgressOverlay();
+                hideProgressOverlay();
+                return;
+            }
+
+            try {
+                const selectedPartition = partField.value;
+
+                if (selectedPartition === "boot_ab") {
+                    // Flash to Boot_A
+                    await device.flashBlob("boot_a", file);
+                    //alert("Successfully flashed to Boot A");
+
+                    // Flash to Boot_B
+                    await device.flashBlob("boot_b", file);
+                    alert("Successfully flashed to Boot_ab");
+                } else {
+                    // Flash to selected partition
+                    await device.flashBlob(selectedPartition, file);
+                    alert(`Successfully flashed to ${selectedPartition}`);
+                }
+            } catch (error) {
+                alert(`Failed to flash: ${error.message}`);
+            } finally {
+                fileField.value = "";
+                rbootHideProgressOverlay();
+                hideProgressOverlay();
+                await checkDeviceConnection();
+            }
+        }
+
+        function rbootGetImagePath(selectedImage) {
+            switch (selectedImage) {
+                // HyperOS GLOBAL Versions
+                case "magisk-1-0-6-global":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.6.0.TKXMIXM.GLOBAL.boot.img";
+                case "magisk-1-0-5-global":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.5.0.TKXMIXM.GLOBAL.boot.img";
+                case "magisk-1-0-4-global":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.4.0.TKXMIXM.GLOBAL.boot.img";
+                case "magisk-1-0-1-global":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.1.0.TKXMIXM.GLOBAL.boot.img";
+                
+            // India Versions  
+                case "magisk-1-0-18-india":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.18.0.TKXINXM.INDIA.boot.img";
+                case "magisk-1-0-17-india":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.17.0.TKXINXM.INDIA.boot.img";
+                case "magisk-1-0-16-india":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.16.0.TKXINXM.INDIA.boot.img";
+                case "magisk-1-0-14-india":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.14.0.TKXINXM.INDIA.boot.img";
+                case "magisk-1-0-13-india":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.13.0.TKXINXM.INDIA.boot.img";
+                case "magisk-1-0-12-india":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.12.0.TKXINXM.INDIA.boot.img";
+                case "magisk-1-0-9-india":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.9.0.TKXINXM.INDIA.boot.img";
+                case "magisk-1-0-8-india":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.8.0.TKXINXM.INDIA.boot.img";
+                case "magisk-1-0-7-india":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.7.0.TKXINXM.INDIA.boot.img";
+                case "magisk-1-0-4-india":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.4.0.TKXINXM.INDIA.boot.img";
+                
+            // EEA Versions  
+                case "magisk-1-0-6-eea":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.6.0.TKXEUXM.EEA.boot.img";
+                case "magisk-1-0-5-eea":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.5.0.TKXEUXM.EEA.boot.img";
+                case "magisk-1-0-2-eea":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.2.0.TKXEUXM.EEA.boot.img";
+                case "magisk-1-0-1-eea":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.1.0.TKXEUXM.EEA.boot.img";
+                
+            // Russia Versions    
+                case "magisk-1-0-5-russia":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.5.0.TKXRUXM.RUSSIA.boot.img";
+                case "magisk-1-0-4-russia":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.4.0.TKXRUXM.RUSSIA.boot.img";
+                case "magisk-1-0-3-russia":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.3.0.TKXRUXM.RUSSIA.boot.img";
+                case "magisk-1-0-1-russia":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.1.0.TKXRUXM.RUSSIA.boot.img";
+                
+            // China Versions    
+                case "magisk-1-0-3-china":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.3.0.TKXCNXM.CHINA.boot.img";
+                case "magisk-1-0-2-china":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.2.0.TKXCNXM.CHINA.boot.img";
+                
+            // Turkey Versions
+                case "magisk-1-0-6-turkey":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.6.0.TKXTRXM.TURKEY.boot.img";
+                case "magisk-1-0-5-turkey":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.5.0.TKXTRXM.TURKEY.boot.img";
+                case "magisk-1-0-4-turkey":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.4.0.TKXTRXM.TURKEY.boot.img";
+                case "magisk-1-0-2-turkey":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.2.0.TKXTRXM.TURKEY.boot.img";
+                
+            // taiwan Versions
+                case "magisk-1-0-6-taiwan":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.6.0.TKXTWXM.TAIWAN.boot.img";
+                case "magisk-1-0-5-taiwan":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.5.0.TKXTWXM.TAIWAN.boot.img";
+                case "magisk-1-0-4-taiwan":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.4.0.TKXTWXM.TAIWAN.boot.img";
+                case "magisk-1-0-2-taiwan":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.2.0.TKXTWXM.TAIWAN.boot.img";
+                
+            // MIUI 14 GLOBAL Versions
+                case "magisk-14-0-8-global":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.8.0.TKXMIXM.GLOBAL.boot.img";
+                case "magisk-14-0-7-global":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.7.0.TKXMIXM.GLOBAL.boot.img";
+                case "magisk-14-0-6-global":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.6.0.TKXMIXM.GLOBAL.boot.img";
+                case "magisk-14-0-5-global":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.5.0.TKXMIXM.GLOBAL.boot.img";
+                case "magisk-14-0-4-global":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.4.0.TKXMIXM.GLOBAL.boot.img";
+                case "magisk-14-0-3-global":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.3.0.TKXMIXM.GLOBAL.boot.img";
+
+            // India Versions	    
+                case "magisk-14-0-7-india":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.7.0.TKXINXM.INDIA.boot.img";
+                case "magisk-14-0-4-india":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.4.0.TKXINXM.INDIA.boot.img";
+                case "magisk-14-0-3-india":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.3.0.TKXINXM.INDIA.boot.img";
+                case "magisk-14-0-1-india":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.1.0.TKXINXM.INDIA.boot.img";
+
+            // EEA Versions	    
+                case "magisk-14-0-9-eea":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.9.0.TKXEUXM.EEA.boot.img";
+                case "magisk-14-0-8-eea":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.8.0.TKXEUXM.EEA.boot.img";
+                case "magisk-14-0-7-eea":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.7.0.TKXEUXM.EEA.boot.img";
+                case "magisk-14-0-6-eea":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.6.0.TKXEUXM.EEA.boot.img";
+                case "magisk-14-0-5-eea":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.5.0.TKXEUXM.EEA.boot.img";
+                case "magisk-14-0-4-eea":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.4.0.TKXEUXM.EEA.boot.img";
+                case "magisk-14-0-2-eea":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.2.0.TKXEUXM.EEA.boot.img";
+
+            // Russia Versions    
+                case "magisk-14-0-7-russia":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.7.0.TKXRUXM.RUSSIA.boot.img";
+                case "magisk-14-0-6-russia":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.6.0.TKXRUXM.RUSSIA.boot.img";
+                case "magisk-14-0-5-russia":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.5.0.TKXRUXM.RUSSIA.boot.img";
+                case "magisk-14-0-4-russia":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.4.0.TKXRUXM.RUSSIA.boot.img";
+                case "magisk-14-0-3-russia":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.3.0.TKXRUXM.RUSSIA.boot.img";
+                case "magisk-14-0-2-russia":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.2.0.TKXRUXM.RUSSIA.boot.img";
+
+            // China Versions	    
+                case "magisk-14-0-7-china":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.7.0.TKXCNXM.CHINA.boot.img";
+                case "magisk-14-0-6-china":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.6.0.TKXCNXM.CHINA.boot.img";
+                case "magisk-14-0-5-china":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.5.0.TKXCNXM.CHINA.boot.img";
+                case "magisk-14-0-4-china":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.4.0.TKXCNXM.CHINA.boot.img";
+                
+            // Turkey Versions    
+                case "magisk-14-0-5-turkey":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.5.0.TKXTRXM.TURKEY.boot.img";
+                case "magisk-14-0-4-turkey":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.4.0.TKXTRXM.TURKEY.boot.img";
+                case "magisk-14-0-2-turkey":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.2.0.TKXTRXM.TURKEY.boot.img";
+                case "magisk-14-0-1-turkey":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.1.0.TKXTRXM.TURKEY.boot.img";
+
+            // taiwan Versions	    
+                case "magisk-14-0-3-taiwan":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.3.0.TKXTWXM.TAIWAN.boot.img";
+                case "magisk-14-0-2-taiwan":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.2.0.TKXTWXM.TAIWAN.boot.img";
+                case "magisk-14-0-1-taiwan":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.1.0.TKXTWXM.TAIWAN.boot.img";
+
+            // MIUI 13 GLOBAL Versions
+                case "magisk-13-1-4-global":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.4.0.SKXMIXM.GLOBAL.boot.img";
+                case "magisk-13-1-3-global":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.3.0.SKXMIXM.GLOBAL.boot.img";
+                case "magisk-13-0-4-global":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.4.0.RKXMIXM.GLOBAL.boot.img";
+                case "magisk-13-0-3-global":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.3.0.RKXMIXM.GLOBAL.boot.img";
+                case "magisk-13-0-2-global":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.2.0.RKXMIXM.GLOBAL.boot.img";
+                case "magisk-13-0-1-global":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.1.0.RKXMIXM.GLOBAL.boot.img";
+
+            // India Versions
+                case "magisk-13-1-4-india":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.4.0.SKXINXM.INDIA.boot.img";
+                case "magisk-13-1-3-india":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.3.0.SKXINXM.INDIA.boot.img";
+                case "magisk-13-0-6-india":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.6.0.RKXINXM.INDIA.boot.img";
+                case "magisk-13-0-5-india":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.5.0.RKXINXM.INDIA.boot.img";
+                case "magisk-13-0-4-india":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.4.0.RKXINXM.INDIA.boot.img";
+
+            // Russia Versions
+                case "magisk-13-1-8-russia":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.8.0.SKXRUXM.RUSSIA.boot.img";
+                case "magisk-13-1-6-russia":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.6.0.SKXRUXM.RUSSIA.boot.img";
+                case "magisk-13-1-4-russia":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.4.0.SKXRUXM.RUSSIA.boot.img";
+                case "magisk-13-0-3-russia":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.3.0.RKXRUXM.RUSSIA.boot.img";
+                case "magisk-13-0-2-russia":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.2.0.RKXRUXM.RUSSIA.boot.img";
+                case "magisk-13-0-1-russia":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.1.0.RKXRUXM.RUSSIA.boot.img";
+
+            // EEA Versions
+                case "magisk-13-1-5-eea":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.5.0.SKXEUXM.EEA.boot.img";
+                case "magisk-13-1-3-eea":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.3.0.SKXEUXM.EEA.boot.img";
+                case "magisk-13-1-2-eea":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.2.0.SKXEUXM.EEA.boot.img";
+                case "magisk-13-0-6-eea":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.6.0.RKXEUXM.EEA.boot.img";
+                case "magisk-13-0-5-eea":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.5.0.RKXEUXM.EEA.boot.img";
+                case "magisk-13-0-4-eea":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.4.0.RKXEUXM.EEA.boot.img";
+                case "magisk-13-0-3-eea":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.3.0.RKXEUXM.EEA.boot.img";
+
+            // China Versions
+                case "magisk-13-1-5-china":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.5.0.SKXCNXM.CHINA.boot.img";
+                case "magisk-13-1-4-china":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.4.0.SKXCNXM.CHINA.boot.img";
+                case "magisk-13-0-9-china":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.9.0.RKXCNXM.CHINA.boot.img";
+                case "magisk-13-0-8-china":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.8.0.RKXCNXM.CHINA.boot.img";
+                case "magisk-13-0-5-china":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.5.0.RKXCNXM.CHINA.boot.img";
+                case "magisk-13-0-3-china":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.3.0.RKXCNXM.CHINA.boot.img";
+
+            // Turkey Versions
+                case "magisk-13-1-2-turkey":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.2.0.SKXTRXM.TURKEY.boot.img";
+                case "magisk-13-0-3-turkey":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.3.0.RKXTRXM.TURKEY.boot.img";
+                case "magisk-13-0-2-turkey":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.2.0.RKXTRXM.TURKEY.boot.img";
+                case "magisk-13-0-1-turkey":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.1.0.RKXTRXM.TURKEY.boot.img";
+
+            // taiwan Versions
+                case "magisk-13-1-2-taiwan":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.2.0.RKXTWXM.TAIWAN.boot.img";
+                case "magisk-13-0-4-taiwan":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.4.0.RKXTWXM.TAIWAN.boot.img";
+                case "magisk-13-0-3-taiwan":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.3.0.RKXTWXM.TAIWAN.boot.img";
+                case "magisk-13-0-2-taiwan":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.2.0.RKXTWXM.TAIWAN.boot.img";
+                default:
+                    return null;
+            }
+        }
+
+        async function rbootDownloadFlashImage(imagePath) {
+            const progressBarContainer = document.querySelector('.rboot-progress-container');
+            const progressBar = document.querySelector('.rboot-progress-bar');
+            progressBarContainer.style.display = 'block';
+
+            try {
+                const response = await fetch(imagePath);
+                if (!response.ok) throw new Error("Failed to download flash image");
+
+                const contentLength = response.headers.get('Content-Length');
+                const total = parseInt(contentLength, 10);
+                let loaded = 0;
+
+                const reader = response.body.getReader();
+                const chunks = [];
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    chunks.push(value);
+                    loaded += value.length;
+                    progressBar.style.width = `${(loaded / total) * 100}%`;
+                }
+
+                const blob = new Blob(chunks);
+                return blob;
+            } catch (error) {
+                console.error("Download error:", error);
+                alert("Error downloading flash image. Please try again.");
+            } finally {
+                progressBarContainer.style.display = 'none';
+                progressBar.style.width = `0%`;
+            }
+        }
+
+        function rbootShowProgressOverlay() {
+            const progressBarContainer = document.querySelector('.rboot-progress-container');
+            const progressBar = document.querySelector('.rboot-progress-bar');
+            progressBarContainer.style.display = 'block';
+            progressBar.style.width = '0%';
+        }
+
+        function rbootHideProgressOverlay() {
+            const progressBarContainer = document.querySelector('.rboot-progress-container');
+            progressBarContainer.style.display = 'none';
+        }
+
+        // Function to handle input and enable the wipe button
+        function handleWipeInput(event) {
+            const wipeButton = document.querySelector(".wipe-button");
+            const warningMessage = document.getElementById("warning-message");
+
+            if (event.target.value.toUpperCase() === "FORMAT") {
+                wipeButton.disabled = false;
+                warningMessage.style.color = "red"; 
+            warningMessage.style.fontStyle = "normal"; 
+            } else {
+                wipeButton.disabled = true;
+                warningMessage.style.color = ""; 
+            warningMessage.style.fontStyle = "italic"; 
+            }
+        }
+
+        async function wipeDownloadFile(url) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error("Failed to download file");
+
+                const reader = response.body.getReader();
+                const chunks = [];
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    chunks.push(value);
+                }
+
+                return new Blob(chunks);
+            } catch (error) {
+                console.error("Download error:", error);
+                alert("Error downloading file. Please try again.");
+            }
+        }
+
+        // Main function to handle the wipe operation
+        async function wipepart() {
+            const wipeButton = document.querySelector(".wipe-button");
+            
+            // Show confirmation dialog
+            const userConfirmed = confirm("⚠️ This will format all data, including Android and Windows (if installed). Do you want to continue?");
+            
+            if (!userConfirmed) {
+                // User canceled, reset the input and button
+                document.querySelector(".wipe-input").value = ""; 
+                handleWipeInput({ target: { value: "" } }); // Reset wipe button state
+                return; // Exit the function
+            }
+            
+            wipeButton.disabled = true; // Disable the button to prevent multiple clicks
+            showProgressOverlay();
+
+            try {
+                // Step 1: Download and flash GPT file to partition "partition:0"
+                let gptBlob = await wipeDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/uninstall/gpt_both0.bin");
+                await device.flashBlob("partition:0", gptBlob);
+
+            // Step 2: Execute additional erase commands
+                await device.runCommand("erase:metadata");
+                await device.runCommand("erase:userdata");
+
+                // Step 3: Download and flash userdata to partition "userdata"
+                let userdataBlob = await wipeDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/uninstall/userdata.img");
+                await device.flashBlob("userdata", userdataBlob);
+
+            // Step 2.1 LOL: Execute additional erase commands
+                await device.runCommand("erase:metadata");
+                await device.runCommand("erase:userdata");
+
+            // Get the current slot
+            let activeSlot = (await device.runCommand("getvar:current-slot")).text.trim();
+            let otherSlot = activeSlot === "a" ? "b" : "a";
+            
+                // Switch to the other slot twice
+            await device.runCommand(`set_active:${otherSlot}`);
+            let newActiveSlot = (await device.runCommand("getvar:current-slot")).text.trim();
+                
+            let finalSlot = newActiveSlot === "a" ? "b" : "a";
+            await device.runCommand(`set_active:${finalSlot}`);
+
+                alert("gpt_both0.bin flashed successfully, and userdata has been erased.");
+
+            } catch (error) {
+                alert(`Failed to complete wipe: ${error.message}`);
+            } finally {
+                document.querySelector(".wipe-input").value = "";
+                const warningMessage = document.getElementById("warning-message");
+                warningMessage.style.color = ""; 
+            warningMessage.style.fontStyle = "italic"; 
+                hideProgressOverlay();
+                await checkDeviceConnection();
+            }
+        }
 
 		// Main function to handle vbmeta disable
-async function vbmeta_disable() {  
-    // Show confirmation dialog
-    const userConfirmedvb = confirm("⚠️ This will disable you vbmeta verificationa and only for Xiaomi pad 5, Do you want to continue?");
-    
-    if (!userConfirmedvb) {
-        // User canceled, reset the input and button
-        return; // Exit the function
-    }
-    
-    showProgressOverlay();
+        async function vbmeta_disable() {  
+            // Show confirmation dialog
+            const userConfirmedvb = confirm("⚠️ This will disable you vbmeta verificationa and only for Xiaomi pad 5, Do you want to continue?");
+            
+            if (!userConfirmedvb) {
+                // User canceled, reset the input and button
+                return; // Exit the function
+            }
+            
+            showProgressOverlay();
 
-    try {
-        // Step 1: Download and flash GPT file to partition "partition:0"
-        let vbmeta = await wipeDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/other/vbmeta.img");
-        await device.flashBlob("vbmeta_a", vbmeta);
-	await device.flashBlob("vbmeta_b", vbmeta);
+            try {
+                // Step 1: Download and flash GPT file to partition "partition:0"
+                let vbmeta = await wipeDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/other/vbmeta.img");
+                await device.flashBlob("vbmeta_a", vbmeta);
+            await device.flashBlob("vbmeta_b", vbmeta);
 
-        alert("vbmeta disabled successfully, enjoy! flashing gsi/other stuff 😁.");
+                alert("vbmeta disabled successfully, enjoy! flashing gsi/other stuff 😁.");
 
-    } catch (error) {
-        alert(`Failed to disable vbmeta: ${error.message}`);
-    } finally {
-        hideProgressOverlay();
-        await checkDeviceConnection();
-    }
-}
+            } catch (error) {
+                alert(`Failed to disable vbmeta: ${error.message}`);
+            } finally {
+                hideProgressOverlay();
+                await checkDeviceConnection();
+            }
+        }
 
+	    // Main function to handle vbmeta disable
+        async function vbmeta_system_disable() {  
+            // Show confirmation dialog
+            const userConfirmedvbs = confirm("⚠️ This will disable you vbmeta_system verificationa and only for Xiaomi pad 5, Do you want to continue?");
+            
+            if (!userConfirmedvbs) {
+                // User canceled, reset the input and button
+                return; // Exit the function
+            }
+            
+            showProgressOverlay();
 
-	// Main function to handle vbmeta disable
-async function vbmeta_system_disable() {  
-    // Show confirmation dialog
-    const userConfirmedvbs = confirm("⚠️ This will disable you vbmeta_system verificationa and only for Xiaomi pad 5, Do you want to continue?");
-    
-    if (!userConfirmedvbs) {
-        // User canceled, reset the input and button
-        return; // Exit the function
-    }
-    
-    showProgressOverlay();
+            try {
+                // Step 1: Download and flash GPT file to partition "partition:0"
+                let vbmeta_system = await wipeDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/other/vbmeta_system.img");
+                await device.flashBlob("vbmeta_system_a", vbmeta_system);
+            await device.flashBlob("vbmeta_system_b", vbmeta_system);
 
-    try {
-        // Step 1: Download and flash GPT file to partition "partition:0"
-        let vbmeta_system = await wipeDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/other/vbmeta_system.img");
-        await device.flashBlob("vbmeta_system_a", vbmeta_system);
-	await device.flashBlob("vbmeta_system_b", vbmeta_system);
+                alert("vbmeta_system disabled successfully, enjoy! flashing gsi/other stuff 😁.");
 
-        alert("vbmeta_system disabled successfully, enjoy! flashing gsi/other stuff 😁.");
+            } catch (error) {
+                alert(`Failed to disable vbmeta_system: ${error.message}`);
+            } finally {
+                hideProgressOverlay();
+                await checkDeviceConnection();
+            }
+        }
 
-    } catch (error) {
-        alert(`Failed to disable vbmeta_system: ${error.message}`);
-    } finally {
-        hideProgressOverlay();
-        await checkDeviceConnection();
-    }
-}
-
-
-    document.querySelector(".wipe-input").addEventListener("input", handleWipeInput);
-    document.querySelector(".wipe-button").addEventListener("click", wipepart);
-    document.querySelector(".wipe-form").addEventListener("submit", function(event) {
-	event.preventDefault(); 
-    });
-
-    document.querySelector(".vbmeta-button").addEventListener("click", vbmeta_disable);
-    document.querySelector(".vbmeta-system-button").addEventListener("click", vbmeta_system_disable);
-
-
-
-
-	 const chickens = [];
+	    const chickens = [];
         let animationRequestIds = [];
 
         function playMusic() {
@@ -2325,38 +2272,42 @@ async function vbmeta_system_disable() {
             return chicken;
         }
 	
-	document.querySelector(".rickroll-button").addEventListener("click", playMusic);
+	    document.querySelector(".rickroll-button").addEventListener("click", playMusic);
 	
-	function logdownload() {
-	    const logOutput = document.getElementById('log-output').textContent.trim(); // Get log content
-	    if (logOutput === "") {
-	        alert("Log is empty LOL. Nothing to download! 😂");
-	        return;
-	    }
-	    const blob = new Blob([logOutput], { type: 'text/plain' }); // Create a Blob object
-	    const url = URL.createObjectURL(blob); // Create a URL for the Blob
-	    const a = document.createElement('a'); // Create an anchor element
-	    a.href = url;
-	    a.download = 'arkt_fastboot_tool.log'; // Set the file name
-	    document.body.appendChild(a); // Append the anchor to the body
-	    a.click(); // Trigger the download
-	    document.body.removeChild(a); // Remove the anchor
-	    URL.revokeObjectURL(url); // Revoke the URL to free resources
-	}
-	
-	
-    document.querySelector(".connect-button").addEventListener("click", connectDevice);
-    document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
-    document.querySelector(".reboot-button").addEventListener("click", rebootDevice);
-    document.querySelector(".reboot-bootloader-button").addEventListener("click", rebootToBootloader);
-    document.querySelector(".reboot-recovery-button").addEventListener("click", rebootToRecovery);
-    document.querySelector(".reboot-fastbootd-button").addEventListener("click", rebootToFastbootD);
-    document.querySelector(".reboot-edl-button").addEventListener("click", rebootToEDL);
-    document.querySelector(".switchslot-button").addEventListener("click", switchSlot);
-    document.querySelector(".boot-form").addEventListener("submit", bootFormFile);
-    document.querySelector(".flash-form").addEventListener("submit", flashFormFile);
-    document.querySelector(".rboot-flash-form").addEventListener("submit", rbootFlashFormFile);
-    document.querySelector(".download-log-button").addEventListener("click", logdownload);
-</script>
+        function logdownload() {
+            const logOutput = document.getElementById('log-output').textContent.trim(); // Get log content
+            if (logOutput === "") {
+                alert("Log is empty LOL. Nothing to download! 😂");
+                return;
+            }
+            const blob = new Blob([logOutput], { type: 'text/plain' }); // Create a Blob object
+            const url = URL.createObjectURL(blob); // Create a URL for the Blob
+            const a = document.createElement('a'); // Create an anchor element
+            a.href = url;
+            a.download = 'arkt_fastboot_tool.log'; // Set the file name
+            document.body.appendChild(a); // Append the anchor to the body
+            a.click(); // Trigger the download
+            document.body.removeChild(a); // Remove the anchor
+            URL.revokeObjectURL(url); // Revoke the URL to free resources
+        }
+
+        document.querySelector(".wipe-input").addEventListener("input", handleWipeInput);
+        document.querySelector(".wipe-button").addEventListener("click", wipepart);
+        document.querySelector(".wipe-form").addEventListener("submit", function(event) {event.preventDefault();});
+        document.querySelector(".vbmeta-button").addEventListener("click", vbmeta_disable);
+        document.querySelector(".vbmeta-system-button").addEventListener("click", vbmeta_system_disable);
+        document.querySelector(".connect-button").addEventListener("click", connectDevice);
+        document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
+        document.querySelector(".reboot-button").addEventListener("click", rebootDevice);
+        document.querySelector(".reboot-bootloader-button").addEventListener("click", rebootToBootloader);
+        document.querySelector(".reboot-recovery-button").addEventListener("click", rebootToRecovery);
+        document.querySelector(".reboot-fastbootd-button").addEventListener("click", rebootToFastbootD);
+        document.querySelector(".reboot-edl-button").addEventListener("click", rebootToEDL);
+        document.querySelector(".switchslot-button").addEventListener("click", switchSlot);
+        document.querySelector(".boot-form").addEventListener("submit", bootFormFile);
+        document.querySelector(".flash-form").addEventListener("submit", flashFormFile);
+        document.querySelector(".rboot-flash-form").addEventListener("submit", rbootFlashFormFile);
+        document.querySelector(".download-log-button").addEventListener("click", logdownload);
+    </script>
 </body>
 </html>
