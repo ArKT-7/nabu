@@ -13,7 +13,7 @@
     <meta name="title" content="Fastboot Tool for flashing/booting/rooting" />
     <title>Fastboot Tool by ArKT</title>
     <link rel="icon" href="https://img.icons8.com/fluency/48/android.png" type="image/png">
-    <style id="light">
+    <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #f0f0f0, #d4e0e5);
@@ -653,697 +653,6 @@
             background: rgba(0, 0, 0, 0.7);
         }
     </style>
-    <style id="dark">
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1c1f24, #18191A);    
-            color: #e8eaed;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-            min-height: 100vh;
-            background-color: #1c1f24;
-        }
-
-        h1 {
-            color: #4a4a4a;
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 38px;
-            text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        h2 {
-            color: #f8f9fa;
-            margin-top: 0;
-            margin-bottom: 5px;
-            font-size: 24px;
-            letter-spacing: 2px;
-            background: linear-gradient(135deg, #00d1ff, #0052cc);
-            -webkit-background-clip: text;
-            color: transparent;
-            animation: textGlow 4s ease-in-out infinite;
-        }
-
-        .title {
-            text-align: center;
-            font-size: 32px;
-            letter-spacing: 0.5px;
-        }
-
-        .text-gradient {
-            background: linear-gradient(135deg, #00d1ff, #0052cc);
-            -webkit-background-clip: text;
-            color: transparent;
-            text-shadow: 
-                0 0 5px rgba(0, 209, 255, 0.7), 
-                0 0 10px rgba(0, 209, 255, 0.5), 
-                0 0 15px rgba(0, 209, 255, 0.3), 
-                0 0 20px rgba(0, 209, 255, 0.2);
-            animation: textGlow 2s ease-in-out infinite;
-        }
-
-        .subtitle {
-            color: #f8f9fa;
-            text-align: center;
-            font-size: 24px;
-            margin-top: -5px;
-        }
-
-        @keyframes textGlow {
-            0%, 100% {
-                text-shadow: 
-                    0 0 8px rgba(0, 82, 204, 0.8), 
-                    0 0 20px rgba(0, 209, 255, 0.5);
-            }
-            50% {
-                text-shadow: 
-                    0 0 16px rgba(0, 82, 204, 0.8), 
-                    0 0 30px rgba(0, 209, 255, 0.5);
-            }
-        }
-
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center; 
-            padding: 30px;
-            width: 90%;
-            max-width: 600px;
-            margin: 30px 0;
-            background: linear-gradient(135deg, #1c1f24, #3a3f44);
-            background-size: 200% 200%; 
-            border-radius: 20px;
-            position: relative;
-            text-align: center;
-            overflow: hidden;
-            animation: backgroundMove 20s linear infinite; 
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .container::before {
-            content: '';
-            position: absolute;
-            top: -3px;
-            left: -3px;
-            right: -3px;
-            bottom: -3px;
-            background: linear-gradient(45deg, #ff6ec4, #7873f5, #3a1c71, #ff6ec4);
-            background-size: 400% 400%;
-            border-radius: 20px;
-            z-index: -1;
-            filter: blur(10px);
-            opacity: 0.8;
-            animation: glow 10s ease infinite;
-            box-shadow: 
-                0 0 20px 10px rgba(255, 110, 196, 0.5),   
-                0 0 40px 10px rgba(255, 110, 196, 0.3) inset,
-                -10px -10px 30px rgba(255, 110, 196, 0.8), 
-                10px -10px 30px rgba(255, 110, 196, 0.8),  
-                -10px 10px 30px rgba(255, 110, 196, 0.8),
-                10px 10px 30px rgba(255, 110, 196, 0.8);  
-        }
-
-        @keyframes glow {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        @keyframes backgroundMove {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        form {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            align-items: center; 
-        }
-
-        @keyframes fadeInUp {
-            0% {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .only-nabu-wipe {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .only-nabu-wipe::after {
-            content: "Only for Nabu";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(2px);
-            background-color: rgba(255, 255, 255, 0.05);
-            color: rgba(255, 255, 255, 0.551);
-            font-weight: bold;
-            font-size: 1.2em;
-            pointer-events: none;
-            z-index: 1;
-            border-radius: 20px;
-        }
-
-        .only-nabu-wipe .wipe-content {
-            pointer-events: none;
-        }
-
-        .button {
-            background: linear-gradient(135deg, #007bff, #00d4ff);
-            border: none;
-            border-radius: 20px;
-            color: white;
-            padding: 15px 20px;
-            font-size: 18px;
-            font-weight: bold;
-            text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            transition: background 0.3s ease, transform 0.3s ease;
-            margin: 10px 0;
-            width: 100%;
-            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
-            animation: buttonGlow 3s ease-in-out infinite alternate;
-        }
-        
-        .button:hover {
-            background: linear-gradient(135deg, #0056b3, #0094c6);
-            transform: scale(1.05);
-        }
-        
-        .button:disabled {
-            background: linear-gradient(135deg, #b0b0b0, #d4d4d4);
-            color: #888;
-            cursor: not-allowed;
-            box-shadow: none;
-            transform: none;
-        }
-
-        .only-nabu-disabled:disabled::after {
-            content: "Only for Nabu";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(1.2px);
-            background-color: rgba(255, 255, 255, 0.05);
-            color: rgba(255, 255, 255, 0.716);
-            font-weight: bold;
-            font-size: 1em;
-            pointer-events: none;
-            z-index: 1;
-            border-radius: 20px;
-        }
-
-        .only-nabu-disabled {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .red-button {
-            background: linear-gradient(135deg, #ff3b3b, #ff6666);
-            border: none;
-            border-radius: 20px;
-            color: white;
-            padding: 15px 20px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.3s ease, transform 0.3s ease;
-            margin: 10px 0;
-            width: 100%;
-            box-shadow: 0 4px 10px rgba(255, 59, 59, 0.5); 
-        }
-        
-        .red-button:hover {
-            background: linear-gradient(135deg, #ff0000, #ff4d4d); 
-        }
-
-        .red-button:disabled {
-            background: linear-gradient(135deg, #b0b0b0, #d4d4d4);
-                color: #888;
-                cursor: not-allowed;
-                box-shadow: none;
-                transform: none;
-        }    
-        
-        input[type="file"],
-        input[type="text"], 
-        select {
-            text-align: center;
-            width: 100%;
-            max-width: 600px;
-            padding: 15px 20px;
-            margin: 10px 0; 
-            border-radius: 20px;
-            border: none;
-            box-sizing: border-box;
-            background: linear-gradient(135deg, #333, #444);
-            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none; 
-            background-color: #444;
-            font-size: 14px;
-            font-weight: bold;
-            color: white;
-        }
-        
-        input[type="file"] {
-            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none; 
-        }
-
-        label {
-            font-weight: bold;
-            display: block;
-            margin-bottom: 12px;
-            font-size: 19px;
-            text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
-        }
-        
-        label2 {
-            font-weight: bold;
-            display: block;
-            margin-bottom: 6px;
-            margin-top: 8px;
-            font-size: 18px;
-            text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
-        }
-        
-        .progress-container {
-            width: 100%;
-            height: 30px;
-            background-color: #f3f3f3;
-            border-radius: 15px;
-            overflow: hidden;
-            margin-top: 10px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-            display: none; 
-        }
-        
-        .progress-bar {
-            height: 100%;
-            width: 0%;
-            background-color: #4caf50;
-            transition: width 0.5s ease;
-            border-radius: 15px;
-        }
-        
-        .status-field {
-            font-weight: bold;
-            display: block;
-            margin-bottom: 10px;
-            margin-top: 1px;
-            font-size: 20px;
-            text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
-        }
-        
-        pre.result-field {
-            background: linear-gradient(135deg, #333, #444); 
-            padding: 20px 20px 20px;
-            border-radius: 15px;
-            overflow-y: auto; 
-            overflow-x: hidden;
-            max-height: 200px; 
-            border: none;
-            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-            width: 90%; 
-            margin-top: 0; 
-            position: relative; 
-            color: white;
-            white-space: pre-wrap; 
-            word-wrap: break-word; 
-        }
-        
-        pre.result-field::-webkit-scrollbar {
-            width: 12px; 
-            background: transparent; 
-        }
-        
-        pre.result-field::-webkit-scrollbar-thumb {
-            background: rgba(0, 0, 0, 0.5); 
-            border-radius: 10px; 
-            border: 3px solid transparent; 
-            background-clip: padding-box; 
-            height: 50px; 
-            margin: 10px 0; 
-        }
-        
-        pre.result-field::-webkit-scrollbar-thumb:hover {
-            background: rgba(0, 0, 0, 0.7);
-        }
-        
-        #progress-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: none; 
-            justify-content: center;
-            align-items: center;
-            z-index: 1000; 
-        }
-        
-        #progress-overlay.active {
-            display: flex;
-        }
-        
-        #progress-message {
-            color: white;
-            font-size: 24px;
-            text-align: center;
-            padding: 20px;
-            background-color: rgba(0, 0, 0, 0.8);
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-            animation: pulse 1.5s infinite;
-        }
-        
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-        
-        .rboot-button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 15px 25px;
-            cursor: pointer;
-            border-radius: 20px;
-            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.15), -4px -4px 10px rgba(255, 255, 255, 0.7);
-            transition: box-shadow 0.3s, transform 0.2s;
-        }
-        
-        .rboot-button:hover {
-            background-color: #0056b3;
-            box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15), -2px -2px 6px rgba(255, 255, 255, 0.7);
-            transform: translateY(-3px);
-        }
-        
-        .rboot-progress-container {
-            width: 100%;
-            height: 30px;
-            background-color: #f3f3f3;
-            border-radius: 15px;
-            overflow: hidden;
-            margin-top: 10px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-            display: none; 
-        }
-        
-        .rboot-progress-bar {
-            height: 100%;
-            width: 0%;
-            background-color: #4caf50;
-            transition: width 0.5s ease;
-            border-radius: 15px;
-        }
-        
-        .switchx {
-            font-size: 17px;
-            position: absolute;
-            top: 7px;
-            right: 7px;
-            display: inline-block;
-            width: 40px;
-            height: 22px;
-        }
-        
-        .switchx input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, #3a3f44, #50575d);
-            transition: 0.4s;
-            border-radius: 15px;
-            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 0.2);
-        }
-        
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            border-radius: 50%;
-            left: 2px;
-            bottom: 2px;
-            z-index: 2;
-            background-color: #e8e8e8; 
-            transition: 0.4s;
-            box-shadow: 0 3px 4px rgba(0, 0, 0, 0.3);
-        }
-        
-        .sun svg {
-            position: absolute;
-            top: 4px; 
-            left: 4px; 
-            z-index: 1;
-            width: 14px;
-            height: 14px;
-        }
-        
-        .moon svg {
-            fill: #73C0FC;
-            position: absolute;
-            top: 4px;
-            left: 24px; 
-            z-index: 1;
-            width: 14px;
-            height: 14px; 
-        }
-        
-        input:checked + .slider {
-            background: linear-gradient(135deg, #e0e6ed, #c8d0d8);
-            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        input:checked + .slider:before {
-            background-color: #ffffff; 
-            transform: translateX(18px);
-            box-shadow: 0 3px 4px rgba(0, 0, 0, 0.2);
-        }
-        
-        .inputx:focus + .slider {
-            box-shadow: 0 0 1px #183153;
-        }
-
-        .animated-button img {
-            transition: transform 0.3s ease, opacity 0.3s ease;
-        }
-        
-        .animated-button:hover img {
-            transform: scale(1.1);
-            opacity: 0.9; 
-        }
-
-        .chicken {
-            position: absolute;
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            transition: transform 0.2s ease, opacity 2s ease;
-        }
-
-        .file-table-container {
-            max-height: 200px;
-            overflow-y: auto; 
-            overflow-x: auto; 
-            margin: 20px 0;
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            background: linear-gradient(135deg, #333, #444); 
-            width: 100%; 
-            margin: 0 auto; 
-        }
-        
-        .file-table {
-            width: 100%; 
-            border-collapse: collapse; 
-            text-align: center; 
-            color: white;
-            font-family: 'Arial', sans-serif; 
-            table-layout: fixed;
-            margin: 0; 
-        }
-        
-        .file-table th {
-            position: sticky;
-            top: 0;
-            background: rgba(0, 0, 0, 0.02); 
-            color: white;
-            font-weight: bold;
-            padding: 10px;
-            border-bottom: 1px solid rgba(51, 51, 51, 0.3); 
-            word-wrap: break-word; 
-            white-space: normal;
-        }
-        
-        .file-table td {
-            padding: 10px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-            color: white;
-            overflow: auto; 
-            white-space: nowrap;
-            word-wrap: break-word; 
-            max-width: 200px; 
-        }
-        
-        .file-table td::-webkit-scrollbar {
-            width: 8px; 
-            height: 8px; 
-        }
-        
-        .file-table td::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        
-        .file-table td::-webkit-scrollbar-thumb {
-            background: #191919; 
-            border-radius: 10px; 
-            border: 2px solid transparent;
-            background-clip: padding-box; 
-        }
-        
-        .file-table td::-webkit-scrollbar-thumb:hover {
-            background: rgba(0, 0, 0, 0.3); 
-        }
-        
-        .file-table tbody tr:hover {
-            background: rgba(0, 0, 0, 0.05);
-            cursor: pointer;
-        }
-        
-        .file-table td.editable-partition {
-            background: #444444; 
-            cursor: text; 
-        }
-        
-        .file-table-container::-webkit-scrollbar {
-            width: 12px;
-            background: transparent;
-        }
-        
-        .file-table-container::-webkit-scrollbar-thumb {
-            background: rgba(0, 0, 0, 0.5); 
-            border-radius: 10px; 
-            border: 3px solid transparent;
-            background-clip: padding-box;
-        }
-        
-        .file-table-container::-webkit-scrollbar-thumb:hover {
-            background: rgba(0, 0, 0, 0.7);
-        }
-    </style>
-    <style>
-        #theme-overlay {
-        position: fixed;
-        top: 0; left: 0;
-        width: 100vw;
-        height: 100vh;
-        pointer-events: none;
-        z-index: 9999;
-        overflow: hidden;
-        }
-
-        .ripple-circle {
-        position: absolute;
-        width: 150px;
-        height: 150px;
-        border-radius: 50%;
-        transform: scale(0);
-        background: radial-gradient(circle, rgba(255, 255, 255, 0.5), transparent 70%);
-        animation: rippleAnim 0.8s ease-out forwards;
-        backdrop-filter: blur(20px);
-        opacity: 1;
-        pointer-events: none;
-        z-index: 9999;
-        }
-
-        /* Add this class to the toggle input when animating */
-.toggle-animate {
-    animation: jumpAnim 0.5s ease-out;
-}
-
-/* Define the keyframes for the jump animation */
-@keyframes jumpAnim {
-  0% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-15px);
-  }
-  100% {
-    transform: translateY(0);
-  }
-}
-
-
-        @keyframes rippleAnim {
-        to {
-            transform: scale(10);
-            opacity: 0;
-        }
-        }
-    </style>
 </head>
 <body>
     <h1 class="title">
@@ -1356,7 +665,7 @@
     </div>
 
     <div class="container">
-         <label class="switchx">
+        <label class="switchx">
             <span class="sun">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <g fill="#ffd43b">
@@ -1376,8 +685,6 @@
         <p class="status-field">Not connected in Fastboot</p>
         <button class="button connect-button">Connect device Fastboot</button>
     </div>
-
-    <div id="theme-overlay"></div>
 
     <div class="container">
         <form class="command-form">
@@ -1455,7 +762,7 @@
             </form>
         </div>
     </div>
-       
+
     <div class="container">
         <form class="rboot-flash-form">
             <label for="rboot-flash-file">Flash any rooted or normal boot image</label>
@@ -1598,7 +905,7 @@
                 <option value="magisk-13-0-4-taiwan">MIUI 13.0.4 (Taiwan)</option>
                 <option value="magisk-13-0-3-taiwan">MIUI 13.0.3 (Taiwan)</option>
                 <option value="magisk-13-0-2-taiwan">MIUI 13.0.2 (Taiwan)</option>
-	    </select>
+            </select>
 	    <input type="submit" value="Flash" class="button" />
 	    <div class="rboot-progress-container" style="display:none;">
 		<div class="rboot-progress-bar" style="width:0%;"></div>
@@ -1629,6 +936,7 @@
             </a>
         </div>
     </div>
+
     <script type="module">
         import * as fastboot from "../dist/fastboot.mjs";
         import { BlobStore } from "../download.js";
@@ -1637,68 +945,34 @@
         window.device = device;
         let blobStore = new BlobStore();
 
-        window.onload = function () {
+        fastboot.setDebugLevel(2);
+
+	    window.onload = function() {
             const toggleInput = document.getElementById('toggle-input');
-            const lightStyle = document.getElementById('light');
-            const darkStyle = document.getElementById('dark');
-            const overlay = document.getElementById('theme-overlay');
-
-            // Theme state tracker: "dark" by default
-            let currentTheme = 'dark';
-
-            // Initial setup
-            lightStyle.disabled = true;
-            darkStyle.disabled = false;
             toggleInput.checked = false;
-
-            toggleInput.addEventListener('change', function () {
-                // Get toggle position
-                const rect = toggleInput.getBoundingClientRect();
-                const centerX = rect.left + rect.width / 2;
-                const centerY = rect.top + rect.height / 2;
-
-                // Create ripple
-                const ripple = document.createElement('div');
-                ripple.className = 'ripple-circle';
-                ripple.style.left = `${centerX - 75}px`;
-                ripple.style.top = `${centerY - 75}px`;
-                ripple.style.width = ripple.style.height = '150px';
-                ripple.style.transformOrigin = 'center';
-                overlay.appendChild(ripple);
-
-                // Switch theme after ripple starts
-                setTimeout(() => {
-                    if (currentTheme === 'dark') {
-                        // Switch to light
-                        lightStyle.disabled = false;
-                        darkStyle.disabled = true;
-                        currentTheme = 'light';
-                    } else {
-                        // Switch to dark
-                        lightStyle.disabled = true;
-                        darkStyle.disabled = false;
-                        currentTheme = 'dark';
-                    }
-                }, 200);
-
-                // Remove ripple and reset toggle
-                setTimeout(() => {
-                    ripple.remove();
-
-                    // Add jump animation
-                    toggleInput.classList.add('toggle-animate');
-
-                    setTimeout(() => {
-                        // Reset toggle visually and unfocus
-                        toggleInput.checked = false;
-                        toggleInput.blur(); // <--- unfocus the switch
-                        toggleInput.classList.remove('toggle-animate');
-                    }, 100);
-                }, 500);
-            });
         };
 
-        fastboot.setDebugLevel(2);
+        function redirectToUrl() {
+            const toggleInput = document.getElementById('toggle-input');
+
+            setTimeout(() => {
+                window.location.href = "https://arkt-7.github.io/nabu"; 
+            }, 400);
+        }
+
+        const toggleInput = document.getElementById('toggle-input');
+        toggleInput.addEventListener('change', function() {
+            if (this.checked) {
+                redirectToUrl(); 
+            } else {
+                this.checked = false;
+            }
+        });
+
+        window.onbeforeunload = function() {
+            const toggleInput = document.getElementById('toggle-input');
+            toggleInput.checked = false;
+        };
 
         let messageInterval;
         let typingInterval; 
