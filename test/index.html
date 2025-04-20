@@ -1306,8 +1306,8 @@
 
         .ripple-circle {
         position: absolute;
-        width: 500px;
-        height: 500px;
+        width: 150px;
+        height: 150px;
         border-radius: 50%;
         transform: scale(0);
         background: radial-gradient(circle, rgba(255, 255, 255, 0.5), transparent 70%);
@@ -1317,6 +1317,25 @@
         pointer-events: none;
         z-index: 9999;
         }
+
+        /* Add this class to the toggle input when animating */
+.toggle-animate {
+    animation: jumpAnim 0.5s ease-out;
+}
+
+/* Define the keyframes for the jump animation */
+@keyframes jumpAnim {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
 
         @keyframes rippleAnim {
         to {
@@ -1357,8 +1376,8 @@
         <p class="status-field">Not connected in Fastboot</p>
         <button class="button connect-button">Connect device Fastboot</button>
     </div>
-    <div id="theme-overlay"></div>
 
+    <div id="theme-overlay"></div>
 
     <div class="container">
         <form class="command-form">
@@ -1619,44 +1638,64 @@
         let blobStore = new BlobStore();
 
         window.onload = function () {
-        const toggleInput = document.getElementById('toggle-input');
-        const lightStyle = document.getElementById('light');
-        const darkStyle = document.getElementById('dark');
-        const overlay = document.getElementById('theme-overlay');
+            const toggleInput = document.getElementById('toggle-input');
+            const lightStyle = document.getElementById('light');
+            const darkStyle = document.getElementById('dark');
+            const overlay = document.getElementById('theme-overlay');
 
-        // Default: dark
-        lightStyle.disabled = true;
-        darkStyle.disabled = false;
-        toggleInput.checked = false;
+            // Theme state tracker: "dark" by default
+            let currentTheme = 'dark';
 
-        toggleInput.addEventListener('change', function (e) {
-            // Get toggle's screen position
-            const rect = toggleInput.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
+            // Initial setup
+            lightStyle.disabled = true;
+            darkStyle.disabled = false;
+            toggleInput.checked = false;
 
-            // Create ripple
-            const ripple = document.createElement('div');
-            ripple.className = 'ripple-circle';
-            ripple.style.left = `${centerX - 150}px`;
-            ripple.style.top = `${centerY - 150}px`;
-            ripple.style.width = ripple.style.height = '300px';
-            ripple.style.transformOrigin = 'center';
+            toggleInput.addEventListener('change', function () {
+                // Get toggle position
+                const rect = toggleInput.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
 
-            overlay.appendChild(ripple);
+                // Create ripple
+                const ripple = document.createElement('div');
+                ripple.className = 'ripple-circle';
+                ripple.style.left = `${centerX - 75}px`;
+                ripple.style.top = `${centerY - 75}px`;
+                ripple.style.width = ripple.style.height = '150px';
+                ripple.style.transformOrigin = 'center';
+                overlay.appendChild(ripple);
 
-            // Trigger theme switch after ripple starts
-            setTimeout(() => {
-            const isLight = toggleInput.checked;
-            lightStyle.disabled = !isLight;
-            darkStyle.disabled = isLight;
-            }, 200);
+                // Switch theme after ripple starts
+                setTimeout(() => {
+                    if (currentTheme === 'dark') {
+                        // Switch to light
+                        lightStyle.disabled = false;
+                        darkStyle.disabled = true;
+                        currentTheme = 'light';
+                    } else {
+                        // Switch to dark
+                        lightStyle.disabled = true;
+                        darkStyle.disabled = false;
+                        currentTheme = 'dark';
+                    }
+                }, 200);
 
-            // Remove ripple after animation
-            setTimeout(() => {
-            ripple.remove();
-            }, 1000);
-        });
+                // Remove ripple and reset toggle
+                setTimeout(() => {
+                    ripple.remove();
+
+                    // Add jump animation
+                    toggleInput.classList.add('toggle-animate');
+
+                    setTimeout(() => {
+                        // Reset toggle visually and unfocus
+                        toggleInput.checked = false;
+                        toggleInput.blur(); // <--- unfocus the switch
+                        toggleInput.classList.remove('toggle-animate');
+                    }, 100);
+                }, 500);
+            });
         };
 
         fastboot.setDebugLevel(2);
