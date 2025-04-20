@@ -1436,6 +1436,8 @@
             const formElements = document.querySelectorAll("input, button, select, textarea");
             let rbootPartitionSelect = document.querySelector('.rboot-flash-partition');
             let previousSelectedValue = rbootPartitionSelect ? rbootPartitionSelect.value : null;
+            const fileTable = document.querySelector("#file-table tbody");
+            fileTable.innerHTML = "";
 
             formElements.forEach((element) => {
                 if (element.tagName === "INPUT" && (element.type === "text" || element.type === "file")) {
@@ -1484,28 +1486,14 @@
             if (product === "nabu") {
                 deviceName = "Device name : Xiaomi Pad 5";
                 if (titleText) titleText.textContent = "Nabu Fastboot Tool";
-                let rbootFlashPartitionSelect = document.querySelector('.rboot-flash-partition');
-                if (rbootFlashPartitionSelect) {
-                    rbootFlashPartitionSelect.value = "boot_ab"; // Select the "Flash to Boot ab (both slots)"
-                }
             } else if (product === "dm3q") {
                 deviceName = "Device name : Samsung S23 Ultra";
                 isNabu = true; // Device is not nabu
                 if (titleText) titleText.textContent = "Web Fastboot Tool";
-                // Select the current slot in the rboot-flash-partition select
-                let rbootFlashPartitionSelect = document.querySelector('.rboot-flash-partition');
-                if (rbootFlashPartitionSelect) {
-                    rbootFlashPartitionSelect.value = "boot"; // Select the "Flash to Boot (current slot)" option
-                }
             } else if (product !== "nabu") {
                 isNabu = true; // Device is not nabu
                 deviceName = "Device name : IDK LoL 😂";
                 if (titleText) titleText.textContent = "Web Fastboot Tool";
-                // Select the current slot in the rboot-flash-partition select
-                let rbootFlashPartitionSelect = document.querySelector('.rboot-flash-partition');
-                if (rbootFlashPartitionSelect) {
-                    rbootFlashPartitionSelect.value = "boot"; // Select the "Flash to Boot (current slot)" option
-                }
             }
 
             let status = `Connected to : ${product} <br /> Current slot : ${slot} <br /> (serial : ${serial})`;
@@ -1535,8 +1523,59 @@
             }
             statusField.innerHTML = status;
             toggleElements(false, isNabu); 
+            handleSlotAndBootOptions();
+            clearFormElements();
         }
-	
+
+        // Function to update the flash boot partition options based on the slot status
+        async function handleSlotAndBootOptions() {
+            const slot = await device.getVariable("current-slot");
+            const selectElement = document.querySelector(".rboot-flash-partition");
+
+            // Update fileMapping: strip _ab if slot is invalid
+            if (slot === null || (slot !== "a" && slot !== "b")) {
+                for (const [file, partition] of Object.entries(fileMapping)) {
+                    if (partition.endsWith("_ab")) {
+                        fileMapping[file] = partition.replace(/_ab$/, "");
+                    }
+                }
+            }
+
+            // Clear and repopulate the select dropdown
+            selectElement.innerHTML = '';
+
+            // Default prompt option
+            const defaultOption = document.createElement("option");
+            defaultOption.value = "";
+            defaultOption.textContent = "Select boot partition";
+            selectElement.appendChild(defaultOption);
+
+            // Always add "boot" (current slot)
+            const bootOption = document.createElement("option");
+            bootOption.value = "boot";
+            bootOption.textContent = "Flash to Boot (current slot)";
+            bootOption.selected = true; // Always default to this
+            selectElement.appendChild(bootOption);
+
+            // If valid slot, add all options
+            if (slot === "a" || slot === "b") {
+                const bootAB = document.createElement("option");
+                bootAB.value = "boot_ab";
+                bootAB.textContent = "Flash to Boot ab (both slots)";
+                selectElement.appendChild(bootAB);
+
+                const bootA = document.createElement("option");
+                bootA.value = "boot_a";
+                bootA.textContent = "Flash to Boot A only";
+                selectElement.appendChild(bootA);
+
+                const bootB = document.createElement("option");
+                bootB.value = "boot_b";
+                bootB.textContent = "Flash to Boot B only";
+                selectElement.appendChild(bootB);
+            }
+        }
+
         // Function to check a partition's availability
         async function checkPartition(partitionName, partitionChk, partitionSize) {
             return partitionChk; // Return true if the partition is available
@@ -1921,6 +1960,7 @@
             const resultField = document.querySelector(".result-field");
             const fileTable = document.querySelector("#file-table tbody");
             const rows = fileTable.querySelectorAll("tr");
+            let slot = await device.getVariable("current-slot");
 
             const files = Array.from(fileField.files);
             if (files.length === 0) {
@@ -1936,7 +1976,12 @@
             rows.forEach((row, index) => {
                 const fileName = files[index].name.toLowerCase();
                 const partitionCell = row.cells[1];
-                const partition = partitionCell.textContent.trim();
+                let partition = partitionCell.textContent.trim();
+
+                // Added: if slot is null or not a/b, and partition ends with _ab, remove the _ab suffix
+                if ((slot === null || (slot !== "a" && slot !== "b")) && partition.endsWith("_ab")) {
+                    partition = partition.replace(/_ab$/, "");
+                }
 
                 if (!partition || partition === "Enter Partition" || partition === "Enter Partition in the table for multiple files") {
                     partitionCell.textContent = "Enter Partition";
@@ -1961,31 +2006,30 @@
                     const partition = partitions[i];
 
                     // Handle `_AB` logic
-                // Handle `_AB` logic
-            if (partition.endsWith("_ab")) {
-                const partitionA = partition.replace("_ab", "_a");
-                const partitionB = partition.replace("_ab", "_b");
-            
-                // Prepend flashing messages to resultField
-                resultField.textContent = `Flashing ${file.name} to ${partitionA}...\n` + resultField.textContent;
-                await device.flashBlob(partitionA, file, (progress) => {
-                    resultField.textContent = `${partitionA} Progress: ${progress}%\n` + resultField.textContent;
-                });
-                resultField.textContent = `Successfully flashed ${file.name} to ${partitionA}.\n` + resultField.textContent;
-            
-                resultField.textContent = `Flashing ${file.name} to ${partitionB}...\n` + resultField.textContent;
-                await device.flashBlob(partitionB, file, (progress) => {
-                    resultField.textContent = `${partitionB} Progress: ${progress}%\n` + resultField.textContent;
-                });
-                resultField.textContent = `Successfully flashed ${file.name} to ${partitionB}.\n` + resultField.textContent;
-            } else {
-                // Flash normally
-                resultField.textContent = `Flashing ${file.name} to ${partition}...\n` + resultField.textContent;
-                await device.flashBlob(partition, file, (progress) => {
-                    resultField.textContent = `${partition} Progress: ${progress}%\n` + resultField.textContent;
-                });
-                resultField.textContent = `Successfully flashed ${file.name} to ${partition}.\n` + resultField.textContent;
-            }
+                    if (partition.endsWith("_ab")) {
+                        const partitionA = partition.replace("_ab", "_a");
+                        const partitionB = partition.replace("_ab", "_b");
+
+                        // Prepend flashing messages to resultField
+                        resultField.textContent = `Flashing ${file.name} to ${partitionA}...\n` + resultField.textContent;
+                        await device.flashBlob(partitionA, file, (progress) => {
+                            resultField.textContent = `${partitionA} Progress: ${progress}%\n` + resultField.textContent;
+                        });
+                        resultField.textContent = `Successfully flashed ${file.name} to ${partitionA}.\n` + resultField.textContent;
+
+                        resultField.textContent = `Flashing ${file.name} to ${partitionB}...\n` + resultField.textContent;
+                        await device.flashBlob(partitionB, file, (progress) => {
+                            resultField.textContent = `${partitionB} Progress: ${progress}%\n` + resultField.textContent;
+                        });
+                        resultField.textContent = `Successfully flashed ${file.name} to ${partitionB}.\n` + resultField.textContent;
+                    } else {
+                        // Flash normally
+                        resultField.textContent = `Flashing ${file.name} to ${partition}...\n` + resultField.textContent;
+                        await device.flashBlob(partition, file, (progress) => {
+                            resultField.textContent = `${partition} Progress: ${progress}%\n` + resultField.textContent;
+                        });
+                        resultField.textContent = `Successfully flashed ${file.name} to ${partition}.\n` + resultField.textContent;
+                    }
                 }
                 alert("All files flashed successfully!");
             } catch (error) {
