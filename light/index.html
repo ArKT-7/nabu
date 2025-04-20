@@ -660,7 +660,6 @@
     </h1>
     <h2 class="subtitle">By °⊥⋊ɹ∀° :)</h2>
 
-    <!-- Add a progress overlay for the "Processing... Please wait" message -->
     <div id="progress-overlay">
         <div id="progress-message">Processing... Please wait</div>
     </div>
@@ -683,7 +682,6 @@
             <input type="checkbox" class="inputx" id="toggle-input">
             <span class="slider"></span>
         </label>
-
         <p class="status-field">Not connected in Fastboot</p>
         <button class="button connect-button">Connect device Fastboot</button>
     </div>
@@ -694,28 +692,25 @@
             <input type="text" name="command" class="command-input" placeholder="Enter fastboot command here without 'fastboot'" />
             <input type="submit" value="Send" class="button" />
         </form>
-        <button class="button reboot-button">Reboot Device</button>
-        <button class="button reboot-bootloader-button">Reboot to Bootloader</button>
-        <button class="button reboot-recovery-button">Reboot to Recovery</button>
-        <button class="button reboot-fastbootd-button">Reboot to FastbootD</button>
-        <button class="button reboot-edl-button">Reboot to EDL</button>
-	<button class="button switchslot-button">Switch slot to other</button>
+            <button class="button reboot-button">Reboot Device</button>
+            <button class="button reboot-bootloader-button">Reboot to Bootloader</button>
+            <button class="button reboot-recovery-button">Reboot to Recovery</button>
+            <button class="button reboot-fastbootd-button">Reboot to FastbootD</button>
+            <button class="button reboot-edl-button">Reboot to EDL</button>
+	        <button class="button switchslot-button">Switch slot to other</button>
 	    <p style="text-align: center; font-style: italic; margin-top: 6px;">
-	            <strong>- Output logs - </strong>
-	        </p>
-            <pre class="result-field"></pre>
+	        <strong>Output logs - Flashing percentage</strong>
+	    </p>
+        <pre class="result-field"></pre>
     </div>
 
     <div class="container">
         <form class="flash-form">
             <label for="flash-file">Flash any images/Complete ROM 💀</label>
             <input type="file" name="flash-file" id="flash-file" accept=".img,.bin,.elf,.mbn" multiple />
-    
             <label for="flash-partition">Enter Partition</label>
-            <input type="text" name="flash-partition" class="flash-partition" 
-                   placeholder="Partition like - boot, dtbo, super, vendor_boot, recovery, etc." disabled />
+            <input type="text" name="flash-partition" class="flash-partition" placeholder="Partition like - boot, dtbo, super, vendor_boot, recovery, etc." disabled />
             <div class="file-table-container">
-                <!-- Table for displaying selected files -->
                 <table id="file-table" class="file-table">
                     <thead>
                         <tr>
@@ -725,7 +720,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Dynamic rows will be added here -->
                     </tbody>
                 </table>
             </div>
@@ -748,11 +742,11 @@
                 <option value="uefi-v4-nosb">Windows UEFI-v4 No Secure boot</option>
 	            <option value="uefi-v3">Windows UEFI-v3 old</option>
             </select>
-		<input type="submit" value="Boot" class="button" />
-		<div class="progress-container" style="display: none;">
-			<div class="progress-bar" style="width:0%;"></div>
-		</div>
-	</form>
+		    <input type="submit" value="Boot" class="button" />
+		    <div class="progress-container" style="display: none;">
+			    <div class="progress-bar" style="width:0%;"></div>
+		    </div>
+	    </form>
     </div>
 
     <div class="container wipe-container">
@@ -769,7 +763,6 @@
         </div>
     </div>
 
-	<!-- New Container for Downloading and Flashing Images -->
     <div class="container">
         <form class="rboot-flash-form">
             <label for="rboot-flash-file">Flash any rooted or normal boot image</label>
@@ -785,187 +778,164 @@
             <label for="rboot-flash-image">Magisk V28.1 Rooted images for Nabu</label>
             <select name="rboot-flash-image" class="rboot-flash-image">
                 <option value="">Select rooted HyperOS/MIUI 13/14 boot</option>
-
-		<!-- Global Versions HyperOS-->
-		<option value="magisk-1-0-6-global">HyperOS 1.0.6 (Global)</option>
+		        <!-- Global Versions HyperOS-->
+		        <option value="magisk-1-0-6-global">HyperOS 1.0.6 (Global)</option>
                 <option value="magisk-1-0-5-global">HyperOS 1.0.5 (Global)</option>
                 <option value="magisk-1-0-4-global">HyperOS 1.0.4 (Global)</option>
-	    	<option value="magisk-1-0-1-global">HyperOS 1.0.1 (Global)</option>
+	    	    <option value="magisk-1-0-1-global">HyperOS 1.0.1 (Global)</option>
+                <!-- India Versions -->
+                <option value="magisk-1-0-18-india">HyperOS 1.0.18 (India)</option>
+                <option value="magisk-1-0-17-india">HyperOS 1.0.17 (India)</option>
+                <option value="magisk-1-0-16-india">HyperOS 1.0.16 (India)</option>
+                <option value="magisk-1-0-14-india">HyperOS 1.0.14 (India)</option>
+                <option value="magisk-1-0-13-india">HyperOS 1.0.13 (India)</option>
+                <option value="magisk-1-0-12-india">HyperOS 1.0.12 (India)</option>
+                <option value="magisk-1-0-9-india">HyperOS 1.0.9 (India)</option>    
+                <option value="magisk-1-0-8-india">HyperOS 1.0.8 (India)</option>
+                <option value="magisk-1-0-7-india">HyperOS 1.0.7 (India)</option>
+                <option value="magisk-1-0-4-india">HyperOS 1.0.4 (India)</option>
+                <!-- EEA Versions -->
+                <option value="magisk-1-0-6-eea">HyperOS 1.0.6 (EEA)</option>
+                <option value="magisk-1-0-5-eea">HyperOS 1.0.5 (EEA)</option>
+                <option value="magisk-1-0-2-eea">HyperOS 1.0.2 (EEA)</option>
+                <option value="magisk-1-0-1-eea">HyperOS 1.0.1 (EEA)</option>
+                <!-- Russia Versions -->
+                <option value="magisk-1-0-5-russia">HyperOS 1.0.5 (Russia)</option>
+                <option value="magisk-1-0-4-russia">HyperOS 1.0.4 (Russia)</option>
+                <option value="magisk-1-0-3-russia">HyperOS 1.0.3 (Russia)</option>
+                <option value="magisk-1-0-1-russia">HyperOS 1.0.1 (Russia)</option>
+                <!-- China Versions -->
+                <option value="magisk-1-0-3-china">HyperOS 1.0.3 (China)</option>
+                <option value="magisk-1-0-2-china">HyperOS 1.0.2 (China)</option>
+                <!-- Turkey Versions -->
+                <option value="magisk-1-0-6-turkey">HyperOS 1.0.6 (Turkey)</option>
+                <option value="magisk-1-0-5-turkey">HyperOS 1.0.5 (Turkey)</option>
+                <option value="magisk-1-0-4-turkey">HyperOS 1.0.4 (Turkey)</option>
+                <option value="magisk-1-0-2-turkey">HyperOS 1.0.2 (Turkey)</option>
+                <!-- Taiwan Versions -->
+                <option value="magisk-1-0-6-taiwan">HyperOS 1.0.6 (Taiwan)</option>
+                <option value="magisk-1-0-5-taiwan">HyperOS 1.0.5 (Taiwan)</option>
+                <option value="magisk-1-0-4-taiwan">HyperOS 1.0.4 (Taiwan)</option>
+                <option value="magisk-1-0-2-taiwan">HyperOS 1.0.2 (Taiwan)</option>
 
-		<!-- India Versions -->
-        <option value="magisk-1-0-18-india">HyperOS 1.0.18 (India)</option>
-        <option value="magisk-1-0-17-india">HyperOS 1.0.17 (India)</option>
-        <option value="magisk-1-0-16-india">HyperOS 1.0.16 (India)</option>
-        <option value="magisk-1-0-14-india">HyperOS 1.0.14 (India)</option>
-        <option value="magisk-1-0-13-india">HyperOS 1.0.13 (India)</option>
-		<option value="magisk-1-0-12-india">HyperOS 1.0.12 (India)</option>
-		<option value="magisk-1-0-9-india">HyperOS 1.0.9 (India)</option>    
-	    	<option value="magisk-1-0-8-india">HyperOS 1.0.8 (India)</option>
-	    	<option value="magisk-1-0-7-india">HyperOS 1.0.7 (India)</option>
-	    	<option value="magisk-1-0-4-india">HyperOS 1.0.4 (India)</option>
+                <!-- Global Versions MIUI 14-->
+                <option value="magisk-14-0-8-global">MIUI 14.0.8 (Global)</option>
+                <option value="magisk-14-0-7-global">MIUI 14.0.7 (Global)</option>
+                <option value="magisk-14-0-6-global">MIUI 14.0.6 (Global)</option>
+                <option value="magisk-14-0-5-global">MIUI 14.0.5 (Global)</option>
+                <option value="magisk-14-0-4-global">MIUI 14.0.4 (Global)</option>
+                <option value="magisk-14-0-3-global">MIUI 14.0.3 (Global)</option>      
+                <!-- India Versions -->
+                <option value="magisk-14-0-7-india">MIUI 14.0.7 (India)</option>
+                <option value="magisk-14-0-4-india">MIUI 14.0.4 (India)</option>
+                <option value="magisk-14-0-3-india">MIUI 14.0.3 (India)</option>
+                <option value="magisk-14-0-1-india">MIUI 14.0.1 (India)</option>
+                <!-- EEA Versions -->
+                <option value="magisk-14-0-9-eea">MIUI 14.0.9 (EEA)</option>
+                <option value="magisk-14-0-8-eea">MIUI 14.0.8 (EEA)</option>
+                <option value="magisk-14-0-7-eea">MIUI 14.0.7 (EEA)</option>
+                <option value="magisk-14-0-6-eea">MIUI 14.0.6 (EEA)</option>
+                <option value="magisk-14-0-5-eea">MIUI 14.0.5 (EEA)</option>
+                <option value="magisk-14-0-4-eea">MIUI 14.0.4 (EEA)</option>
+                <option value="magisk-14-0-2-eea">MIUI 14.0.2 (EEA)</option>
+                <!-- Russia Versions -->
+                <option value="magisk-14-0-7-russia">MIUI 14.0.7 (Russia)</option>
+                <option value="magisk-14-0-6-russia">MIUI 14.0.6 (Russia)</option>
+                <option value="magisk-14-0-5-russia">MIUI 14.0.5 (Russia)</option>
+                <option value="magisk-14-0-4-russia">MIUI 14.0.4 (Russia)</option>
+                <option value="magisk-14-0-3-russia">MIUI 14.0.3 (Russia)</option>
+                <option value="magisk-14-0-2-russia">MIUI 14.0.2 (Russia)</option>
+                <!-- China Versions -->
+                <option value="magisk-14-0-7-china">MIUI 14.0.7 (China)</option>
+                <option value="magisk-14-0-6-china">MIUI 14.0.6 (China)</option>
+                <option value="magisk-14-0-5-china">MIUI 14.0.5 (China)</option>
+                <option value="magisk-14-0-4-china">MIUI 14.0.4 (China)</option>
+                <!-- Turkey Versions -->
+                <option value="magisk-14-0-5-turkey">MIUI 14.0.5 (Turkey)</option>
+                <option value="magisk-14-0-4-turkey">MIUI 14.0.4 (Turkey)</option>
+                <option value="magisk-14-0-2-turkey">MIUI 14.0.2 (Turkey)</option>
+                <option value="magisk-14-0-1-turkey">MIUI 14.0.1 (Turkey)</option>
+                <!-- Taiwan Versions -->
+                <option value="magisk-14-0-3-taiwan">MIUI 14.0.3 (Taiwan)</option>
+                <option value="magisk-14-0-2-taiwan">MIUI 14.0.2 (Taiwan)</option>
+                <option value="magisk-14-0-1-taiwan">MIUI 14.0.1 (Taiwan)</option>
 
-		<!-- EEA Versions -->
-		<option value="magisk-1-0-6-eea">HyperOS 1.0.6 (EEA)</option>
-	    	<option value="magisk-1-0-5-eea">HyperOS 1.0.5 (EEA)</option>
-	    	<option value="magisk-1-0-2-eea">HyperOS 1.0.2 (EEA)</option>
-	   	<option value="magisk-1-0-1-eea">HyperOS 1.0.1 (EEA)</option>
-
-		<!-- Russia Versions -->
-		<option value="magisk-1-0-5-russia">HyperOS 1.0.5 (Russia)</option>
-	    	<option value="magisk-1-0-4-russia">HyperOS 1.0.4 (Russia)</option>
-	    	<option value="magisk-1-0-3-russia">HyperOS 1.0.3 (Russia)</option>
-	    	<option value="magisk-1-0-1-russia">HyperOS 1.0.1 (Russia)</option>
-
-		<!-- China Versions -->
-	    	<option value="magisk-1-0-3-china">HyperOS 1.0.3 (China)</option>
-	    	<option value="magisk-1-0-2-china">HyperOS 1.0.2 (China)</option>
-
-		<!-- Turkey Versions -->
-		<option value="magisk-1-0-6-turkey">HyperOS 1.0.6 (Turkey)</option>
-	    	<option value="magisk-1-0-5-turkey">HyperOS 1.0.5 (Turkey)</option>
-	    	<option value="magisk-1-0-4-turkey">HyperOS 1.0.4 (Turkey)</option>
-	    	<option value="magisk-1-0-2-turkey">HyperOS 1.0.2 (Turkey)</option>
-
-		<!-- Taiwan Versions -->
-		<option value="magisk-1-0-6-taiwan">HyperOS 1.0.6 (Taiwan)</option>
-	    	<option value="magisk-1-0-5-taiwan">HyperOS 1.0.5 (Taiwan)</option>
-	    	<option value="magisk-1-0-4-taiwan">HyperOS 1.0.4 (Taiwan)</option>
-	    	<option value="magisk-1-0-2-taiwan">HyperOS 1.0.2 (Taiwan)</option>
-	
-	    	<!-- Global Versions MIUI 14-->
-	    	<option value="magisk-14-0-8-global">MIUI 14.0.8 (Global)</option>
-	    	<option value="magisk-14-0-7-global">MIUI 14.0.7 (Global)</option>
-	    	<option value="magisk-14-0-6-global">MIUI 14.0.6 (Global)</option>
-	    	<option value="magisk-14-0-5-global">MIUI 14.0.5 (Global)</option>
-	    	<option value="magisk-14-0-4-global">MIUI 14.0.4 (Global)</option>
-	    	<option value="magisk-14-0-3-global">MIUI 14.0.3 (Global)</option>
-	    
-	    	<!-- India Versions -->
-	    	<option value="magisk-14-0-7-india">MIUI 14.0.7 (India)</option>
-	    	<option value="magisk-14-0-4-india">MIUI 14.0.4 (India)</option>
-	    	<option value="magisk-14-0-3-india">MIUI 14.0.3 (India)</option>
-	    	<option value="magisk-14-0-1-india">MIUI 14.0.1 (India)</option>
-	    
-	    	<!-- EEA Versions -->
-	    	<option value="magisk-14-0-9-eea">MIUI 14.0.9 (EEA)</option>
-	    	<option value="magisk-14-0-8-eea">MIUI 14.0.8 (EEA)</option>
-	    	<option value="magisk-14-0-7-eea">MIUI 14.0.7 (EEA)</option>
-	    	<option value="magisk-14-0-6-eea">MIUI 14.0.6 (EEA)</option>
-	    	<option value="magisk-14-0-5-eea">MIUI 14.0.5 (EEA)</option>
-	    	<option value="magisk-14-0-4-eea">MIUI 14.0.4 (EEA)</option>
-	    	<option value="magisk-14-0-2-eea">MIUI 14.0.2 (EEA)</option>
-	    
-	    	<!-- Russia Versions -->
-	    	<option value="magisk-14-0-7-russia">MIUI 14.0.7 (Russia)</option>
-	    	<option value="magisk-14-0-6-russia">MIUI 14.0.6 (Russia)</option>
-	    	<option value="magisk-14-0-5-russia">MIUI 14.0.5 (Russia)</option>
-	    	<option value="magisk-14-0-4-russia">MIUI 14.0.4 (Russia)</option>
-	    	<option value="magisk-14-0-3-russia">MIUI 14.0.3 (Russia)</option>
-	    	<option value="magisk-14-0-2-russia">MIUI 14.0.2 (Russia)</option>
-	    
-	    	<!-- China Versions -->
-	    	<option value="magisk-14-0-7-china">MIUI 14.0.7 (China)</option>
-	    	<option value="magisk-14-0-6-china">MIUI 14.0.6 (China)</option>
-	    	<option value="magisk-14-0-5-china">MIUI 14.0.5 (China)</option>
-	    	<option value="magisk-14-0-4-china">MIUI 14.0.4 (China)</option>
-	    
-	    	<!-- Turkey Versions -->
-	    	<option value="magisk-14-0-5-turkey">MIUI 14.0.5 (Turkey)</option>
-	    	<option value="magisk-14-0-4-turkey">MIUI 14.0.4 (Turkey)</option>
-	    	<option value="magisk-14-0-2-turkey">MIUI 14.0.2 (Turkey)</option>
-	    	<option value="magisk-14-0-1-turkey">MIUI 14.0.1 (Turkey)</option>
-	    
-	    	<!-- Taiwan Versions -->
-	    	<option value="magisk-14-0-3-taiwan">MIUI 14.0.3 (Taiwan)</option>
-	    	<option value="magisk-14-0-2-taiwan">MIUI 14.0.2 (Taiwan)</option>
-	    	<option value="magisk-14-0-1-taiwan">MIUI 14.0.1 (Taiwan)</option>
-
-		<!-- Global Versions MIUI 13-->
-		<option value="magisk-13-1-4-global">MIUI 13.1.4 (Global)</option>
-		<option value="magisk-13-1-3-global">MIUI 13.1.3 (Global)</option>
-		<option value="magisk-13-0-4-global">MIUI 13.0.4 (Global)</option>
-		<option value="magisk-13-0-3-global">MIUI 13.0.3 (Global)</option>
-		<option value="magisk-13-0-2-global">MIUI 13.0.2 (Global)</option>
-		<option value="magisk-13-0-1-global">MIUI 13.0.1 (Global)</option>
-		
-		<!-- India Versions -->
-		<option value="magisk-13-1-4-india">MIUI 13.1.4 (India)</option>
-		<option value="magisk-13-1-3-india">MIUI 13.1.3 (India)</option>
-		<option value="magisk-13-0-6-india">MIUI 13.0.6 (India)</option>
-		<option value="magisk-13-0-5-india">MIUI 13.0.5 (India)</option>
-		<option value="magisk-13-0-4-india">MIUI 13.0.4 (India)</option>
-		
-		<!-- Russia Versions -->
-		<option value="magisk-13-1-8-russia">MIUI 13.1.8 (Russia)</option>
-		<option value="magisk-13-1-6-russia">MIUI 13.1.6 (Russia)</option>
-		<option value="magisk-13-1-4-russia">MIUI 13.1.4 (Russia)</option>
-		<option value="magisk-13-0-3-russia">MIUI 13.0.3 (Russia)</option>
-		<option value="magisk-13-0-2-russia">MIUI 13.0.2 (Russia)</option>
-		<option value="magisk-13-0-1-russia">MIUI 13.0.1 (Russia)</option>
-		
-		<!-- EEA Versions -->
-		<option value="magisk-13-1-5-eea">MIUI 13.1.5 (EEA)</option>
-		<option value="magisk-13-1-3-eea">MIUI 13.1.3 (EEA)</option>
-		<option value="magisk-13-1-2-eea">MIUI 13.1.2 (EEA)</option>
-		<option value="magisk-13-0-6-eea">MIUI 13.0.6 (EEA)</option>
-		<option value="magisk-13-0-5-eea">MIUI 13.0.5 (EEA)</option>
-		<option value="magisk-13-0-4-eea">MIUI 13.0.4 (EEA)</option>
-		<option value="magisk-13-0-3-eea">MIUI 13.0.3 (EEA)</option>
-		
-		<!-- China Versions -->
-		<option value="magisk-13-1-5-china">MIUI 13.1.5 (China)</option>
-		<option value="magisk-13-1-4-china">MIUI 13.1.4 (China)</option>
-		<option value="magisk-13-0-9-china">MIUI 13.0.9 (China)</option>
-		<option value="magisk-13-0-8-china">MIUI 13.0.8 (China)</option>
-		<option value="magisk-13-0-5-china">MIUI 13.0.5 (China)</option>
-		<option value="magisk-13-0-3-china">MIUI 13.0.3 (China)</option>
-		
-		<!-- Turkey Versions -->
-		<option value="magisk-13-1-2-turkey">MIUI 13.1.2 (Turkey)</option>
-		<option value="magisk-13-0-3-turkey">MIUI 13.0.3 (Turkey)</option>
-		<option value="magisk-13-0-2-turkey">MIUI 13.0.2 (Turkey)</option>
-		<option value="magisk-13-0-1-turkey">MIUI 13.0.1 (Turkey)</option>
-		
-		<!-- Taiwan Versions -->
-		<option value="magisk-13-1-2-taiwan">MIUI 13.1.2 (Taiwan)</option>
-		<option value="magisk-13-0-4-taiwan">MIUI 13.0.4 (Taiwan)</option>
-		<option value="magisk-13-0-3-taiwan">MIUI 13.0.3 (Taiwan)</option>
-		<option value="magisk-13-0-2-taiwan">MIUI 13.0.2 (Taiwan)</option>
-
-	    </select>
-		<input type="submit" value="Flash" class="button" />
-		<!-- Progress bar for feedback -->
-		<div class="rboot-progress-container" style="display:none;">
-			<div class="rboot-progress-bar" style="width:0%;"></div>
-		</div>
-	</form>
+                <!-- Global Versions MIUI 13-->
+                <option value="magisk-13-1-4-global">MIUI 13.1.4 (Global)</option>
+                <option value="magisk-13-1-3-global">MIUI 13.1.3 (Global)</option>
+                <option value="magisk-13-0-4-global">MIUI 13.0.4 (Global)</option>
+                <option value="magisk-13-0-3-global">MIUI 13.0.3 (Global)</option>
+                <option value="magisk-13-0-2-global">MIUI 13.0.2 (Global)</option>
+                <option value="magisk-13-0-1-global">MIUI 13.0.1 (Global)</option>
+                <!-- India Versions -->
+                <option value="magisk-13-1-4-india">MIUI 13.1.4 (India)</option>
+                <option value="magisk-13-1-3-india">MIUI 13.1.3 (India)</option>
+                <option value="magisk-13-0-6-india">MIUI 13.0.6 (India)</option>
+                <option value="magisk-13-0-5-india">MIUI 13.0.5 (India)</option>
+                <option value="magisk-13-0-4-india">MIUI 13.0.4 (India)</option>
+                <!-- Russia Versions -->
+                <option value="magisk-13-1-8-russia">MIUI 13.1.8 (Russia)</option>
+                <option value="magisk-13-1-6-russia">MIUI 13.1.6 (Russia)</option>
+                <option value="magisk-13-1-4-russia">MIUI 13.1.4 (Russia)</option>
+                <option value="magisk-13-0-3-russia">MIUI 13.0.3 (Russia)</option>
+                <option value="magisk-13-0-2-russia">MIUI 13.0.2 (Russia)</option>
+                <option value="magisk-13-0-1-russia">MIUI 13.0.1 (Russia)</option>
+                <!-- EEA Versions -->
+                <option value="magisk-13-1-5-eea">MIUI 13.1.5 (EEA)</option>
+                <option value="magisk-13-1-3-eea">MIUI 13.1.3 (EEA)</option>
+                <option value="magisk-13-1-2-eea">MIUI 13.1.2 (EEA)</option>
+                <option value="magisk-13-0-6-eea">MIUI 13.0.6 (EEA)</option>
+                <option value="magisk-13-0-5-eea">MIUI 13.0.5 (EEA)</option>
+                <option value="magisk-13-0-4-eea">MIUI 13.0.4 (EEA)</option>
+                <option value="magisk-13-0-3-eea">MIUI 13.0.3 (EEA)</option>
+                <!-- China Versions -->
+                <option value="magisk-13-1-5-china">MIUI 13.1.5 (China)</option>
+                <option value="magisk-13-1-4-china">MIUI 13.1.4 (China)</option>
+                <option value="magisk-13-0-9-china">MIUI 13.0.9 (China)</option>
+                <option value="magisk-13-0-8-china">MIUI 13.0.8 (China)</option>
+                <option value="magisk-13-0-5-china">MIUI 13.0.5 (China)</option>
+                <option value="magisk-13-0-3-china">MIUI 13.0.3 (China)</option>
+                <!-- Turkey Versions -->
+                <option value="magisk-13-1-2-turkey">MIUI 13.1.2 (Turkey)</option>
+                <option value="magisk-13-0-3-turkey">MIUI 13.0.3 (Turkey)</option>
+                <option value="magisk-13-0-2-turkey">MIUI 13.0.2 (Turkey)</option>
+                <option value="magisk-13-0-1-turkey">MIUI 13.0.1 (Turkey)</option>
+                <!-- Taiwan Versions -->
+                <option value="magisk-13-1-2-taiwan">MIUI 13.1.2 (Taiwan)</option>
+                <option value="magisk-13-0-4-taiwan">MIUI 13.0.4 (Taiwan)</option>
+                <option value="magisk-13-0-3-taiwan">MIUI 13.0.3 (Taiwan)</option>
+                <option value="magisk-13-0-2-taiwan">MIUI 13.0.2 (Taiwan)</option>
+	        </select>
+		    <input type="submit" value="Flash" class="button" />
+		    <div class="rboot-progress-container" style="display:none;">
+			    <div class="rboot-progress-bar" style="width:0%;"></div>
+		    </div>
+	    </form>
     </div>
-
 
     <div class="container">
         <form class="other-form">
-        <label for="other">other stuffs for Nabu Only :)</label>
+            <label for="other">other stuffs for Nabu Only :)</label>
         </form>
         <button class="button vbmeta-button">Disable Vbmeta verification</button>
         <button class="button vbmeta-system-button">Disable Vbmeta System verification</button>
-	<button class="button rickroll-button">😅 Ram health check 😁</button>
+	    <button class="button rickroll-button">😅 Ram health check 😁</button>
     </div>
     
 	<audio id="audioPlayer" src="https://raw.githubusercontent.com/arkt-7/nabu-files/main/other/rickroll.mp3"></audio>
 	
     <div class="container">
-    <h2 style="text-align: center;">Support My Journey</h2>
-    <p style="text-align: center; font-style: italic; margin-bottom: 10px; margin-top: 10px;">"Your support fuels my passion for creating!"</p>
-    <div class="button-container" style="text-align: center;">
-        <a href="https://www.buymeacoffee.com/ArKT" target="_blank" class="animated-button">
-            <img src="https://raw.githubusercontent.com/ArKT-7/Temp-files/master/assets/buymecoffee.png" alt="Buy Me a Coffee" style="height: 60px; width: 217px; margin-top: 10px; margin-left: 10px; margin-right: 10px;">
-        </a>
-        <a href="https://www.paypal.me/arkt7" target="_blank" class="animated-button">
-            <img src="https://raw.githubusercontent.com/ArKT-7/Temp-files/master/assets/Paypal.png" alt="Donate via PayPal" style="height: 63px; width: 220px; margin-top: 10px; margin-right: 10px; margin-left: 10px;">
-         </a>
-      </div>
+        <h2 style="text-align: center;">Support My Journey</h2>
+        <p style="text-align: center; font-style: italic; margin-bottom: 10px; margin-top: 10px;">"Your support fuels my passion for creating!"</p>
+        <div class="button-container" style="text-align: center;">
+            <a href="https://www.buymeacoffee.com/ArKT" target="_blank" class="animated-button">
+                <img src="https://raw.githubusercontent.com/ArKT-7/Temp-files/master/assets/buymecoffee.png" alt="Buy Me a Coffee" style="height: 60px; width: 217px; margin-top: 10px; margin-left: 10px; margin-right: 10px;">
+            </a>
+            <a href="https://www.paypal.me/arkt7" target="_blank" class="animated-button">
+                <img src="https://raw.githubusercontent.com/ArKT-7/Temp-files/master/assets/Paypal.png" alt="Donate via PayPal" style="height: 63px; width: 220px; margin-top: 10px; margin-right: 10px; margin-left: 10px;">
+            </a>
+        </div>
     </div>
-
 
 <script type="module">
     import * as fastboot from "../dist/fastboot.mjs";
