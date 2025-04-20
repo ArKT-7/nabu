@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="./dist/fastboot.mjs" type="module"></script>
     <script src="./download.js" type="module"></script>
-    <meta property="og:title" content="Fastboot Tool by ArKT" />
+    <meta property="og:title" content="Web Fastboot Tool by ArKT" />
     <meta property="og:description" content="It can boot Images like recovery and can flash images in any partition" />
     <meta property="og:url" content="https://arkt-7.github.io/nabu/" />
     <meta property="og:type" content="website" />
     <meta name="description" content="It can boot Images like recovery and can flash images in any partition" />
-    <meta name="title" content="Fastboot Tool for flashing/booting/rooting" />
-    <title>Fastboot Tool by ArKT</title>
+    <meta name="title" content="Web Fastboot Tool for flashing/booting/rooting" />
+    <title>Web Fastboot Tool by ArKT</title>
     <link rel="icon" href="https://img.icons8.com/fluency/48/android.png" type="image/png">
     <style id="light">
         body {
@@ -932,7 +932,7 @@
 </head>
 <body>
     <h1 class="title">
-        <span class="text-gradient">Nabu Fastboot Tool</span>
+        <span class="text-gradient">Web Fastboot Tool</span>
     </h1>
     <h2 class="subtitle">By °⊥⋊ɹ∀° :)</h2>
 
@@ -1480,8 +1480,10 @@
 
             let deviceName = "";
             let isNabu = false;
+            const titleText = document.querySelector(".text-gradient");
             if (product === "nabu") {
                 deviceName = "Device name : Xiaomi Pad 5";
+                if (titleText) titleText.textContent = "Nabu Fastboot Tool";
                 let rbootFlashPartitionSelect = document.querySelector('.rboot-flash-partition');
                 if (rbootFlashPartitionSelect) {
                     rbootFlashPartitionSelect.value = "boot_ab"; // Select the "Flash to Boot ab (both slots)"
@@ -1489,6 +1491,7 @@
             } else if (product === "dm3q") {
                 deviceName = "Device name : Samsung S23 Ultra";
                 isNabu = true; // Device is not nabu
+                if (titleText) titleText.textContent = "Web Fastboot Tool";
                 // Select the current slot in the rboot-flash-partition select
                 let rbootFlashPartitionSelect = document.querySelector('.rboot-flash-partition');
                 if (rbootFlashPartitionSelect) {
@@ -1497,6 +1500,7 @@
             } else if (product !== "nabu") {
                 isNabu = true; // Device is not nabu
                 deviceName = "Device name : IDK LoL 😂";
+                if (titleText) titleText.textContent = "Web Fastboot Tool";
                 // Select the current slot in the rboot-flash-partition select
                 let rbootFlashPartitionSelect = document.querySelector('.rboot-flash-partition');
                 if (rbootFlashPartitionSelect) {
