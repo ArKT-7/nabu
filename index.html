@@ -1,4 +1,4 @@
-<!DOCTYPE html> //checkpoint save
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -29,7 +29,7 @@
         }
 
         h1 {
-            color: #4a4a4a; /* Fallback color for browsers that don't support the gradient */
+            color: #4a4a4a;
             text-align: center;
             margin-bottom: 20px;
             font-size: 38px;
@@ -90,18 +90,19 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center; /* Center contents vertically */
+            justify-content: center; 
             padding: 30px;
             width: 90%;
             max-width: 600px;
             margin: 30px 0;
-            background: linear-gradient(135deg, #1c1f24, #3a3f44); /* Original gradient */
-            background-size: 200% 200%; /* Increase size for smoother movement */
+            background: linear-gradient(135deg, #1c1f24, #3a3f44);
+            background-size: 200% 200%; 
             border-radius: 20px;
             position: relative;
             text-align: center;
             overflow: hidden;
-            animation: backgroundMove 20s linear infinite; /* Linear for smooth infinite animation */
+            animation: backgroundMove 20s linear infinite; 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
         .container::before {
@@ -111,20 +112,20 @@
             left: -3px;
             right: -3px;
             bottom: -3px;
-            background: linear-gradient(45deg, #ff6ec4, #7873f5, #3a1c71, #ff6ec4); /* Glowing gradient for border */
+            background: linear-gradient(45deg, #ff6ec4, #7873f5, #3a1c71, #ff6ec4);
             background-size: 400% 400%;
             border-radius: 20px;
             z-index: -1;
-            filter: blur(10px); /* Glowing effect */
+            filter: blur(10px);
             opacity: 0.8;
-            animation: glow 10s ease infinite; /* Glowing border animation */
+            animation: glow 10s ease infinite;
             box-shadow: 
-                0 0 20px 10px rgba(255, 110, 196, 0.5),   /* General glow */
-                0 0 40px 10px rgba(255, 110, 196, 0.3) inset, /* Inner glow */
-                -10px -10px 30px rgba(255, 110, 196, 0.8), /* Top-left corner */
-                10px -10px 30px rgba(255, 110, 196, 0.8),  /* Top-right corner */
-                -10px 10px 30px rgba(255, 110, 196, 0.8),  /* Bottom-left corner */
-                10px 10px 30px rgba(255, 110, 196, 0.8);   /* Bottom-right corner */
+                0 0 20px 10px rgba(255, 110, 196, 0.5),   
+                0 0 40px 10px rgba(255, 110, 196, 0.3) inset,
+                -10px -10px 30px rgba(255, 110, 196, 0.8), 
+                10px -10px 30px rgba(255, 110, 196, 0.8),  
+                -10px 10px 30px rgba(255, 110, 196, 0.8),
+                10px 10px 30px rgba(255, 110, 196, 0.8);  
         }
 
         @keyframes glow {
@@ -153,9 +154,9 @@
 
         form {
             display: flex;
-            flex-direction: column; /* Align form elements vertically */
+            flex-direction: column;
             width: 100%;
-            align-items: center; /* Center form elements */
+            align-items: center; 
         }
 
         @keyframes fadeInUp {
@@ -198,401 +199,362 @@
             pointer-events: none;
         }
 
-	.button {
-	    background-color: #ffffff;
-	    background: linear-gradient(135deg, #007bff, #00d4ff);
-	    border: none;
-	    border-radius: 20px;
-	    color: white;
-	    padding: 15px 20px;
-	    font-size: 18px;
-	    font-weight: bold;
-	    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
-	    cursor: pointer;
-	    transition: background 0.3s ease, transform 0.3s ease;
-	    margin: 10px 0;
-	    width: 100%;
-	    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
-	    animation: buttonGlow 3s ease-in-out infinite alternate;
-	}
-	
-	.button:hover {
-	    background: linear-gradient(135deg, #0056b3, #0094c6);
-	    transform: scale(1.05);
-	}
-	
-	.button:disabled {
-	    background: linear-gradient(135deg, #b0b0b0, #d4d4d4);
-	    color: #888; /* Dull text color to emphasize the disabled state */
-	    cursor: not-allowed;
-	    box-shadow: none;
-	    transform: none;
-	}
-
-    .only-nabu-disabled:disabled::after {
-        content: "Only for Nabu";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        backdrop-filter: blur(1.2px);
-        background-color: rgba(255, 255, 255, 0.05);
-        color: rgba(255, 255, 255, 0.716);
-        font-weight: bold;
-        font-size: 1em;
-        pointer-events: none;
-        z-index: 1;
-        border-radius: 20px;
-    }
-
-
-    .only-nabu-disabled {
-        position: relative;
-        overflow: hidden;
-    }
-
-
-	.red-button {
-	    background: linear-gradient(135deg, #ff3b3b, #ff6666); /* Brighter red shades */
-	    border: none;
-	    border-radius: 20px;
-	    color: white;
-	    padding: 15px 20px;
-	    font-size: 18px;
-	    font-weight: bold;
-	    cursor: pointer;
-	    transition: background 0.3s ease, transform 0.3s ease;
-	    margin: 10px 0;
-	    width: 100%;
-	    box-shadow: 0 4px 10px rgba(255, 59, 59, 0.5); /* Adjusted shadow for a more vibrant look */
-	}
-	
-	.red-button:hover {
-	    background: linear-gradient(135deg, #ff0000, #ff4d4d); /* More intense color on hover */
-	}
-
-	
-	.red-button:disabled {
-	    background: linear-gradient(135deg, #b0b0b0, #d4d4d4);
+        .button {
+            background: linear-gradient(135deg, #007bff, #00d4ff);
+            border: none;
+            border-radius: 20px;
+            color: white;
+            padding: 15px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+            margin: 10px 0;
+            width: 100%;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+            animation: buttonGlow 3s ease-in-out infinite alternate;
+        }
+        
+        .button:hover {
+            background: linear-gradient(135deg, #0056b3, #0094c6);
+            transform: scale(1.05);
+        }
+        
+        .button:disabled {
+            background: linear-gradient(135deg, #b0b0b0, #d4d4d4);
             color: #888;
             cursor: not-allowed;
             box-shadow: none;
             transform: none;
+        }
+
+        .only-nabu-disabled:disabled::after {
+            content: "Only for Nabu";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(1.2px);
+            background-color: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.716);
+            font-weight: bold;
+            font-size: 1em;
+            pointer-events: none;
+            z-index: 1;
+            border-radius: 20px;
+        }
+
+        .only-nabu-disabled {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .red-button {
+            background: linear-gradient(135deg, #ff3b3b, #ff6666);
+            border: none;
+            border-radius: 20px;
+            color: white;
+            padding: 15px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+            margin: 10px 0;
+            width: 100%;
+            box-shadow: 0 4px 10px rgba(255, 59, 59, 0.5); 
+        }
+        
+        .red-button:hover {
+            background: linear-gradient(135deg, #ff0000, #ff4d4d); 
+        }
+
+        .red-button:disabled {
+            background: linear-gradient(135deg, #b0b0b0, #d4d4d4);
+                color: #888;
+                cursor: not-allowed;
+                box-shadow: none;
+                transform: none;
         }    
-	
-	/* .flash-form, .boot-form, .rboot-flash-form, .command-form { */
-	/*     display: flex; */
-	/*     flex-direction: column; */
-	/*     align-items: center; /* Center the form horizontally */
-	/*     width: 100%; /* Full width for the form */
-	/* } */
-	
-	input[type="file"],
-	input[type="text"], 
-	select {
-	    text-align: center; /* Center align text inside input fields */
-	    width: 100%; /* Use full width of the container */
-	    max-width: 600px; /* Set a max width for better appearance */
-	    padding: 15px 20px;
-	    margin: 10px 0; /* Vertical spacing between inputs */
-	    border-radius: 20px;
-	    border: none;
-	    box-sizing: border-box; /* Ensure padding and borders are included in the width */
-	    background-color: #ffffff;
-	    background: linear-gradient(135deg, #333, #444); /* Gradient background */
-	    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-	    transition: all 0.3s ease;
-	    -webkit-appearance: none; /* Remove default styling */
-	    -moz-appearance: none; /* Remove default styling */
-	    appearance: none; /* Remove default styling */
-	    background-color: #444;
-	    font-size: 14px;
-	    font-weight: bold;
-	    color: white;
-	}
-	
-	input[type="file"] {
-	    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
-	    transition: all 0.3s ease;
-	    -webkit-appearance: none; /* Remove default styling */
-	    -moz-appearance: none; /* Remove default styling */
-	    appearance: none; /* Remove default styling */
-	}
-	
-	/* select { */
-	/*     text-align: center; /* Center align text inside select fields */
-	/*     width: 100%; */
-	/*     padding: 15px 20px; */
-	/*     margin: 10px 0; */
-	/*     border-radius: 20px; */
-	/*     border: none; */
-	/*     background-color: #ffffff; */
-	/*     background: linear-gradient(135deg, #333, #444); /* Gradient background */
-	/*     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2); */
-	/*     transition: all 0.3s ease; */
-	/*     -webkit-appearance: none; /* Remove default styling */
-	/*     -moz-appearance: none; /* Remove default styling */
-	/*     appearance: none; /* Remove default styling */
-	/*     background-color: #444; */
-	/*     font-size: 14px; */
-	/*     font-weight: bold; */
-	/*     color: white; */
-	/* } */
-	
-	label {
-	    font-weight: bold;
-	    display: block;
-	    margin-bottom: 12px;
-	    font-size: 19px;
-	    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
-	}
-	
-	label2 {
-	    font-weight: bold;
-	    display: block;
-	    margin-bottom: 6px;
-	    margin-top: 8px;
-	    font-size: 18px;
-	    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
-	}
-	
-	.progress-container {
-	    width: 100%;
-	    height: 30px;
-	    background-color: #f3f3f3;
-	    border-radius: 15px;
-	    overflow: hidden;
-	    margin-top: 10px;
-	    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-	    display: none; /* Initially hidden */
-	}
-	
-	.progress-bar {
-	    height: 100%;
-	    width: 0%;
-	    background-color: #4caf50;
-	    transition: width 0.5s ease;
-	    border-radius: 15px;
-	}
-	
-	.status-field {
-	    font-weight: bold;
-	    display: block;
-	    margin-bottom: 10px;
-	    margin-top: 1px;
-	    font-size: 20px;
-	    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
-	}
-	
-	pre.result-field {
-	    padding: 20px 20px 20px; /* Adjust bottom padding */
-	    border-radius: 15px;
-	    overflow-y: auto; 
-	    overflow-x: hidden; /* Prevent horizontal overflow */
-	    max-height: 200px; 
-	    border: none;
-	    background-color: #ffffff;
-	    background: linear-gradient(135deg, #333, #444); /* Gradient background */
-	    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-	    width: 90%; 
-	    margin-top: 0; 
-	    position: relative; 
-	    color: white;
-	    white-space: pre-wrap; /* Preserve whitespace and wrap text */
-	    word-wrap: break-word; /* Allow long words to break to the next line */
-	}
-	
-	/* Scrollbar styling */
-	pre.result-field::-webkit-scrollbar {
-	    width: 12px; 
-	    background: transparent; 
-	}
-	
-	pre.result-field::-webkit-scrollbar-thumb {
-	    background: rgba(0, 0, 0, 0.5); 
-	    border-radius: 10px; 
-	    border: 3px solid transparent; 
-	    background-clip: padding-box; 
-	    height: 50px; /* Set a fixed height for the scrollbar thumb */
-	    margin: 10px 0; /* Add top and bottom margin */
-	}
-	
-	pre.result-field::-webkit-scrollbar-thumb:hover {
-	    background: rgba(0, 0, 0, 0.7);
-	}
-	
-	#progress-overlay {
-	    position: fixed;
-	    top: 0;
-	    left: 0;
-	    right: 0;
-	    bottom: 0;
-	    background-color: rgba(0, 0, 0, 0.7);
-	    display: none; /* Hidden initially */
-	    justify-content: center;
-	    align-items: center;
-	    z-index: 1000; /* Bring it above everything */
-	}
-	
-	#progress-overlay.active {
-	    display: flex;
-	}
-	
-	#progress-message {
-	    color: white;
-	    font-size: 24px;
-	    text-align: center;
-	    padding: 20px;
-	    background-color: rgba(0, 0, 0, 0.8);
-	    border-radius: 10px;
-	    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-	    animation: pulse 1.5s infinite;
-	}
-	
-	@keyframes pulse {
-	    0% {
-	        transform: scale(1);
-	    }
-	    50% {
-	        transform: scale(1.05);
-	    }
-	    100% {
-	        transform: scale(1);
-	    }
-	}
-	
-	/* Neumorphic Buttons */
-	.rboot-button {
-	    background-color: #007bff;
-	    color: white;
-	    border: none;
-	    padding: 15px 25px;
-	    cursor: pointer;
-	    border-radius: 20px;
-	    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.15), -4px -4px 10px rgba(255, 255, 255, 0.7);
-	    transition: box-shadow 0.3s, transform 0.2s;
-	}
-	
-	.rboot-button:hover {
-	    background-color: #0056b3;
-	    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15), -2px -2px 6px rgba(255, 255, 255, 0.7);
-	    transform: translateY(-3px);
-	}
-	
-	/* Progress Bar */
-	.rboot-progress-container {
-	    width: 100%;
-	    height: 30px;
-	    background-color: #f3f3f3;
-	    border-radius: 15px;
-	    overflow: hidden;
-	    margin-top: 10px;
-	    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-	    display: none; /* Initially hidden */
-	}
-	
-	.rboot-progress-bar {
-	    height: 100%;
-	    width: 0%;
-	    background-color: #4caf50;
-	    transition: width 0.5s ease;
-	    border-radius: 15px;
-	}
-	
-	.switchx {
-	    font-size: 17px;
-	    position: absolute;
-	    top: 7px;
-	    right: 7px;
-	    display: inline-block;
-	    width: 40px;
-	    height: 22px;
-	}
-	
-	.switchx input {
-	    opacity: 0;
-	    width: 0;
-	    height: 0;
-	}
+        
+        input[type="file"],
+        input[type="text"], 
+        select {
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+            padding: 15px 20px;
+            margin: 10px 0; 
+            border-radius: 20px;
+            border: none;
+            box-sizing: border-box;
+            background: linear-gradient(135deg, #333, #444);
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none; 
+            background-color: #444;
+            font-size: 14px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        input[type="file"] {
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none; 
+        }
 
-	.slider {
-	    position: absolute;
-	    cursor: pointer;
-	    top: 0;
-	    left: 0;
-	    right: 0;
-	    bottom: 0;
-	    background: linear-gradient(135deg, #3a3f44, #50575d); /* Dark mode background */
-	    transition: 0.4s;
-	    border-radius: 15px;
-	    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 0.2);
-	}
-	
-	.slider:before {
-	    position: absolute;
-	    content: "";
-	    height: 18px;
-	    width: 18px;
-	    border-radius: 50%;
-	    left: 2px;
-	    bottom: 2px;
-	    z-index: 2;
-	    background-color: #e8e8e8; /* White knob */
-	    transition: 0.4s;
-	    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.3);
-	}
-	
-	/* Adjusted sun icon for smaller size */
-	.sun svg {
-	    position: absolute;
-	    top: 4px; /* Adjusted position */
-	    left: 4px; /* Move sun to the left */
-	    z-index: 1;
-	    width: 14px; /* Smaller size */
-	    height: 14px; /* Smaller size */
-	}
-	
-	/* Adjusted moon icon for smaller size */
-	.moon svg {
-	    fill: #73C0FC;
-	    position: absolute;
-	    top: 4px; /* Adjusted position */
-	    left: 24px; /* Adjusted to fit smaller toggle */
-	    z-index: 1;
-	    width: 14px; /* Smaller size */
-	    height: 14px; /* Smaller size */
-	}
-	
-	/* Light mode when the switch is checked */
-	input:checked + .slider {
-	    background: linear-gradient(135deg, #e0e6ed, #c8d0d8); /* Light mode gradient */
-	    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.1);
-	}
-	
-	input:checked + .slider:before {
-	    background-color: #ffffff; /* Knob in light mode */
-	    transform: translateX(18px);
-	    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.2);
-	}
-	
-	.inputx:focus + .slider {
-	    box-shadow: 0 0 1px #183153;
-	}
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 12px;
+            font-size: 19px;
+            text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        label2 {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 6px;
+            margin-top: 8px;
+            font-size: 18px;
+            text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 30px;
+            background-color: #f3f3f3;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-top: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            display: none; 
+        }
+        
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: #4caf50;
+            transition: width 0.5s ease;
+            border-radius: 15px;
+        }
+        
+        .status-field {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+            margin-top: 1px;
+            font-size: 20px;
+            text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        pre.result-field {
+            background: linear-gradient(135deg, #333, #444); 
+            padding: 20px 20px 20px;
+            border-radius: 15px;
+            overflow-y: auto; 
+            overflow-x: hidden;
+            max-height: 200px; 
+            border: none;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+            width: 90%; 
+            margin-top: 0; 
+            position: relative; 
+            color: white;
+            white-space: pre-wrap; 
+            word-wrap: break-word; 
+        }
+        
+        pre.result-field::-webkit-scrollbar {
+            width: 12px; 
+            background: transparent; 
+        }
+        
+        pre.result-field::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.5); 
+            border-radius: 10px; 
+            border: 3px solid transparent; 
+            background-clip: padding-box; 
+            height: 50px; 
+            margin: 10px 0; 
+        }
+        
+        pre.result-field::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.7);
+        }
+        
+        #progress-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none; 
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; 
+        }
+        
+        #progress-overlay.active {
+            display: flex;
+        }
+        
+        #progress-message {
+            color: white;
+            font-size: 24px;
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        .rboot-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            cursor: pointer;
+            border-radius: 20px;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.15), -4px -4px 10px rgba(255, 255, 255, 0.7);
+            transition: box-shadow 0.3s, transform 0.2s;
+        }
+        
+        .rboot-button:hover {
+            background-color: #0056b3;
+            box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15), -2px -2px 6px rgba(255, 255, 255, 0.7);
+            transform: translateY(-3px);
+        }
+        
+        .rboot-progress-container {
+            width: 100%;
+            height: 30px;
+            background-color: #f3f3f3;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-top: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            display: none; 
+        }
+        
+        .rboot-progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: #4caf50;
+            transition: width 0.5s ease;
+            border-radius: 15px;
+        }
+        
+        .switchx {
+            font-size: 17px;
+            position: absolute;
+            top: 7px;
+            right: 7px;
+            display: inline-block;
+            width: 40px;
+            height: 22px;
+        }
+        
+        .switchx input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
 
-	.animated-button img {
-	    transition: transform 0.3s ease, opacity 0.3s ease;
-	}
-	
-	.animated-button:hover img {
-	    transform: scale(1.1);
-	    opacity: 0.9; 
-	}
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #3a3f44, #50575d);
+            transition: 0.4s;
+            border-radius: 15px;
+            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 0.2);
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            border-radius: 50%;
+            left: 2px;
+            bottom: 2px;
+            z-index: 2;
+            background-color: #e8e8e8; 
+            transition: 0.4s;
+            box-shadow: 0 3px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .sun svg {
+            position: absolute;
+            top: 4px; 
+            left: 4px; 
+            z-index: 1;
+            width: 14px;
+            height: 14px;
+        }
+        
+        .moon svg {
+            fill: #73C0FC;
+            position: absolute;
+            top: 4px;
+            left: 24px; 
+            z-index: 1;
+            width: 14px;
+            height: 14px; 
+        }
+        
+        input:checked + .slider {
+            background: linear-gradient(135deg, #e0e6ed, #c8d0d8);
+            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        input:checked + .slider:before {
+            background-color: #ffffff; 
+            transform: translateX(18px);
+            box-shadow: 0 3px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .inputx:focus + .slider {
+            box-shadow: 0 0 1px #183153;
+        }
 
-	.chicken {
+        .animated-button img {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        
+        .animated-button:hover img {
+            transform: scale(1.1);
+            opacity: 0.9; 
+        }
+
+        .chicken {
             position: absolute;
             width: 80px;
             height: 80px;
@@ -600,108 +562,97 @@
             transition: transform 0.2s ease, opacity 2s ease;
         }
 
-	/* Scrollable container styling for the table */
-	.file-table-container {
-	    max-height: 200px; /* Set a max height for scrolling */
-	    overflow-y: auto; /* Enable vertical scrolling */
-	    overflow-x: auto; /* Enable horizontal scrolling */
-	    margin: 20px 0;
-	    border-radius: 15px; /* Rounded corners */
-	    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Modern shadow */
-	    background: linear-gradient(135deg, #333, #444); /* Gradient background */
-	    width: 100%; /* Full width inside the container */
-	    margin: 0 auto; /* Center the container horizontally */
-	}
-	
-	/* Table styling */
-	.file-table {
-	    width: 100%; /* Full width inside the container */
-	    border-collapse: collapse; /* Remove gaps between cells */
-	    text-align: center; /* Center text horizontally in each cell */
-	    color: white; /* Text color */
-	    font-family: 'Arial', sans-serif; /* Modern, clean font */
-	    table-layout: fixed; /* Fix table layout to handle overflow properly */
-	    margin: 0; /* Remove any margin from the table */
-	}
-	
-	/* Header styling */
-	.file-table th {
-	    position: sticky;
-	    top: 0; /* Sticky headers */
-	    background: rgba(0, 0, 0, 0.02); /* Subtle dark overlay */
-	    color: white; /* Dark text color */
-	    font-weight: bold;
-	    padding: 10px;
-	    border-bottom: 1px solid rgba(51, 51, 51, 0.3); 
-	    word-wrap: break-word; /* Break words in header */
-	    white-space: normal; /* Allow wrapping in header */
-	}
-	
-	/* Row styling */
-	.file-table td {
-	    padding: 10px;
-	    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-	    color: white;
-	    overflow: auto; /* Allow scrolling within individual cells */
-	    white-space: nowrap; /* Keep text in a single line */
-	    word-wrap: break-word; /* Allow wrapping within the cell */
-	    max-width: 200px; /* Set a max width for each cell */
-	}
-	
-	/* Custom Scrollbar Styling */
-	.file-table td::-webkit-scrollbar {
-	    width: 8px; /* Adjust the width of the scrollbar */
-	    height: 8px; /* Adjust the height for horizontal scrollbar */
-	}
-	
-	/* Track (background area) styling */
-	.file-table td::-webkit-scrollbar-track {
-	    background: transparent; /* Make the scrollbar track transparent */
-	}
-	
-	/* Thumb (scroll handle) styling */
-	.file-table td::-webkit-scrollbar-thumb {
-	    background: #191919; /* Subtle dark color for the thumb */
-	    border-radius: 10px; /* Rounded corners for the thumb */
-	    border: 2px solid transparent; /* Add space around the thumb */
-	    background-clip: padding-box; /* Ensure the thumb stays within its border */
-	}
-	
-	/* Hover effect for the thumb */
-	.file-table td::-webkit-scrollbar-thumb:hover {
-	    background: rgba(0, 0, 0, 0.3); /* Darken the thumb slightly on hover */
-	}
-	
-	/* Hover effect for rows */
-	.file-table tbody tr:hover {
-	    background: rgba(0, 0, 0, 0.05); /* Highlight on hover */
-	    cursor: pointer; /* Pointer cursor */
-	}
-	
-	/* Editable cell styling */
-	.file-table td.editable-partition {
-	    background: #444444; /* Highlight editable cells */
-	    cursor: text; /* Text cursor */
-	}
-	
-	/* Scrollbar styling */
-	.file-table-container::-webkit-scrollbar {
-	    width: 12px;
-	    background: transparent;
-	}
-	
-	.file-table-container::-webkit-scrollbar-thumb {
-	    background: rgba(0, 0, 0, 0.5); /* Dark scrollbar thumb */
-	    border-radius: 10px; /* Rounded corners */
-	    border: 3px solid transparent;
-	    background-clip: padding-box;
-	}
-	
-	.file-table-container::-webkit-scrollbar-thumb:hover {
-	    background: rgba(0, 0, 0, 0.7); /* Darker thumb on hover */
-	}
-
-</style>
+        .file-table-container {
+            max-height: 200px;
+            overflow-y: auto; 
+            overflow-x: auto; 
+            margin: 20px 0;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(135deg, #333, #444); 
+            width: 100%; 
+            margin: 0 auto; 
+        }
+        
+        .file-table {
+            width: 100%; 
+            border-collapse: collapse; 
+            text-align: center; 
+            color: white;
+            font-family: 'Arial', sans-serif; 
+            table-layout: fixed;
+            margin: 0; 
+        }
+        
+        .file-table th {
+            position: sticky;
+            top: 0;
+            background: rgba(0, 0, 0, 0.02); 
+            color: white;
+            font-weight: bold;
+            padding: 10px;
+            border-bottom: 1px solid rgba(51, 51, 51, 0.3); 
+            word-wrap: break-word; 
+            white-space: normal;
+        }
+        
+        .file-table td {
+            padding: 10px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            color: white;
+            overflow: auto; 
+            white-space: nowrap;
+            word-wrap: break-word; 
+            max-width: 200px; 
+        }
+        
+        .file-table td::-webkit-scrollbar {
+            width: 8px; 
+            height: 8px; 
+        }
+        
+        .file-table td::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .file-table td::-webkit-scrollbar-thumb {
+            background: #191919; 
+            border-radius: 10px; 
+            border: 2px solid transparent;
+            background-clip: padding-box; 
+        }
+        
+        .file-table td::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.3); 
+        }
+        
+        .file-table tbody tr:hover {
+            background: rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+        }
+        
+        .file-table td.editable-partition {
+            background: #444444; 
+            cursor: text; 
+        }
+        
+        .file-table-container::-webkit-scrollbar {
+            width: 12px;
+            background: transparent;
+        }
+        
+        .file-table-container::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.5); 
+            border-radius: 10px; 
+            border: 3px solid transparent;
+            background-clip: padding-box;
+        }
+        
+        .file-table-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.7);
+        }
+    </style>
 </head>
 <body>
     <h1 class="title">
