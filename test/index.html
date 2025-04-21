@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="../dist/fastboot.mjs" type="module"></script>
     <script src="../download.js" type="module"></script>
-    <meta property="og:title" content="Fastboot Tool by ArKT" />
+    <meta property="og:title" content="Web Fastboot Tool by ArKT" />
     <meta property="og:description" content="It can boot Images like recovery and can flash images in any partition" />
     <meta property="og:url" content="https://arkt-7.github.io/nabu/" />
     <meta property="og:type" content="website" />
     <meta name="description" content="It can boot Images like recovery and can flash images in any partition" />
-    <meta name="title" content="Fastboot Tool for flashing/booting/rooting" />
-    <title>Fastboot Tool by ArKT</title>
+    <meta name="title" content="Web Fastboot Tool for flashing/booting/rooting" />
+    <title>Web Fastboot Tool by ArKT</title>
     <link rel="icon" href="https://img.icons8.com/fluency/48/android.png" type="image/png">
-    <style>
+    <style id="light">
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #f0f0f0, #d4e0e5);
@@ -46,24 +46,6 @@
             -webkit-background-clip: text;
             color: transparent;
             animation: textGlow 4s ease-in-out infinite;
-        }
-
-        .title {
-            text-align: center;
-            font-size: 32px;
-            letter-spacing: 0.5px;
-        }
-
-        .text-gradient {
-            background: linear-gradient(135deg, #00d1ff, #0052cc);
-            -webkit-background-clip: text;
-            color: transparent;
-            text-shadow: 
-                0 0 5px rgba(0, 209, 255, 0.7), 
-                0 0 10px rgba(0, 209, 255, 0.5), 
-                0 0 15px rgba(0, 209, 255, 0.3), 
-                0 0 20px rgba(0, 209, 255, 0.2);
-            animation: textGlow 2s ease-in-out infinite;
         }
 
         .subtitle {
@@ -126,6 +108,402 @@
                 10px -10px 30px rgba(255, 158, 207, 0.5),
                 -10px 10px 30px rgba(255, 158, 207, 0.5),
                 10px 10px 30px rgba(255, 158, 207, 0.5);
+        }
+
+        input[type="file"],
+        input[type="text"],
+        select {
+            text-align: center; 
+            width: 100%; 
+            max-width: 600px; 
+            padding: 15px 20px;
+            margin: 10px 0;
+            border-radius: 20px;
+            border: none;
+            box-sizing: border-box; 
+            background: linear-gradient(135deg, #f0f4f8, #e2e8f0); 
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.08); 
+            transition: all 0.3s ease;
+            -webkit-appearance: none; 
+            -moz-appearance: none; 
+            appearance: none; 
+            font-size: 14px;
+            font-weight: bold;
+            color: #333; 
+        }
+        
+        pre.result-field {
+            background: linear-gradient(135deg, #f0f4f8, #e2e8f0); 
+            padding: 20px 20px 20px; 
+            border-radius: 15px;
+            overflow-y: auto; 
+            overflow-x: hidden;
+            max-height: 200px; 
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 90%; 
+            margin-top: 0; 
+            position: relative; 
+            color: black;
+            white-space: pre-wrap;
+            word-wrap: break-word; 
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #e0e6ed, #c8d0d8); 
+            transition: 0.4s;
+            border-radius: 15px; 
+            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.1); 
+        }
+        
+        .sun svg {
+            position: absolute;
+            top: 4px;
+            left: 24px; 
+            z-index: 1;
+            width: 14px; 
+            height: 14px; 
+        }
+        
+        .moon svg {
+            fill: #73C0FC;
+            position: absolute;
+            top: 4px;
+            left: 4px; 
+            z-index: 1;
+            width: 14px;
+            height: 14px; 
+        }
+        
+        input:checked + .slider {
+            background: linear-gradient(135deg, #3a3f44, #50575d); 
+            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 0.2);
+        }
+        
+        input:checked + .slider:before {
+            background-color: #ffffff; 
+            transform: translateX(18px);
+            box-shadow: 0 3px 4px rgba(0, 0, 0, 0.3); 
+        }
+
+        .file-table-container {
+            max-height: 200px;
+            overflow-y: auto; 
+            overflow-x: auto;
+            margin: 20px 0;
+            border: 1px solid #ccc;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
+            background: linear-gradient(135deg, #f0f4f8, #e2e8f0);
+            width: 100%; 
+            margin: 0 auto; 
+        }
+        
+        .file-table {
+            width: 100%;
+            border-collapse: collapse; 
+            text-align: center;
+            color: black;
+            font-family: 'Arial', sans-serif;
+            table-layout: fixed;
+            margin: 0;
+        }
+        
+        .file-table th {
+            position: sticky;
+            top: 0; 
+            background: rgba(0, 0, 0, 0.02); 
+            color: black; 
+            font-weight: bold;
+            padding: 10px;
+            border-bottom: 2px solid #ccc;
+            word-wrap: break-word; 
+            white-space: normal;
+        }
+        
+        .file-table td {
+            padding: 10px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            color: black;
+            overflow: auto; 
+            white-space: nowrap; 
+            word-wrap: break-word; 
+            max-width: 200px;
+        }
+        
+        .file-table td::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            border: 2px solid transparent;
+            background-clip: padding-box; 
+        }
+        
+        .file-table td.editable-partition {
+            background: #eef7ff; 
+            cursor: text;
+        }
+    </style>
+    <style id="dark">
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1c1f24, #18191A);    
+            color: #e8eaed;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            min-height: 100vh;
+            background-color: #1c1f24;
+        }
+
+        h1 {
+            color: #4a4a4a;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 38px;
+            text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #f8f9fa;
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 24px;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #00d1ff, #0052cc);
+            -webkit-background-clip: text;
+            color: transparent;
+            animation: textGlow 4s ease-in-out infinite;
+        }
+
+        .subtitle {
+            color: #f8f9fa;
+            text-align: center;
+            font-size: 24px;
+            margin-top: -5px;
+        }
+
+        @keyframes textGlow {
+            0%, 100% {
+                text-shadow: 
+                    0 0 8px rgba(0, 82, 204, 0.8), 
+                    0 0 20px rgba(0, 209, 255, 0.5);
+            }
+            50% {
+                text-shadow: 
+                    0 0 16px rgba(0, 82, 204, 0.8), 
+                    0 0 30px rgba(0, 209, 255, 0.5);
+            }
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; 
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            margin: 30px 0;
+            background: linear-gradient(135deg, #1c1f24, #3a3f44);
+            background-size: 200% 200%; 
+            border-radius: 20px;
+            position: relative;
+            text-align: center;
+            overflow: hidden;
+            animation: backgroundMove 20s linear infinite; 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: linear-gradient(45deg, #ff6ec4, #7873f5, #3a1c71, #ff6ec4);
+            background-size: 400% 400%;
+            border-radius: 20px;
+            z-index: -1;
+            filter: blur(10px);
+            opacity: 0.8;
+            animation: glow 10s ease infinite;
+            box-shadow: 
+                0 0 20px 10px rgba(255, 110, 196, 0.5),   
+                0 0 40px 10px rgba(255, 110, 196, 0.3) inset,
+                -10px -10px 30px rgba(255, 110, 196, 0.8), 
+                10px -10px 30px rgba(255, 110, 196, 0.8),  
+                -10px 10px 30px rgba(255, 110, 196, 0.8),
+                10px 10px 30px rgba(255, 110, 196, 0.8);  
+        }
+        
+        input[type="file"],
+        input[type="text"], 
+        select {
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+            padding: 15px 20px;
+            margin: 10px 0; 
+            border-radius: 20px;
+            border: none;
+            box-sizing: border-box;
+            background: linear-gradient(135deg, #333, #444);
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none; 
+            background-color: #444;
+            font-size: 14px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        pre.result-field {
+            background: linear-gradient(135deg, #333, #444); 
+            padding: 20px 20px 20px;
+            border-radius: 15px;
+            overflow-y: auto; 
+            overflow-x: hidden;
+            max-height: 200px; 
+            border: none;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+            width: 90%; 
+            margin-top: 0; 
+            position: relative; 
+            color: white;
+            white-space: pre-wrap; 
+            word-wrap: break-word; 
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #3a3f44, #50575d);
+            transition: 0.4s;
+            border-radius: 15px;
+            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 0.2);
+        }
+        
+        .sun svg {
+            position: absolute;
+            top: 4px; 
+            left: 4px; 
+            z-index: 1;
+            width: 14px;
+            height: 14px;
+        }
+        
+        .moon svg {
+            fill: #73C0FC;
+            position: absolute;
+            top: 4px;
+            left: 24px; 
+            z-index: 1;
+            width: 14px;
+            height: 14px; 
+        }
+        
+        input:checked + .slider {
+            background: linear-gradient(135deg, #e0e6ed, #c8d0d8);
+            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        input:checked + .slider:before {
+            background-color: #ffffff; 
+            transform: translateX(18px);
+            box-shadow: 0 3px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .file-table-container {
+            max-height: 200px;
+            overflow-y: auto; 
+            overflow-x: auto; 
+            margin: 20px 0;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(135deg, #333, #444); 
+            width: 100%; 
+            margin: 0 auto; 
+        }
+        
+        .file-table {
+            width: 100%; 
+            border-collapse: collapse; 
+            text-align: center; 
+            color: white;
+            font-family: 'Arial', sans-serif; 
+            table-layout: fixed;
+            margin: 0; 
+        }
+        
+        .file-table th {
+            position: sticky;
+            top: 0;
+            background: rgba(0, 0, 0, 0.02); 
+            color: white;
+            font-weight: bold;
+            padding: 10px;
+            border-bottom: 1px solid rgba(51, 51, 51, 0.3); 
+            word-wrap: break-word; 
+            white-space: normal;
+        }
+        
+        .file-table td {
+            padding: 10px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            color: white;
+            overflow: auto; 
+            white-space: nowrap;
+            word-wrap: break-word; 
+            max-width: 200px; 
+        }
+        
+        .file-table td::-webkit-scrollbar-thumb {
+            background: #191919; 
+            border-radius: 10px; 
+            border: 2px solid transparent;
+            background-clip: padding-box; 
+        }
+        
+        .file-table td.editable-partition {
+            background: #444444; 
+            cursor: text; 
+        }
+    </style>
+    <style>
+
+        .title {
+            text-align: center;
+            font-size: 32px;
+            letter-spacing: 0.5px;
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #00d1ff, #0052cc);
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 
+                0 0 5px rgba(0, 209, 255, 0.7), 
+                0 0 10px rgba(0, 209, 255, 0.5), 
+                0 0 15px rgba(0, 209, 255, 0.3), 
+                0 0 20px rgba(0, 209, 255, 0.2);
+            animation: textGlow 2s ease-in-out infinite;
         }
 
         @keyframes glow {
@@ -281,29 +659,6 @@
                 transform: none;
         }
 
-        
-        input[type="file"],
-        input[type="text"],
-        select {
-            text-align: center; 
-            width: 100%; 
-            max-width: 600px; 
-            padding: 15px 20px;
-            margin: 10px 0;
-            border-radius: 20px;
-            border: none;
-            box-sizing: border-box; 
-            background: linear-gradient(135deg, #f0f4f8, #e2e8f0); 
-            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.08); 
-            transition: all 0.3s ease;
-            -webkit-appearance: none; 
-            -moz-appearance: none; 
-            appearance: none; 
-            font-size: 14px;
-            font-weight: bold;
-            color: #333; 
-        }
-        
         input[type="file"] {
             box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05); 
             transition: all 0.3s ease;
@@ -317,15 +672,6 @@
             display: block;
             margin-bottom: 12px;
             font-size: 19px;
-            text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
-        }
-        
-        label2 {
-            font-weight: bold;
-            display: block;
-            margin-bottom: 6px;
-            margin-top: 8px;
-            font-size: 18px;
             text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
         }
         
@@ -356,24 +702,7 @@
             font-size: 20px;
             text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
         }
-        
-        pre.result-field {
-            background: linear-gradient(135deg, #f0f4f8, #e2e8f0); 
-            padding: 20px 20px 20px; 
-            border-radius: 15px;
-            overflow-y: auto; 
-            overflow-x: hidden;
-            max-height: 200px; 
-            border: 1px solid #ccc;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            width: 90%; 
-            margin-top: 0; 
-            position: relative; 
-            color: black;
-            white-space: pre-wrap;
-            word-wrap: break-word; 
-        }
-        
+
         pre.result-field::-webkit-scrollbar {
             width: 12px; 
             background: transparent; 
@@ -467,7 +796,7 @@
             transition: width 0.5s ease;
             border-radius: 15px;
         }
-        
+
         .switchx {
             font-size: 17px;
             position: absolute;
@@ -483,64 +812,21 @@
             width: 0;
             height: 0;
         }
-        
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, #e0e6ed, #c8d0d8); 
-            transition: 0.4s;
-            border-radius: 15px; 
-            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.1); 
-        }
-        
+
         .slider:before {
             position: absolute;
             content: "";
             height: 18px;
-            width: 18px; 
-            border-radius: 50%; 
+            width: 18px;
+            border-radius: 50%;
             left: 2px;
             bottom: 2px;
             z-index: 2;
-            background-color: #e8e8e8;
+            background-color: #e8e8e8; 
             transition: 0.4s;
-            box-shadow: 0 3px 4px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 3px 4px rgba(0, 0, 0, 0.3);
         }
-        
-        .sun svg {
-            position: absolute;
-            top: 4px;
-            left: 24px; 
-            z-index: 1;
-            width: 14px; 
-            height: 14px; 
-        }
-        
-        .moon svg {
-            fill: #73C0FC;
-            position: absolute;
-            top: 4px;
-            left: 4px; 
-            z-index: 1;
-            width: 14px;
-            height: 14px; 
-        }
-        
-        input:checked + .slider {
-            background: linear-gradient(135deg, #3a3f44, #50575d); 
-            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 0.2);
-        }
-        
-        input:checked + .slider:before {
-            background-color: #ffffff; 
-            transform: translateX(18px);
-            box-shadow: 0 3px 4px rgba(0, 0, 0, 0.3); 
-        }
-        
+
         .inputx:focus + .slider {
             box-shadow: 0 0 1px #183153;
         }
@@ -562,51 +848,6 @@
             transition: transform 0.2s ease, opacity 2s ease;
         }
 
-        .file-table-container {
-            max-height: 200px;
-            overflow-y: auto; 
-            overflow-x: auto;
-            margin: 20px 0;
-            border: 1px solid #ccc;
-            border-radius: 15px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
-            background: linear-gradient(135deg, #f0f4f8, #e2e8f0);
-            width: 100%; 
-            margin: 0 auto; 
-        }
-        
-        .file-table {
-            width: 100%;
-            border-collapse: collapse; 
-            text-align: center;
-            color: black;
-            font-family: 'Arial', sans-serif;
-            table-layout: fixed;
-            margin: 0;
-        }
-        
-        .file-table th {
-            position: sticky;
-            top: 0; 
-            background: rgba(0, 0, 0, 0.02); 
-            color: black; 
-            font-weight: bold;
-            padding: 10px;
-            border-bottom: 2px solid #ccc;
-            word-wrap: break-word; 
-            white-space: normal;
-        }
-        
-        .file-table td {
-            padding: 10px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-            color: black;
-            overflow: auto; 
-            white-space: nowrap; 
-            word-wrap: break-word; 
-            max-width: 200px;
-        }
-        
         .file-table td::-webkit-scrollbar {
             width: 8px; 
             height: 8px; 
@@ -615,14 +856,7 @@
         .file-table td::-webkit-scrollbar-track {
             background: transparent;
         }
-        
-        .file-table td::-webkit-scrollbar-thumb {
-            background: rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            border: 2px solid transparent;
-            background-clip: padding-box; 
-        }
-        
+
         .file-table td::-webkit-scrollbar-thumb:hover {
             background: rgba(0, 0, 0, 0.3);
         }
@@ -631,12 +865,7 @@
             background: rgba(0, 0, 0, 0.05);
             cursor: pointer; 
         }
-        
-        .file-table td.editable-partition {
-            background: #eef7ff; 
-            cursor: text;
-        }
-        
+
         .file-table-container::-webkit-scrollbar {
             width: 12px;
             background: transparent;
@@ -652,11 +881,58 @@
         .file-table-container::-webkit-scrollbar-thumb:hover {
             background: rgba(0, 0, 0, 0.7);
         }
+
+        #theme-overlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+        z-index: 9999;
+        overflow: hidden;
+        }
+
+        .ripple-circle {
+        position: absolute;
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        transform: scale(0);
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.5), transparent 70%);
+        animation: rippleAnim 0.8s ease-out forwards;
+        backdrop-filter: blur(20px);
+        opacity: 1;
+        pointer-events: none;
+        z-index: 9999;
+        }
+
+        .toggle-animate {
+            animation: jumpAnim 0.5s ease-out;
+        }
+
+        @keyframes jumpAnim {
+        0% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-15px);
+        }
+        100% {
+            transform: translateY(0);
+        }
+        }
+
+        @keyframes rippleAnim {
+        to {
+            transform: scale(10);
+            opacity: 0;
+        }
+        }
     </style>
 </head>
 <body>
     <h1 class="title">
-        <span class="text-gradient">Nabu Fastboot Tool</span>
+        <span class="text-gradient">Web Fastboot Tool</span>
     </h1>
     <h2 class="subtitle">By °⊥⋊ɹ∀° :)</h2>
 
@@ -665,7 +941,7 @@
     </div>
 
     <div class="container">
-        <label class="switchx">
+         <label class="switchx">
             <span class="sun">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <g fill="#ffd43b">
@@ -685,6 +961,8 @@
         <p class="status-field">Not connected in Fastboot</p>
         <button class="button connect-button">Connect device Fastboot</button>
     </div>
+
+    <div id="theme-overlay"></div>
 
     <div class="container">
         <form class="command-form">
@@ -762,7 +1040,7 @@
             </form>
         </div>
     </div>
-
+       
     <div class="container">
         <form class="rboot-flash-form">
             <label for="rboot-flash-file">Flash any rooted or normal boot image</label>
@@ -905,7 +1183,7 @@
                 <option value="magisk-13-0-4-taiwan">MIUI 13.0.4 (Taiwan)</option>
                 <option value="magisk-13-0-3-taiwan">MIUI 13.0.3 (Taiwan)</option>
                 <option value="magisk-13-0-2-taiwan">MIUI 13.0.2 (Taiwan)</option>
-            </select>
+	    </select>
 	    <input type="submit" value="Flash" class="button" />
 	    <div class="rboot-progress-container" style="display:none;">
 		<div class="rboot-progress-bar" style="width:0%;"></div>
@@ -936,7 +1214,6 @@
             </a>
         </div>
     </div>
-
     <script type="module">
         import * as fastboot from "../dist/fastboot.mjs";
         import { BlobStore } from "../download.js";
@@ -945,34 +1222,68 @@
         window.device = device;
         let blobStore = new BlobStore();
 
+        window.onload = function () {
+            const toggleInput = document.getElementById('toggle-input');
+            const lightStyle = document.getElementById('light');
+            const darkStyle = document.getElementById('dark');
+            const overlay = document.getElementById('theme-overlay');
+
+            // Theme state tracker: "dark" by default
+            let currentTheme = 'dark';
+
+            // Initial setup
+            lightStyle.disabled = true;
+            darkStyle.disabled = false;
+            toggleInput.checked = false;
+
+            toggleInput.addEventListener('change', function () {
+                // Get toggle position
+                const rect = toggleInput.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+
+                // Create ripple
+                const ripple = document.createElement('div');
+                ripple.className = 'ripple-circle';
+                ripple.style.left = `${centerX - 75}px`;
+                ripple.style.top = `${centerY - 75}px`;
+                ripple.style.width = ripple.style.height = '150px';
+                ripple.style.transformOrigin = 'center';
+                overlay.appendChild(ripple);
+
+                // Switch theme after ripple starts
+                setTimeout(() => {
+                    if (currentTheme === 'dark') {
+                        // Switch to light
+                        lightStyle.disabled = false;
+                        darkStyle.disabled = true;
+                        currentTheme = 'light';
+                    } else {
+                        // Switch to dark
+                        lightStyle.disabled = true;
+                        darkStyle.disabled = false;
+                        currentTheme = 'dark';
+                    }
+                }, 200);
+
+                // Remove ripple and reset toggle
+                setTimeout(() => {
+                    ripple.remove();
+
+                    // Add jump animation
+                    toggleInput.classList.add('toggle-animate');
+
+                    setTimeout(() => {
+                        // Reset toggle visually and unfocus
+                        toggleInput.checked = false;
+                        toggleInput.blur(); // <--- unfocus the switch
+                        toggleInput.classList.remove('toggle-animate');
+                    }, 100);
+                }, 500);
+            });
+        };
+
         fastboot.setDebugLevel(2);
-
-	    window.onload = function() {
-            const toggleInput = document.getElementById('toggle-input');
-            toggleInput.checked = false;
-        };
-
-        function redirectToUrl() {
-            const toggleInput = document.getElementById('toggle-input');
-
-            setTimeout(() => {
-                window.location.href = "https://arkt-7.github.io/nabu"; 
-            }, 400);
-        }
-
-        const toggleInput = document.getElementById('toggle-input');
-        toggleInput.addEventListener('change', function() {
-            if (this.checked) {
-                redirectToUrl(); 
-            } else {
-                this.checked = false;
-            }
-        });
-
-        window.onbeforeunload = function() {
-            const toggleInput = document.getElementById('toggle-input');
-            toggleInput.checked = false;
-        };
 
         let messageInterval;
         let typingInterval; 
@@ -1125,6 +1436,8 @@
             const formElements = document.querySelectorAll("input, button, select, textarea");
             let rbootPartitionSelect = document.querySelector('.rboot-flash-partition');
             let previousSelectedValue = rbootPartitionSelect ? rbootPartitionSelect.value : null;
+            const fileTable = document.querySelector("#file-table tbody");
+            fileTable.innerHTML = "";
 
             formElements.forEach((element) => {
                 if (element.tagName === "INPUT" && (element.type === "text" || element.type === "file")) {
@@ -1141,56 +1454,60 @@
             }
         }
             
+        let isConnected = false;
+
+        async function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
         async function connectDevice() {
+            if (isConnected) return;
+
             let statusField = document.querySelector(".status-field");
             statusField.textContent = "Connecting...";
 
             try {
                 await device.connect();
+                isConnected = true;
             } catch (error) {
                 statusField.textContent = `Failed to connect to device: ${error.message}`;
-                toggleElements(true); 
+                toggleElements(true);
                 return;
             }
 
-            let product = await device.getVariable("product");
-            let slot = await device.getVariable("current-slot");
-            let serial = await device.getVariable("serialno");
-            let bootloaderStatus = await device.getVariable("unlocked"); 
-            let userdata_chk = await device.getVariable("partition-type:userdata");
-            let win_chk = await device.getVariable("partition-type:win");
-            let esp_chk = await device.getVariable("partition-type:esp"); 
-            let linux_chk = await device.getVariable("partition-type:linux"); 
-            let userdata_size = await device.getVariable("partition-size:userdata");
-            let win_size = await device.getVariable("partition-size:win");
-            let esp_size = await device.getVariable("partition-size:esp");
-            let linux_size = await device.getVariable("partition-size:linux"); 
-            let bootloaderStatusText = bootloaderStatus === "yes" ? "unlocked" : "locked";
+            // Add delays for stability on mobile WebUSB
+            const product = await device.getVariable("product"); await sleep(100);
+            const slot = await device.getVariable("current-slot"); await sleep(100);
+            const serial = await device.getVariable("serialno"); await sleep(100);
+            const bootloaderStatus = await device.getVariable("unlocked"); await sleep(100);
+
+            const userdata_chk = await device.getVariable("partition-type:userdata"); await sleep(50);
+            const win_chk = await device.getVariable("partition-type:win"); await sleep(50);
+            const esp_chk = await device.getVariable("partition-type:esp"); await sleep(50);
+            const linux_chk = await device.getVariable("partition-type:linux"); await sleep(50);
+
+            const userdata_size = await device.getVariable("partition-size:userdata"); await sleep(50);
+            const win_size = await device.getVariable("partition-size:win"); await sleep(50);
+            const esp_size = await device.getVariable("partition-size:esp"); await sleep(50);
+            const linux_size = await device.getVariable("partition-size:linux"); await sleep(50);
+
+            const bootloaderStatusText = bootloaderStatus === "yes" ? "unlocked" : "locked";
 
             let deviceName = "";
             let isNabu = false;
+            const titleText = document.querySelector(".text-gradient");
+
             if (product === "nabu") {
                 deviceName = "Device name : Xiaomi Pad 5";
-                let rbootFlashPartitionSelect = document.querySelector('.rboot-flash-partition');
-                if (rbootFlashPartitionSelect) {
-                    rbootFlashPartitionSelect.value = "boot_ab"; // Select the "Flash to Boot ab (both slots)"
-                }
+                if (titleText) titleText.textContent = "Nabu Fastboot Tool";
             } else if (product === "dm3q") {
                 deviceName = "Device name : Samsung S23 Ultra";
-                isNabu = true; // Device is not nabu
-                // Select the current slot in the rboot-flash-partition select
-                let rbootFlashPartitionSelect = document.querySelector('.rboot-flash-partition');
-                if (rbootFlashPartitionSelect) {
-                    rbootFlashPartitionSelect.value = "boot"; // Select the "Flash to Boot (current slot)" option
-                }
-            } else if (product !== "nabu") {
-                isNabu = true; // Device is not nabu
+                isNabu = true;
+                if (titleText) titleText.textContent = "Web Fastboot Tool";
+            } else {
+                isNabu = true;
                 deviceName = "Device name : IDK LoL 😂";
-                // Select the current slot in the rboot-flash-partition select
-                let rbootFlashPartitionSelect = document.querySelector('.rboot-flash-partition');
-                if (rbootFlashPartitionSelect) {
-                    rbootFlashPartitionSelect.value = "boot"; // Select the "Flash to Boot (current slot)" option
-                }
+                if (titleText) titleText.textContent = "Web Fastboot Tool";
             }
 
             let status = `Connected to : ${product} <br /> Current slot : ${slot} <br /> (serial : ${serial})`;
@@ -1198,10 +1515,10 @@
                 status += `<br />${deviceName}`;
             }
 
-            status += `<br />Bootloader status: ${bootloaderStatusText}`; // Keep Bootloader status without extra spacing
-            
-            // Check partitions availability and sizes
-            let sizeInfo = ''; // Initialize a variable to collect size info
+            status += `<br />Bootloader status: ${bootloaderStatusText}`;
+
+            // Partition size info
+            let sizeInfo = '';
             if (await checkPartition("userdata", userdata_chk, userdata_size)) {
                 sizeInfo += `<p style="margin: 0; margin-top: 5px;">Android Partition : ${getSizeString(userdata_size)}</p>`;
             }
@@ -1214,14 +1531,79 @@
             if (await checkPartition("esp", esp_chk, esp_size)) {
                 sizeInfo += `<p style="margin: 0; margin-bottom: 0px;">ESP Partition : ${getSizeString(esp_size)}</p>`;
             }
-            
+
             if (sizeInfo) {
-                status += `<br />${sizeInfo}`; // Add size info to status only if available
+                status += `<br />${sizeInfo}`;
             }
+
             statusField.innerHTML = status;
-            toggleElements(false, isNabu); 
+            toggleElements(false, isNabu);
+            handleSlotAndBootOptions(slot); // Pass slot to function
+            clearFormElements();
         }
-	
+
+        async function handleSlotAndBootOptions(slot) {
+            const selectElement = document.querySelector(".rboot-flash-partition");
+
+            // Fetch slot if not passed
+            if (!slot) {
+                slot = await device.getVariable("current-slot");
+            }
+
+            // Normalize/trim slot if needed
+            slot = slot?.trim().toLowerCase();
+
+            // Update fileMapping: strip _ab if slot is invalid
+            if (!slot || (slot !== "a" && slot !== "b")) {
+                for (const [file, partition] of Object.entries(fileMapping)) {
+                    if (partition.endsWith("_ab")) {
+                        fileMapping[file] = partition.replace(/_ab$/, "");
+                    }
+                }
+            }
+
+            // Clear previous options
+            selectElement.innerHTML = '';
+
+            // Add slot info (non-selectable)
+            const infoOption = document.createElement("option");
+            infoOption.disabled = true;
+            infoOption.textContent = slot ? `Current slot: ${slot.toUpperCase()}` : "Slot info unavailable";
+            selectElement.appendChild(infoOption);
+
+            // Default prompt option
+            const defaultOption = document.createElement("option");
+            defaultOption.value = "";
+            defaultOption.textContent = "Select boot partition";
+            defaultOption.selected = true;
+            selectElement.appendChild(defaultOption);
+
+            // Always add current-slot flash option
+            const bootOption = document.createElement("option");
+            bootOption.value = "boot";
+            bootOption.textContent = "Flash to Boot (current slot)";
+            selectElement.appendChild(bootOption);
+
+            // Add A/B options if valid slot
+            if (slot === "a" || slot === "b") {
+                const bootAB = document.createElement("option");
+                bootAB.value = "boot_ab";
+                bootAB.textContent = "Flash to Boot ab (both slots)";
+                selectElement.appendChild(bootAB);
+
+                const bootA = document.createElement("option");
+                bootA.value = "boot_a";
+                bootA.textContent = "Flash to Boot A only";
+                selectElement.appendChild(bootA);
+
+                const bootB = document.createElement("option");
+                bootB.value = "boot_b";
+                bootB.textContent = "Flash to Boot B only";
+                selectElement.appendChild(bootB);
+            }
+        }
+
+
         // Function to check a partition's availability
         async function checkPartition(partitionName, partitionChk, partitionSize) {
             return partitionChk; // Return true if the partition is available
@@ -1606,6 +1988,7 @@
             const resultField = document.querySelector(".result-field");
             const fileTable = document.querySelector("#file-table tbody");
             const rows = fileTable.querySelectorAll("tr");
+            let slot = await device.getVariable("current-slot");
 
             const files = Array.from(fileField.files);
             if (files.length === 0) {
@@ -1621,7 +2004,12 @@
             rows.forEach((row, index) => {
                 const fileName = files[index].name.toLowerCase();
                 const partitionCell = row.cells[1];
-                const partition = partitionCell.textContent.trim();
+                let partition = partitionCell.textContent.trim();
+
+                // Added: if slot is null or not a/b, and partition ends with _ab, remove the _ab suffix
+                if ((slot === null || (slot !== "a" && slot !== "b")) && partition.endsWith("_ab")) {
+                    partition = partition.replace(/_ab$/, "");
+                }
 
                 if (!partition || partition === "Enter Partition" || partition === "Enter Partition in the table for multiple files") {
                     partitionCell.textContent = "Enter Partition";
@@ -1646,31 +2034,30 @@
                     const partition = partitions[i];
 
                     // Handle `_AB` logic
-                // Handle `_AB` logic
-            if (partition.endsWith("_ab")) {
-                const partitionA = partition.replace("_ab", "_a");
-                const partitionB = partition.replace("_ab", "_b");
-            
-                // Prepend flashing messages to resultField
-                resultField.textContent = `Flashing ${file.name} to ${partitionA}...\n` + resultField.textContent;
-                await device.flashBlob(partitionA, file, (progress) => {
-                    resultField.textContent = `${partitionA} Progress: ${progress}%\n` + resultField.textContent;
-                });
-                resultField.textContent = `Successfully flashed ${file.name} to ${partitionA}.\n` + resultField.textContent;
-            
-                resultField.textContent = `Flashing ${file.name} to ${partitionB}...\n` + resultField.textContent;
-                await device.flashBlob(partitionB, file, (progress) => {
-                    resultField.textContent = `${partitionB} Progress: ${progress}%\n` + resultField.textContent;
-                });
-                resultField.textContent = `Successfully flashed ${file.name} to ${partitionB}.\n` + resultField.textContent;
-            } else {
-                // Flash normally
-                resultField.textContent = `Flashing ${file.name} to ${partition}...\n` + resultField.textContent;
-                await device.flashBlob(partition, file, (progress) => {
-                    resultField.textContent = `${partition} Progress: ${progress}%\n` + resultField.textContent;
-                });
-                resultField.textContent = `Successfully flashed ${file.name} to ${partition}.\n` + resultField.textContent;
-            }
+                    if (partition.endsWith("_ab")) {
+                        const partitionA = partition.replace("_ab", "_a");
+                        const partitionB = partition.replace("_ab", "_b");
+
+                        // Prepend flashing messages to resultField
+                        resultField.textContent = `Flashing ${file.name} to ${partitionA}...\n` + resultField.textContent;
+                        await device.flashBlob(partitionA, file, (progress) => {
+                            resultField.textContent = `${partitionA} Progress: ${progress}%\n` + resultField.textContent;
+                        });
+                        resultField.textContent = `Successfully flashed ${file.name} to ${partitionA}.\n` + resultField.textContent;
+
+                        resultField.textContent = `Flashing ${file.name} to ${partitionB}...\n` + resultField.textContent;
+                        await device.flashBlob(partitionB, file, (progress) => {
+                            resultField.textContent = `${partitionB} Progress: ${progress}%\n` + resultField.textContent;
+                        });
+                        resultField.textContent = `Successfully flashed ${file.name} to ${partitionB}.\n` + resultField.textContent;
+                    } else {
+                        // Flash normally
+                        resultField.textContent = `Flashing ${file.name} to ${partition}...\n` + resultField.textContent;
+                        await device.flashBlob(partition, file, (progress) => {
+                            resultField.textContent = `${partition} Progress: ${progress}%\n` + resultField.textContent;
+                        });
+                        resultField.textContent = `Successfully flashed ${file.name} to ${partition}.\n` + resultField.textContent;
+                    }
                 }
                 alert("All files flashed successfully!");
             } catch (error) {
