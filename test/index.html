@@ -1490,20 +1490,6 @@
             const bootloaderStatusText = bootloaderStatus === "yes" ? "unlocked" : "locked";
 
             let deviceName = "";
-            let isNabu = false;
-            const titleText = document.querySelector(".text-gradient");
-            if (product === "nabu") {
-                deviceName = "Device name : Xiaomi Pad 5";
-                if (titleText) titleText.textContent = "Nabu Fastboot Tool";
-            } else if (product === "dm3q") {
-                deviceName = "Device name : Samsung S23 Ultra";
-                isNabu = true;
-                if (titleText) titleText.textContent = "Web Fastboot Tool";
-            } else if (product) {
-                isNabu = true;
-                deviceName = "Device name : IDK LoL 😂";
-                if (titleText) titleText.textContent = "Web Fastboot Tool";
-            }
 
             let status = `Connected to : ${product ?? "Unknown"} <br /> Current slot : ${slot ?? "Unavailable"} <br /> (serial : ${serial ?? "Unavailable"})`;
             if (deviceName) {
@@ -1515,7 +1501,6 @@
 
             statusField.innerHTML = status;
             toggleElements(false, isNabu);
-            handleSlotAndBootOptions(slot);
             clearFormElements();
         }
 
