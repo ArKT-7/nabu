@@ -1486,17 +1486,7 @@
 
             // Grab info, all skip-safe
             const product = await getVarOnce("product");
-            const slot = await getVarOnce("current-slot");
-            const serial = await getVarOnce("serialno");
             const bootloaderStatus = await getVarOnce("unlocked");
-            const userdata_chk = await getVarOnce("partition-type:userdata");
-            const win_chk = await getVarOnce("partition-type:win");
-            const esp_chk = await getVarOnce("partition-type:esp");
-            const linux_chk = await getVarOnce("partition-type:linux");
-            const userdata_size = await getVarOnce("partition-size:userdata");
-            const win_size = await getVarOnce("partition-size:win");
-            const esp_size = await getVarOnce("partition-size:esp");
-            const linux_size = await getVarOnce("partition-size:linux");
 
             const bootloaderStatusText = bootloaderStatus === "yes" ? "unlocked" : "locked";
 
@@ -1523,23 +1513,6 @@
 
             status += `<br />Bootloader status: ${bootloaderStatusText}`;
 
-            let sizeInfo = '';
-            if (await checkPartition("userdata", userdata_chk, userdata_size)) {
-                sizeInfo += `<p style="margin: 0; margin-top: 5px;">Android Partition : ${getSizeString(userdata_size)}</p>`;
-            }
-            if (await checkPartition("linux", linux_chk, linux_size)) {
-                sizeInfo += `<p style="margin: 0; margin-bottom: 0px;">Linux Partition : ${getSizeString(linux_size)}</p>`;
-            }
-            if (await checkPartition("win", win_chk, win_size)) {
-                sizeInfo += `<p style="margin: 0; margin-bottom: 0px;">Windows Partition : ${getSizeString(win_size)}</p>`;
-            }
-            if (await checkPartition("esp", esp_chk, esp_size)) {
-                sizeInfo += `<p style="margin: 0; margin-bottom: 0px;">ESP Partition : ${getSizeString(esp_size)}</p>`;
-            }
-
-            if (sizeInfo) {
-                status += `<br />${sizeInfo}`;
-            }
 
             statusField.innerHTML = status;
             toggleElements(false, isNabu);
