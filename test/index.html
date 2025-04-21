@@ -1456,22 +1456,32 @@
             
         let isConnected = false;
 
+      // Sleep helper
         async function sleep(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
         }
 
-        // Timeout-safe version of getVariable
-        async function getVarSafe(name, timeout = 2000) {
-            return Promise.race([
-                device.getVariable(name),
-                new Promise((_, reject) =>
-                    setTimeout(() => reject(new Error(`Timeout waiting for getvar:${name}`)), timeout)
-                )
-            ]);
+        // Retryable version of getVariable with timeout
+        async function getVarRetry(name, maxAttempts = 10, delay = 200, timeout = 2000) {
+            for (let i = 0; i < maxAttempts; i++) {
+                try {
+                    return await Promise.race([
+                        device.getVariable(name),
+                        new Promise((_, reject) =>
+                            setTimeout(() => reject(new Error(`Timeout waiting for getvar:${name}`)), timeout)
+                        )
+                    ]);
+                } catch (e) {
+                    console.warn(`getvar:${name} attempt ${i + 1} failed:`, e.message);
+                    await sleep(delay);
+                }
+            }
+            console.warn(`getvar:${name} failed after ${maxAttempts} attempts.`);
+            return null;
         }
 
         async function connectDevice() {
-            let statusField = document.querySelector(".status-field");
+            const statusField = document.querySelector(".status-field");
             statusField.textContent = "Connecting...";
 
             try {
@@ -1482,26 +1492,19 @@
                 return;
             }
 
-            let product = await getVarSafe("product");
-            let slot;
-            try {
-                slot = await getVarSafe("current-slot");
-            } catch (e) {
-                console.warn("Slot unavailable or slow:", e.message);
-                slot = null;
-            }
-
-            let serial = await getVarSafe("serialno");
-            let bootloaderStatus = await getVarSafe("unlocked"); 
-            let userdata_chk = await getVarSafe("partition-type:userdata");
-            let win_chk = await getVarSafe("partition-type:win");
-            let esp_chk = await getVarSafe("partition-type:esp"); 
-            let linux_chk = await getVarSafe("partition-type:linux"); 
-            let userdata_size = await getVarSafe("partition-size:userdata");
-            let win_size = await getVarSafe("partition-size:win");
-            let esp_size = await getVarSafe("partition-size:esp");
-            let linux_size = await getVarSafe("partition-size:linux"); 
-            let bootloaderStatusText = bootloaderStatus === "yes" ? "unlocked" : "locked";
+            const product = await getVarRetry("product");
+            const slot = await getVarRetry("current-slot");
+            const serial = await getVarRetry("serialno");
+            const bootloaderStatus = await getVarRetry("unlocked");
+            const userdata_chk = await getVarRetry("partition-type:userdata");
+            const win_chk = await getVarRetry("partition-type:win");
+            const esp_chk = await getVarRetry("partition-type:esp");
+            const linux_chk = await getVarRetry("partition-type:linux");
+            const userdata_size = await getVarRetry("partition-size:userdata");
+            const win_size = await getVarRetry("partition-size:win");
+            const esp_size = await getVarRetry("partition-size:esp");
+            const linux_size = await getVarRetry("partition-size:linux");
+            const bootloaderStatusText = bootloaderStatus === "yes" ? "unlocked" : "locked";
 
             let deviceName = "";
             let isNabu = false;
@@ -1513,13 +1516,13 @@
                 deviceName = "Device name : Samsung S23 Ultra";
                 isNabu = true;
                 if (titleText) titleText.textContent = "Web Fastboot Tool";
-            } else if (product !== "nabu") {
+            } else if (product) {
                 isNabu = true;
                 deviceName = "Device name : IDK LoL 😂";
                 if (titleText) titleText.textContent = "Web Fastboot Tool";
             }
 
-            let status = `Connected to : ${product} <br /> Current slot : ${slot ?? "Unavailable"} <br /> (serial : ${serial})`;
+            let status = `Connected to : ${product ?? "Unknown"} <br /> Current slot : ${slot ?? "Unavailable"} <br /> (serial : ${serial ?? "Unavailable"})`;
             if (deviceName) {
                 status += `<br />${deviceName}`;
             }
@@ -1539,16 +1542,17 @@
             if (await checkPartition("esp", esp_chk, esp_size)) {
                 sizeInfo += `<p style="margin: 0; margin-bottom: 0px;">ESP Partition : ${getSizeString(esp_size)}</p>`;
             }
-            
+
             if (sizeInfo) {
                 status += `<br />${sizeInfo}`;
             }
-            statusField.innerHTML = status;
 
+            statusField.innerHTML = status;
             toggleElements(false, isNabu);
-            handleSlotAndBootOptions(slot); // pass the slot explicitly
+           // handleSlotAndBootOptions(slot);
             clearFormElements();
         }
+
 
         async function handleSlotAndBootOptions(slot) {
             const selectElement = document.querySelector(".rboot-flash-partition");
