@@ -1545,16 +1545,16 @@
         async function handleSlotAndBootOptions(slot) {
             const selectElement = document.querySelector(".rboot-flash-partition");
 
-            // Fetch slot if not passed
+            // If not passed, fetch slot
             if (!slot) {
                 slot = await device.getVariable("current-slot");
             }
 
-            // Normalize/trim slot if needed
+            // Normalize slot string
             slot = slot?.trim().toLowerCase();
 
-            // Update fileMapping: strip _ab if slot is invalid
-            if (!slot || (slot !== "a" && slot !== "b")) {
+            // Update fileMapping if slot is invalid
+            if (slot === null || (slot !== "a" && slot !== "b")) {
                 for (const [file, partition] of Object.entries(fileMapping)) {
                     if (partition.endsWith("_ab")) {
                         fileMapping[file] = partition.replace(/_ab$/, "");
@@ -1562,29 +1562,23 @@
                 }
             }
 
-            // Clear previous options
-            selectElement.innerHTML = '';
+            // Clear dropdown
+            selectElement.innerHTML = "";
 
-            // Add slot info (non-selectable)
-            const infoOption = document.createElement("option");
-            infoOption.disabled = true;
-            infoOption.textContent = slot ? `Current slot: ${slot.toUpperCase()}` : "Slot info unavailable";
-            selectElement.appendChild(infoOption);
-
-            // Default prompt option
+            // Add default prompt
             const defaultOption = document.createElement("option");
             defaultOption.value = "";
             defaultOption.textContent = "Select boot partition";
-            defaultOption.selected = true;
             selectElement.appendChild(defaultOption);
 
-            // Always add current-slot flash option
+            // Always show boot (current slot)
             const bootOption = document.createElement("option");
             bootOption.value = "boot";
             bootOption.textContent = "Flash to Boot (current slot)";
+            bootOption.selected = true;
             selectElement.appendChild(bootOption);
 
-            // Add A/B options if valid slot
+            // Only show other options if slot is valid
             if (slot === "a" || slot === "b") {
                 const bootAB = document.createElement("option");
                 bootAB.value = "boot_ab";
@@ -1602,7 +1596,6 @@
                 selectElement.appendChild(bootB);
             }
         }
-
 
         // Function to check a partition's availability
         async function checkPartition(partitionName, partitionChk, partitionSize) {
