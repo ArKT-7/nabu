@@ -1456,18 +1456,19 @@
             
         let isConnected = false;
 
-        // One-time safe getvar (2s timeout)
+        // Sleep helper
         async function getVarOnce(name, timeout = 2000) {
             try {
-                return await Promise.race([
+                const result = await Promise.race([
                     device.getVariable(name),
                     new Promise((_, reject) =>
                         setTimeout(() => reject(new Error(`Timeout: getvar:${name}`)), timeout)
                     )
                 ]);
+                return result;
             } catch (e) {
-                console.warn(`Skipping ${name}:`, e.message);
-                return null;
+                console.warn(`Bypassed ${name}:`, e.message);
+                return null; // Fallback on error or timeout
             }
         }
 
@@ -1483,6 +1484,7 @@
                 return;
             }
 
+            // Grab info, all skip-safe
             const product = await getVarOnce("product");
             const slot = await getVarOnce("current-slot");
             const serial = await getVarOnce("serialno");
