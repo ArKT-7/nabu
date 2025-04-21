@@ -1486,7 +1486,6 @@
 
             // Grab info, all skip-safe
             const product = await getVarOnce("product");
-            const bootloaderStatus = await getVarOnce("unlocked");
 
             const bootloaderStatusText = bootloaderStatus === "yes" ? "unlocked" : "locked";
 
