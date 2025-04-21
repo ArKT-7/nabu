@@ -1456,28 +1456,19 @@
             
         let isConnected = false;
 
-      // Sleep helper
-        async function sleep(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
-
-        // Retryable version of getVariable with timeout
-        async function getVarRetry(name, maxAttempts = 10, delay = 200, timeout = 2000) {
-            for (let i = 0; i < maxAttempts; i++) {
-                try {
-                    return await Promise.race([
-                        device.getVariable(name),
-                        new Promise((_, reject) =>
-                            setTimeout(() => reject(new Error(`Timeout waiting for getvar:${name}`)), timeout)
-                        )
-                    ]);
-                } catch (e) {
-                    console.warn(`getvar:${name} attempt ${i + 1} failed:`, e.message);
-                    await sleep(delay);
-                }
+        // One-time safe getvar (2s timeout)
+        async function getVarOnce(name, timeout = 2000) {
+            try {
+                return await Promise.race([
+                    device.getVariable(name),
+                    new Promise((_, reject) =>
+                        setTimeout(() => reject(new Error(`Timeout: getvar:${name}`)), timeout)
+                    )
+                ]);
+            } catch (e) {
+                console.warn(`Skipping ${name}:`, e.message);
+                return null;
             }
-            console.warn(`getvar:${name} failed after ${maxAttempts} attempts.`);
-            return null;
         }
 
         async function connectDevice() {
@@ -1492,18 +1483,19 @@
                 return;
             }
 
-            const product = await getVarRetry("product");
-            const slot = await getVarRetry("current-slot");
-            const serial = await getVarRetry("serialno");
-            const bootloaderStatus = await getVarRetry("unlocked");
-            const userdata_chk = await getVarRetry("partition-type:userdata");
-            const win_chk = await getVarRetry("partition-type:win");
-            const esp_chk = await getVarRetry("partition-type:esp");
-            const linux_chk = await getVarRetry("partition-type:linux");
-            const userdata_size = await getVarRetry("partition-size:userdata");
-            const win_size = await getVarRetry("partition-size:win");
-            const esp_size = await getVarRetry("partition-size:esp");
-            const linux_size = await getVarRetry("partition-size:linux");
+            const product = await getVarOnce("product");
+            const slot = await getVarOnce("current-slot");
+            const serial = await getVarOnce("serialno");
+            const bootloaderStatus = await getVarOnce("unlocked");
+            const userdata_chk = await getVarOnce("partition-type:userdata");
+            const win_chk = await getVarOnce("partition-type:win");
+            const esp_chk = await getVarOnce("partition-type:esp");
+            const linux_chk = await getVarOnce("partition-type:linux");
+            const userdata_size = await getVarOnce("partition-size:userdata");
+            const win_size = await getVarOnce("partition-size:win");
+            const esp_size = await getVarOnce("partition-size:esp");
+            const linux_size = await getVarOnce("partition-size:linux");
+
             const bootloaderStatusText = bootloaderStatus === "yes" ? "unlocked" : "locked";
 
             let deviceName = "";
@@ -1528,7 +1520,7 @@
             }
 
             status += `<br />Bootloader status: ${bootloaderStatusText}`;
-            
+
             let sizeInfo = '';
             if (await checkPartition("userdata", userdata_chk, userdata_size)) {
                 sizeInfo += `<p style="margin: 0; margin-top: 5px;">Android Partition : ${getSizeString(userdata_size)}</p>`;
@@ -1549,10 +1541,9 @@
 
             statusField.innerHTML = status;
             toggleElements(false, isNabu);
-           // handleSlotAndBootOptions(slot);
+            handleSlotAndBootOptions(slot);
             clearFormElements();
         }
-
 
         async function handleSlotAndBootOptions(slot) {
             const selectElement = document.querySelector(".rboot-flash-partition");
