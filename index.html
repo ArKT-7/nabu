@@ -1490,6 +1490,14 @@
                 deviceName = "Device name : Samsung S23 Ultra";
                 isNabu = true; // Device is not nabu
                 if (titleText) titleText.textContent = "Web Fastboot Tool";
+            } else if (product === "beryllium") {
+                deviceName = "Device name : Poco F1";
+                isNabu = true; // Device is not nabu
+                if (titleText) titleText.textContent = "F1 Fastboot Tool";
+            } else if (product === "vayu") {
+                deviceName = "Device name : Poco X3 Pro";
+                isNabu = true; // Device is not nabu
+                if (titleText) titleText.textContent = "Vayu Fastboot Tool";
             } else if (product !== "nabu") {
                 isNabu = true; // Device is not nabu
                 deviceName = "Device name : IDK LoL 😂";
