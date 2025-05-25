@@ -1536,7 +1536,7 @@
         }
 
         // Function to update the flash boot partition options based on the slot status
-        async function handleSlotAndBootOptions() {
+       /*  async function handleSlotAndBootOptions() {
             const slot = await device.getVariable("current-slot");
             const selectElement = document.querySelector(".rboot-flash-partition");
 
@@ -1582,7 +1582,52 @@
                 bootB.textContent = "Flash to Boot B only";
                 selectElement.appendChild(bootB);
             }
-        }
+        }*/
+
+	async function handleSlotAndBootOptions() {
+	    const slot = await device.getVariable("current-slot");
+	    const selectElement = document.querySelector(".rboot-flash-partition");
+	
+	    if (slot === null || (slot !== "a" && slot !== "b")) {
+	        for (const [file, partition] of Object.entries(fileMapping)) {
+	            if (partition.endsWith("_ab")) {
+	                fileMapping[file] = partition.replace(/_ab$/, "");
+	            }
+	        }
+	    }
+	
+	    selectElement.innerHTML = '';
+	
+	    const defaultOption = document.createElement("option");
+	    defaultOption.value = "";
+	    defaultOption.textContent = "Select boot partition";
+	    selectElement.appendChild(defaultOption);
+	
+	    const bootOption = document.createElement("option");
+	    bootOption.value = "boot";
+	    bootOption.textContent = "Flash to Boot (current slot)";
+	    selectElement.appendChild(bootOption);
+	
+	    if (slot === "a" || slot === "b") {
+	        const bootAB = document.createElement("option");
+	        bootAB.value = "boot_ab";
+	        bootAB.textContent = "Flash to Boot ab (both slots)";
+	        bootAB.selected = true;
+	        selectElement.appendChild(bootAB);
+	
+	        const bootA = document.createElement("option");
+	        bootA.value = "boot_a";
+	        bootA.textContent = "Flash to Boot A only";
+	        selectElement.appendChild(bootA);
+	
+	        const bootB = document.createElement("option");
+	        bootB.value = "boot_b";
+	        bootB.textContent = "Flash to Boot B only";
+	        selectElement.appendChild(bootB);
+	    } else {
+	        bootOption.selected = true;
+	    }
+	}
 
         // Function to check a partition's availability
         async function checkPartition(partitionName, partitionChk, partitionSize) {
