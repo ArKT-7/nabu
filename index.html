@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="./dist/fastboot.mjs" type="module"></script>
     <script src="./download.js" type="module"></script>
+    <script src="./dist/zip-full.min.js"></script>
     <meta property="og:title" content="Web Fastboot Tool by ArKT" />
     <meta property="og:description" content="It can boot Images like recovery and can flash images in any partition" />
     <meta property="og:url" content="https://arkt-7.github.io/nabu/" />
@@ -727,7 +728,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(0, 0, 0, 0.5);
             display: none; 
             justify-content: center;
             align-items: center;
@@ -985,7 +986,7 @@
     <div class="container">
         <form class="flash-form">
             <label for="flash-file">Flash any images/Complete ROM 💀</label>
-            <input type="file" name="flash-file" id="flash-file" accept=".img,.bin,.elf,.mbn" multiple />
+            <input type="file" name="flash-file" id="flash-file" accept=".img,.bin,.elf,.mbn,.zip" multiple />
             <label for="flash-partition">Enter Partition</label>
             <input type="text" name="flash-partition" class="flash-partition" placeholder="Partition like - boot, dtbo, super, vendor_boot, recovery, etc." disabled />
             <div class="file-table-container">
@@ -1382,6 +1383,27 @@
             messageIndex = 0; 
             isFinalLoop = false; 
             progressMessage.textContent = ''; 
+        }
+
+        let previousScrollY = 0;
+        function scrollToLogs() {
+            const resultField = document.querySelector(".result-field");
+            if (resultField) {
+                previousScrollY = window.scrollY; // Save current position
+                const offset = -69;
+                const top = resultField.getBoundingClientRect().top + window.pageYOffset;
+                window.scrollTo({
+                    top: top + offset,
+                    behavior: "smooth"
+                });
+            }
+        }
+
+        function scrollBackToOriginal() {
+            window.scrollTo({
+                top: previousScrollY,
+                behavior: "smooth"
+            });
         }
 
         function toggleElements(disable, isNabu = false) {
@@ -1937,7 +1959,7 @@
         }
 
         // Function for typing animation
-        function typeAnimation(element, text, delay = 33) {
+        function typeAnimation(element, text, delay = 16) {
             element.value = ""; // Clear the input box
             let i = 0;
 
@@ -1950,109 +1972,166 @@
             }, delay);
         }
 
+        let extractedFilesFromZip = [];
+        let currentZipReader = null;
+        let currentZipEntries = [];
+
         // Handle file selection
-        document.querySelector("#flash-file").addEventListener("change", function () {
+        document.querySelector("#flash-file").addEventListener("change", async function () {
             const fileField = document.querySelector("#flash-file");
             const partField = document.querySelector(".flash-partition");
             const fileTable = document.querySelector("#file-table tbody");
 
-            // Clear existing rows
-            fileTable.innerHTML = "";
+            fileTable.innerHTML = "";  // clear table
+            extractedFilesFromZip = [];
+            currentZipReader = null;
+            currentZipEntries = [];
 
-            // Update placeholder and disable status based on file selection
-            if (fileField.files.length > 1) {
+            let filesToShow = [];
+
+            if (fileField.files.length === 0) {
+                // No file selected: disable and clear input, keep placeholder
+                partField.value = "";
                 partField.disabled = true;
-                partField.placeholder = "Enter partition in the table for multiple files";
-            } else {
-                partField.disabled = false;
                 partField.placeholder = "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
+                return;
             }
 
-            // Populate the table with file data
-            Array.from(fileField.files).forEach((file, index) => {
-                const fileName = file.name.toLowerCase();
-                const matchedPartition = fileMapping[fileName];
-                const fileSize = formatFileSize(file.size);
+            // Helper to add a row for a file
+            function addFileRow(fileName, fileSize, isEditable) {
+                const matchedPartition = fileMapping[fileName.toLowerCase()] || null;
+                const editable = !matchedPartition;  // partition editable only if not matched
 
-                const isEditable = !matchedPartition;
-
-                // Add row to the table
                 const row = document.createElement("tr");
                 row.innerHTML = `
                     <td>${fileName}</td>
-                    <td contenteditable="${isEditable}" 
-                        class="${isEditable ? 'editable-partition' : ''}">
+                    <td contenteditable="${editable}" class="${editable ? 'editable-partition' : ''}">
                         ${matchedPartition || "Enter Partition"}
                     </td>
                     <td>${fileSize}</td>
                 `;
                 fileTable.appendChild(row);
+            }
 
-                // Synchronize input field and table for a single file
-                if (fileField.files.length === 1) {
-                    if (matchedPartition) {
-                        // Known file, trigger typing animation for the partition
-                        partField.value = ""; // Clear the input field
-                        typeAnimation(partField, matchedPartition, 100);
+            const selectedFiles = Array.from(fileField.files);
 
-                        partField.addEventListener("input", (e) => {
-                            row.cells[1].textContent = e.target.value;
-                        });
+            if (selectedFiles.length === 1 && selectedFiles[0].name.toLowerCase().endsWith(".zip")) {
+                try {
+                    const zipFile = selectedFiles[0];
+                    currentZipReader = new zip.ZipReader(new zip.BlobReader(zipFile));
+                    currentZipEntries = await currentZipReader.getEntries();
 
-                        row.cells[1].addEventListener("input", (e) => {
-                            partField.value = e.target.textContent;
-                        });
-                    } else {
-                        // Unknown file, don't trigger typing animation, leave input as placeholder
-                        partField.value = ""; // Clear the input field
-                        partField.placeholder = "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
-                        partField.addEventListener("input", (e) => {
-                            row.cells[1].textContent = e.target.value;
-                        });
+                    const allowedExt = ['img', 'mbn', 'elf', 'bin'];
+                    const maxSizeBytes = 500 * 1024 * 1024; // 500 MB
 
-                        row.cells[1].addEventListener("input", (e) => {
-                            partField.value = e.target.textContent;
-                        });
+                    // Filter files by extension and size <= 500MB (using uncompressedSize metadata)
+                    const filteredEntries = currentZipEntries.filter(e => {
+                        const ext = e.filename.split('.').pop().toLowerCase();
+                        return allowedExt.includes(ext) && e.uncompressedSize <= maxSizeBytes;
+                    });
+
+                    if (filteredEntries.length === 0) {
+                        alert("No supported image files smaller than 500MB found inside the ZIP!");
+                        return;
                     }
+
+                    // Just list filenames & sizes, no blob extraction here
+                    filteredEntries.forEach(entry => {
+                        const fileName = entry.filename.split('/').pop();
+                        const sizeFormatted = formatFileSize(entry.uncompressedSize || 0);
+                        addFileRow(fileName, sizeFormatted, true);
+                        filesToShow.push({ name: fileName });
+                    });
+                    partField.value = "";
+                    partField.disabled = true;
+                    partField.placeholder = "Enter partition in the table for multiple files";
+
+                } catch (err) {
+                    alert("Failed to read ZIP file: " + err.message);
+                    return;
                 }
-            });
+            } else {
+                // Normal files selected, just show them directly
+                selectedFiles.forEach(file => {
+                    const fileName = file.name;
+                    const sizeFormatted = formatFileSize(file.size);
+                    const matchedPartition = fileMapping[fileName.toLowerCase()];
+                    const isEditable = !matchedPartition;
+                    addFileRow(fileName, sizeFormatted, isEditable);
+                    filesToShow.push({ name: fileName, file });
+                });
+
+                currentZipReader = null;
+                currentZipEntries = [];
+
+                if (selectedFiles.length > 1) {
+                    partField.value = "";
+                    partField.disabled = true;
+                    partField.placeholder = "Enter partition in the table for multiple files";
+                } else {
+                    partField.value = "";
+                    partField.disabled = false;
+                    partField.placeholder = "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
+                }
+            }
+
+            // If exactly 1 file, do typing animation + sync input & cell
+            if (filesToShow.length === 1) {
+                const matchedPartition = fileMapping[filesToShow[0].name.toLowerCase()] || null;
+                const firstRow = fileTable.querySelector("tr");
+                if (!firstRow) return;
+                const partitionCell = firstRow.cells[1];
+
+                if (matchedPartition) {
+                    partField.value = "";
+                    typeAnimation(partField, matchedPartition, 100);
+                } else {
+                    partField.value = "";
+                    partField.placeholder = "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
+                }
+
+                partField.oninput = null;
+                partitionCell.oninput = null;
+
+                partField.addEventListener("input", (e) => {
+                    partitionCell.textContent = e.target.value;
+                });
+                partitionCell.addEventListener("input", (e) => {
+                    partField.value = e.target.textContent;
+                });
+            }
         });
 
-        // Validate before flashing
+
         async function flashFormFile(event) {
             event.preventDefault();
             showProgressOverlay();
+            scrollToLogs(); 
 
-            const fileField = document.querySelector("#flash-file");
-            const logOutput = document.querySelector("#log-output");
-            const resultField = document.querySelector(".result-field");
             const fileTable = document.querySelector("#file-table tbody");
             const rows = fileTable.querySelectorAll("tr");
+            const resultField = document.querySelector(".result-field");
             let slot = await device.getVariable("current-slot");
 
-            const files = Array.from(fileField.files);
-            if (files.length === 0) {
+            if (rows.length === 0) {
                 alert("Please select at least one file to flash!");
                 hideProgressOverlay();
+                scrollBackToOriginal();
                 return;
             }
 
-            // Validate partitions
             const partitions = [];
             let hasError = false;
 
-            rows.forEach((row, index) => {
-                const fileName = files[index].name.toLowerCase();
-                const partitionCell = row.cells[1];
-                let partition = partitionCell.textContent.trim();
+            rows.forEach((row) => {
+                let partition = row.cells[1].textContent.trim();
 
-                // Added: if slot is null or not a/b, and partition ends with _ab, remove the _ab suffix
                 if ((slot === null || (slot !== "a" && slot !== "b")) && partition.endsWith("_ab")) {
                     partition = partition.replace(/_ab$/, "");
                 }
 
                 if (!partition || partition === "Enter Partition" || partition === "Enter Partition in the table for multiple files") {
-                    partitionCell.textContent = "Enter Partition";
+                    row.cells[1].textContent = "Enter Partition";
                     hasError = true;
                 } else {
                     partitions.push(partition);
@@ -2061,51 +2140,73 @@
 
             if (hasError) {
                 alert("Error: Please enter valid partitions for all files in the table.");
-                // Reset the table to display placeholder text again
                 resetTableToPlaceholders();
                 hideProgressOverlay();
+                scrollBackToOriginal();
                 return;
             }
 
-            // Flash files
             try {
-                for (let i = 0; i < files.length; i++) {
-                    const file = files[i];
+                // For each row/file, extract if ZIP else use file directly and flash
+                for (let i = 0; i < rows.length; i++) {
+                    const fileName = rows[i].cells[0].textContent;
                     const partition = partitions[i];
 
-                    // Handle `_AB` logic
+                    let fileBlob = null;
+
+                    if (currentZipReader && currentZipEntries.length > 0) {
+                        // Find the entry in ZIP by matching file name
+                        const entry = currentZipEntries.find(e => e.filename.endsWith(fileName));
+                        if (!entry) throw new Error(`File ${fileName} not found inside ZIP`);
+
+                        // Extract blob on demand (this might take some time for large files)
+                        fileBlob = await entry.getData(new zip.BlobWriter());
+                    } else {
+                        // Not a zip, get file directly from input
+                        const fileField = document.querySelector("#flash-file");
+                        const file = Array.from(fileField.files).find(f => f.name === fileName);
+                        if (!file) throw new Error(`File ${fileName} not found in input files`);
+                        fileBlob = file;
+                    }
+
                     if (partition.endsWith("_ab")) {
                         const partitionA = partition.replace("_ab", "_a");
                         const partitionB = partition.replace("_ab", "_b");
 
-                        // Prepend flashing messages to resultField
-                        resultField.textContent = `Flashing ${file.name} to ${partitionA}...\n` + resultField.textContent;
-                        await device.flashBlob(partitionA, file, (progress) => {
+                        resultField.textContent = `Flashing ${fileName} to ${partitionA}...\n` + resultField.textContent;
+                        await device.flashBlob(partitionA, fileBlob, (progress) => {
                             resultField.textContent = `${partitionA} Progress: ${progress}%\n` + resultField.textContent;
                         });
-                        resultField.textContent = `Successfully flashed ${file.name} to ${partitionA}.\n` + resultField.textContent;
+                        resultField.textContent = `Successfully flashed ${fileName} to ${partitionA}.\n` + resultField.textContent;
 
-                        resultField.textContent = `Flashing ${file.name} to ${partitionB}...\n` + resultField.textContent;
-                        await device.flashBlob(partitionB, file, (progress) => {
+                        resultField.textContent = `Flashing ${fileName} to ${partitionB}...\n` + resultField.textContent;
+                        await device.flashBlob(partitionB, fileBlob, (progress) => {
                             resultField.textContent = `${partitionB} Progress: ${progress}%\n` + resultField.textContent;
                         });
-                        resultField.textContent = `Successfully flashed ${file.name} to ${partitionB}.\n` + resultField.textContent;
+                        resultField.textContent = `Successfully flashed ${fileName} to ${partitionB}.\n` + resultField.textContent;
                     } else {
-                        // Flash normally
-                        resultField.textContent = `Flashing ${file.name} to ${partition}...\n` + resultField.textContent;
-                        await device.flashBlob(partition, file, (progress) => {
+                        resultField.textContent = `Flashing ${fileName} to ${partition}...\n` + resultField.textContent;
+                        await device.flashBlob(partition, fileBlob, (progress) => {
                             resultField.textContent = `${partition} Progress: ${progress}%\n` + resultField.textContent;
                         });
-                        resultField.textContent = `Successfully flashed ${file.name} to ${partition}.\n` + resultField.textContent;
+                        resultField.textContent = `Successfully flashed ${fileName} to ${partition}.\n` + resultField.textContent;
                     }
                 }
+
                 alert("All files flashed successfully!");
             } catch (error) {
                 alert(`Failed to flash: ${error.message}`);
             } finally {
-                fileField.value = "";
+                document.querySelector("#flash-file").value = "";
+                const partField = document.querySelector(".flash-partition");
+				partField.value = "";
+                partField.disabled = true;
+                partField.placeholder = "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
                 document.querySelector("#file-table tbody").innerHTML = "";
+                currentZipReader = null;
+                currentZipEntries = [];
                 hideProgressOverlay();
+                scrollBackToOriginal();
                 await checkDeviceConnection();
             }
         }
