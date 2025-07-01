@@ -1196,6 +1196,7 @@
         <form class="other-form">
             <label for="other">Other Stuffs :)</label>
         </form>
+	<button class="button vendor-boot-button">Flash Empty vendor_boot</button>
         <button class="button vbmeta-button">Disable Vbmeta verification</button>
         <button class="button vbmeta-system-button">Disable Vbmeta System verification</button>
 	<button class="button rickroll-button">😅 Ram health check 😁</button>
@@ -1388,6 +1389,7 @@
             const rbootFlashSelect = document.querySelector(".rboot-flash-image");
             const bootTypeSelect = document.querySelector(".boot-type");
             const vbmetaButton = document.querySelector(".vbmeta-button");
+	    const vendorbootButton = document.querySelector(".vendor-boot-button");
             const vbmetaSButton = document.querySelector(".vbmeta-system-button");
             const wipeContainer = document.querySelector(".wipe-container");
             const wipeinput = document.querySelector(".wipe-input");
@@ -1414,6 +1416,11 @@
                     vbmetaButton.classList.add("only-nabu-disabled");
                 }
 
+		if (vendorbootButton) {
+                    vendorbootButton.disabled = true;
+                    vendorbootButton.classList.add("only-nabu-disabled");
+                }
+
                 if (vbmetaSButton) {
                     vbmetaSButton.disabled = true;
                     vbmetaSButton.classList.add("only-nabu-disabled");
@@ -1424,6 +1431,7 @@
                 }
             } else {
                 if (vbmetaButton) vbmetaButton.classList.remove("only-nabu-disabled");
+		if (vendorbootButton) vendorbootButton.classList.remove("only-nabu-disabled");
                 if (vbmetaSButton) vbmetaSButton.classList.remove("only-nabu-disabled");
 
                 if (wipeContainer) {
@@ -2569,7 +2577,7 @@
             }
         }
 
-		// Main function to handle vbmeta disable
+	// Main function to handle vbmeta disable
         async function vbmeta_disable() {  
             // Show confirmation dialog
             const userConfirmedvb = confirm("⚠️ This will disable you vbmeta verificationa and only for Xiaomi pad 5, Do you want to continue?");
@@ -2597,7 +2605,34 @@
             }
         }
 
-	    // Main function to handle vbmeta disable
+	// Main function to handle empty vendor boot flash
+        async function vendor_boot_flash() {  
+            // Show confirmation dialog
+            const userConfirmedvbf = confirm("Note: This will remove any aosp recovery if you have one, Do you want to continue?");
+            
+            if (!userConfirmedvbf) {
+                // User canceled, reset the input and button
+                return; // Exit the function
+            }
+            
+            showProgressOverlay();
+
+            try {
+                let vboot = await wipeDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/other/vendor_boot.img");
+                await device.flashBlob("vendor_boot_a", vboot);
+                await device.flashBlob("vendor_boot_b", vboot);
+
+                alert("empty vendor_boot flashed successfully, now you will be able to boot twrp on aosp roms 😁.");
+
+            } catch (error) {
+                alert(`Failed to flash empty vendor_boot: ${error.message}`);
+            } finally {
+                hideProgressOverlay();
+                await checkDeviceConnection();
+            }
+        }
+
+	// Main function to handle vbmeta disable
         async function vbmeta_system_disable() {  
             // Show confirmation dialog
             const userConfirmedvbs = confirm("⚠️ This will disable you vbmeta_system verificationa and only for Xiaomi pad 5, Do you want to continue?");
@@ -2610,7 +2645,6 @@
             showProgressOverlay();
 
             try {
-                // Step 1: Download and flash GPT file to partition "partition:0"
                 let vbmeta_system = await wipeDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/other/vbmeta_system.img");
                 await device.flashBlob("vbmeta_system_a", vbmeta_system);
             await device.flashBlob("vbmeta_system_b", vbmeta_system);
@@ -2625,7 +2659,7 @@
             }
         }
 
-	    const chickens = [];
+	const chickens = [];
         let animationRequestIds = [];
 
         function playMusic() {
@@ -2714,6 +2748,7 @@
         document.querySelector(".wipe-button").addEventListener("click", wipepart);
         document.querySelector(".wipe-form").addEventListener("submit", function(event) {event.preventDefault();});
         document.querySelector(".vbmeta-button").addEventListener("click", vbmeta_disable);
+	document.querySelector(".vendor-boot-button").addEventListener("click", vendor_boot_flash);
         document.querySelector(".vbmeta-system-button").addEventListener("click", vbmeta_system_disable);
         document.querySelector(".connect-button").addEventListener("click", connectDevice);
         document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
