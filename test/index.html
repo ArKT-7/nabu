@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="../dist/fastboot.mjs" type="module"></script>
     <script src="../download.js" type="module"></script>
+    <script src="../dist/zip-full.min.js"></script>
     <meta property="og:title" content="Web Fastboot Tool by ArKT" />
     <meta property="og:description" content="It can boot Images like recovery and can flash images in any partition" />
     <meta property="og:url" content="https://arkt-7.github.io/nabu/" />
@@ -727,7 +728,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(0, 0, 0, 0.5);
             display: none; 
             justify-content: center;
             align-items: center;
@@ -985,7 +986,7 @@
     <div class="container">
         <form class="flash-form">
             <label for="flash-file">Flash any images/Complete ROM 💀</label>
-            <input type="file" name="flash-file" id="flash-file" accept=".img,.bin,.elf,.mbn" multiple />
+            <input type="file" name="flash-file" id="flash-file" accept=".img,.bin,.elf,.mbn,.zip" multiple />
             <label for="flash-partition">Enter Partition</label>
             <input type="text" name="flash-partition" class="flash-partition" placeholder="Partition like - boot, dtbo, super, vendor_boot, recovery, etc." disabled />
             <div class="file-table-container">
@@ -1014,7 +1015,8 @@
             <input type="file" name="boot-file" id="boot-file" accept=".img" />
             <select name="boot-type" class="boot-type">
                 <option value="">Select Images to boot directly on/for Nabu</option>
-                <option value="twrp">TWRP New/Modded Recovery</option>
+                <option value="twrp-mod">TWRP Modded Recovery</option>
+		<option value="twrp">TWRP Recovery</option>
             	<option value="pbrp">Pitch Black Recovery</option>
             	<option value="uefi-v4-sb">Windows UEFI-v4 Secure boot</option>
                 <option value="uefi-v4-nosb">Windows UEFI-v4 No Secure boot</option>
@@ -1053,7 +1055,7 @@
                 <option value="boot_a">Flash to Boot A only</option>
                 <option value="boot_b">Flash to Boot B only</option>
             </select>
-            <label for="rboot-flash-image">Magisk V28.1 Rooted images for Nabu</label>
+            <label for="rboot-flash-image">Magisk V29 Rooted images for Nabu</label>
             <select name="rboot-flash-image" class="rboot-flash-image">
                 <option value="">Select rooted HyperOS/MIUI 13/14 boot</option>
 		<!-- Global Versions HyperOS-->
@@ -1195,6 +1197,7 @@
         <form class="other-form">
             <label for="other">Other Stuffs :)</label>
         </form>
+	<button class="button vendor-boot-button">Flash Empty vendor_boot</button>
         <button class="button vbmeta-button">Disable Vbmeta verification</button>
         <button class="button vbmeta-system-button">Disable Vbmeta System verification</button>
 	<button class="button rickroll-button">😅 Ram health check 😁</button>
@@ -1382,11 +1385,33 @@
             progressMessage.textContent = ''; 
         }
 
+        let previousScrollY = 0;
+        function scrollToLogs() {
+            const resultField = document.querySelector(".result-field");
+            if (resultField) {
+                previousScrollY = window.scrollY; // Save current position
+                const offset = -69;
+                const top = resultField.getBoundingClientRect().top + window.pageYOffset;
+                window.scrollTo({
+                    top: top + offset,
+                    behavior: "smooth"
+                });
+            }
+        }
+
+        function scrollBackToOriginal() {
+            window.scrollTo({
+                top: previousScrollY,
+                behavior: "smooth"
+            });
+        }
+
         function toggleElements(disable, isNabu = false) {
             const formElements = document.querySelectorAll("input, button, select");
             const rbootFlashSelect = document.querySelector(".rboot-flash-image");
             const bootTypeSelect = document.querySelector(".boot-type");
             const vbmetaButton = document.querySelector(".vbmeta-button");
+	    const vendorbootButton = document.querySelector(".vendor-boot-button");
             const vbmetaSButton = document.querySelector(".vbmeta-system-button");
             const wipeContainer = document.querySelector(".wipe-container");
             const wipeinput = document.querySelector(".wipe-input");
@@ -1413,6 +1438,11 @@
                     vbmetaButton.classList.add("only-nabu-disabled");
                 }
 
+		if (vendorbootButton) {
+                    vendorbootButton.disabled = true;
+                    vendorbootButton.classList.add("only-nabu-disabled");
+                }
+
                 if (vbmetaSButton) {
                     vbmetaSButton.disabled = true;
                     vbmetaSButton.classList.add("only-nabu-disabled");
@@ -1423,6 +1453,7 @@
                 }
             } else {
                 if (vbmetaButton) vbmetaButton.classList.remove("only-nabu-disabled");
+		if (vendorbootButton) vendorbootButton.classList.remove("only-nabu-disabled");
                 if (vbmetaSButton) vbmetaSButton.classList.remove("only-nabu-disabled");
 
                 if (wipeContainer) {
@@ -1454,26 +1485,8 @@
             }
         }
             
-        let isConnected = false;
-
-        // Sleep helper
-        async function getVarOnce(name, timeout = 2000) {
-            try {
-                const result = await Promise.race([
-                    device.getVariable(name),
-                    new Promise((_, reject) =>
-                        setTimeout(() => reject(new Error(`Timeout: getvar:${name}`)), timeout)
-                    )
-                ]);
-                return result;
-            } catch (e) {
-                console.warn(`Bypassed ${name}:`, e.message);
-                return null; // Fallback on error or timeout
-            }
-        }
-
         async function connectDevice() {
-            const statusField = document.querySelector(".status-field");
+            let statusField = document.querySelector(".status-field");
             statusField.textContent = "Connecting...";
 
             try {
@@ -1484,38 +1497,85 @@
                 return;
             }
 
-            // Grab info, all skip-safe
-            const product = await getVarOnce("product");
-
-            const bootloaderStatusText = bootloaderStatus === "yes" ? "unlocked" : "locked";
+            let product = await device.getVariable("product");
+            let slot = await device.getVariable("current-slot");
+            let serial = await device.getVariable("serialno");
+            let bootloaderStatus = await device.getVariable("unlocked"); 
+            let userdata_chk = await device.getVariable("partition-type:userdata");
+            let win_chk = await device.getVariable("partition-type:win");
+            let esp_chk = await device.getVariable("partition-type:esp"); 
+            let linux_chk = await device.getVariable("partition-type:linux"); 
+            let userdata_size = await device.getVariable("partition-size:userdata");
+            let win_size = await device.getVariable("partition-size:win");
+            let esp_size = await device.getVariable("partition-size:esp");
+            let linux_size = await device.getVariable("partition-size:linux"); 
+            let bootloaderStatusText = bootloaderStatus === "yes" ? "unlocked" : "locked";
 
             let deviceName = "";
+            let isNabu = false;
+            const titleText = document.querySelector(".text-gradient");
+            if (product === "nabu") {
+                deviceName = "Device name : Xiaomi Pad 5";
+                if (titleText) titleText.textContent = "Nabu Fastboot Tool";
+            } else if (product === "dm3q") {
+                deviceName = "Device name : Samsung S23 Ultra";
+                isNabu = true; // Device is not nabu
+                if (titleText) titleText.textContent = "Web Fastboot Tool";
+            } else if (product === "beryllium") {
+                deviceName = "Device name : Poco F1";
+                isNabu = true; // Device is not nabu
+                if (titleText) titleText.textContent = "F1 Fastboot Tool";
+            } else if (product === "pipa") {
+                deviceName = "Device name : Xiaomi Pad 6";
+                isNabu = true; // Device is not nabu
+                if (titleText) titleText.textContent = "Pipa Fastboot Tool";
+            } else if (product === "vayu") {
+                deviceName = "Device name : Poco X3 Pro";
+                isNabu = true; // Device is not nabu
+                if (titleText) titleText.textContent = "Vayu Fastboot Tool";
+            } else if (product !== "nabu") {
+                isNabu = true; // Device is not nabu
+                deviceName = "Device name : IDK LoL 😂";
+                if (titleText) titleText.textContent = "Web Fastboot Tool";
+            }
 
-            let status = `Connected to : ${product ?? "Unknown"} <br /> Current slot : ${slot ?? "Unavailable"} <br /> (serial : ${serial ?? "Unavailable"})`;
+            let status = `Connected to : ${product} <br /> Current slot : ${slot} <br /> (serial : ${serial})`;
             if (deviceName) {
                 status += `<br />${deviceName}`;
             }
 
-            status += `<br />Bootloader status: ${bootloaderStatusText}`;
-
-
+            status += `<br />Bootloader status: ${bootloaderStatusText}`; // Keep Bootloader status without extra spacing
+            
+            // Check partitions availability and sizes
+            let sizeInfo = ''; // Initialize a variable to collect size info
+            if (await checkPartition("userdata", userdata_chk, userdata_size)) {
+                sizeInfo += `<p style="margin: 0; margin-top: 5px;">Android Partition : ${getSizeString(userdata_size)}</p>`;
+            }
+            if (await checkPartition("linux", linux_chk, linux_size)) {
+                sizeInfo += `<p style="margin: 0; margin-bottom: 0px;">Linux Partition : ${getSizeString(linux_size)}</p>`;
+            }
+            if (await checkPartition("win", win_chk, win_size)) {
+                sizeInfo += `<p style="margin: 0; margin-bottom: 0px;">Windows Partition : ${getSizeString(win_size)}</p>`;
+            }
+            if (await checkPartition("esp", esp_chk, esp_size)) {
+                sizeInfo += `<p style="margin: 0; margin-bottom: 0px;">ESP Partition : ${getSizeString(esp_size)}</p>`;
+            }
+            
+            if (sizeInfo) {
+                status += `<br />${sizeInfo}`; // Add size info to status only if available
+            }
             statusField.innerHTML = status;
-            toggleElements(false, isNabu);
+            toggleElements(false, isNabu); 
+            handleSlotAndBootOptions();
             clearFormElements();
         }
 
-        async function handleSlotAndBootOptions(slot) {
+        // Function to update the flash boot partition options based on the slot status
+       /*  async function handleSlotAndBootOptions() {
+            const slot = await device.getVariable("current-slot");
             const selectElement = document.querySelector(".rboot-flash-partition");
 
-            // If not passed, fetch slot
-            if (!slot) {
-                slot = await device.getVariable("current-slot");
-            }
-
-            // Normalize slot string
-            slot = slot?.trim().toLowerCase();
-
-            // Update fileMapping if slot is invalid
+            // Update fileMapping: strip _ab if slot is invalid
             if (slot === null || (slot !== "a" && slot !== "b")) {
                 for (const [file, partition] of Object.entries(fileMapping)) {
                     if (partition.endsWith("_ab")) {
@@ -1524,23 +1584,23 @@
                 }
             }
 
-            // Clear dropdown
-            selectElement.innerHTML = "";
+            // Clear and repopulate the select dropdown
+            selectElement.innerHTML = '';
 
-            // Add default prompt
+            // Default prompt option
             const defaultOption = document.createElement("option");
             defaultOption.value = "";
             defaultOption.textContent = "Select boot partition";
             selectElement.appendChild(defaultOption);
 
-            // Always show boot (current slot)
+            // Always add "boot" (current slot)
             const bootOption = document.createElement("option");
             bootOption.value = "boot";
             bootOption.textContent = "Flash to Boot (current slot)";
-            bootOption.selected = true;
+            bootOption.selected = true; // Always default to this
             selectElement.appendChild(bootOption);
 
-            // Only show other options if slot is valid
+            // If valid slot, add all options
             if (slot === "a" || slot === "b") {
                 const bootAB = document.createElement("option");
                 bootAB.value = "boot_ab";
@@ -1557,7 +1617,52 @@
                 bootB.textContent = "Flash to Boot B only";
                 selectElement.appendChild(bootB);
             }
-        }
+        }*/
+
+	async function handleSlotAndBootOptions() {
+	    const slot = await device.getVariable("current-slot");
+	    const selectElement = document.querySelector(".rboot-flash-partition");
+	
+	    if (slot === null || (slot !== "a" && slot !== "b")) {
+	        for (const [file, partition] of Object.entries(fileMapping)) {
+	            if (partition.endsWith("_ab")) {
+	                fileMapping[file] = partition.replace(/_ab$/, "");
+	            }
+	        }
+	    }
+	
+	    selectElement.innerHTML = '';
+	
+	    const defaultOption = document.createElement("option");
+	    defaultOption.value = "";
+	    defaultOption.textContent = "Select boot partition";
+	    selectElement.appendChild(defaultOption);
+	
+	    const bootOption = document.createElement("option");
+	    bootOption.value = "boot";
+	    bootOption.textContent = "Flash to Boot (current slot)";
+	    selectElement.appendChild(bootOption);
+	
+	    if (slot === "a" || slot === "b") {
+	        const bootAB = document.createElement("option");
+	        bootAB.value = "boot_ab";
+	        bootAB.textContent = "Flash to Boot ab (both slots)";
+	        bootAB.selected = true;
+	        selectElement.appendChild(bootAB);
+	
+	        const bootA = document.createElement("option");
+	        bootA.value = "boot_a";
+	        bootA.textContent = "Flash to Boot A only";
+	        selectElement.appendChild(bootA);
+	
+	        const bootB = document.createElement("option");
+	        bootB.value = "boot_b";
+	        bootB.textContent = "Flash to Boot B only";
+	        selectElement.appendChild(bootB);
+	    } else {
+	        bootOption.selected = true;
+	    }
+	}
 
         // Function to check a partition's availability
         async function checkPartition(partitionName, partitionChk, partitionSize) {
@@ -1724,8 +1829,10 @@
     
         function getImagePath(selectedBootType) {
             switch (selectedBootType) {
-                case "twrp":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/modded-twrp-new.img";
+                case "twrp-mod":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/mod-windows-twrp.img";
+		case "twrp":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/mod-normal-twrp.img";
                 case "pbrp":
                     return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/pitchblack-nabu.img";
                 case "uefi-v4-sb":
@@ -1852,7 +1959,7 @@
         }
 
         // Function for typing animation
-        function typeAnimation(element, text, delay = 33) {
+        function typeAnimation(element, text, delay = 16) {
             element.value = ""; // Clear the input box
             let i = 0;
 
@@ -1865,109 +1972,166 @@
             }, delay);
         }
 
+        let extractedFilesFromZip = [];
+        let currentZipReader = null;
+        let currentZipEntries = [];
+
         // Handle file selection
-        document.querySelector("#flash-file").addEventListener("change", function () {
+        document.querySelector("#flash-file").addEventListener("change", async function () {
             const fileField = document.querySelector("#flash-file");
             const partField = document.querySelector(".flash-partition");
             const fileTable = document.querySelector("#file-table tbody");
 
-            // Clear existing rows
-            fileTable.innerHTML = "";
+            fileTable.innerHTML = "";  // clear table
+            extractedFilesFromZip = [];
+            currentZipReader = null;
+            currentZipEntries = [];
 
-            // Update placeholder and disable status based on file selection
-            if (fileField.files.length > 1) {
+            let filesToShow = [];
+
+            if (fileField.files.length === 0) {
+                // No file selected: disable and clear input, keep placeholder
+                partField.value = "";
                 partField.disabled = true;
-                partField.placeholder = "Enter partition in the table for multiple files";
-            } else {
-                partField.disabled = false;
                 partField.placeholder = "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
+                return;
             }
 
-            // Populate the table with file data
-            Array.from(fileField.files).forEach((file, index) => {
-                const fileName = file.name.toLowerCase();
-                const matchedPartition = fileMapping[fileName];
-                const fileSize = formatFileSize(file.size);
+            // Helper to add a row for a file
+            function addFileRow(fileName, fileSize, isEditable) {
+                const matchedPartition = fileMapping[fileName.toLowerCase()] || null;
+                const editable = !matchedPartition;  // partition editable only if not matched
 
-                const isEditable = !matchedPartition;
-
-                // Add row to the table
                 const row = document.createElement("tr");
                 row.innerHTML = `
                     <td>${fileName}</td>
-                    <td contenteditable="${isEditable}" 
-                        class="${isEditable ? 'editable-partition' : ''}">
+                    <td contenteditable="${editable}" class="${editable ? 'editable-partition' : ''}">
                         ${matchedPartition || "Enter Partition"}
                     </td>
                     <td>${fileSize}</td>
                 `;
                 fileTable.appendChild(row);
+            }
 
-                // Synchronize input field and table for a single file
-                if (fileField.files.length === 1) {
-                    if (matchedPartition) {
-                        // Known file, trigger typing animation for the partition
-                        partField.value = ""; // Clear the input field
-                        typeAnimation(partField, matchedPartition, 100);
+            const selectedFiles = Array.from(fileField.files);
 
-                        partField.addEventListener("input", (e) => {
-                            row.cells[1].textContent = e.target.value;
-                        });
+            if (selectedFiles.length === 1 && selectedFiles[0].name.toLowerCase().endsWith(".zip")) {
+                try {
+                    const zipFile = selectedFiles[0];
+                    currentZipReader = new zip.ZipReader(new zip.BlobReader(zipFile));
+                    currentZipEntries = await currentZipReader.getEntries();
 
-                        row.cells[1].addEventListener("input", (e) => {
-                            partField.value = e.target.textContent;
-                        });
-                    } else {
-                        // Unknown file, don't trigger typing animation, leave input as placeholder
-                        partField.value = ""; // Clear the input field
-                        partField.placeholder = "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
-                        partField.addEventListener("input", (e) => {
-                            row.cells[1].textContent = e.target.value;
-                        });
+                    const allowedExt = ['img', 'mbn', 'elf', 'bin'];
+                    const maxSizeBytes = 7000 * 1024 * 1024; // 500 MB
 
-                        row.cells[1].addEventListener("input", (e) => {
-                            partField.value = e.target.textContent;
-                        });
+                    // Filter files by extension and size <= 500MB (using uncompressedSize metadata)
+                    const filteredEntries = currentZipEntries.filter(e => {
+                        const ext = e.filename.split('.').pop().toLowerCase();
+                        return allowedExt.includes(ext) && e.uncompressedSize <= maxSizeBytes;
+                    });
+
+                    if (filteredEntries.length === 0) {
+                        alert("No supported image files smaller than 500MB found inside the ZIP!");
+                        return;
                     }
+
+                    // Just list filenames & sizes, no blob extraction here
+                    filteredEntries.forEach(entry => {
+                        const fileName = entry.filename.split('/').pop();
+                        const sizeFormatted = formatFileSize(entry.uncompressedSize || 0);
+                        addFileRow(fileName, sizeFormatted, true);
+                        filesToShow.push({ name: fileName });
+                    });
+                    partField.value = "";
+                    partField.disabled = true;
+                    partField.placeholder = "Enter partition in the table for multiple files";
+
+                } catch (err) {
+                    alert("Failed to read ZIP file: " + err.message);
+                    return;
                 }
-            });
+            } else {
+                // Normal files selected, just show them directly
+                selectedFiles.forEach(file => {
+                    const fileName = file.name;
+                    const sizeFormatted = formatFileSize(file.size);
+                    const matchedPartition = fileMapping[fileName.toLowerCase()];
+                    const isEditable = !matchedPartition;
+                    addFileRow(fileName, sizeFormatted, isEditable);
+                    filesToShow.push({ name: fileName, file });
+                });
+
+                currentZipReader = null;
+                currentZipEntries = [];
+
+                if (selectedFiles.length > 1) {
+                    partField.value = "";
+                    partField.disabled = true;
+                    partField.placeholder = "Enter partition in the table for multiple files";
+                } else {
+                    partField.value = "";
+                    partField.disabled = false;
+                    partField.placeholder = "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
+                }
+            }
+
+            // If exactly 1 file, do typing animation + sync input & cell
+            if (filesToShow.length === 1) {
+                const matchedPartition = fileMapping[filesToShow[0].name.toLowerCase()] || null;
+                const firstRow = fileTable.querySelector("tr");
+                if (!firstRow) return;
+                const partitionCell = firstRow.cells[1];
+
+                if (matchedPartition) {
+                    partField.value = "";
+                    typeAnimation(partField, matchedPartition, 100);
+                } else {
+                    partField.value = "";
+                    partField.placeholder = "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
+                }
+
+                partField.oninput = null;
+                partitionCell.oninput = null;
+
+                partField.addEventListener("input", (e) => {
+                    partitionCell.textContent = e.target.value;
+                });
+                partitionCell.addEventListener("input", (e) => {
+                    partField.value = e.target.textContent;
+                });
+            }
         });
 
-        // Validate before flashing
+
         async function flashFormFile(event) {
             event.preventDefault();
             showProgressOverlay();
+            scrollToLogs(); 
 
-            const fileField = document.querySelector("#flash-file");
-            const logOutput = document.querySelector("#log-output");
-            const resultField = document.querySelector(".result-field");
             const fileTable = document.querySelector("#file-table tbody");
             const rows = fileTable.querySelectorAll("tr");
+            const resultField = document.querySelector(".result-field");
             let slot = await device.getVariable("current-slot");
 
-            const files = Array.from(fileField.files);
-            if (files.length === 0) {
+            if (rows.length === 0) {
                 alert("Please select at least one file to flash!");
                 hideProgressOverlay();
+                scrollBackToOriginal();
                 return;
             }
 
-            // Validate partitions
             const partitions = [];
             let hasError = false;
 
-            rows.forEach((row, index) => {
-                const fileName = files[index].name.toLowerCase();
-                const partitionCell = row.cells[1];
-                let partition = partitionCell.textContent.trim();
+            rows.forEach((row) => {
+                let partition = row.cells[1].textContent.trim();
 
-                // Added: if slot is null or not a/b, and partition ends with _ab, remove the _ab suffix
                 if ((slot === null || (slot !== "a" && slot !== "b")) && partition.endsWith("_ab")) {
                     partition = partition.replace(/_ab$/, "");
                 }
 
                 if (!partition || partition === "Enter Partition" || partition === "Enter Partition in the table for multiple files") {
-                    partitionCell.textContent = "Enter Partition";
+                    row.cells[1].textContent = "Enter Partition";
                     hasError = true;
                 } else {
                     partitions.push(partition);
@@ -1976,51 +2140,73 @@
 
             if (hasError) {
                 alert("Error: Please enter valid partitions for all files in the table.");
-                // Reset the table to display placeholder text again
                 resetTableToPlaceholders();
                 hideProgressOverlay();
+                scrollBackToOriginal();
                 return;
             }
 
-            // Flash files
             try {
-                for (let i = 0; i < files.length; i++) {
-                    const file = files[i];
+                // For each row/file, extract if ZIP else use file directly and flash
+                for (let i = 0; i < rows.length; i++) {
+                    const fileName = rows[i].cells[0].textContent;
                     const partition = partitions[i];
 
-                    // Handle `_AB` logic
+                    let fileBlob = null;
+
+                    if (currentZipReader && currentZipEntries.length > 0) {
+                        // Find the entry in ZIP by matching file name
+                        const entry = currentZipEntries.find(e => e.filename.endsWith(fileName));
+                        if (!entry) throw new Error(`File ${fileName} not found inside ZIP`);
+
+                        // Extract blob on demand (this might take some time for large files)
+                        fileBlob = await entry.getData(new zip.BlobWriter());
+                    } else {
+                        // Not a zip, get file directly from input
+                        const fileField = document.querySelector("#flash-file");
+                        const file = Array.from(fileField.files).find(f => f.name === fileName);
+                        if (!file) throw new Error(`File ${fileName} not found in input files`);
+                        fileBlob = file;
+                    }
+
                     if (partition.endsWith("_ab")) {
                         const partitionA = partition.replace("_ab", "_a");
                         const partitionB = partition.replace("_ab", "_b");
 
-                        // Prepend flashing messages to resultField
-                        resultField.textContent = `Flashing ${file.name} to ${partitionA}...\n` + resultField.textContent;
-                        await device.flashBlob(partitionA, file, (progress) => {
+                        resultField.textContent = `Flashing ${fileName} to ${partitionA}...\n` + resultField.textContent;
+                        await device.flashBlob(partitionA, fileBlob, (progress) => {
                             resultField.textContent = `${partitionA} Progress: ${progress}%\n` + resultField.textContent;
                         });
-                        resultField.textContent = `Successfully flashed ${file.name} to ${partitionA}.\n` + resultField.textContent;
+                        resultField.textContent = `Successfully flashed ${fileName} to ${partitionA}.\n` + resultField.textContent;
 
-                        resultField.textContent = `Flashing ${file.name} to ${partitionB}...\n` + resultField.textContent;
-                        await device.flashBlob(partitionB, file, (progress) => {
+                        resultField.textContent = `Flashing ${fileName} to ${partitionB}...\n` + resultField.textContent;
+                        await device.flashBlob(partitionB, fileBlob, (progress) => {
                             resultField.textContent = `${partitionB} Progress: ${progress}%\n` + resultField.textContent;
                         });
-                        resultField.textContent = `Successfully flashed ${file.name} to ${partitionB}.\n` + resultField.textContent;
+                        resultField.textContent = `Successfully flashed ${fileName} to ${partitionB}.\n` + resultField.textContent;
                     } else {
-                        // Flash normally
-                        resultField.textContent = `Flashing ${file.name} to ${partition}...\n` + resultField.textContent;
-                        await device.flashBlob(partition, file, (progress) => {
+                        resultField.textContent = `Flashing ${fileName} to ${partition}...\n` + resultField.textContent;
+                        await device.flashBlob(partition, fileBlob, (progress) => {
                             resultField.textContent = `${partition} Progress: ${progress}%\n` + resultField.textContent;
                         });
-                        resultField.textContent = `Successfully flashed ${file.name} to ${partition}.\n` + resultField.textContent;
+                        resultField.textContent = `Successfully flashed ${fileName} to ${partition}.\n` + resultField.textContent;
                     }
                 }
+
                 alert("All files flashed successfully!");
             } catch (error) {
                 alert(`Failed to flash: ${error.message}`);
             } finally {
-                fileField.value = "";
+                document.querySelector("#flash-file").value = "";
+                const partField = document.querySelector(".flash-partition");
+				partField.value = "";
+                partField.disabled = true;
+                partField.placeholder = "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
                 document.querySelector("#file-table tbody").innerHTML = "";
+                currentZipReader = null;
+                currentZipEntries = [];
                 hideProgressOverlay();
+                scrollBackToOriginal();
                 await checkDeviceConnection();
             }
         }
@@ -2097,253 +2283,253 @@
             switch (selectedImage) {
                 // HyperOS GLOBAL Versions
                 case "magisk-1-0-6-global":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.6.0.TKXMIXM.GLOBAL.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_29.0_TWRP_NABU.OS1.0.6.0.TKXMIXM.GLOBAL.boot.img";
                 case "magisk-1-0-5-global":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.5.0.TKXMIXM.GLOBAL.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_29.0_TWRP_NABU.OS1.0.5.0.TKXMIXM.GLOBAL.boot.img";
                 case "magisk-1-0-4-global":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.4.0.TKXMIXM.GLOBAL.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_29.0_TWRP_NABU.OS1.0.4.0.TKXMIXM.GLOBAL.boot.img";
                 case "magisk-1-0-1-global":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.1.0.TKXMIXM.GLOBAL.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_29.0_TWRP_NABU.OS1.0.1.0.TKXMIXM.GLOBAL.boot.img";
                 
             // India Versions  
                 case "magisk-1-0-18-india":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.18.0.TKXINXM.INDIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_29.0_TWRP_NABU.OS1.0.18.0.TKXINXM.INDIA.boot.img";
                 case "magisk-1-0-17-india":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.17.0.TKXINXM.INDIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_29.0_TWRP_NABU.OS1.0.17.0.TKXINXM.INDIA.boot.img";
                 case "magisk-1-0-16-india":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.16.0.TKXINXM.INDIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_29.0_TWRP_NABU.OS1.0.16.0.TKXINXM.INDIA.boot.img";
                 case "magisk-1-0-14-india":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.14.0.TKXINXM.INDIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_29.0_TWRP_NABU.OS1.0.14.0.TKXINXM.INDIA.boot.img";
                 case "magisk-1-0-13-india":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.13.0.TKXINXM.INDIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_29.0_TWRP_NABU.OS1.0.13.0.TKXINXM.INDIA.boot.img";
                 case "magisk-1-0-12-india":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.12.0.TKXINXM.INDIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_29.0_TWRP_NABU.OS1.0.12.0.TKXINXM.INDIA.boot.img";
                 case "magisk-1-0-9-india":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.9.0.TKXINXM.INDIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_29.0_TWRP_NABU.OS1.0.9.0.TKXINXM.INDIA.boot.img";
                 case "magisk-1-0-8-india":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.8.0.TKXINXM.INDIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_29.0_TWRP_NABU.OS1.0.8.0.TKXINXM.INDIA.boot.img";
                 case "magisk-1-0-7-india":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.7.0.TKXINXM.INDIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_29.0_TWRP_NABU.OS1.0.7.0.TKXINXM.INDIA.boot.img";
                 case "magisk-1-0-4-india":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.4.0.TKXINXM.INDIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_29.0_TWRP_NABU.OS1.0.4.0.TKXINXM.INDIA.boot.img";
                 
             // EEA Versions  
                 case "magisk-1-0-6-eea":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.6.0.TKXEUXM.EEA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_29.0_TWRP_NABU.OS1.0.6.0.TKXEUXM.EEA.boot.img";
                 case "magisk-1-0-5-eea":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.5.0.TKXEUXM.EEA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_29.0_TWRP_NABU.OS1.0.5.0.TKXEUXM.EEA.boot.img";
                 case "magisk-1-0-2-eea":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.2.0.TKXEUXM.EEA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_29.0_TWRP_NABU.OS1.0.2.0.TKXEUXM.EEA.boot.img";
                 case "magisk-1-0-1-eea":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.1.0.TKXEUXM.EEA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_29.0_TWRP_NABU.OS1.0.1.0.TKXEUXM.EEA.boot.img";
                 
             // Russia Versions    
                 case "magisk-1-0-5-russia":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.5.0.TKXRUXM.RUSSIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_29.0_TWRP_NABU.OS1.0.5.0.TKXRUXM.RUSSIA.boot.img";
                 case "magisk-1-0-4-russia":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.4.0.TKXRUXM.RUSSIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_29.0_TWRP_NABU.OS1.0.4.0.TKXRUXM.RUSSIA.boot.img";
                 case "magisk-1-0-3-russia":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.3.0.TKXRUXM.RUSSIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_29.0_TWRP_NABU.OS1.0.3.0.TKXRUXM.RUSSIA.boot.img";
                 case "magisk-1-0-1-russia":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.1.0.TKXRUXM.RUSSIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_29.0_TWRP_NABU.OS1.0.1.0.TKXRUXM.RUSSIA.boot.img";
                 
             // China Versions    
                 case "magisk-1-0-3-china":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.3.0.TKXCNXM.CHINA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_29.0_TWRP_NABU.OS1.0.3.0.TKXCNXM.CHINA.boot.img";
                 case "magisk-1-0-2-china":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.2.0.TKXCNXM.CHINA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_29.0_TWRP_NABU.OS1.0.2.0.TKXCNXM.CHINA.boot.img";
                 
             // Turkey Versions
                 case "magisk-1-0-6-turkey":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.6.0.TKXTRXM.TURKEY.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_29.0_TWRP_NABU.OS1.0.6.0.TKXTRXM.TURKEY.boot.img";
                 case "magisk-1-0-5-turkey":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.5.0.TKXTRXM.TURKEY.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_29.0_TWRP_NABU.OS1.0.5.0.TKXTRXM.TURKEY.boot.img";
                 case "magisk-1-0-4-turkey":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.4.0.TKXTRXM.TURKEY.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_29.0_TWRP_NABU.OS1.0.4.0.TKXTRXM.TURKEY.boot.img";
                 case "magisk-1-0-2-turkey":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.2.0.TKXTRXM.TURKEY.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_29.0_TWRP_NABU.OS1.0.2.0.TKXTRXM.TURKEY.boot.img";
                 
             // taiwan Versions
                 case "magisk-1-0-6-taiwan":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.6.0.TKXTWXM.TAIWAN.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_29.0_TWRP_NABU.OS1.0.6.0.TKXTWXM.TAIWAN.boot.img";
                 case "magisk-1-0-5-taiwan":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.5.0.TKXTWXM.TAIWAN.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_29.0_TWRP_NABU.OS1.0.5.0.TKXTWXM.TAIWAN.boot.img";
                 case "magisk-1-0-4-taiwan":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.4.0.TKXTWXM.TAIWAN.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_29.0_TWRP_NABU.OS1.0.4.0.TKXTWXM.TAIWAN.boot.img";
                 case "magisk-1-0-2-taiwan":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_28.1_NABU.OS1.0.2.0.TKXTWXM.TAIWAN.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/hyperos-rooted-boot/Magisk_29.0_TWRP_NABU.OS1.0.2.0.TKXTWXM.TAIWAN.boot.img";
                 
             // MIUI 14 GLOBAL Versions
                 case "magisk-14-0-8-global":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.8.0.TKXMIXM.GLOBAL.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_29.0_TWRP_NABU.V14.0.8.0.TKXMIXM.GLOBAL.boot.img";
                 case "magisk-14-0-7-global":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.7.0.TKXMIXM.GLOBAL.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_29.0_TWRP_NABU.V14.0.7.0.TKXMIXM.GLOBAL.boot.img";
                 case "magisk-14-0-6-global":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.6.0.TKXMIXM.GLOBAL.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_29.0_TWRP_NABU.V14.0.6.0.TKXMIXM.GLOBAL.boot.img";
                 case "magisk-14-0-5-global":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.5.0.TKXMIXM.GLOBAL.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_29.0_TWRP_NABU.V14.0.5.0.TKXMIXM.GLOBAL.boot.img";
                 case "magisk-14-0-4-global":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.4.0.TKXMIXM.GLOBAL.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_29.0_TWRP_NABU.V14.0.4.0.TKXMIXM.GLOBAL.boot.img";
                 case "magisk-14-0-3-global":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.3.0.TKXMIXM.GLOBAL.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_29.0_TWRP_NABU.V14.0.3.0.TKXMIXM.GLOBAL.boot.img";
 
             // India Versions	    
                 case "magisk-14-0-7-india":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.7.0.TKXINXM.INDIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_29.0_TWRP_NABU.V14.0.7.0.TKXINXM.INDIA.boot.img";
                 case "magisk-14-0-4-india":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.4.0.TKXINXM.INDIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_29.0_TWRP_NABU.V14.0.4.0.TKXINXM.INDIA.boot.img";
                 case "magisk-14-0-3-india":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.3.0.TKXINXM.INDIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_29.0_TWRP_NABU.V14.0.3.0.TKXINXM.INDIA.boot.img";
                 case "magisk-14-0-1-india":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.1.0.TKXINXM.INDIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_29.0_TWRP_NABU.V14.0.1.0.TKXINXM.INDIA.boot.img";
 
             // EEA Versions	    
                 case "magisk-14-0-9-eea":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.9.0.TKXEUXM.EEA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_29.0_TWRP_NABU.V14.0.9.0.TKXEUXM.EEA.boot.img";
                 case "magisk-14-0-8-eea":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.8.0.TKXEUXM.EEA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_29.0_TWRP_NABU.V14.0.8.0.TKXEUXM.EEA.boot.img";
                 case "magisk-14-0-7-eea":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.7.0.TKXEUXM.EEA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_29.0_TWRP_NABU.V14.0.7.0.TKXEUXM.EEA.boot.img";
                 case "magisk-14-0-6-eea":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.6.0.TKXEUXM.EEA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_29.0_TWRP_NABU.V14.0.6.0.TKXEUXM.EEA.boot.img";
                 case "magisk-14-0-5-eea":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.5.0.TKXEUXM.EEA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_29.0_TWRP_NABU.V14.0.5.0.TKXEUXM.EEA.boot.img";
                 case "magisk-14-0-4-eea":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.4.0.TKXEUXM.EEA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_29.0_TWRP_NABU.V14.0.4.0.TKXEUXM.EEA.boot.img";
                 case "magisk-14-0-2-eea":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.2.0.TKXEUXM.EEA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_29.0_TWRP_NABU.V14.0.2.0.TKXEUXM.EEA.boot.img";
 
             // Russia Versions    
                 case "magisk-14-0-7-russia":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.7.0.TKXRUXM.RUSSIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_29.0_TWRP_NABU.V14.0.7.0.TKXRUXM.RUSSIA.boot.img";
                 case "magisk-14-0-6-russia":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.6.0.TKXRUXM.RUSSIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_29.0_TWRP_NABU.V14.0.6.0.TKXRUXM.RUSSIA.boot.img";
                 case "magisk-14-0-5-russia":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.5.0.TKXRUXM.RUSSIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_29.0_TWRP_NABU.V14.0.5.0.TKXRUXM.RUSSIA.boot.img";
                 case "magisk-14-0-4-russia":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.4.0.TKXRUXM.RUSSIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_29.0_TWRP_NABU.V14.0.4.0.TKXRUXM.RUSSIA.boot.img";
                 case "magisk-14-0-3-russia":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.3.0.TKXRUXM.RUSSIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_29.0_TWRP_NABU.V14.0.3.0.TKXRUXM.RUSSIA.boot.img";
                 case "magisk-14-0-2-russia":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.2.0.TKXRUXM.RUSSIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_29.0_TWRP_NABU.V14.0.2.0.TKXRUXM.RUSSIA.boot.img";
 
             // China Versions	    
                 case "magisk-14-0-7-china":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.7.0.TKXCNXM.CHINA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_29.0_TWRP_NABU.V14.0.7.0.TKXCNXM.CHINA.boot.img";
                 case "magisk-14-0-6-china":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.6.0.TKXCNXM.CHINA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_29.0_TWRP_NABU.V14.0.6.0.TKXCNXM.CHINA.boot.img";
                 case "magisk-14-0-5-china":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.5.0.TKXCNXM.CHINA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_29.0_TWRP_NABU.V14.0.5.0.TKXCNXM.CHINA.boot.img";
                 case "magisk-14-0-4-china":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.4.0.TKXCNXM.CHINA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_29.0_TWRP_NABU.V14.0.4.0.TKXCNXM.CHINA.boot.img";
                 
             // Turkey Versions    
                 case "magisk-14-0-5-turkey":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.5.0.TKXTRXM.TURKEY.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_29.0_TWRP_NABU.V14.0.5.0.TKXTRXM.TURKEY.boot.img";
                 case "magisk-14-0-4-turkey":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.4.0.TKXTRXM.TURKEY.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_29.0_TWRP_NABU.V14.0.4.0.TKXTRXM.TURKEY.boot.img";
                 case "magisk-14-0-2-turkey":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.2.0.TKXTRXM.TURKEY.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_29.0_TWRP_NABU.V14.0.2.0.TKXTRXM.TURKEY.boot.img";
                 case "magisk-14-0-1-turkey":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.1.0.TKXTRXM.TURKEY.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_29.0_TWRP_NABU.V14.0.1.0.TKXTRXM.TURKEY.boot.img";
 
             // taiwan Versions	    
                 case "magisk-14-0-3-taiwan":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.3.0.TKXTWXM.TAIWAN.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_29.0_TWRP_NABU.V14.0.3.0.TKXTWXM.TAIWAN.boot.img";
                 case "magisk-14-0-2-taiwan":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.2.0.TKXTWXM.TAIWAN.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_29.0_TWRP_NABU.V14.0.2.0.TKXTWXM.TAIWAN.boot.img";
                 case "magisk-14-0-1-taiwan":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_28.1_NABU.V14.0.1.0.TKXTWXM.TAIWAN.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui14-rooted-boot/Magisk_29.0_TWRP_NABU.V14.0.1.0.TKXTWXM.TAIWAN.boot.img";
 
             // MIUI 13 GLOBAL Versions
                 case "magisk-13-1-4-global":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.4.0.SKXMIXM.GLOBAL.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.1.4.0.SKXMIXM.GLOBAL.boot.img";
                 case "magisk-13-1-3-global":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.3.0.SKXMIXM.GLOBAL.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.1.3.0.SKXMIXM.GLOBAL.boot.img";
                 case "magisk-13-0-4-global":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.4.0.RKXMIXM.GLOBAL.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.0.4.0.RKXMIXM.GLOBAL.boot.img";
                 case "magisk-13-0-3-global":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.3.0.RKXMIXM.GLOBAL.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.0.3.0.RKXMIXM.GLOBAL.boot.img";
                 case "magisk-13-0-2-global":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.2.0.RKXMIXM.GLOBAL.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.0.2.0.RKXMIXM.GLOBAL.boot.img";
                 case "magisk-13-0-1-global":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.1.0.RKXMIXM.GLOBAL.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.0.1.0.RKXMIXM.GLOBAL.boot.img";
 
             // India Versions
                 case "magisk-13-1-4-india":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.4.0.SKXINXM.INDIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.1.4.0.SKXINXM.INDIA.boot.img";
                 case "magisk-13-1-3-india":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.3.0.SKXINXM.INDIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.1.3.0.SKXINXM.INDIA.boot.img";
                 case "magisk-13-0-6-india":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.6.0.RKXINXM.INDIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.0.6.0.RKXINXM.INDIA.boot.img";
                 case "magisk-13-0-5-india":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.5.0.RKXINXM.INDIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.0.5.0.RKXINXM.INDIA.boot.img";
                 case "magisk-13-0-4-india":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.4.0.RKXINXM.INDIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.0.4.0.RKXINXM.INDIA.boot.img";
 
             // Russia Versions
                 case "magisk-13-1-8-russia":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.8.0.SKXRUXM.RUSSIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.1.8.0.SKXRUXM.RUSSIA.boot.img";
                 case "magisk-13-1-6-russia":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.6.0.SKXRUXM.RUSSIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.1.6.0.SKXRUXM.RUSSIA.boot.img";
                 case "magisk-13-1-4-russia":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.4.0.SKXRUXM.RUSSIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.1.4.0.SKXRUXM.RUSSIA.boot.img";
                 case "magisk-13-0-3-russia":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.3.0.RKXRUXM.RUSSIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.0.3.0.RKXRUXM.RUSSIA.boot.img";
                 case "magisk-13-0-2-russia":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.2.0.RKXRUXM.RUSSIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.0.2.0.RKXRUXM.RUSSIA.boot.img";
                 case "magisk-13-0-1-russia":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.1.0.RKXRUXM.RUSSIA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.0.1.0.RKXRUXM.RUSSIA.boot.img";
 
             // EEA Versions
                 case "magisk-13-1-5-eea":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.5.0.SKXEUXM.EEA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.1.5.0.SKXEUXM.EEA.boot.img";
                 case "magisk-13-1-3-eea":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.3.0.SKXEUXM.EEA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.1.3.0.SKXEUXM.EEA.boot.img";
                 case "magisk-13-1-2-eea":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.2.0.SKXEUXM.EEA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.1.2.0.SKXEUXM.EEA.boot.img";
                 case "magisk-13-0-6-eea":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.6.0.RKXEUXM.EEA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.0.6.0.RKXEUXM.EEA.boot.img";
                 case "magisk-13-0-5-eea":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.5.0.RKXEUXM.EEA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.0.5.0.RKXEUXM.EEA.boot.img";
                 case "magisk-13-0-4-eea":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.4.0.RKXEUXM.EEA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.0.4.0.RKXEUXM.EEA.boot.img";
                 case "magisk-13-0-3-eea":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.3.0.RKXEUXM.EEA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.0.3.0.RKXEUXM.EEA.boot.img";
 
             // China Versions
                 case "magisk-13-1-5-china":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.5.0.SKXCNXM.CHINA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.1.5.0.SKXCNXM.CHINA.boot.img";
                 case "magisk-13-1-4-china":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.4.0.SKXCNXM.CHINA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.1.4.0.SKXCNXM.CHINA.boot.img";
                 case "magisk-13-0-9-china":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.9.0.RKXCNXM.CHINA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.0.9.0.RKXCNXM.CHINA.boot.img";
                 case "magisk-13-0-8-china":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.8.0.RKXCNXM.CHINA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.0.8.0.RKXCNXM.CHINA.boot.img";
                 case "magisk-13-0-5-china":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.5.0.RKXCNXM.CHINA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.0.5.0.RKXCNXM.CHINA.boot.img";
                 case "magisk-13-0-3-china":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.3.0.RKXCNXM.CHINA.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.0.3.0.RKXCNXM.CHINA.boot.img";
 
             // Turkey Versions
                 case "magisk-13-1-2-turkey":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.2.0.SKXTRXM.TURKEY.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.1.2.0.SKXTRXM.TURKEY.boot.img";
                 case "magisk-13-0-3-turkey":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.3.0.RKXTRXM.TURKEY.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.0.3.0.RKXTRXM.TURKEY.boot.img";
                 case "magisk-13-0-2-turkey":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.2.0.RKXTRXM.TURKEY.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.0.2.0.RKXTRXM.TURKEY.boot.img";
                 case "magisk-13-0-1-turkey":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.1.0.RKXTRXM.TURKEY.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.0.1.0.RKXTRXM.TURKEY.boot.img";
 
             // taiwan Versions
                 case "magisk-13-1-2-taiwan":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.1.2.0.RKXTWXM.TAIWAN.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.1.2.0.RKXTWXM.TAIWAN.boot.img";
                 case "magisk-13-0-4-taiwan":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.4.0.RKXTWXM.TAIWAN.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.0.4.0.RKXTWXM.TAIWAN.boot.img";
                 case "magisk-13-0-3-taiwan":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.3.0.RKXTWXM.TAIWAN.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.0.3.0.RKXTWXM.TAIWAN.boot.img";
                 case "magisk-13-0-2-taiwan":
-                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_28.1_NABU.V13.0.2.0.RKXTWXM.TAIWAN.boot.img";
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/miui13-rooted-boot/Magisk_29.0_TWRP_NABU.V13.0.2.0.RKXTWXM.TAIWAN.boot.img";
                 default:
                     return null;
             }
@@ -2492,7 +2678,7 @@
             }
         }
 
-		// Main function to handle vbmeta disable
+	// Main function to handle vbmeta disable
         async function vbmeta_disable() {  
             // Show confirmation dialog
             const userConfirmedvb = confirm("⚠️ This will disable you vbmeta verificationa and only for Xiaomi pad 5, Do you want to continue?");
@@ -2520,7 +2706,34 @@
             }
         }
 
-	    // Main function to handle vbmeta disable
+	// Main function to handle empty vendor boot flash
+        async function vendor_boot_flash() {  
+            // Show confirmation dialog
+            const userConfirmedvbf = confirm("Note: This will remove any aosp recovery if you have one, Do you want to continue?");
+            
+            if (!userConfirmedvbf) {
+                // User canceled, reset the input and button
+                return; // Exit the function
+            }
+            
+            showProgressOverlay();
+
+            try {
+                let vboot = await wipeDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/other/vendor_boot.img");
+                await device.flashBlob("vendor_boot_a", vboot);
+                await device.flashBlob("vendor_boot_b", vboot);
+
+                alert("empty vendor_boot flashed successfully, now you will be able to boot twrp on aosp roms 😁.");
+
+            } catch (error) {
+                alert(`Failed to flash empty vendor_boot: ${error.message}`);
+            } finally {
+                hideProgressOverlay();
+                await checkDeviceConnection();
+            }
+        }
+
+	// Main function to handle vbmeta disable
         async function vbmeta_system_disable() {  
             // Show confirmation dialog
             const userConfirmedvbs = confirm("⚠️ This will disable you vbmeta_system verificationa and only for Xiaomi pad 5, Do you want to continue?");
@@ -2533,7 +2746,6 @@
             showProgressOverlay();
 
             try {
-                // Step 1: Download and flash GPT file to partition "partition:0"
                 let vbmeta_system = await wipeDownloadFile("https://raw.githubusercontent.com/arkt-7/nabu-files/main/other/vbmeta_system.img");
                 await device.flashBlob("vbmeta_system_a", vbmeta_system);
             await device.flashBlob("vbmeta_system_b", vbmeta_system);
@@ -2548,7 +2760,7 @@
             }
         }
 
-	    const chickens = [];
+	const chickens = [];
         let animationRequestIds = [];
 
         function playMusic() {
@@ -2637,6 +2849,7 @@
         document.querySelector(".wipe-button").addEventListener("click", wipepart);
         document.querySelector(".wipe-form").addEventListener("submit", function(event) {event.preventDefault();});
         document.querySelector(".vbmeta-button").addEventListener("click", vbmeta_disable);
+	document.querySelector(".vendor-boot-button").addEventListener("click", vendor_boot_flash);
         document.querySelector(".vbmeta-system-button").addEventListener("click", vbmeta_system_disable);
         document.querySelector(".connect-button").addEventListener("click", connectDevice);
         document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
