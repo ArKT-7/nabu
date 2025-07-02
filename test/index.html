@@ -2022,7 +2022,7 @@
                     currentZipEntries = await currentZipReader.getEntries();
 
                     const allowedExt = ['img', 'mbn', 'elf', 'bin'];
-                    const maxSizeBytes = 7000 * 1024 * 1024; // 500 MB
+                    const maxSizeBytes = 9000 * 1024 * 1024; // 500 MB
 
                     // Filter files by extension and size <= 500MB (using uncompressedSize metadata)
                     const filteredEntries = currentZipEntries.filter(e => {
