@@ -254,6 +254,24 @@
             background: #eef7ff; 
             cursor: text;
         }
+        
+        input[type="file"]::-webkit-file-upload-button {
+            padding: 3.6px 12px;
+            margin-right: 10px;
+            border-radius: 10px;
+            background-color: #e3e3e3;
+            color: #333;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+            font-size: 14px;
+        }
+
+        input[type="file"]::-webkit-file-upload-button:hover {
+            background-color: #d3d3d3;
+            transform: scale(1.03);
+        }
     </style>
     <style id="dark">
         body {
@@ -498,6 +516,24 @@
             background: #444444; 
             cursor: text; 
         }
+
+        input[type="file"]::-webkit-file-upload-button {
+            padding: 4px 10px;
+            margin-right: 10px;
+            border-radius: 10px;
+            background-color: #545454;
+            color: white;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+            font-size: 14px;
+        }
+
+        input[type="file"]::-webkit-file-upload-button:hover {
+            background-color: #646464;
+            transform: scale(1.03);
+        }
     </style>
     <style>
 
@@ -608,8 +644,8 @@
         }
 
         .button:hover {
-            background: linear-gradient(135deg, #0056b3, #0094c6);
-            transform: scale(1.05);
+            background: linear-gradient(135deg, #0869d1, #08ace2);
+            transform: scale(1.022);
         }
         
         .button:disabled {
@@ -940,6 +976,17 @@
             transform: scale(10);
             opacity: 0;
         }
+        }
+
+        input[type="file"] {
+            padding: 11px 12px;
+        }
+
+        input[type="file"]:disabled::-webkit-file-upload-button {
+            background-color: #d1d5db;
+            color: #888;
+            cursor: not-allowed;
+            transform: none;
         }
     </style>
 </head>
@@ -1472,6 +1519,28 @@
             }
             wipeButton.disabled = true;
         }
+
+        const bootFileInput = document.getElementById("boot-file");
+        const bootTypeSelect = document.querySelector(".boot-type");
+
+        bootFileInput.addEventListener("change", function () {
+            bootTypeSelect.disabled = this.files.length > 0;
+        });
+
+        bootTypeSelect.addEventListener("change", function () {
+            bootFileInput.disabled = this.value !== "";
+        });
+
+        const rbootFileInput = document.querySelector(".rboot-flash-file");
+        const rbootMagiskSelect = document.querySelector(".rboot-flash-image");
+
+        rbootFileInput.addEventListener("change", function () {
+            rbootMagiskSelect.disabled = this.files.length > 0;
+        });
+
+        rbootMagiskSelect.addEventListener("change", function () {
+            rbootFileInput.disabled = this.value !== "";
+        });
 
         function clearFormElements() {
             const formElements = document.querySelectorAll("input, button, select, textarea");
