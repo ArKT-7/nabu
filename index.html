@@ -1868,6 +1868,52 @@
             }
         }
 
+        function validateBootImage(fileInput) {
+            const file = fileInput.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                const buffer = event.target.result;
+                const view = new DataView(buffer);
+                const magic = String.fromCharCode(
+                    view.getUint8(0), view.getUint8(1), view.getUint8(2),
+                    view.getUint8(3), view.getUint8(4), view.getUint8(5),
+                    view.getUint8(6), view.getUint8(7)
+                );
+                if (magic !== "ANDROID!") {
+                    alert("Error! Not a valid Android boot image!");
+                    fileInput.value = "";
+                    triggerInputStateReset(fileInput);
+                    return;
+                }
+                const kernel_size = view.getUint32(8, true);
+                if (kernel_size === 0) {
+                    alert("Error! Boot image is invalid (kernel size is zero)");
+                    fileInput.value = "";
+                    triggerInputStateReset(fileInput);
+                    return;
+                }
+            };
+            reader.readAsArrayBuffer(file.slice(0, 64));
+        }
+
+        function triggerInputStateReset(fileInput) {
+            const id = fileInput.id;
+            if (id === "boot-file") {
+                document.querySelector(".boot-type").disabled = false;
+            } else if (fileInput.classList.contains("rboot-flash-file")) {
+                document.querySelector(".rboot-flash-image").disabled = false;
+            }
+        }
+
+        document.getElementById('boot-file').addEventListener('change', function () {
+            validateBootImage(this);
+        });
+
+        document.querySelector('.rboot-flash-file').addEventListener('change', function () {
+            validateBootImage(this);
+        });
+
         async function bootFormFile(event) {
             event.preventDefault();
             showProgressOverlay();
