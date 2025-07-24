@@ -1074,8 +1074,9 @@
             <input type="file" name="boot-file" id="boot-file" accept=".img" />
             <select name="boot-type" class="boot-type">
                 <option value="">Select Images to boot directly on/for Nabu</option>
-                <option value="twrp-mod">TWRP Modded Recovery</option>
-		<option value="twrp">TWRP Recovery</option>
+                <option value="twrp-mod">TWRP Windows Modded Recovery</option>
+                <option value="twrp">TWRP Recovery</option>
+                <option value="twrp-mod-lin">TWRP Linux Modded Recovery</option>
             	<option value="pbrp">Pitch Black Recovery</option>
             	<option value="uefi-v4-sb">Windows UEFI-v4 Secure boot</option>
                 <option value="uefi-v4-nosb">Windows UEFI-v4 No Secure boot</option>
@@ -1956,7 +1957,9 @@
             switch (selectedBootType) {
                 case "twrp-mod":
                     return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/mod-windows-twrp.img";
-		case "twrp":
+                case "twrp-mod-lin":
+                    return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/mod-linux-twrp.img";
+                case "twrp":
                     return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/mod-normal-twrp.img";
                 case "pbrp":
                     return "https://raw.githubusercontent.com/arkt-7/nabu-files/main/recovery/pitchblack-nabu.img";
