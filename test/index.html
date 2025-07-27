@@ -768,6 +768,15 @@
         .file-table thead th:last-child {
             border-top-right-radius: 15px;
             border-bottom-right-radius: 15px;
+            width: 18px;
+            max-width: 18px;
+            padding-right: 12px;
+        }
+
+        .file-table tbody td:last-child {
+            width: 18px;
+            max-width: 18px;
+            padding-right: 12px;
         }
 
         .file-table input[type="checkbox"].row-checkbox {
@@ -926,10 +935,10 @@
                 <table id="file-table" class="file-table">
                     <thead>
                         <tr>
-                            <th>Select</th>
                             <th>File Name</th>
                             <th>Partition</th>
                             <th>Size</th>
+                            <th><input type="checkbox" id="select-all-checkbox" class="row-checkbox"/></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1286,6 +1295,7 @@
             const fileField = document.querySelector("#flash-file");
             const partField = document.querySelector(".flash-partition");
             const fileTable = document.querySelector("#file-table tbody");
+            const selectAllCheckbox = document.getElementById("select-all-checkbox");
 
             fileTable.innerHTML = "";  // clear table
             extractedFilesFromZip = [];
@@ -1298,7 +1308,15 @@
                 partField.value = "";
                 partField.disabled = true;
                 partField.placeholder = "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
+                updateSelectAllCheckbox();
                 return;
+            }
+
+            function setPartitionCellEditable(row, editable) {
+                const partitionCell = row.querySelector('td.editable-partition');
+                if (partitionCell) {
+                    partitionCell.setAttribute('contenteditable', editable ? 'true' : 'false');
+                }
             }
 
             function addFileRow(fileName, fileSize, isEditable) {
@@ -1307,25 +1325,61 @@
 
                 const row = document.createElement("tr");
                 row.innerHTML = `
-                    <td><input type="checkbox" class="row-checkbox" checked /></td>
                     <td>${fileName}</td>
                     <td contenteditable="${editable}" class="${editable ? 'editable-partition' : ''}">
                         ${matchedPartition || "Enter Partition"}
                     </td>
                     <td>${fileSize}</td>
+                    <td><input type="checkbox" class="row-checkbox" checked /></td>
                 `;
+            setPartitionCellEditable(row, true);
             row.addEventListener("click", (e) => {
                 if (e.target.classList.contains('row-checkbox')) return;
                 if (e.target.closest('td.editable-partition')) return;
                 const checkbox = row.querySelector('.row-checkbox');
                 checkbox.checked = !checkbox.checked;
                 row.classList.toggle('disabled', !checkbox.checked);
+                setPartitionCellEditable(row, checkbox.checked);
+                updateSelectAllCheckbox();
             });
 
             row.querySelector('.row-checkbox').addEventListener("change", function () {
                 row.classList.toggle('disabled', !this.checked);
+                setPartitionCellEditable(row, this.checked);
+                updateSelectAllCheckbox();
             });
                 fileTable.appendChild(row);
+            }
+
+            function updateSelectAllCheckbox() {
+                if (!selectAllCheckbox) return;
+                const rowCheckboxes = Array.from(fileTable.querySelectorAll(".row-checkbox"))
+                    .filter(cb => cb !== selectAllCheckbox);
+
+                if (rowCheckboxes.length === 0) {
+                    selectAllCheckbox.checked = false;
+                    selectAllCheckbox.indeterminate = false;
+                    return;
+                }
+                const allChecked = rowCheckboxes.every(cb => cb.checked);
+                const someChecked = rowCheckboxes.some(cb => cb.checked);
+                selectAllCheckbox.checked = allChecked;
+                selectAllCheckbox.indeterminate = !allChecked && someChecked;
+            }
+
+            if (selectAllCheckbox && !selectAllCheckbox.hasSelectAllListener) {
+                selectAllCheckbox.addEventListener("change", () => {
+                    const checked = selectAllCheckbox.checked;
+                    const rowCheckboxes = Array.from(fileTable.querySelectorAll(".row-checkbox"))
+                        .filter(cb => cb !== selectAllCheckbox);
+                    rowCheckboxes.forEach(cb => {
+                        if (cb.checked !== checked) {
+                            cb.checked = checked;
+                            cb.dispatchEvent(new Event('change'));
+                        }
+                    });
+                });
+                selectAllCheckbox.hasSelectAllListener = true;
             }
 
             const selectedFiles = Array.from(fileField.files);
@@ -1345,7 +1399,7 @@
                     });
 
                     if (filteredEntries.length === 0) {
-                        alert("No supported image files smaller than 500MB found inside the ZIP!");
+                        alert("No supported image files smaller than 9000MB found inside the ZIP!");
                         return;
                     }
 
@@ -1391,7 +1445,7 @@
                 const matchedPartition = fileMapping[filesToShow[0].name.toLowerCase()] || null;
                 const firstRow = fileTable.querySelector("tr");
                 if (!firstRow) return;
-                const partitionCell = firstRow.cells[1];
+                const partitionCell = firstRow.cells[2];
 
                 if (matchedPartition) {
                     partField.value = "";
@@ -1408,9 +1462,10 @@
                     partitionCell.textContent = e.target.value;
                 });
                 partitionCell.addEventListener("input", (e) => {
-                    partField.value = e.target.textContent;
+                    partField.value = partitionCell.textContent;
                 });
             }
+            updateSelectAllCheckbox();
         });
 
 
@@ -1435,14 +1490,14 @@
             let hasError = false;
 
             rows.forEach((row) => {
-                let partition = row.cells[2].textContent.trim();
+                let partition = row.cells[1].textContent.trim();
 
                 if ((slot === null || (slot !== "a" && slot !== "b")) && partition.endsWith("_ab")) {
                     partition = partition.replace(/_ab$/, "");
                 }
 
                 if (!partition || partition === "Enter Partition" || partition === "Enter Partition in the table for multiple files") {
-                    row.cells[2].textContent = "Enter Partition";
+                    row.cells[1].textContent = "Enter Partition";
                     hasError = true;
                 } else {
                     partitions.push(partition);
@@ -1519,7 +1574,7 @@
             const fileTable = document.querySelector("#file-table tbody");
             const rows = fileTable.querySelectorAll("tr");
             rows.forEach(row => {
-                const partitionCell = row.cells[1];
+                const partitionCell = row.cells[0];
                 if (!partitionCell.textContent.trim() || partitionCell.textContent.trim() === "Enter Partition") {
                     partitionCell.textContent = "Enter Partition";
                 }
