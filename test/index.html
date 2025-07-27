@@ -217,11 +217,14 @@
         .file-table th {
             position: sticky;
             top: 0; 
+            z-index: 10;
+            background: transparent;
+            backdrop-filter: blur(7px);
+            -webkit-backdrop-filter: blur(7px);
             background: rgba(0, 0, 0, 0.02); 
             color: black; 
             font-weight: bold;
             padding: 10px;
-            border-bottom: 2px solid #ccc;
             word-wrap: break-word; 
             white-space: normal;
         }
@@ -247,6 +250,18 @@
             background: #eef7ff; 
             cursor: text;
         }
+
+        .file-table tr.disabled {
+            background-color: #dddddd;
+        }
+
+        .file-table tr.disabled td.editable-partition {
+            background: #dddddd; 
+        }
+
+        .file-table tr.disabled:hover {
+            background-color: #d8d8d8;
+        }
         
         input[type="file"]::-webkit-file-upload-button {
             padding: 3.6px 12px;
@@ -264,6 +279,10 @@
         input[type="file"]::-webkit-file-upload-button:hover {
             background-color: #d3d3d3;
             transform: scale(1.03);
+        }
+
+        .file-table input[type="checkbox"].row-checkbox {
+        background: #e3e3e3;
         }
     </style>
     <style id="dark">
@@ -472,11 +491,14 @@
         .file-table th {
             position: sticky;
             top: 0;
+            z-index: 10;
+            background: transparent;
+            backdrop-filter: blur(7px);
+            -webkit-backdrop-filter: blur(7px);
             background: rgba(0, 0, 0, 0.02); 
             color: white;
             font-weight: bold;
             padding: 10px;
-            border-bottom: 1px solid rgba(51, 51, 51, 0.3); 
             word-wrap: break-word; 
             white-space: normal;
         }
@@ -503,6 +525,18 @@
             cursor: text; 
         }
 
+        .file-table tr.disabled {
+            background-color: #2a2a2a;
+        }
+
+        .file-table tr.disabled td.editable-partition {
+            background: #2a2a2a; 
+        }
+
+        .file-table tr.disabled:hover {
+            background-color: #272727;
+        }
+
         input[type="file"]::-webkit-file-upload-button {
             padding: 4px 10px;
             margin-right: 10px;
@@ -519,6 +553,10 @@
         input[type="file"]::-webkit-file-upload-button:hover {
             background-color: #646464;
             transform: scale(1.03);
+        }
+
+        .file-table input[type="checkbox"].row-checkbox {
+        background: #292e39;
         }
     </style>
     <style>
@@ -721,6 +759,56 @@
         .file-table-container::-webkit-scrollbar-thumb:hover {
             background: rgba(0, 0, 0, 0.7);
         }
+        
+        .file-table thead th:first-child {
+            border-top-left-radius: 15px;
+            border-bottom-left-radius: 15px;
+        }
+
+        .file-table thead th:last-child {
+            border-top-right-radius: 15px;
+            border-bottom-right-radius: 15px;
+        }
+
+        .file-table input[type="checkbox"].row-checkbox {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        width: 18px;
+        height: 18px;
+        border: 2px solid #8899a8;
+        border-radius: 5px;
+        display: inline-block;
+        cursor: pointer;
+        vertical-align: middle;
+        box-sizing: border-box;
+        transition: border-color 0.17s, background 0.17s;
+        margin: 0;
+        position: relative;
+        }
+
+        .file-table input[type="checkbox"].row-checkbox:hover,
+        .file-table input[type="checkbox"].row-checkbox:focus-visible {
+        border-color: #3a90db;
+        }
+
+        .file-table input[type="checkbox"].row-checkbox:checked {
+        background: #3a90db;
+        border-color: #3a90db;
+        }
+
+        .file-table input[type="checkbox"].row-checkbox:checked::after {
+        content: '';
+        position: absolute;
+        left: 4.5px;
+        top: 1.2px;
+        width: 5px;
+        height: 10px;
+        border: solid #fff;
+        border-width: 0 2.5px 2.5px 0;
+        transform: rotate(45deg);
+        pointer-events: none;
+        }
 
         #theme-overlay {
         position: fixed;
@@ -838,6 +926,7 @@
                 <table id="file-table" class="file-table">
                     <thead>
                         <tr>
+                            <th>Select</th>
                             <th>File Name</th>
                             <th>Partition</th>
                             <th>Size</th>
@@ -1218,12 +1307,24 @@
 
                 const row = document.createElement("tr");
                 row.innerHTML = `
+                    <td><input type="checkbox" class="row-checkbox" checked /></td>
                     <td>${fileName}</td>
                     <td contenteditable="${editable}" class="${editable ? 'editable-partition' : ''}">
                         ${matchedPartition || "Enter Partition"}
                     </td>
                     <td>${fileSize}</td>
                 `;
+            row.addEventListener("click", (e) => {
+                if (e.target.classList.contains('row-checkbox')) return;
+                if (e.target.closest('td.editable-partition')) return;
+                const checkbox = row.querySelector('.row-checkbox');
+                checkbox.checked = !checkbox.checked;
+                row.classList.toggle('disabled', !checkbox.checked);
+            });
+
+            row.querySelector('.row-checkbox').addEventListener("change", function () {
+                row.classList.toggle('disabled', !this.checked);
+            });
                 fileTable.appendChild(row);
             }
 
@@ -1319,7 +1420,8 @@
             toggleElements("all"); 
 
             const fileTable = document.querySelector("#file-table tbody");
-            const rows = fileTable.querySelectorAll("tr");
+            const allRows = fileTable.querySelectorAll("tr");
+            const rows = Array.from(allRows).filter(row => row.querySelector('.row-checkbox')?.checked);
             const resultField = document.querySelector(".result-field");
             let slot = await device.getVariable("current-slot");
 
@@ -1333,14 +1435,14 @@
             let hasError = false;
 
             rows.forEach((row) => {
-                let partition = row.cells[1].textContent.trim();
+                let partition = row.cells[2].textContent.trim();
 
                 if ((slot === null || (slot !== "a" && slot !== "b")) && partition.endsWith("_ab")) {
                     partition = partition.replace(/_ab$/, "");
                 }
 
                 if (!partition || partition === "Enter Partition" || partition === "Enter Partition in the table for multiple files") {
-                    row.cells[1].textContent = "Enter Partition";
+                    row.cells[2].textContent = "Enter Partition";
                     hasError = true;
                 } else {
                     partitions.push(partition);
@@ -1348,7 +1450,7 @@
             });
 
             if (hasError) {
-                alert("Error: Please enter valid partitions for all files in the table.");
+                alert("Error: Please enter valid partitions for all selected files in the table.");
                 resetTableToPlaceholders();
                 toggleElements("all-enable");
                 return;
@@ -1356,7 +1458,7 @@
 
             try {
                 for (let i = 0; i < rows.length; i++) {
-                    const fileName = rows[i].cells[0].textContent;
+                    const fileName = rows[i].cells[1].textContent;
                     const partition = partitions[i];
 
                     let fileBlob = null;
@@ -1402,7 +1504,7 @@
             } finally {
                 document.querySelector("#flash-file").value = "";
                 const partField = document.querySelector(".flash-partition");
-				partField.value = "";
+                partField.value = "";
                 partField.disabled = true;
                 toggleElements("all-enable");
                 partField.placeholder = "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
