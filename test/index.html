@@ -771,12 +771,14 @@
             width: 18px;
             max-width: 18px;
             padding-right: 12px;
+            padding-left: 6px;
         }
 
         .file-table tbody td:last-child {
             width: 18px;
             max-width: 18px;
             padding-right: 12px;
+            padding-left: 6px;
         }
 
         .file-table input[type="checkbox"].row-checkbox {
@@ -1445,7 +1447,7 @@
                 const matchedPartition = fileMapping[filesToShow[0].name.toLowerCase()] || null;
                 const firstRow = fileTable.querySelector("tr");
                 if (!firstRow) return;
-                const partitionCell = firstRow.cells[2];
+                const partitionCell = firstRow.cells[1];
 
                 if (matchedPartition) {
                     partField.value = "";
@@ -1513,7 +1515,7 @@
 
             try {
                 for (let i = 0; i < rows.length; i++) {
-                    const fileName = rows[i].cells[1].textContent;
+                    const fileName = rows[i].cells[0].textContent;
                     const partition = partitions[i];
 
                     let fileBlob = null;
@@ -1574,7 +1576,7 @@
             const fileTable = document.querySelector("#file-table tbody");
             const rows = fileTable.querySelectorAll("tr");
             rows.forEach(row => {
-                const partitionCell = row.cells[0];
+                const partitionCell = row.cells[1];
                 if (!partitionCell.textContent.trim() || partitionCell.textContent.trim() === "Enter Partition") {
                     partitionCell.textContent = "Enter Partition";
                 }
