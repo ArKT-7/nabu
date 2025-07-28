@@ -909,6 +909,21 @@
             letter-spacing: 0.08em;
         }
 
+        .file-table tr.disabled td:nth-child(2)[contenteditable] {
+            pointer-events: none !important;
+            user-select: none !important;
+        }
+
+        .file-table.table-locked,
+        .file-table.table-locked * {
+            pointer-events: none !important;
+            user-select: none !important;
+        }
+        .file-table.table-locked [contenteditable] {
+            pointer-events: none !important;
+            user-select: none !important;
+        }
+
         #theme-overlay {
         position: fixed;
         top: 0; left: 0;
@@ -1109,23 +1124,26 @@
         fastboot.setDebugLevel(2);
 
         function toggleElements(disable) {
-        const formElements = document.querySelectorAll("input, button, select");
-
-        if (disable === "all") {
-            formElements.forEach(element => element.disabled = true);
-        } else if (disable === "all-enable") {
-            formElements.forEach(element => element.disabled = false);
-        } else {
-            formElements.forEach((element) => {
-            if (
-                !element.classList.contains("connect-button") &&
-                !element.classList.contains("download-log-button") &&
-                !element.closest(".switchx")
-            ) {
-                element.disabled = Boolean(disable);
+            const formElements = document.querySelectorAll("input, button, select");
+            const fileTable = document.querySelector(".file-table");
+            if (disable === "all") {
+                formElements.forEach(element => element.disabled = true);
+                if (fileTable) fileTable.classList.add("table-locked");
+            } else if (disable === "all-enable") {
+                formElements.forEach(element => element.disabled = false);
+                if (fileTable) fileTable.classList.remove("table-locked");
+            } else {
+                formElements.forEach((element) => {
+                    if (
+                        !element.classList.contains("connect-button") &&
+                        !element.classList.contains("download-log-button") &&
+                        !element.closest(".switchx")
+                    ) {
+                        element.disabled = Boolean(disable);
+                    }
+                });
+                if (fileTable) fileTable.classList.toggle("table-locked", Boolean(disable));
             }
-            });
-        }
         }
 
         function clearFormElements() {
@@ -1404,8 +1422,9 @@
 
             function setPartitionCellEditable(row, editable) {
                 const partitionCell = row.querySelector('td.editable-partition');
+                const actuallyEditable = editable && !row.classList.contains('disabled');
                 if (partitionCell) {
-                    partitionCell.setAttribute('contenteditable', editable ? 'true' : 'false');
+                    partitionCell.setAttribute('contenteditable', actuallyEditable ? 'true' : 'false');
                 }
             }
 
@@ -1516,6 +1535,23 @@
                     addFileRow(fileName, sizeFormatted, isEditable);
                     filesToShow.push({ name: fileName, file });
                 });
+
+                if (selectedFiles.length > 1) {
+                    const someMatch = selectedFiles.some(file => fileMapping[file.name.toLowerCase()]);
+                    if (someMatch) {
+                        const allRows = Array.from(fileTable.querySelectorAll("tr"));
+                        allRows.forEach(row => {
+                            const fileName = row.cells[0].textContent.trim().toLowerCase();
+                            if (!fileMapping[fileName]) {
+                                if (!row.classList.contains('disabled')) row.classList.add('disabled');
+                                const cb = row.querySelector('.row-checkbox');
+                                if (cb) cb.checked = false;
+                                const partitionCell = row.cells[1];
+                                if (partitionCell) partitionCell.setAttribute('contenteditable', 'false');
+                            }
+                        });
+                    }
+                }
 
                 currentZipReader = null;
                 currentZipEntries = [];
