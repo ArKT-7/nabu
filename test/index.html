@@ -282,7 +282,19 @@
         }
 
         .file-table input[type="checkbox"].row-checkbox {
-        background: #e3e3e3;
+            background: #e3e3e3;
+        }
+
+        .file-table tr.disabled td:nth-child(1)::after {
+            color: black;
+        }
+
+        .file-table tr.disabled td:nth-child(2)::after {
+            color: black;
+        }
+
+        .file-table tr.disabled td:nth-child(3)::after {
+            color: black;
         }
     </style>
     <style id="dark">
@@ -556,7 +568,19 @@
         }
 
         .file-table input[type="checkbox"].row-checkbox {
-        background: #292e39;
+            background: #292e39;
+        }
+
+        .file-table tr.disabled td:nth-child(1)::after {
+            color: #fff;
+        }
+
+        .file-table tr.disabled td:nth-child(2)::after {
+            color: #fff;
+        }
+
+        .file-table tr.disabled td:nth-child(3)::after {
+            color: #fff;
         }
     </style>
     <style>
@@ -819,6 +843,70 @@
         border-width: 0 2.5px 2.5px 0;
         transform: rotate(45deg);
         pointer-events: none;
+        }
+
+        /* Hide all checkboxes in the table, including header */
+        .file-table thead th:nth-last-child(2) {
+            border-top-right-radius: 15px;
+            border-bottom-right-radius: 15px;
+        }
+
+        .file-table thead th:last-child,
+        .file-table tbody td:last-child {
+            width: 0 !important;
+            min-width: 0 !important;
+            max-width: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+            overflow: hidden !important;
+        }
+        /* Hide all checkboxes in the table, including header */
+
+        .file-table tr.disabled {
+            position: relative;
+        }
+
+        .file-table tr.disabled td {
+            position: relative;
+        }
+
+        .file-table tr.disabled td::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            backdrop-filter: blur(3.5px);
+            -webkit-backdrop-filter: blur(3.5px);
+            z-index: 2;
+        }
+
+        .file-table tr.disabled td:nth-child(1)::after {
+            content: "Click";
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1m;
+            font-weight: bold;
+            letter-spacing: 0.08em;
+        }
+
+        .file-table tr.disabled td:nth-child(2)::after {
+            content: " To ";
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            letter-spacing: 0.08em;
+        }
+
+        .file-table tr.disabled td:nth-child(3)::after {
+            content: "Enable";
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            letter-spacing: 0.08em;
         }
 
         #theme-overlay {
