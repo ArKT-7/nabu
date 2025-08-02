@@ -1518,6 +1518,24 @@
                         addFileRow(fileName, sizeFormatted, true);
                         filesToShow.push({ name: fileName });
                     });
+                    
+                    if (filteredEntries.length > 1) {
+                        const someMatch = filteredEntries.some(entry => fileMapping[entry.filename.split('/').pop().toLowerCase()]);
+                        if (someMatch) {
+                            const allRows = Array.from(fileTable.querySelectorAll("tr"));
+                            allRows.forEach(row => {
+                                const fileName = row.cells[0].textContent.trim().toLowerCase();
+                                if (!fileMapping[fileName]) {
+                                    if (!row.classList.contains('disabled')) row.classList.add('disabled');
+                                    const cb = row.querySelector('.row-checkbox');
+                                    if (cb) cb.checked = false;
+                                    const partitionCell = row.cells[1];
+                                    if (partitionCell) partitionCell.setAttribute('contenteditable', 'false');
+                                }
+                            });
+                        }
+                    }
+
                     partField.value = "";
                     partField.disabled = true;
                     partField.placeholder = "Enter partition in the table for multiple files";
@@ -1596,8 +1614,7 @@
 
 
         async function flashFormFile(event) {
-            event.preventDefault();
-            scrollToLogs(); 
+            event.preventDefault(); 
             toggleElements("all"); 
 
             const fileTable = document.querySelector("#file-table tbody");
@@ -1636,6 +1653,7 @@
                 toggleElements("all-enable");
                 return;
             }
+            scrollToLogs();
 
             try {
                 for (let i = 0; i < rows.length; i++) {
