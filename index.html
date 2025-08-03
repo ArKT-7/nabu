@@ -224,11 +224,14 @@
         .file-table th {
             position: sticky;
             top: 0; 
+            z-index: 10;
+            background: transparent;
+            backdrop-filter: blur(7px);
+            -webkit-backdrop-filter: blur(7px);
             background: rgba(0, 0, 0, 0.02); 
             color: black; 
             font-weight: bold;
             padding: 10px;
-            border-bottom: 2px solid #ccc;
             word-wrap: break-word; 
             white-space: normal;
         }
@@ -254,6 +257,18 @@
             background: #eef7ff; 
             cursor: text;
         }
+
+        .file-table tr.disabled {
+            background-color: #dddddd;
+        }
+
+        .file-table tr.disabled td.editable-partition {
+            background: #dddddd; 
+        }
+
+        .file-table tr.disabled:hover {
+            background-color: #d8d8d8;
+        }
         
         input[type="file"]::-webkit-file-upload-button {
             padding: 3.6px 12px;
@@ -271,6 +286,22 @@
         input[type="file"]::-webkit-file-upload-button:hover {
             background-color: #d3d3d3;
             transform: scale(1.03);
+        }
+
+        .file-table input[type="checkbox"].row-checkbox {
+            background: #e3e3e3;
+        }
+
+        .file-table tr.disabled td:nth-child(1)::after {
+            color: black;
+        }
+
+        .file-table tr.disabled td:nth-child(2)::after {
+            color: black;
+        }
+
+        .file-table tr.disabled td:nth-child(3)::after {
+            color: black;
         }
     </style>
     <style id="dark">
@@ -486,11 +517,14 @@
         .file-table th {
             position: sticky;
             top: 0;
+            z-index: 10;
+            background: transparent;
+            backdrop-filter: blur(7px);
+            -webkit-backdrop-filter: blur(7px);
             background: rgba(0, 0, 0, 0.02); 
             color: white;
             font-weight: bold;
             padding: 10px;
-            border-bottom: 1px solid rgba(51, 51, 51, 0.3); 
             word-wrap: break-word; 
             white-space: normal;
         }
@@ -517,6 +551,18 @@
             cursor: text; 
         }
 
+        .file-table tr.disabled {
+            background-color: #2a2a2a;
+        }
+
+        .file-table tr.disabled td.editable-partition {
+            background: #2a2a2a; 
+        }
+
+        .file-table tr.disabled:hover {
+            background-color: #272727;
+        }
+
         input[type="file"]::-webkit-file-upload-button {
             padding: 4px 10px;
             margin-right: 10px;
@@ -533,6 +579,22 @@
         input[type="file"]::-webkit-file-upload-button:hover {
             background-color: #646464;
             transform: scale(1.03);
+        }
+
+        .file-table input[type="checkbox"].row-checkbox {
+            background: #292e39;
+        }
+
+        .file-table tr.disabled td:nth-child(1)::after {
+            color: #fff;
+        }
+
+        .file-table tr.disabled td:nth-child(2)::after {
+            color: #fff;
+        }
+
+        .file-table tr.disabled td:nth-child(3)::after {
+            color: #fff;
         }
     </style>
     <style>
@@ -612,7 +674,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(2px);
+            backdrop-filter: blur(2.5px);
             background-color: rgba(255, 255, 255, 0.05);
             color: rgba(255, 255, 255, 0.551);
             font-weight: bold;
@@ -666,7 +728,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(1.2px);
+            backdrop-filter: blur(2px);
             background-color: rgba(255, 255, 255, 0.05);
             color: rgba(255, 255, 255, 0.716);
             font-weight: bold;
@@ -776,7 +838,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.25);
             display: none; 
             justify-content: center;
             align-items: center;
@@ -930,6 +992,146 @@
         .file-table-container::-webkit-scrollbar-thumb:hover {
             background: rgba(0, 0, 0, 0.7);
         }
+        
+        .file-table thead th:first-child {
+            border-top-left-radius: 15px;
+            border-bottom-left-radius: 15px;
+        }
+
+        .file-table thead th:last-child {
+            border-top-right-radius: 15px;
+            border-bottom-right-radius: 15px;
+            width: 18px;
+            max-width: 18px;
+            padding-right: 12px;
+            padding-left: 6px;
+        }
+
+        .file-table tbody td:last-child {
+            width: 18px;
+            max-width: 18px;
+            padding-right: 12px;
+            padding-left: 6px;
+        }
+
+        .file-table input[type="checkbox"].row-checkbox {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        width: 18px;
+        height: 18px;
+        border: 2px solid #8899a8;
+        border-radius: 5px;
+        display: inline-block;
+        cursor: pointer;
+        vertical-align: middle;
+        box-sizing: border-box;
+        transition: border-color 0.17s, background 0.17s;
+        margin: 0;
+        position: relative;
+        }
+
+        .file-table input[type="checkbox"].row-checkbox:hover,
+        .file-table input[type="checkbox"].row-checkbox:focus-visible {
+        border-color: #3a90db;
+        }
+
+        .file-table input[type="checkbox"].row-checkbox:checked {
+        background: #3a90db;
+        border-color: #3a90db;
+        }
+
+        .file-table input[type="checkbox"].row-checkbox:checked::after {
+        content: '';
+        position: absolute;
+        left: 4.5px;
+        top: 1.2px;
+        width: 5px;
+        height: 10px;
+        border: solid #fff;
+        border-width: 0 2.5px 2.5px 0;
+        transform: rotate(45deg);
+        pointer-events: none;
+        }
+
+        /* Hide all checkboxes in the table, including header */
+        .file-table thead th:nth-last-child(2) {
+            border-top-right-radius: 15px;
+            border-bottom-right-radius: 15px;
+        }
+
+        .file-table thead th:last-child,
+        .file-table tbody td:last-child {
+            width: 0 !important;
+            min-width: 0 !important;
+            max-width: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+            overflow: hidden !important;
+        }
+        /* Hide all checkboxes in the table, including header */
+
+        .file-table tr.disabled {
+            position: relative;
+        }
+
+        .file-table tr.disabled td {
+            position: relative;
+        }
+
+        .file-table tr.disabled td::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            backdrop-filter: blur(3.5px);
+            -webkit-backdrop-filter: blur(3.5px);
+            z-index: 2;
+        }
+
+        .file-table tr.disabled td:nth-child(1)::after {
+            content: "Click";
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1m;
+            font-weight: bold;
+            letter-spacing: 0.08em;
+        }
+
+        .file-table tr.disabled td:nth-child(2)::after {
+            content: " To ";
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            letter-spacing: 0.08em;
+        }
+
+        .file-table tr.disabled td:nth-child(3)::after {
+            content: "Enable";
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            letter-spacing: 0.08em;
+        }
+
+        .file-table tr.disabled td:nth-child(2)[contenteditable] {
+            cursor: pointer !important;
+            user-select: none !important;
+        }
+
+        .file-table.table-locked,
+        .file-table.table-locked * {
+            pointer-events: none !important;
+            user-select: none !important;
+        }
+        .file-table.table-locked [contenteditable] {
+            pointer-events: none !important;
+            user-select: none !important;
+        }
 
         #theme-overlay {
         position: fixed;
@@ -1055,6 +1257,7 @@
                             <th>File Name</th>
                             <th>Partition</th>
                             <th>Size</th>
+                            <th><input type="checkbox" id="select-all-checkbox" class="row-checkbox"/></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1469,11 +1672,12 @@
             const rbootFlashSelect = document.querySelector(".rboot-flash-image");
             const bootTypeSelect = document.querySelector(".boot-type");
             const vbmetaButton = document.querySelector(".vbmeta-button");
-	    const vendorbootButton = document.querySelector(".vendor-boot-button");
+            const vendorbootButton = document.querySelector(".vendor-boot-button");
             const vbmetaSButton = document.querySelector(".vbmeta-system-button");
             const wipeContainer = document.querySelector(".wipe-container");
             const wipeinput = document.querySelector(".wipe-input");
             const wipeButton = document.querySelector(".wipe-button");
+            const fileTable = document.querySelector(".file-table");
             wipeButton.disabled = true;
 
             formElements.forEach((element) => {
@@ -1486,6 +1690,12 @@
                 }
             });
 
+            if (disable) {
+                if (fileTable) fileTable.classList.add("table-locked");
+            } else {
+                if (fileTable) fileTable.classList.remove("table-locked");
+            }
+
             if (isNabu) {
                 if (rbootFlashSelect) rbootFlashSelect.disabled = true;
                 if (bootTypeSelect) bootTypeSelect.disabled = true;
@@ -1496,7 +1706,7 @@
                     vbmetaButton.classList.add("only-nabu-disabled");
                 }
 
-		if (vendorbootButton) {
+                if (vendorbootButton) {
                     vendorbootButton.disabled = true;
                     vendorbootButton.classList.add("only-nabu-disabled");
                 }
@@ -1511,7 +1721,7 @@
                 }
             } else {
                 if (vbmetaButton) vbmetaButton.classList.remove("only-nabu-disabled");
-		if (vendorbootButton) vendorbootButton.classList.remove("only-nabu-disabled");
+                if (vendorbootButton) vendorbootButton.classList.remove("only-nabu-disabled");
                 if (vbmetaSButton) vbmetaSButton.classList.remove("only-nabu-disabled");
 
                 if (wipeContainer) {
@@ -1521,12 +1731,15 @@
             wipeButton.disabled = true;
         }
 
+        let isNabu = false;
         const bootFileInput = document.getElementById("boot-file");
         const bootTypeSelect = document.querySelector(".boot-type");
 
-        bootFileInput.addEventListener("change", function () {
-            bootTypeSelect.disabled = this.files.length > 0;
-        });
+        if (!isNabu) {
+            bootFileInput.addEventListener("change", function () {
+                bootTypeSelect.disabled = this.files.length > 0;
+            });
+        }
 
         bootTypeSelect.addEventListener("change", function () {
             bootFileInput.disabled = this.value !== "";
@@ -1535,9 +1748,11 @@
         const rbootFileInput = document.querySelector(".rboot-flash-file");
         const rbootMagiskSelect = document.querySelector(".rboot-flash-image");
 
-        rbootFileInput.addEventListener("change", function () {
-            rbootMagiskSelect.disabled = this.files.length > 0;
-        });
+        if (!isNabu) {
+            rbootFileInput.addEventListener("change", function () {
+                rbootMagiskSelect.disabled = this.files.length > 0;
+            });
+        }
 
         rbootMagiskSelect.addEventListener("change", function () {
             rbootFileInput.disabled = this.value !== "";
@@ -1592,7 +1807,6 @@
             let bootloaderStatusText = bootloaderStatus === "yes" ? "unlocked" : "locked";
 
             let deviceName = "";
-            let isNabu = false;
             const titleText = document.querySelector(".text-gradient");
             if (product === "nabu") {
                 deviceName = "Device name : Xiaomi Pad 5";
@@ -1884,14 +2098,18 @@
                 if (magic !== "ANDROID!") {
                     alert("Error! Not a valid Android boot image!");
                     fileInput.value = "";
-                    triggerInputStateReset(fileInput);
+                    if (!isNabu) {
+                        triggerInputStateReset(fileInput);
+                    }
                     return;
                 }
                 const kernel_size = view.getUint32(8, true);
                 if (kernel_size === 0) {
                     alert("Error! Boot image is invalid (kernel size is zero)");
                     fileInput.value = "";
-                    triggerInputStateReset(fileInput);
+                    if (!isNabu) {
+                        triggerInputStateReset(fileInput);
+                    }
                     return;
                 }
             };
@@ -2109,6 +2327,7 @@
             const fileField = document.querySelector("#flash-file");
             const partField = document.querySelector(".flash-partition");
             const fileTable = document.querySelector("#file-table tbody");
+            const selectAllCheckbox = document.getElementById("select-all-checkbox");
 
             fileTable.innerHTML = "";  // clear table
             extractedFilesFromZip = [];
@@ -2122,7 +2341,16 @@
                 partField.value = "";
                 partField.disabled = true;
                 partField.placeholder = "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
+                updateSelectAllCheckbox();
                 return;
+            }
+
+            function setPartitionCellEditable(row, editable) {
+                const partitionCell = row.querySelector('td.editable-partition');
+                const actuallyEditable = editable && !row.classList.contains('disabled');
+                if (partitionCell) {
+                    partitionCell.setAttribute('contenteditable', actuallyEditable ? 'true' : 'false');
+                }
             }
 
             // Helper to add a row for a file
@@ -2137,8 +2365,71 @@
                         ${matchedPartition || "Enter Partition"}
                     </td>
                     <td>${fileSize}</td>
+                    <td><input type="checkbox" class="row-checkbox" checked /></td>
                 `;
+            setPartitionCellEditable(row, true);
+            row.addEventListener("click", (e) => {
+                if (e.target.classList.contains('row-checkbox')) return;
+                const checkbox = row.querySelector('.row-checkbox');
+                const partitionCell = row.querySelector('td.editable-partition');
+                if (!checkbox.checked) {
+                    checkbox.checked = true;
+                    row.classList.remove('disabled');
+                    setPartitionCellEditable(row, true);
+                    updateSelectAllCheckbox();
+                    if (partitionCell && partitionCell.contains(e.target)) {
+                        partitionCell.focus();
+                    }
+                    e.preventDefault();
+                    e.stopPropagation();
+                } else {
+                    if (partitionCell && partitionCell.contains(e.target)) {
+                        return;
+                    }
+                    checkbox.checked = false;
+                    row.classList.add('disabled');
+                    setPartitionCellEditable(row, false);
+                    updateSelectAllCheckbox();
+                }
+            });
+
+            row.querySelector('.row-checkbox').addEventListener("change", function () {
+                row.classList.toggle('disabled', !this.checked);
+                setPartitionCellEditable(row, this.checked);
+                updateSelectAllCheckbox();
+            });
                 fileTable.appendChild(row);
+            }
+
+            function updateSelectAllCheckbox() {
+                if (!selectAllCheckbox) return;
+                const rowCheckboxes = Array.from(fileTable.querySelectorAll(".row-checkbox"))
+                    .filter(cb => cb !== selectAllCheckbox);
+
+                if (rowCheckboxes.length === 0) {
+                    selectAllCheckbox.checked = false;
+                    selectAllCheckbox.indeterminate = false;
+                    return;
+                }
+                const allChecked = rowCheckboxes.every(cb => cb.checked);
+                const someChecked = rowCheckboxes.some(cb => cb.checked);
+                selectAllCheckbox.checked = allChecked;
+                selectAllCheckbox.indeterminate = !allChecked && someChecked;
+            }
+
+            if (selectAllCheckbox && !selectAllCheckbox.hasSelectAllListener) {
+                selectAllCheckbox.addEventListener("change", () => {
+                    const checked = selectAllCheckbox.checked;
+                    const rowCheckboxes = Array.from(fileTable.querySelectorAll(".row-checkbox"))
+                        .filter(cb => cb !== selectAllCheckbox);
+                    rowCheckboxes.forEach(cb => {
+                        if (cb.checked !== checked) {
+                            cb.checked = checked;
+                            cb.dispatchEvent(new Event('change'));
+                        }
+                    });
+                });
+                selectAllCheckbox.hasSelectAllListener = true;
             }
 
             const selectedFiles = Array.from(fileField.files);
@@ -2159,7 +2450,8 @@
                     });
 
                     if (filteredEntries.length === 0) {
-                        alert("No supported image files smaller than 500MB found inside the ZIP!");
+                        alert("No supported image files found and or smaller than 500MB found inside the ZIP!");
+                        document.querySelector("#flash-file").value = "";
                         return;
                     }
 
@@ -2170,6 +2462,24 @@
                         addFileRow(fileName, sizeFormatted, true);
                         filesToShow.push({ name: fileName });
                     });
+                    
+                    if (filteredEntries.length > 1) {
+                        const someMatch = filteredEntries.some(entry => fileMapping[entry.filename.split('/').pop().toLowerCase()]);
+                        if (someMatch) {
+                            const allRows = Array.from(fileTable.querySelectorAll("tr"));
+                            allRows.forEach(row => {
+                                const fileName = row.cells[0].textContent.trim().toLowerCase();
+                                if (!fileMapping[fileName]) {
+                                    if (!row.classList.contains('disabled')) row.classList.add('disabled');
+                                    const cb = row.querySelector('.row-checkbox');
+                                    if (cb) cb.checked = false;
+                                    const partitionCell = row.cells[1];
+                                    if (partitionCell) partitionCell.setAttribute('contenteditable', 'false');
+                                }
+                            });
+                        }
+                    }
+
                     partField.value = "";
                     partField.disabled = true;
                     partField.placeholder = "Enter partition in the table for multiple files";
@@ -2188,6 +2498,23 @@
                     addFileRow(fileName, sizeFormatted, isEditable);
                     filesToShow.push({ name: fileName, file });
                 });
+
+                if (selectedFiles.length > 1) {
+                    const someMatch = selectedFiles.some(file => fileMapping[file.name.toLowerCase()]);
+                    if (someMatch) {
+                        const allRows = Array.from(fileTable.querySelectorAll("tr"));
+                        allRows.forEach(row => {
+                            const fileName = row.cells[0].textContent.trim().toLowerCase();
+                            if (!fileMapping[fileName]) {
+                                if (!row.classList.contains('disabled')) row.classList.add('disabled');
+                                const cb = row.querySelector('.row-checkbox');
+                                if (cb) cb.checked = false;
+                                const partitionCell = row.cells[1];
+                                if (partitionCell) partitionCell.setAttribute('contenteditable', 'false');
+                            }
+                        });
+                    }
+                }
 
                 currentZipReader = null;
                 currentZipEntries = [];
@@ -2212,7 +2539,7 @@
 
                 if (matchedPartition) {
                     partField.value = "";
-                    typeAnimation(partField, matchedPartition, 100);
+                    typeAnimation(partField, matchedPartition, 50);
                 } else {
                     partField.value = "";
                     partField.placeholder = "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
@@ -2225,19 +2552,19 @@
                     partitionCell.textContent = e.target.value;
                 });
                 partitionCell.addEventListener("input", (e) => {
-                    partField.value = e.target.textContent;
+                    partField.value = partitionCell.textContent;
                 });
             }
+            updateSelectAllCheckbox();
         });
 
 
         async function flashFormFile(event) {
             event.preventDefault();
-            showProgressOverlay();
-            scrollToLogs(); 
 
             const fileTable = document.querySelector("#file-table tbody");
-            const rows = fileTable.querySelectorAll("tr");
+            const allRows = fileTable.querySelectorAll("tr");
+            const rows = Array.from(allRows).filter(row => row.querySelector('.row-checkbox')?.checked);
             const resultField = document.querySelector(".result-field");
             let slot = await device.getVariable("current-slot");
 
@@ -2267,12 +2594,14 @@
             });
 
             if (hasError) {
-                alert("Error: Please enter valid partitions for all files in the table.");
+                alert("Error: Please enter valid partitions for all selected files in the table.");
                 resetTableToPlaceholders();
                 hideProgressOverlay();
                 // scrollBackToOriginal();
                 return;
             }
+            showProgressOverlay();
+            scrollToLogs();
 
             try {
                 // For each row/file, extract if ZIP else use file directly and flash
@@ -2327,7 +2656,7 @@
             } finally {
                 document.querySelector("#flash-file").value = "";
                 const partField = document.querySelector(".flash-partition");
-				partField.value = "";
+                partField.value = "";
                 partField.disabled = true;
                 partField.placeholder = "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
                 document.querySelector("#file-table tbody").innerHTML = "";
