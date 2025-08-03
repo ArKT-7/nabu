@@ -1190,6 +1190,26 @@
             cursor: not-allowed;
             transform: none;
         }
+
+        input[type="file"],
+        input[type="text"], 
+        select {
+            transition:
+                box-shadow 0.25s cubic-bezier(.7,.2,.1,1),
+                outline-offset 0.25s cubic-bezier(.7,.2,.1,1);
+        }
+
+        input[type="file"]:hover,
+        input[type="file"]:focus,
+        input[type="text"]:hover,
+        input[type="text"]:focus,
+        select:hover,
+        select:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px #33adff;
+            outline-offset: 2px;
+            transition: box-shadow 0.3s ease, outline-offset 0.3s ease;
+        }
     </style>
 </head>
 <body>
