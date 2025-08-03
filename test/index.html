@@ -910,7 +910,7 @@
         }
 
         .file-table tr.disabled td:nth-child(2)[contenteditable] {
-            pointer-events: none !important;
+            cursor: pointer !important;
             user-select: none !important;
         }
 
@@ -1444,12 +1444,27 @@
             setPartitionCellEditable(row, true);
             row.addEventListener("click", (e) => {
                 if (e.target.classList.contains('row-checkbox')) return;
-                if (e.target.closest('td.editable-partition')) return;
                 const checkbox = row.querySelector('.row-checkbox');
-                checkbox.checked = !checkbox.checked;
-                row.classList.toggle('disabled', !checkbox.checked);
-                setPartitionCellEditable(row, checkbox.checked);
-                updateSelectAllCheckbox();
+                const partitionCell = row.querySelector('td.editable-partition');
+                if (!checkbox.checked) {
+                    checkbox.checked = true;
+                    row.classList.remove('disabled');
+                    setPartitionCellEditable(row, true);
+                    updateSelectAllCheckbox();
+                    if (partitionCell && partitionCell.contains(e.target)) {
+                        partitionCell.focus();
+                    }
+                    e.preventDefault();
+                    e.stopPropagation();
+                } else {
+                    if (partitionCell && partitionCell.contains(e.target)) {
+                        return;
+                    }
+                    checkbox.checked = false;
+                    row.classList.add('disabled');
+                    setPartitionCellEditable(row, false);
+                    updateSelectAllCheckbox();
+                }
             });
 
             row.querySelector('.row-checkbox').addEventListener("change", function () {
@@ -1593,7 +1608,7 @@
 
                 if (matchedPartition) {
                     partField.value = "";
-                    typeAnimation(partField, matchedPartition, 100);
+                    typeAnimation(partField, matchedPartition, 50);
                 } else {
                     partField.value = "";
                     partField.placeholder = "Partition like - boot, dtbo, super, vendor_boot, recovery, etc.";
