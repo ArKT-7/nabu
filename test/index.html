@@ -131,6 +131,13 @@
             color: #333; 
         }
 
+        select {
+            background-color: #eaf0f7;
+            background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='18' viewBox='0 0 10 20' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right 18px center;
+        }
+
         pre.result-field {
             background: linear-gradient(135deg, #f0f4f8, #e2e8f0); 
             padding: 20px 20px 20px; 
@@ -415,6 +422,13 @@
             font-size: 14px;
             font-weight: bold;
             color: white;
+        }
+
+        select {
+            background-color: #3c3c3c;
+            background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='18' viewBox='0 0 10 20' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right 18px center;
         }
         
         pre.result-field {
@@ -981,6 +995,43 @@
             cursor: not-allowed;
             transform: none;
         }
+
+        .reboot-container {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .reboot-main-button {
+            flex: 1 1 50%;
+            font-size: 16px;
+            padding: 15px 7px;
+        }
+
+        .reboot-select {
+            height: 48px;
+            line-height: 24px;
+        }
+
+        input[type="file"],
+        input[type="text"], 
+        select {
+            transition:
+                box-shadow 0.25s cubic-bezier(.7,.2,.1,1),
+                outline-offset 0.25s cubic-bezier(.7,.2,.1,1);
+        }
+
+        input[type="file"]:hover,
+        input[type="file"]:focus,
+        input[type="text"]:hover,
+        input[type="text"]:focus,
+        select:hover,
+        select:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px #33adff;
+            outline-offset: 2px;
+            transition: box-shadow 0.3s ease, outline-offset 0.3s ease;
+        }
     </style>
 </head>
 <body>
@@ -1019,14 +1070,19 @@
             <input type="text" name="command" class="command-input" placeholder="Enter fastboot command here without 'fastboot'" />
             <input type="submit" value="Send" class="button" />
         </form>
-            <button class="button reboot-button">Reboot Device</button>
-            <button class="button reboot-bootloader-button">Reboot to Bootloader</button>
-            <button class="button reboot-recovery-button">Reboot to Recovery</button>
-            <button class="button reboot-fastbootd-button">Reboot to FastbootD</button>
-	    <button class="button switchslot-button">Switch slot to other</button>
-	<p style="text-align: center; font-style: italic; margin-top: 6px;">
-	    <strong>Output logs - Flashing percentage</strong>
-	</p>
+        <div class="reboot-container" style="display: flex; align-items: center; gap: 8px; margin: 10px 0;">
+            <button class="button reboot-main-button" style="min-width: 100px; flex-shrink: 0;">Reboot to</button>
+            <select class="reboot-select" style="flex-grow: 1; padding: 6px; font-size: 1rem;">
+                <option value="reboot">Device</option>
+                <option value="reboot-bootloader">Bootloader</option>
+                <option value="reboot-recovery">Recovery</option>
+                <option value="reboot-fastboot">FastbootD</option>
+            </select>
+        </div>
+        <button class="button switchslot-button">Switch slot to other</button>
+        <p style="text-align: center; font-style: italic; margin-top: 6px;">
+            <strong>Output logs - Flashing percentage</strong>
+        </p>
         <pre class="result-field"></pre>
     </div>
 
@@ -1285,10 +1341,12 @@
             }
         }
 
-        async function rebootDevice() {await runRebootCommand("reboot", "Device rebooted successfully!");}
-        async function rebootToBootloader() {await runRebootCommand("reboot-bootloader", "Rebooted to Bootloader successfully!");}
-        async function rebootToRecovery() {await runRebootCommand("reboot-recovery", "Rebooted to Recovery successfully!");}
-        async function rebootToFastbootD() {await runRebootCommand("reboot-fastboot", "Rebooted to FastbootD successfully!");}
+        const rebootCommands = {
+        "reboot": () => runRebootCommand("reboot", "Device rebooted successfully!"),
+        "reboot-bootloader": () => runRebootCommand("reboot-bootloader", "Rebooted to Bootloader successfully!"),
+        "reboot-recovery": () => runRebootCommand("reboot-recovery", "Rebooted to Recovery successfully!"),
+        "reboot-fastboot": () => runRebootCommand("reboot-fastboot", "Rebooted to FastbootD successfully!")
+        };
 
         async function switchSlot() {
             let resultField = document.querySelector(".result-field");
@@ -1759,10 +1817,14 @@
 
         document.querySelector(".connect-button").addEventListener("click", connectDevice);
         document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
-        document.querySelector(".reboot-button").addEventListener("click", rebootDevice);
-        document.querySelector(".reboot-bootloader-button").addEventListener("click", rebootToBootloader);
-        document.querySelector(".reboot-recovery-button").addEventListener("click", rebootToRecovery);
-        document.querySelector(".reboot-fastbootd-button").addEventListener("click", rebootToFastbootD);
+        document.querySelector(".reboot-main-button").addEventListener("click", () => {
+        const selectedValue = document.querySelector(".reboot-select").value;
+        if (rebootCommands[selectedValue]) {
+            rebootCommands[selectedValue]();
+        } else {
+            alert("Please select a valid reboot option.");
+        }
+        });
         document.querySelector(".switchslot-button").addEventListener("click", switchSlot);
         document.querySelector(".flash-form").addEventListener("submit", flashFormFile);
         document.querySelector(".download-log-button").addEventListener("click", logdownload);
