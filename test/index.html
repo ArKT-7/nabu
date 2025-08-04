@@ -121,7 +121,7 @@
             border: none;
             box-sizing: border-box; 
             background: linear-gradient(135deg, #f0f4f8, #e2e8f0); 
-            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.08); 
+            box-shadow: 0px 2px 50px rgba(0, 0, 0, 0.08); 
             transition: all 0.3s ease;
             -webkit-appearance: none; 
             -moz-appearance: none; 
@@ -413,7 +413,7 @@
             border: none;
             box-sizing: border-box;
             background: linear-gradient(135deg, #333, #444);
-            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0px 2px 50px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
             -webkit-appearance: none;
             -moz-appearance: none;
@@ -1201,6 +1201,26 @@
                 if (fileTable) fileTable.classList.toggle("table-locked", Boolean(disable));
             }
         }
+
+        /*
+        Issue on mobile browser
+        document.querySelectorAll('select').forEach(function(selectEl) {
+            selectEl.addEventListener('change', function() {
+                setTimeout(() => {
+                    this.blur();
+                }, 110);
+            });
+            selectEl.addEventListener('click', function(e) {
+                if (this.value === this.dataset.lastValue) {
+                    setTimeout(() => {
+                        this.blur();
+                    }, 110);
+                } else {
+                    this.dataset.lastValue = this.value;
+                }
+            });
+            selectEl.dataset.lastValue = selectEl.value;
+        });*/
 
         function clearFormElements() {
             const formElements = document.querySelectorAll("input, button, select, textarea");
