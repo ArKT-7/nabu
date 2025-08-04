@@ -25,6 +25,7 @@
             position: relative;
             min-height: 100vh;
             background-color: #f0f0f0;
+            min-width: fit-content;
         }
 
         h1 {
@@ -124,7 +125,7 @@
             -webkit-appearance: none; 
             -moz-appearance: none; 
             appearance: none; 
-            font-size: 14px;
+            font-size: 17px;
             font-weight: bold;
             color: #333; 
         }
@@ -133,7 +134,7 @@
             background-color: #eaf0f7;
             background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='18' viewBox='0 0 10 20' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
             background-repeat: no-repeat;
-            background-position: right 18px center;
+            background-position: right 12px center;
         }
 
         pre.result-field {
@@ -315,6 +316,7 @@
             position: relative;
             min-height: 100vh;
             background-color: #1c1f24;
+            min-width: fit-content;
         }
 
         h1 {
@@ -415,7 +417,7 @@
             -moz-appearance: none;
             appearance: none; 
             background-color: #444;
-            font-size: 14px;
+            font-size: 17px;
             font-weight: bold;
             color: white;
         }
@@ -424,7 +426,7 @@
             background-color: #3c3c3c;
             background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='18' viewBox='0 0 10 20' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
             background-repeat: no-repeat;
-            background-position: right 18px center;
+            background-position: right 12px center;
         }
         
         pre.result-field {
@@ -970,18 +972,8 @@
         .reboot-container {
             display: flex;
             align-items: center;
+            gap: 10px;
             width: 100%;
-        }
-
-        .reboot-main-button {
-            flex: 1 1 50%;
-            font-size: 16px;
-            padding: 15px 7px;
-        }
-
-        .reboot-select {
-            height: 48px;
-            line-height: 24px;
         }
 
         input[type="file"],
@@ -1041,9 +1033,10 @@
             <input type="text" name="command" class="command-input" placeholder="Enter fastboot command here without 'fastboot'" />
             <input type="submit" value="Send" class="button" />
         </form>
-        <div class="reboot-container" style="display: flex; align-items: center; gap: 8px; margin: 10px 0;">
-            <button class="button reboot-main-button" style="min-width: 100px; flex-shrink: 0;">Reboot to</button>
-            <select class="reboot-select" style="flex-grow: 1; padding: 6px; font-size: 1rem;">
+        <button class="button switchslot-button">Switch slot to other</button>
+        <div class="reboot-container">
+            <button class="button reboot-main-button">Reboot to</button>
+            <select class="select reboot-select">
                 <option value="reboot">System</option>
                 <option value="reboot-bootloader">Bootloader</option>
                 <option value="reboot-recovery">Recovery</option>
@@ -1051,7 +1044,6 @@
                 <option value="reboot-edl">EDL</option>
             </select>
         </div>
-        <button class="button switchslot-button">Switch slot to other</button>
         <p style="text-align: center; font-style: italic; margin-top: 6px;">
             <strong>Output logs - Flashing percentage</strong>
         </p>

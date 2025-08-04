@@ -25,6 +25,7 @@
             position: relative;
             min-height: 100vh;
             background-color: #f0f0f0;
+            min-width: fit-content;
         }
 
         h1 {
@@ -315,6 +316,7 @@
             position: relative;
             min-height: 100vh;
             background-color: #1c1f24;
+            min-width: fit-content;
         }
 
         h1 {
@@ -1181,6 +1183,18 @@
             outline-offset: 2px;
             transition: box-shadow 0.3s ease, outline-offset 0.3s ease;
         }
+
+        .reboot-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .reboot-select {
+            font-size: 17px;
+            background-position: right 12px center;
+        }
     </style>
 </head>
 <body>
@@ -1223,12 +1237,17 @@
             <input type="text" name="command" class="command-input" placeholder="Enter fastboot command here without 'fastboot'" />
             <input type="submit" value="Send" class="button" />
         </form>
-            <button class="button reboot-button">Reboot Device</button>
-            <button class="button reboot-bootloader-button">Reboot to Bootloader</button>
-            <button class="button reboot-recovery-button">Reboot to Recovery</button>
-            <button class="button reboot-fastbootd-button">Reboot to FastbootD</button>
-            <button class="button reboot-edl-button">Reboot to EDL</button>
-	    <button class="button switchslot-button">Switch slot to other</button>
+        <button class="button switchslot-button">Switch slot to other</button>
+        <div class="reboot-container">
+            <button class="button reboot-main-button">Reboot to</button>
+            <select class="select reboot-select">
+                <option value="reboot">System</option>
+                <option value="reboot-bootloader">Bootloader</option>
+                <option value="reboot-recovery">Recovery</option>
+                <option value="reboot-fastboot">FastbootD</option>
+                <option value="reboot-edl">EDL</option>
+            </select>
+        </div>
 	<p style="text-align: center; font-style: italic; margin-top: 6px;">
 	    <strong>Output logs - Flashing percentage</strong>
 	</p>
@@ -2018,25 +2037,13 @@
             }
         }
 
-        async function rebootDevice() {
-            await runRebootCommand("reboot", "Device rebooted successfully!");
-        }
-
-        async function rebootToBootloader() {
-            await runRebootCommand("reboot-bootloader", "Rebooted to Bootloader successfully!");
-        }
-
-        async function rebootToRecovery() {
-            await runRebootCommand("reboot-recovery", "Rebooted to Recovery successfully!");
-        }
-
-        async function rebootToFastbootD() {
-            await runRebootCommand("reboot-fastboot", "Rebooted to FastbootD successfully!");
-        }
-
-        async function rebootToEDL() {
-            await runRebootCommand("oem edl", "Rebooted to EDL successfully!");
-        }
+        const rebootCommands = {
+        "reboot": () => runRebootCommand("reboot", "Device rebooted successfully!"),
+        "reboot-bootloader": () => runRebootCommand("reboot-bootloader", "Rebooted to Bootloader successfully!"),
+        "reboot-recovery": () => runRebootCommand("reboot-recovery", "Rebooted to Recovery successfully!"),
+        "reboot-fastboot": () => runRebootCommand("reboot-fastboot", "Rebooted to FastbootD successfully!"),
+        "reboot-edl": () => runRebootCommand("oem edl", "Rebooted to EDL successfully!")
+        };
 
         async function switchSlot() {
             let resultField = document.querySelector(".result-field");
@@ -3298,15 +3305,18 @@
         document.querySelector(".wipe-button").addEventListener("click", wipepart);
         document.querySelector(".wipe-form").addEventListener("submit", function(event) {event.preventDefault();});
         document.querySelector(".vbmeta-button").addEventListener("click", vbmeta_disable);
-	document.querySelector(".vendor-boot-button").addEventListener("click", vendor_boot_flash);
+        document.querySelector(".vendor-boot-button").addEventListener("click", vendor_boot_flash);
         document.querySelector(".vbmeta-system-button").addEventListener("click", vbmeta_system_disable);
         document.querySelector(".connect-button").addEventListener("click", connectDevice);
         document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
-        document.querySelector(".reboot-button").addEventListener("click", rebootDevice);
-        document.querySelector(".reboot-bootloader-button").addEventListener("click", rebootToBootloader);
-        document.querySelector(".reboot-recovery-button").addEventListener("click", rebootToRecovery);
-        document.querySelector(".reboot-fastbootd-button").addEventListener("click", rebootToFastbootD);
-        document.querySelector(".reboot-edl-button").addEventListener("click", rebootToEDL);
+        document.querySelector(".reboot-main-button").addEventListener("click", () => {
+        const selectedValue = document.querySelector(".reboot-select").value;
+        if (rebootCommands[selectedValue]) {
+            rebootCommands[selectedValue]();
+        } else {
+            alert("Please select a valid reboot option.");
+        }
+        });
         document.querySelector(".switchslot-button").addEventListener("click", switchSlot);
         document.querySelector(".boot-form").addEventListener("submit", bootFormFile);
         document.querySelector(".flash-form").addEventListener("submit", flashFormFile);
