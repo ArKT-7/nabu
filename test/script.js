@@ -127,10 +127,18 @@ async function connectDevice() {
 
     try {
         await device.connect();
-    } catch (error) {
+    catch (error) {
+    if (error.message && error.message.includes("undefined (reading 'getDevices')")) {
+        statusField.innerHTML = `
+            xoxo, gossip girl 🙈<br><br>
+            ⚠️ Your browser doesn’t support WebUSB.<br>
+            Please use a modern browser such as Chrome, Edge, or Brave (Chromium‑based).
+        `;
+    } else {
         statusField.textContent = `Failed to connect to device: ${error.message}`;
-        toggleElements(true); 
-        return;
+    }
+    toggleElements(true); 
+    return;
     }
 
     let product = await device.getVariable("product");
