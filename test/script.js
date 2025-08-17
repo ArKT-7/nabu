@@ -130,10 +130,9 @@ async function connectDevice() {
     } catch (error) {
     if (error.message && error.message.includes("undefined (reading 'getDevices')")) {
         statusField.innerHTML = `
-            xoxo, gossip girl 🙈<br><br>
-            ⚠️ Your browser doesn’t support WebUSB.<br>
-            Please use a modern browser such as Chrome, Edge, or Brave (Chromium‑based).
-        `;
+            🙈 xoxo, gossip girl 🙈<br><br>
+            ⚠️ Your browser doesn’t support <b><i>WebUSB</i></b> ⚠️<br>
+            <b>Please use a modern browser such as Chrome, Edge, or Brave Chromium based!</b>`;
     } else {
         statusField.textContent = `Failed to connect to device: ${error.message}`;
     }
