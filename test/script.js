@@ -132,11 +132,11 @@ async function connectDevice() {
         statusField.innerHTML = `
             🙈 xoxo, gossip girl 🙈<br><br>
             ⚠️ Your browser doesn’t support <b><i>WebUSB</i></b> ⚠️<br>
-            <b>Please use a modern browser such as Chrome, Edge, or Brave Chromium based!</b>`;
+            <b>Please use a modern browser such as <i>Chrome, Edge, Brave,</i> or any <i>Chromium‑based browser.</i></b>`;
     } else if (error.message && error.message.includes("No device selected")) {
         statusField.innerHTML = `
-            ⚠️ <b>Please select your <i>Android</i> device and <i>allow</i> access ⚠️</b><br><br>
-            If not visible, check your USB cable and ensure device is in <b><i>fastboot mode</i></b>.`;
+            ⚠️ <b>Please select your <i>Android</i> device and <i>allow</i> access ⚠️</b><br>
+            If not visible, check your USB cable and,<br>ensure device is in <b><i>Fastboot Mode</i></b>.`;
     } else {
         statusField.textContent = `Failed to connect to device: ${error.message}`;
     }
