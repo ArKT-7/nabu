@@ -135,7 +135,7 @@ async function connectDevice() {
             <b>Please use a modern browser such as Chrome, Edge, or Brave Chromium based!</b>`;
     } else if (error.message && error.message.includes("No device selected")) {
         statusField.innerHTML = `
-            ⚠️ <b>Please select your <i>Android</i> device and <i>allow</i> access.</b><br>
+            ⚠️ <b>Please select your <i>Android</i> device and <i>allow</i> access.</b><br><br>
             If not visible, check your USB cable and ensure device is in <b><i>fastboot mode</i></b>.`;
     } else {
         statusField.textContent = `Failed to connect to device: ${error.message}`;
