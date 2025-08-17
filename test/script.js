@@ -127,7 +127,7 @@ async function connectDevice() {
 
     try {
         await device.connect();
-    catch (error) {
+    } catch (error) {
     if (error.message && error.message.includes("undefined (reading 'getDevices')")) {
         statusField.innerHTML = `
             xoxo, gossip girl 🙈<br><br>
