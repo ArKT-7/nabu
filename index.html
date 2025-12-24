@@ -1607,8 +1607,7 @@
 
                     const maxH = Math.min(260, vh - rect.bottom - margin - 16);
                     menuEl.style.maxHeight = Math.max(80, maxH) + 'px';
-                }
-                else {
+                } else {
                     const top = Math.max(margin + scrollY, rect.top - margin - Math.min(prefHeight, 260) + scrollY);
                     menuEl.style.top = top + 'px';
                     const maxH = Math.min(260, rect.top - margin - 16);
@@ -2614,6 +2613,8 @@
                 const progressBarContainer = document.querySelector('.progress-container');
                 const progressBar = document.querySelector('.progress-bar');
                 progressBarContainer.style.display = 'block';
+                progressBar.style.width = '0%';
+                progressBar.style.transition = 'none';
 
                 try {
                     const response = await fetch(imagePath);
@@ -2633,15 +2634,20 @@
                             break;
                         chunks.push(value);
                         loaded += value.length;
-                        progressBar.style.width = `${(loaded / total) * 100}%`;
+                        if (total) {
+                            const percent = (loaded / total) * 100;
+                            progressBar.style.width = `${percent}%`;
+                        }
                     }
 
+                    await new Promise(r => setTimeout(r, 100));
                     const blob = new Blob(chunks);
                     return blob;
                 } catch (error) {
                     console.error("Download error:", error);
                     alert("Error downloading boot image. Please try again.");
                 } finally {
+                    progressBar.style.transition = 'width 0.5s ease';
                     progressBarContainer.style.display = 'none';
                     progressBar.style.width = `0%`;
                 }
@@ -3144,6 +3150,7 @@
                 rbootShowProgressOverlay();
                 showProgressOverlay();
 
+                const resultField = document.querySelector(".result-field");
                 let fileField = document.querySelector(".rboot-flash-file");
                 let partField = document.querySelector(".rboot-flash-partition");
                 let selectedImage = document.querySelector(".rboot-flash-image").value;
@@ -3161,32 +3168,58 @@
                 }
 
                 if (!file || !partField.value) {
-                    alert("Please select a valid file and partition!");
+                    if (!file && selectedImage) {} else {
+                        alert("Please select a valid file and partition!");
+                    }
                     rbootHideProgressOverlay();
                     hideProgressOverlay();
                     return;
                 }
+                scrollToLogs();
 
                 try {
                     const selectedPartition = partField.value;
 
                     if (selectedPartition === "boot_ab") {
                         // Flash to Boot_A
-                        await device.flashBlob("boot_a", file);
-                        //alert("Successfully flashed to Boot A");
+                        resultField.textContent = `Flashing to boot_a...\n` + resultField.textContent;
+
+                        await device.flashBlob("boot_a", file, (progress) => {
+                            resultField.textContent = `boot_a Progress: ${progress}%\n` + resultField.textContent;
+                        }
+                        );
+
+                        resultField.textContent = `Successfully flashed to boot_a.\n` + resultField.textContent;
 
                         // Flash to Boot_B
-                        await device.flashBlob("boot_b", file);
-                        alert("Successfully flashed to Boot_ab");
+                        resultField.textContent = `Flashing to boot_b...\n` + resultField.textContent;
+
+                        await device.flashBlob("boot_b", file, (progress) => {
+                            resultField.textContent = `boot_b Progress: ${progress}%\n` + resultField.textContent;
+                        }
+                        );
+
+                        resultField.textContent = `Successfully flashed to boot_b.\n` + resultField.textContent;
+                        alert("Successfully flashed to Boot_ab (Both Slots)");
+
                     } else {
                         // Flash to selected partition
-                        await device.flashBlob(selectedPartition, file);
+                        resultField.textContent = `Flashing to ${selectedPartition}...\n` + resultField.textContent;
+
+                        await device.flashBlob(selectedPartition, file, (progress) => {
+                            resultField.textContent = `${selectedPartition} Progress: ${progress}%\n` + resultField.textContent;
+                        }
+                        );
+
+                        resultField.textContent = `Successfully flashed to ${selectedPartition}.\n` + resultField.textContent;
                         alert(`Successfully flashed to ${selectedPartition}`);
                     }
                 } catch (error) {
+                    resultField.textContent = `Failed to flash: ${error.message}\n` + resultField.textContent;
                     alert(`Failed to flash: ${error.message}`);
                 } finally {
                     fileField.value = "";
+                    // document.querySelector(".rboot-flash-image").selectedIndex = 0;
                     rbootHideProgressOverlay();
                     hideProgressOverlay();
                     await checkDeviceConnection();
@@ -3453,6 +3486,8 @@
                 const progressBarContainer = document.querySelector('.rboot-progress-container');
                 const progressBar = document.querySelector('.rboot-progress-bar');
                 progressBarContainer.style.display = 'block';
+                progressBar.style.width = '0%';
+                progressBar.style.transition = 'none';
 
                 try {
                     const response = await fetch(imagePath);
@@ -3472,15 +3507,44 @@
                             break;
                         chunks.push(value);
                         loaded += value.length;
-                        progressBar.style.width = `${(loaded / total) * 100}%`;
+
+                        if (total) {
+                            const percent = (loaded / total) * 100;
+                            progressBar.style.width = `${percent}%`;
+                        }
                     }
 
-                    const blob = new Blob(chunks);
-                    return blob;
+                    await new Promise(r => setTimeout(r, 100));
+                    const zipBlob = new Blob(chunks);
+                    console.log("Download complete. Extracting...");
+
+                    try {
+                        const zipReader = new zip.ZipReader(new zip.BlobReader(zipBlob));
+                        const entries = await zipReader.getEntries();
+
+                        const imgEntry = entries.find(entry => entry.filename.toLowerCase().endsWith('.img'));
+
+                        if (!imgEntry) {
+                            await zipReader.close();
+                            throw new Error("No .img file found inside the downloaded ZIP archive!");
+                        }
+
+                        const imgBlob = await imgEntry.getData(new zip.BlobWriter());
+                        await zipReader.close();
+
+                        return imgBlob;
+
+                    } catch (zipError) {
+                        console.error("ZIP Extraction Error:", zipError);
+                        throw new Error(`Failed to extract boot image: ${zipError.message}`);
+                    }
+
                 } catch (error) {
-                    console.error("Download error:", error);
-                    alert("Error downloading flash image. Please try again.");
+                    console.error("Download/Extraction error:", error);
+                    alert(`Error: ${error.message}`);
+                    return null;
                 } finally {
+                    progressBar.style.transition = 'width 0.5s ease';
                     progressBarContainer.style.display = 'none';
                     progressBar.style.width = `0%`;
                 }
