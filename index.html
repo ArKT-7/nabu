@@ -1224,6 +1224,7 @@
                 z-index: 1000;
                 -webkit-overflow-scrolling: touch;
                 touch-action: pan-y;
+                overscroll-behavior: contain;
             }
 
             .custom-menu.open {
@@ -1561,8 +1562,8 @@
 
             function positionMenu(fauxRect, menuEl) {
                 const rect = fauxRect;
-                const scrollY = window.scrollY || document.documentElement.scrollTop;
-                const scrollX = window.scrollX || document.documentElement.scrollLeft;
+                const scrollY = window.scrollY || window.pageYOffset;
+                const scrollX = window.scrollX || window.pageXOffset;
 
                 const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
                 const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
@@ -1598,6 +1599,8 @@
             let activeSelect = null;
             let activeRect = null;
             let lastOpenAt = 0;
+            let triggerElement = null;
+            let restoreFocusOnClose = false;
 
             function closeActiveMenu() {
                 if (activeMenu) {
@@ -1606,14 +1609,18 @@
                         activeMenu.parentNode.removeChild(activeMenu);
                     if (activeMenu.__keyHandler)
                         document.removeEventListener('keydown', activeMenu.__keyHandler);
-                    if (activeMenu.__scrollCapture)
-                        document.removeEventListener('scroll', activeMenu.__scrollCapture, true);
                     activeMenu = null;
                 }
                 if (activeBackdrop) {
                     if (activeBackdrop.parentNode)
                         activeBackdrop.parentNode.removeChild(activeBackdrop);
                     activeBackdrop = null;
+                }
+                if (triggerElement) {
+                    if (restoreFocusOnClose) {
+                        triggerElement.focus();
+                    }
+                    triggerElement = null;
                 }
                 activeSelect = null;
                 activeRect = null;
@@ -1631,8 +1638,9 @@
 
             function openMenuFor(selectEl, fauxRect) {
                 closeActiveMenu();
-                activeBackdrop = createBackdrop();
+                triggerElement = selectEl;
                 activeMenu = createMenu();
+                selectEl.blur();
 
                 try {
                     if (document.body.classList.contains('theme-dark') || (window.getComputedStyle(document.querySelector('.container')).backgroundColor.indexOf('rgb(24') === 0)) {
@@ -1640,7 +1648,6 @@
                     }
                 } catch (e) {}
 
-                document.body.appendChild(activeBackdrop);
                 document.body.appendChild(activeMenu);
                 buildMenuFromSelect(selectEl, activeMenu);
 
@@ -1662,12 +1669,6 @@
                     applySelectionToSelect(activeSelect, item.dataset.value);
                     Array.from(activeMenu.querySelectorAll('.menu-item')).forEach(mi => mi.setAttribute('aria-selected', 'false'));
                     item.setAttribute('aria-selected', 'true');
-                    closeActiveMenu();
-                }
-                );
-
-                activeBackdrop.addEventListener('mousedown', (e) => {
-                    e.stopPropagation();
                     closeActiveMenu();
                 }
                 );
@@ -1750,17 +1751,6 @@
                 document.addEventListener('keydown', onKey);
                 activeMenu.__keyHandler = onKey;
 
-                function onScrollCapture(e) {
-                    if (!activeMenu)
-                        return;
-                    if (activeMenu.contains(e.target)) {
-                        return;
-                    }
-                    closeActiveMenu();
-                }
-                document.addEventListener('scroll', onScrollCapture, true);
-                activeMenu.__scrollCapture = onScrollCapture;
-
                 activeMenu.addEventListener('wheel', (ev) => {
                     ev.stopPropagation();
                 }
@@ -1805,6 +1795,7 @@
                         e.stopPropagation();
                         skipNextClick = true;
                         const rect = sel.getBoundingClientRect();
+                        restoreFocusOnClose = false;
                         openMenuFor(sel, rect);
                     }
                     );
@@ -1812,7 +1803,9 @@
                     sel.addEventListener('keydown', (e) => {
                         if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') {
                             e.preventDefault();
+                            e.stopPropagation();
                             const rect = sel.getBoundingClientRect();
+                            restoreFocusOnClose = true;
                             openMenuFor(sel, rect);
                         }
                     }
