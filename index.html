@@ -1601,6 +1601,7 @@
             let lastOpenAt = 0;
             let triggerElement = null;
             let restoreFocusOnClose = false;
+            let isOperationInProgress = false;
 
             function closeActiveMenu() {
                 if (activeMenu) {
@@ -1973,6 +1974,8 @@
             }
 
             function showProgressOverlay() {
+                isOperationInProgress = true;
+                window.onbeforeunload = () => "Operations are in progress, are you sure you want to leave?";
                 const progressOverlay = document.getElementById('progress-overlay');
                 const buttons = document.querySelectorAll('.button');
                 const wipeButton = document.querySelector(".wipe-button");
@@ -1989,6 +1992,8 @@
             }
 
             function hideProgressOverlay() {
+                isOperationInProgress = false;
+                window.onbeforeunload = null;
                 const progressOverlay = document.getElementById('progress-overlay');
                 const buttons = document.querySelectorAll('.button');
                 const wipeButton = document.querySelector(".wipe-button");
