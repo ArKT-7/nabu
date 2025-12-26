@@ -2398,6 +2398,8 @@
                 } catch (error) {
                     statusField.textContent = "Device disconnected!";
                     toggleElements(true);
+                    isOperationInProgress = false;
+                    window.onbeforeunload = null;
                 }
                 clearFormElements();
             }
@@ -3792,6 +3794,12 @@
             document.querySelector(".vendor-boot-button").addEventListener("click", vendor_boot_flash);
             document.querySelector(".vbmeta-system-button").addEventListener("click", vbmeta_system_disable);
             document.querySelector(".connect-button").addEventListener("click", connectDevice);
+            navigator.usb.addEventListener('disconnect', async (event) => {
+                if (device && device.device === event.device) {
+                    checkDeviceConnection();
+                }
+            }
+            );
             document.querySelector(".command-form").addEventListener("submit", sendFormCommand);
             document.querySelector(".reboot-main-button").addEventListener("click", () => {
                 const selectedValue = document.querySelector(".reboot-select").value;
